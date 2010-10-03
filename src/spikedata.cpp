@@ -128,7 +128,6 @@ void SpikeData::printfile()
     std::cout << "cFill1: " << m_head.cFill1 << std::endl;
 
     std::cout << "STIMULUS INFORMATION" << std::endl;
-
     
     std::cout << "SPIKE INFORMATION" << std::endl;
     for (int i = 0; i < MAX_SWEEPS; ++i)
