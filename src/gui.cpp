@@ -10,6 +10,8 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 {
     set_title("Spike Database");
 
+    std::cout << "set_title()" << std::endl;
+
     // Setup the toolbar
     m_refGlade->get_widget("menuQuit", m_pMenuQuit);
     if (m_pMenuQuit)
