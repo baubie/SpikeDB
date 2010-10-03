@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/brandon/SpikeDB/src/spikedata.cpp
+spikedata.h
+/home/brandon/SpikeDB/src/spikedata.h
+
+/home/brandon/SpikeDB/src/spikedata.h
+iostream
+-
+fstream
+-
+stdint.h
+-
+vector
+-
+
