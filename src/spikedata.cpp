@@ -1,6 +1,6 @@
 #include "spikedata.h"
 
-void SpikeData::parse(const char* filename)
+bool SpikeData::parse(const char* filename)
 {
     std::ifstream in(filename, std::ios::binary);
     if (in.good())
@@ -17,8 +17,8 @@ void SpikeData::parse(const char* filename)
         int hsize = sizeof(m_head);
         int nbytes = fsize-hsize;
         if (nbytes < 0) {
-            std::cerr << "ERROR: Invalid spike data file." << std::endl;
-            return;
+//            std::cerr << "ERROR: Invalid spike data file." << std::endl;
+            return false;
         }
         int size = nbytes / sizeof(DWORD);
         m_dwDataArray.reserve(size);
@@ -31,13 +31,16 @@ void SpikeData::parse(const char* filename)
         }
         if (!parsedata())
         {
-            std::cerr << "ERROR: Failed to parse data file." << std::endl;
+//          std::cerr << "ERROR: Failed to parse data file." << std::endl;
+            return false;
         }
     }
     else
     {
-        std::cerr << "ERROR: Unable to open " << filename << std::endl;
+//      std::cerr << "ERROR: Unable to open " << filename << std::endl;
+        return false;
     }
+    return true;
 }
 
 bool SpikeData::parsedata()
@@ -69,7 +72,7 @@ bool SpikeData::parsedata()
                 if (m_head.nPresentation != NONINTERLEAVED) {
                     nPass = nSweepCount/m_head.nSweeps + 1;
                     if (nPass < 1 || nPass > m_head.nPasses) {
-                        std::cerr << "ERROR: Bad pass number (" << nPass << "). Corrupt data file." << std::endl;
+                        std::cerr << "ERROR: Bad pass number (" << nPass << "~"<<m_head.nPasses<<"). Corrupt data file." << std::endl;
                         nPass = 1;
                     }
                     i++;

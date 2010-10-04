@@ -187,7 +187,7 @@ typedef struct
 class SpikeData
 {
     public:
-        void parse(const char* filename);
+        bool parse(const char* filename);
         void printfile();
         HEADER m_head;
 

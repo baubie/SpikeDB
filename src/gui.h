@@ -7,6 +7,7 @@
 #include <plotmm/errorcurve.h>
 #include <plotmm/symbol.h>
 #include <plotmm/paint.h>
+#include <dirent.h>
 #include "spikedata.h"
 
 class GUI : public Gtk::Window
@@ -19,9 +20,11 @@ class GUI : public Gtk::Window
 
         // Signal handlers
         void on_menuQuit_activate();
+        void on_menuImportFolder_activate();
 
         // Child Widgets (from glade file)
         Glib::RefPtr<Gtk::Builder> m_refGlade;
+        Gtk::ImageMenuItem* m_pMenuImportFolder;
         Gtk::ImageMenuItem* m_pMenuQuit;
         Gtk::TreeView* m_pAnimalTree;
         Gtk::TreeView* m_pDetailsList;
