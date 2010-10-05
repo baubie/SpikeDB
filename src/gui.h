@@ -7,7 +7,9 @@
 #include <plotmm/errorcurve.h>
 #include <plotmm/symbol.h>
 #include <plotmm/paint.h>
+#include <string>
 #include <dirent.h>
+#include "sqlite.h"
 #include "spikedata.h"
 
 class GUI : public Gtk::Window
@@ -52,6 +54,7 @@ class GUI : public Gtk::Window
                 { add(m_col_filenum); add(m_col_CF); add(m_col_depth); add(m_col_xaxis); 
                   add(m_col_tags); 
                 }
+                Gtk::TreeModelColumn<int> m_col_cellID;
                 Gtk::TreeModelColumn<int> m_col_filenum;
                 Gtk::TreeModelColumn<int> m_col_CF;
                 Gtk::TreeModelColumn<int> m_col_depth;
@@ -66,6 +69,7 @@ class GUI : public Gtk::Window
         void deletePlots();
         void populateAnimalTree();
         void populateDetailsList();
+        SQLite db;
 };
 
 
