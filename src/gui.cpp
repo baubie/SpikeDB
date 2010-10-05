@@ -50,12 +50,15 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
     m_refAnimalTree = Gtk::TreeStore::create(m_AnimalColumns);
     m_pAnimalTree->set_model(m_refAnimalTree);
     m_pAnimalTree->append_column("Animal/Cell ID", m_AnimalColumns.m_col_name);
+    m_refAnimalTree->set_sort_column(m_AnimalColumns.m_col_name,Gtk::SORT_ASCENDING);
+    m_refAnimalTree->set_sort_func(0, sigc::mem_fun(*this,&GUI::on_animal_sort));
 
     // Create Details TreeView
     m_refGlade->get_widget("tvDetails", m_pDetailsList);
     m_refDetailsList = Gtk::ListStore::create(m_DetailsColumns);
     m_pDetailsList->set_model(m_refDetailsList);
-    m_pDetailsList->append_column("Cell" m_DetailsColumns.m_col_cellID);
+    m_pDetailsList->append_column("AnimalID", m_DetailsColumns.m_col_animalID);
+    m_pDetailsList->append_column("CellID", m_DetailsColumns.m_col_cellID);
     m_pDetailsList->append_column("#", m_DetailsColumns.m_col_filenum);
     m_pDetailsList->append_column("CF (kHz)", m_DetailsColumns.m_col_CF);
     m_pDetailsList->append_column("Depth (um)", m_DetailsColumns.m_col_depth);
@@ -76,6 +79,20 @@ void GUI::deletePlots()
 
 }
 
+int GUI::on_animal_sort(const Gtk::TreeModel::iterator& a_, const Gtk::TreeModel::iterator& b_)
+{
+    const Gtk::TreeModel::Row a__ = *a_;
+    const Gtk::TreeModel::Row b__ = *b_;
+
+    Glib::ustring a = a__.get_value(m_AnimalColumns.m_col_name);
+    Glib::ustring b = b__.get_value(m_AnimalColumns.m_col_name);
+    if (a__.children().size() == 0 && a__.parent() != 0)
+    {
+       // Cell ID's.  Just sort by number.
+       return (atoi(a.c_str()) > atoi(b.c_str()));
+    }
+    return a.compare(b);
+}
 
 void GUI::populateAnimalTree()
 {
@@ -83,11 +100,14 @@ void GUI::populateAnimalTree()
     std::vector< std::map<std::string,std::string> > r = db.query(query.c_str());
 
     m_refAnimalTree->clear();
+    Gtk::TreeModel::Row base;
     Gtk::TreeModel::Row row;
     Gtk::TreeModel::Row childrow;
+    base = *(m_refAnimalTree->append());
+    base[m_AnimalColumns.m_col_name] = "Animals";
     for (unsigned int a = 0; a < r.size(); ++a)
     {
-        row = *(m_refAnimalTree->append());
+        row = *(m_refAnimalTree->append(base.children()));
         row[m_AnimalColumns.m_col_name] = r[a]["ID"];
 
         query = "SELECT * FROM cells WHERE animalID=\"";
@@ -100,7 +120,6 @@ void GUI::populateAnimalTree()
             childrow[m_AnimalColumns.m_col_name] = rc[c]["cellID"];
         }
     }
-    m_refAnimalTree->set_sort_column(m_AnimalColumns.m_col_name,Gtk::SORT_ASCENDING);
 }
 
 

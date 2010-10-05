@@ -51,9 +51,10 @@ class GUI : public Gtk::Window
         {
             public:
                 DetailsColumns()
-                { add(m_col_filenum); add(m_col_CF); add(m_col_depth); add(m_col_xaxis); 
+                { add(m_col_animalID); add(m_col_cellID); add(m_col_filenum); add(m_col_CF); add(m_col_depth); add(m_col_xaxis); 
                   add(m_col_tags); 
                 }
+                Gtk::TreeModelColumn<Glib::ustring> m_col_animalID;
                 Gtk::TreeModelColumn<int> m_col_cellID;
                 Gtk::TreeModelColumn<int> m_col_filenum;
                 Gtk::TreeModelColumn<int> m_col_CF;
@@ -70,6 +71,9 @@ class GUI : public Gtk::Window
         void populateAnimalTree();
         void populateDetailsList();
         SQLite db;
+
+        // Helper to sort by string for parent and number by child
+        int on_animal_sort(const Gtk::TreeModel::iterator& a, const Gtk::TreeModel::iterator& b);
 };
 
 
