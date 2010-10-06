@@ -30,6 +30,8 @@ class GUI : public Gtk::Window
         Gtk::ImageMenuItem* m_pMenuQuit;
         Gtk::TreeView* m_pAnimalTree;
         Gtk::TreeView* m_pDetailsList;
+        Gtk::TreeView* m_pAnimalDetailsList;
+        Gtk::TreeView* m_pCellDetailsList;
 
         // Child Widgets (created in c++)
         std::vector<PlotMM::Plot*> m_pPlot;
@@ -37,6 +39,8 @@ class GUI : public Gtk::Window
         Glib::RefPtr<Gtk::ListStore> m_refDetailsList;
         Glib::RefPtr<Gtk::TreeSelection> m_refAnimalSelection;
         Glib::RefPtr<Gtk::TreeSelection> m_refDetailsSelection;
+        Glib::RefPtr<Gtk::ListStore> m_refAnimalDetailsList;
+        Glib::RefPtr<Gtk::ListStore> m_refCellDetailsList;
 
         // Network Tree Model Columns
         class AnimalColumns : public Gtk::TreeModel::ColumnRecord
@@ -47,6 +51,7 @@ class GUI : public Gtk::Window
                 Gtk::TreeModelColumn<Glib::ustring> m_col_name;
         };
 
+        // Details Tree Model Columns
         class DetailsColumns : public Gtk::TreeModel::ColumnRecord
         {
             public:
@@ -63,13 +68,36 @@ class GUI : public Gtk::Window
                 Gtk::TreeModelColumn<Glib::ustring> m_col_tags;
         };
 
+        class AnimalDetailsColumns : public Gtk::TreeModel::ColumnRecord
+        {
+            public:
+                AnimalDetailsColumns()
+                { add(m_col_name); add(m_col_value); }
+                Gtk::TreeModelColumn<Glib::ustring> m_col_name;
+                Gtk::TreeModelColumn<Glib::ustring> m_col_value;
+        };
+
+        class CellDetailsColumns : public Gtk::TreeModel::ColumnRecord
+        {
+            public:
+                CellDetailsColumns()
+                { add(m_col_name); add(m_col_value); }
+                Gtk::TreeModelColumn<Glib::ustring> m_col_name;
+                Gtk::TreeModelColumn<Glib::ustring> m_col_value;
+        };
+
         AnimalColumns m_AnimalColumns;
         DetailsColumns m_DetailsColumns;
+        AnimalDetailsColumns m_AnimalDetailsColumns;
+        CellDetailsColumns m_CellDetailsColumns;
 
     private:
         void deletePlots();
         void populateAnimalTree();
         void populateDetailsList();
+        void populateAnimalDetailsList(Glib::ustring animalID);
+        void populateCellDetailsList(Glib::ustring animalID, int cellID);
+        void changeAnimalSelection();
         SQLite db;
 
         // Helper to sort by string for parent and number by child

@@ -52,6 +52,10 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
     m_pAnimalTree->append_column("Animal/Cell ID", m_AnimalColumns.m_col_name);
     m_refAnimalTree->set_sort_column(m_AnimalColumns.m_col_name,Gtk::SORT_ASCENDING);
     m_refAnimalTree->set_sort_func(0, sigc::mem_fun(*this,&GUI::on_animal_sort));
+    m_refAnimalSelection = m_pAnimalTree->get_selection();
+    m_refAnimalSelection->signal_changed().connect(
+        sigc::mem_fun(*this, &GUI::changeAnimalSelection)
+    );
 
     // Create Details TreeView
     m_refGlade->get_widget("tvDetails", m_pDetailsList);
@@ -64,6 +68,20 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
     m_pDetailsList->append_column("Depth (um)", m_DetailsColumns.m_col_depth);
     m_pDetailsList->append_column("Variable", m_DetailsColumns.m_col_xaxis);
     m_pDetailsList->append_column("Tags", m_DetailsColumns.m_col_tags);
+
+    // Create Animal Details TreeView
+    m_refGlade->get_widget("tvAnimalDetails", m_pAnimalDetailsList);
+    m_refAnimalDetailsList = Gtk::ListStore::create(m_AnimalDetailsColumns);
+    m_pAnimalDetailsList->set_model(m_refAnimalDetailsList);
+    m_pAnimalDetailsList->append_column("Variable", m_AnimalDetailsColumns.m_col_name);
+    m_pAnimalDetailsList->append_column_editable("Value", m_AnimalDetailsColumns.m_col_value);
+
+    // Create Cell Details TreeView
+    m_refGlade->get_widget("tvCellDetails", m_pCellDetailsList);
+    m_refCellDetailsList = Gtk::ListStore::create(m_CellDetailsColumns);
+    m_pCellDetailsList->set_model(m_refCellDetailsList);
+    m_pCellDetailsList->append_column("Variable", m_CellDetailsColumns.m_col_name);
+    m_pCellDetailsList->append_column_editable("Value", m_CellDetailsColumns.m_col_value);
 
     populateAnimalTree();
 
@@ -92,6 +110,22 @@ int GUI::on_animal_sort(const Gtk::TreeModel::iterator& a_, const Gtk::TreeModel
        return (atoi(a.c_str()) > atoi(b.c_str()));
     }
     return a.compare(b);
+}
+
+void GUI::changeAnimalSelection()
+{
+
+}
+
+void GUI::populateAnimalDetailsList(Glib::ustring animalID)
+{
+
+}
+
+
+void GUI::populateCellDetailsList(Glib::ustring animalID, int cellID)
+{
+
 }
 
 void GUI::populateAnimalTree()
