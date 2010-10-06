@@ -94,10 +94,11 @@ class GUI : public Gtk::Window
     private:
         void deletePlots();
         void populateAnimalTree();
-        void populateDetailsList();
-        void populateAnimalDetailsList(Glib::ustring animalID);
-        void populateCellDetailsList(Glib::ustring animalID, int cellID);
+        void populateDetailsList(const Glib::ustring animalID, const Glib::ustring cellID);
+        void populateAnimalDetailsList(const Glib::ustring animalID);
+        void populateCellDetailsList(const Glib::ustring animalID, const Glib::ustring cellID);
         void changeAnimalSelection();
+        void changeDetailsSelection();
         SQLite db;
 
         // Helper to sort by string for parent and number by child

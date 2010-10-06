@@ -68,6 +68,11 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
     m_pDetailsList->append_column("Depth (um)", m_DetailsColumns.m_col_depth);
     m_pDetailsList->append_column("Variable", m_DetailsColumns.m_col_xaxis);
     m_pDetailsList->append_column("Tags", m_DetailsColumns.m_col_tags);
+    m_refDetailsSelection = m_pDetailsList->get_selection();
+    m_refDetailsSelection->set_mode(Gtk::SELECTION_MULTIPLE);
+    m_refDetailsSelection->signal_changed().connect(
+        sigc::mem_fun(*this, &GUI::changeDetailsSelection)
+    );
 
     // Create Animal Details TreeView
     m_refGlade->get_widget("tvAnimalDetails", m_pAnimalDetailsList);
@@ -112,18 +117,36 @@ int GUI::on_animal_sort(const Gtk::TreeModel::iterator& a_, const Gtk::TreeModel
     return a.compare(b);
 }
 
+void GUI::changeDetailsSelection()
+{
+
+}
+
 void GUI::changeAnimalSelection()
 {
-
+    Gtk::TreeModel::iterator iter = m_refAnimalSelection->get_selected();
+    if(iter) 
+    {
+        Gtk::TreeModel::Row row = *iter;
+        if (row->parent() == 0) {
+            // Root
+            populateDetailsList("","");
+        } else if (row->parent()->parent() == 0) {
+            // First Level
+            populateDetailsList(row->get_value(m_AnimalColumns.m_col_name),"");
+        } else if (row->parent()->parent()->parent() == 0) {
+           // Second Level 
+            populateDetailsList(row->parent()->get_value(m_AnimalColumns.m_col_name),row->get_value(m_AnimalColumns.m_col_name));
+        }
+    }
 }
 
-void GUI::populateAnimalDetailsList(Glib::ustring animalID)
+void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 {
 
 }
 
-
-void GUI::populateCellDetailsList(Glib::ustring animalID, int cellID)
+void GUI::populateCellDetailsList(const Glib::ustring animalID, const Glib::ustring cellID)
 {
 
 }
@@ -157,9 +180,33 @@ void GUI::populateAnimalTree()
 }
 
 
-void GUI::populateDetailsList()
+void GUI::populateDetailsList(const Glib::ustring animalID, const Glib::ustring cellID)
 {
-
+    std::string query;
+    std::cout << animalID << " " << cellID << std::endl;
+    if (animalID != "" && cellID != "") {
+       query = "SELECT * FROM files WHERE animalID=\"";
+       query += animalID;
+       query += "\" AND cellID=";
+       query += cellID;
+    } else if (animalID != "" && cellID == "") {
+       query = "SELECT * FROM files WHERE animalID=\"";
+       query += animalID;
+       query += "\"";
+    } else if (animalID == "" && cellID == "") {
+       query = "SELECT * FROM files";
+    }
+    query += " ORDER BY animalID ASC, cellID ASC, fileID ASC";
+    m_refDetailsList->clear();
+    std::vector<std::map<std::string,std::string> > r = db.query(query.c_str());
+    Gtk::TreeModel::Row row;
+    for (unsigned int a = 0; a < r.size(); ++a)
+    {
+        row = *(m_refDetailsList->append());
+        row[m_DetailsColumns.m_col_animalID] = r[a]["animalID"];
+        row[m_DetailsColumns.m_col_cellID] = atoi(r[a]["cellID"].c_str());
+        row[m_DetailsColumns.m_col_filenum] = atoi(r[a]["fileID"].c_str());
+    }
 }
 
 
@@ -234,6 +281,7 @@ void GUI::on_menuImportFolder_activate()
     }
     populateAnimalTree();
 }
+
 void GUI::on_menuQuit_activate()
 {
     delete m_pMenuQuit;

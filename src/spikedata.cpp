@@ -48,7 +48,7 @@ bool SpikeData::parsedata()
     if (m_dwDataArray.size() == 0) return false;
 
     if (m_dwDataArray[0] != SWEEP_MARK && m_dwDataArray[0] != EOF_MARK) {
-        std::cerr << "ERROR: Data format error." << std::endl;
+//        std::cerr << "ERROR: Data format error." << std::endl;
         return false;
     }
 
