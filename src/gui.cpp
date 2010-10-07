@@ -64,15 +64,16 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
     m_pDetailsList->append_column("AnimalID", m_DetailsColumns.m_col_animalID);
     m_pDetailsList->append_column("CellID", m_DetailsColumns.m_col_cellID);
     m_pDetailsList->append_column("#", m_DetailsColumns.m_col_filenum);
-    m_pDetailsList->append_column("CF (kHz)", m_DetailsColumns.m_col_CF);
-    m_pDetailsList->append_column("Depth (um)", m_DetailsColumns.m_col_depth);
-    m_pDetailsList->append_column("Variable", m_DetailsColumns.m_col_xaxis);
-    m_pDetailsList->append_column("Tags", m_DetailsColumns.m_col_tags);
+    m_pDetailsList->append_column_editable("CF (kHz)", m_DetailsColumns.m_col_CF);
+    m_pDetailsList->append_column_editable("Depth (um)", m_DetailsColumns.m_col_depth);
+    m_pDetailsList->append_column_editable("X-Var", m_DetailsColumns.m_col_xaxis);
+    m_pDetailsList->append_column_editable("Tags", m_DetailsColumns.m_col_tags);
     m_refDetailsSelection = m_pDetailsList->get_selection();
     m_refDetailsSelection->set_mode(Gtk::SELECTION_MULTIPLE);
     m_refDetailsSelection->signal_changed().connect(
         sigc::mem_fun(*this, &GUI::changeDetailsSelection)
     );
+    m_rend_CF.signal_edited().connect(sigc::mem_fun(*this, &GUI::on_detailscolumn_edited));
 
     // Create Animal Details TreeView
     m_refGlade->get_widget("tvAnimalDetails", m_pAnimalDetailsList);
@@ -115,6 +116,11 @@ int GUI::on_animal_sort(const Gtk::TreeModel::iterator& a_, const Gtk::TreeModel
        return (atoi(a.c_str()) > atoi(b.c_str()));
     }
     return a.compare(b);
+}
+
+void GUI::on_detailscolumn_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)
+{
+    Gtk::TreePath path(path_string);
 }
 
 void GUI::changeDetailsSelection()

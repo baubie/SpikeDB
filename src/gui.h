@@ -67,6 +67,9 @@ class GUI : public Gtk::Window
                 Gtk::TreeModelColumn<Glib::ustring> m_col_xaxis;
                 Gtk::TreeModelColumn<Glib::ustring> m_col_tags;
         };
+        Gtk::CellRendererText m_rend_CF;;
+        Gtk::TreeViewColumn m_tvc_CF;
+        void on_detailscolumn_edited(const Glib::ustring& path_string, const Glib::ustring& new_text);
 
         class AnimalDetailsColumns : public Gtk::TreeModel::ColumnRecord
         {
