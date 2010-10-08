@@ -139,7 +139,7 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 {
     Gtk::TreeModel::Row row = *iter;
     sqlite3_stmt *stmt=0;
-    const char query[] = "SELECT head,spikes FROM files WHERE animalID=? AND cellID=? AND fileID=? ORDER BY animalID ASC, cellID ASC, fileID ASC";
+    const char query[] = "SELECT header,spikes FROM files WHERE animalID=? AND cellID=? AND fileID=?";
     sqlite3_prepare_v2(db,query,strlen(query), &stmt, NULL);
     sqlite3_bind_text(stmt, 1, row.get_value(m_DetailsColumns.m_col_animalID).c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_int(stmt, 2, row.get_value(m_DetailsColumns.m_col_cellID));
@@ -151,12 +151,17 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
     {
         void *header = (void*)sqlite3_column_blob(stmt,0);
         const HEADER *h = new HEADER(*static_cast<HEADER*>(header));
-       // int header_length = sqlite3_column_bytes(stmt,0);
         sd.m_head = *h;
+        
+        SPIKESTRUCT *spikes = (SPIKESTRUCT*)sqlite3_column_blob(stmt,1);
+        int spikes_length = sqlite3_column_bytes(stmt,1);
+        int numSpikes = spikes_length/sizeof(SPIKESTRUCT);
+        sd.m_spikeArray.assign(spikes,spikes+numSpikes);
+
+        sd.printfile();
     } 
-    else { std::cerr << "Cannot read spike informatino from database." << std::endl; }
+    else { std::cerr << "ERROR: Failed to read file from database. " << sqlite3_errmsg(db) << std::endl; }
     sqlite3_finalize(stmt);
-    sd.printfile();
 }
 
 void GUI::changeAnimalSelection()
@@ -324,7 +329,7 @@ void GUI::on_menuImportFolder_activate()
                             sqlite3_bind_int(stmt_file, 2, atoi(fileTokens[1].c_str()));
                             sqlite3_bind_int(stmt_file, 3, atoi(fileTokens[2].c_str()));
                             sqlite3_bind_blob(stmt_file, 4, (void*)&sd.m_head, sizeof(sd.m_head), SQLITE_TRANSIENT);
-                            sqlite3_bind_blob(stmt_file, 4, (void*)&sd.m_spikeArray[0], sizeof(SPIKESTRUCT)*sd.m_spikeArray.size(), SQLITE_TRANSIENT);
+                            sqlite3_bind_blob(stmt_file, 5, (void*)&sd.m_spikeArray[0], sizeof(SPIKESTRUCT)*sd.m_spikeArray.size(), SQLITE_TRANSIENT);
                             sqlite3_step(stmt_file);
                             sqlite3_finalize(stmt_file);
                         }
