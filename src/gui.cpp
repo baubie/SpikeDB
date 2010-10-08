@@ -26,10 +26,14 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
   m_refGlade(refGlade),
   m_pMenuQuit(0),
   m_pAnimalTree(0),
-  m_pDetailsList(0),
-  db("spikedb.db")
+  m_pDetailsList(0)
 {
     set_title("Spike Database");
+
+    if (sqlite3_open("spikedb.db", &db) != SQLITE_OK) {
+        std::cerr << "CRITICAL ERROR: Unable to open database file." << std::endl;
+        return;
+    }
 
     // Setup the toolbar
     m_refGlade->get_widget("menuImportFolder", m_pMenuImportFolder);
@@ -38,6 +42,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
     m_refGlade->get_widget("menuQuit", m_pMenuQuit);
     if (m_pMenuQuit)
         m_pMenuQuit->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuQuit_activate));
+
 
     Gtk::TreeModelColumn<int> m_col_filenum;
     Gtk::TreeModelColumn<int> m_col_CF;
@@ -91,16 +96,16 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 
     populateAnimalTree();
 
+    m_refGlade->get_widget("hpanedPlots", m_pHPanedPlots);
+    m_pPlotSpikes = new EasyPlotmm();
+    m_pPlotMeans = new EasyPlotmm();
+    m_pHPanedPlots->add1(*m_pPlotSpikes);
+    m_pHPanedPlots->add2(*m_pPlotMeans);
     show_all_children();
 }
 
 GUI::~GUI()
 {
-}
-
-void GUI::deletePlots()
-{
-
 }
 
 int GUI::on_animal_sort(const Gtk::TreeModel::iterator& a_, const Gtk::TreeModel::iterator& b_)
@@ -125,7 +130,33 @@ void GUI::on_detailscolumn_edited(const Glib::ustring& path_string, const Glib::
 
 void GUI::changeDetailsSelection()
 {
+    m_refDetailsSelection->selected_foreach_iter(
+        sigc::mem_fun(*this, &GUI::addFileToPlot)
+        );
+}
 
+void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
+{
+    Gtk::TreeModel::Row row = *iter;
+    sqlite3_stmt *stmt=0;
+    const char query[] = "SELECT head,spikes FROM files WHERE animalID=? AND cellID=? AND fileID=? ORDER BY animalID ASC, cellID ASC, fileID ASC";
+    sqlite3_prepare_v2(db,query,strlen(query), &stmt, NULL);
+    sqlite3_bind_text(stmt, 1, row.get_value(m_DetailsColumns.m_col_animalID).c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(stmt, 2, row.get_value(m_DetailsColumns.m_col_cellID));
+    sqlite3_bind_int(stmt, 3, row.get_value(m_DetailsColumns.m_col_filenum));
+    int r;
+    r = sqlite3_step(stmt);
+    SpikeData sd;
+    if (r == SQLITE_ROW)
+    {
+        void *header = (void*)sqlite3_column_blob(stmt,0);
+        const HEADER *h = new HEADER(*static_cast<HEADER*>(header));
+       // int header_length = sqlite3_column_bytes(stmt,0);
+        sd.m_head = *h;
+    } 
+    else { std::cerr << "Cannot read spike informatino from database." << std::endl; }
+    sqlite3_finalize(stmt);
+    sd.printfile();
 }
 
 void GUI::changeAnimalSelection()
@@ -159,60 +190,73 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const Glib::ustr
 
 void GUI::populateAnimalTree()
 {
-    std::string query("SELECT * FROM animals"); 
-    std::vector< std::map<std::string,std::string> > r = db.query(query.c_str());
-
+    char query_animals[] = "SELECT ID FROM animals";
+    sqlite3_stmt *stmt_animals, *stmt_cells;
+    sqlite3_prepare_v2(db, query_animals, -1, &stmt_animals, 0);
     m_refAnimalTree->clear();
     Gtk::TreeModel::Row base;
     Gtk::TreeModel::Row row;
     Gtk::TreeModel::Row childrow;
     base = *(m_refAnimalTree->append());
     base[m_AnimalColumns.m_col_name] = "Animals";
-    for (unsigned int a = 0; a < r.size(); ++a)
+    int r_animals, r_cells;
+    while (true)
     {
-        row = *(m_refAnimalTree->append(base.children()));
-        row[m_AnimalColumns.m_col_name] = r[a]["ID"];
-
-        query = "SELECT * FROM cells WHERE animalID=\"";
-        query += r[a]["ID"];
-        query += "\"";
-        std::vector< std::map<std::string,std::string> > rc = db.query(query.c_str());
-        for (unsigned int c = 0; c < rc.size(); ++c)
+        r_animals = sqlite3_step(stmt_animals);
+        if (r_animals == SQLITE_ROW)
         {
-            childrow = *(m_refAnimalTree->append(row.children()));
-            childrow[m_AnimalColumns.m_col_name] = rc[c]["cellID"];
-        }
+            row = *(m_refAnimalTree->append(base.children()));
+            char* animalID = (char*)sqlite3_column_text(stmt_animals,0);
+            row[m_AnimalColumns.m_col_name] = animalID;
+            char query_cells[] = "SELECT cellID FROM cells WHERE animalID=?";
+            sqlite3_prepare_v2(db, query_cells, -1, &stmt_cells, 0);
+            sqlite3_bind_text(stmt_cells, 1, animalID, -1, SQLITE_TRANSIENT);
+            while (true)
+            {
+                r_cells = sqlite3_step(stmt_cells);
+                if (r_cells == SQLITE_ROW)
+                {
+                    char* cellID = (char*)sqlite3_column_text(stmt_cells,0);
+                    childrow = *(m_refAnimalTree->append(row.children()));
+                    childrow[m_AnimalColumns.m_col_name] = cellID;
+                } else { break; }
+            }
+        } else { break; }
     }
 }
 
 
 void GUI::populateDetailsList(const Glib::ustring animalID, const Glib::ustring cellID)
 {
-    std::string query;
-    std::cout << animalID << " " << cellID << std::endl;
+    sqlite3_stmt *stmt=0;
     if (animalID != "" && cellID != "") {
-       query = "SELECT * FROM files WHERE animalID=\"";
-       query += animalID;
-       query += "\" AND cellID=";
-       query += cellID;
+        const char query[] = "SELECT animalID, cellID, fileID FROM files WHERE animalID=? AND cellID=? ORDER BY animalID, cellID, fileID";
+        sqlite3_prepare_v2(db,query,strlen(query), &stmt, NULL);
+        sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 2, cellID.c_str(), -1, SQLITE_TRANSIENT);
     } else if (animalID != "" && cellID == "") {
-       query = "SELECT * FROM files WHERE animalID=\"";
-       query += animalID;
-       query += "\"";
+        const char query[] = "SELECT animalID, cellID, fileID FROM files WHERE animalID=? ORDER BY animalID, cellID, fileID";
+        sqlite3_prepare_v2(db,query,strlen(query), &stmt, NULL);
+        sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
     } else if (animalID == "" && cellID == "") {
-       query = "SELECT * FROM files";
+        const char query[] = "SELECT animalID, cellID, fileID FROM files ORDER BY animalID, cellID, fileID";
+        sqlite3_prepare_v2(db,query,strlen(query), &stmt, NULL);
     }
-    query += " ORDER BY animalID ASC, cellID ASC, fileID ASC";
+
     m_refDetailsList->clear();
-    std::vector<std::map<std::string,std::string> > r = db.query(query.c_str());
     Gtk::TreeModel::Row row;
-    for (unsigned int a = 0; a < r.size(); ++a)
+    while(true)
     {
-        row = *(m_refDetailsList->append());
-        row[m_DetailsColumns.m_col_animalID] = r[a]["animalID"];
-        row[m_DetailsColumns.m_col_cellID] = atoi(r[a]["cellID"].c_str());
-        row[m_DetailsColumns.m_col_filenum] = atoi(r[a]["fileID"].c_str());
+        int r = sqlite3_step(stmt);
+        if (r == SQLITE_ROW)
+        {
+            row = *(m_refDetailsList->append());
+            row[m_DetailsColumns.m_col_animalID] = (char*)sqlite3_column_text(stmt,0);
+            row[m_DetailsColumns.m_col_cellID] = sqlite3_column_int(stmt,1);
+            row[m_DetailsColumns.m_col_filenum] = sqlite3_column_int(stmt,2);
+        } else { break; }
     }
+    sqlite3_finalize(stmt);
 }
 
 
@@ -256,28 +300,33 @@ void GUI::on_menuImportFolder_activate()
                             Tokenize(shortfilename, fileTokens, ".");
 
                             // Insert animal 
-                            std::string query("INSERT INTO animals (ID) VALUES(\""); 
-                            query += fileTokens[0];
-                            query += "\")";
-                            db.query(query.c_str());
+                            const char q_animal[] = "INSERT INTO animals (ID) VALUES(?)";
+                            sqlite3_stmt *stmt_animal=0;
+                            sqlite3_prepare_v2(db,q_animal,strlen(q_animal),&stmt_animal,NULL);
+                            sqlite3_bind_text(stmt_animal,1,fileTokens[0].c_str(),-1,SQLITE_TRANSIENT);
+                            sqlite3_step(stmt_animal);
+                            sqlite3_finalize(stmt_animal);
 
                             // Insert Cell
-                            query = "INSERT INTO cells (animalID,cellID) VALUES(\"";
-                            query += fileTokens[0];
-                            query += "\",";
-                            query += fileTokens[1];
-                            query += ")";
-                            db.query(query.c_str());
+                            const char q_cell[] = "INSERT INTO cells (animalID,cellID) VALUES(?,?)";
+                            sqlite3_stmt *stmt_cell=0;
+                            sqlite3_prepare_v2(db,q_cell,strlen(q_cell), &stmt_cell, NULL);
+                            sqlite3_bind_text(stmt_cell,1,fileTokens[0].c_str(),-1,SQLITE_TRANSIENT);
+                            sqlite3_bind_int(stmt_cell,2,atoi(fileTokens[1].c_str()));
+                            sqlite3_step(stmt_cell);
+                            sqlite3_finalize(stmt_cell);
 
                             // Insert File
-                            query = "INSERT INTO file (animalID,cellID,fileID) VALUES(\"";
-                            query += fileTokens[0];
-                            query += "\",";
-                            query += fileTokens[1];
-                            query += ",";
-                            query += fileTokens[2];
-                            query += ")";
-                            db.query(query.c_str());
+                            const char q_file[] = "INSERT INTO files (animalID,cellID,fileID,header,spikes) VALUES(?,?,?,?,?)";
+                            sqlite3_stmt *stmt_file=0;
+                            sqlite3_prepare_v2(db,q_file,strlen(q_file), &stmt_file, NULL);
+                            sqlite3_bind_text(stmt_file, 1, fileTokens[0].c_str(), -1, SQLITE_TRANSIENT);
+                            sqlite3_bind_int(stmt_file, 2, atoi(fileTokens[1].c_str()));
+                            sqlite3_bind_int(stmt_file, 3, atoi(fileTokens[2].c_str()));
+                            sqlite3_bind_blob(stmt_file, 4, (void*)&sd.m_head, sizeof(sd.m_head), SQLITE_TRANSIENT);
+                            sqlite3_bind_blob(stmt_file, 4, (void*)&sd.m_spikeArray[0], sizeof(SPIKESTRUCT)*sd.m_spikeArray.size(), SQLITE_TRANSIENT);
+                            sqlite3_step(stmt_file);
+                            sqlite3_finalize(stmt_file);
                         }
                     }
                 }
@@ -291,8 +340,14 @@ void GUI::on_menuImportFolder_activate()
 void GUI::on_menuQuit_activate()
 {
     delete m_pMenuQuit;
+    delete m_pMenuImportFolder;
     delete m_pAnimalTree;
     delete m_pDetailsList;
-    db.close();
+    delete m_pHPanedPlots;
+    delete m_pCellDetailsList;
+    delete m_pAnimalDetailsList;
+    delete m_pPlotSpikes;
+    delete m_pPlotMeans;
+    sqlite3_close(db);
     hide();
 }

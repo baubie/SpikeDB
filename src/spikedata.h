@@ -190,13 +190,12 @@ class SpikeData
         bool parse(const char* filename);
         void printfile();
         HEADER m_head;
+        std::vector<SPIKESTRUCT> m_spikeArray;
 
     private:
         std::vector<DWORD> m_dwDataArray;
-        std::vector<SPIKESTRUCT> m_spikeArray;
         int m_nActualPasses[MAX_SWEEPS];
         bool parsedata();
-
 };
 
 

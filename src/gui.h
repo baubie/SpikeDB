@@ -2,14 +2,10 @@
 #define GUI_H
 
 #include <gtkmm.h>
-#include <plotmm/plot.h>
-#include <plotmm/scalediv.h>
-#include <plotmm/errorcurve.h>
-#include <plotmm/symbol.h>
-#include <plotmm/paint.h>
 #include <string>
 #include <dirent.h>
-#include "sqlite.h"
+#include <sqlite3.h>
+#include "easyplotmm/easyplotmm.h"
 #include "spikedata.h"
 
 class GUI : public Gtk::Window
@@ -19,6 +15,9 @@ class GUI : public Gtk::Window
         virtual ~GUI();
 
     protected:
+
+        // SQLite Database
+        sqlite3 *db;
 
         // Signal handlers
         void on_menuQuit_activate();
@@ -32,15 +31,17 @@ class GUI : public Gtk::Window
         Gtk::TreeView* m_pDetailsList;
         Gtk::TreeView* m_pAnimalDetailsList;
         Gtk::TreeView* m_pCellDetailsList;
+        Gtk::HPaned* m_pHPanedPlots;
 
         // Child Widgets (created in c++)
-        std::vector<PlotMM::Plot*> m_pPlot;
         Glib::RefPtr<Gtk::TreeStore> m_refAnimalTree;
         Glib::RefPtr<Gtk::ListStore> m_refDetailsList;
         Glib::RefPtr<Gtk::TreeSelection> m_refAnimalSelection;
         Glib::RefPtr<Gtk::TreeSelection> m_refDetailsSelection;
         Glib::RefPtr<Gtk::ListStore> m_refAnimalDetailsList;
         Glib::RefPtr<Gtk::ListStore> m_refCellDetailsList;
+        EasyPlotmm* m_pPlotSpikes;
+        EasyPlotmm* m_pPlotMeans;
 
         // Network Tree Model Columns
         class AnimalColumns : public Gtk::TreeModel::ColumnRecord
@@ -94,16 +95,14 @@ class GUI : public Gtk::Window
         AnimalDetailsColumns m_AnimalDetailsColumns;
         CellDetailsColumns m_CellDetailsColumns;
 
-    private:
-        void deletePlots();
         void populateAnimalTree();
         void populateDetailsList(const Glib::ustring animalID, const Glib::ustring cellID);
         void populateAnimalDetailsList(const Glib::ustring animalID);
         void populateCellDetailsList(const Glib::ustring animalID, const Glib::ustring cellID);
         void changeAnimalSelection();
         void changeDetailsSelection();
-        SQLite db;
-
+        void addFileToPlot(const Gtk::TreeModel::iterator& iter);
+        
         // Helper to sort by string for parent and number by child
         int on_animal_sort(const Gtk::TreeModel::iterator& a, const Gtk::TreeModel::iterator& b);
 };
