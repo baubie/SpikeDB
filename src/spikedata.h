@@ -10,6 +10,7 @@
 #include <fstream>
 #include <stdint.h>
 #include <vector>
+#include <string>
 
 // Porting from windows!
 #define DWORD uint32_t
@@ -149,6 +150,10 @@ typedef struct
 
 typedef struct
 {
+
+        // int below was long originally
+        // Changed to int to work on 32-bit and 64-bit machines
+
         // general data
         char	cId[12];		//  (12) file identification / validiation 
         long	nMagic;			//   (4) for internal use of the spike programs 
@@ -189,6 +194,10 @@ class SpikeData
     public:
         bool parse(const char* filename);
         void printfile();
+        std::string xVariable();
+        double xvalue(int sweep);
+        double begin(int channel, int sweep);
+        double duration(int channel, int sweep);
         HEADER m_head;
         std::vector<SPIKESTRUCT> m_spikeArray;
 

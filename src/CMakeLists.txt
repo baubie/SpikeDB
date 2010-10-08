@@ -1,3 +1,5 @@
+cmake_minimum_required (VERSION 2.8 FATAL_ERROR)
+
 link_directories(
     ${GTKMM_LIBRARY_DIRS} ${SQLITE3_LIBRARY_DIRS} ${CAIRO_LIBRARY_DIRS})
 

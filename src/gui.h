@@ -105,6 +105,9 @@ class GUI : public Gtk::Window
         
         // Helper to sort by string for parent and number by child
         int on_animal_sort(const Gtk::TreeModel::iterator& a, const Gtk::TreeModel::iterator& b);
+
+    private:
+        std::string curXVariable;
 };
 
 

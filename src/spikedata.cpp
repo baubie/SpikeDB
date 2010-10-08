@@ -109,6 +109,100 @@ bool SpikeData::parsedata()
     return true;
 }
 
+std::string SpikeData::xVariable()
+{
+    std::string xVariable;
+
+    std::cout << (float)m_head.stimFirstCh1.fBegin << ",";
+    std::cout << m_head.stimFirstCh1.fDur << ",";
+    std::cout << m_head.stimFirstCh1.fRfTime << ",";
+    std::cout << m_head.stimFirstCh1.fAtten << ",";
+    std::cout << m_head.stimFirstCh1.fFreq << ",";
+    std::cout << m_head.stimFirstCh1.params.sin.fFreq << std::endl;
+ //   if (m_head.stepFlags[0][0].
+    return xVariable;
+}
+
+double SpikeData::xvalue(int sweep)
+{
+    if (m_head.deltaCh1.fBegin != 0) {
+        return m_head.stimFirstCh1.fBegin+m_head.deltaCh1.fBegin*sweep;
+    }
+    if (m_head.deltaCh1.fDur != 0) {
+        return m_head.stimFirstCh1.fDur+m_head.deltaCh1.fDur*sweep;
+    }
+    if (m_head.deltaCh1.fStimInt != 0) {
+        return m_head.stimFirstCh1.fStimInt+m_head.deltaCh1.fStimInt*sweep;
+    }
+    if (m_head.deltaCh1.fAtten != 0) {
+        return m_head.stimFirstCh1.fAtten+m_head.deltaCh1.fAtten*sweep;
+    }
+    if (m_head.deltaCh1.fCarFreq != 0) {
+        if (m_head.stimFirstCh1.nType == SINUS)
+            return m_head.stimFirstCh1.params.sin.fFreq+m_head.deltaCh1.fCarFreq*sweep;
+        if (m_head.stimFirstCh1.nType == SWEPTSINUS)
+            return m_head.stimFirstCh1.params.sweptsin.fCarFreq+m_head.deltaCh1.fCarFreq*sweep;
+    }
+    /*
+    if (m_head.deltaCh1.fAmDepth != 0) {
+        return m_head.stimFirstCh1.fAmDepth+m_head.deltaCh1.fAmDepth*sweep;
+    }
+    if (m_head.deltaCh1.fModFreq != 0) {
+        return m_head.stimFirstCh1.fModFreq+m_head.deltaCh1.fModFreq*sweep;
+    }
+    */
+    if (m_head.deltaCh2.fBegin != 0) {
+        return m_head.stimFirstCh2.fBegin+m_head.deltaCh2.fBegin*sweep;
+    }
+    if (m_head.deltaCh2.fDur != 0) {
+        return m_head.stimFirstCh2.fDur+m_head.deltaCh2.fDur*sweep;
+    }
+    if (m_head.deltaCh2.fStimInt != 0) {
+        return m_head.stimFirstCh2.fStimInt+m_head.deltaCh2.fStimInt*sweep;
+    }
+    if (m_head.deltaCh2.fAtten != 0) {
+        return m_head.stimFirstCh2.fAtten+m_head.deltaCh2.fAtten*sweep;
+    }
+    if (m_head.deltaCh2.fCarFreq != 0) {
+        if (m_head.stimFirstCh2.nType == SINUS)
+            return m_head.stimFirstCh2.params.sin.fFreq+m_head.deltaCh2.fCarFreq*sweep;
+        if (m_head.stimFirstCh2.nType == SWEPTSINUS)
+            return m_head.stimFirstCh2.params.sweptsin.fCarFreq+m_head.deltaCh2.fCarFreq*sweep;
+    }
+    /*
+    if (m_head.deltaCh2.fAmDepth != 0) {
+        return m_head.stimFirstCh2.fAmDepth+m_head.deltaCh2.fAmDepth*sweep;
+    }
+    if (m_head.deltaCh2.fModFreq != 0) {
+        return m_head.stimFirstCh2.fModFreq+m_head.deltaCh2.fModFreq*sweep;
+    }
+    */
+    return 0;
+}
+
+double SpikeData::begin(int channel, int sweep)
+{
+    switch(channel)
+    {
+        case 1:
+            return m_head.stimFirstCh1.fBegin+m_head.deltaCh1.fBegin*sweep;
+        case 2:
+            return m_head.stimFirstCh2.fBegin+m_head.deltaCh2.fBegin*sweep;
+    }
+    return 0;
+}
+
+double SpikeData::duration(int channel, int sweep)
+{
+    switch(channel)
+    {
+        case 1:
+            return m_head.stimFirstCh1.fDur+m_head.deltaCh1.fDur*sweep;
+        case 2:
+            return m_head.stimFirstCh2.fDur+m_head.deltaCh2.fDur*sweep;
+    }
+    return 0;
+}
 
 void SpikeData::printfile()
 {
@@ -128,29 +222,7 @@ void SpikeData::printfile()
     std::cout << "isSPL: " << m_head.isSPL << std::endl;
     std::cout << "cFrozenNoise: " << m_head.cFrozenNoise << std::endl;
     std::cout << "cAutoAdjPhase: " << m_head.cAutoAdjPhase << std::endl;
-    std::cout << "cFill1: " << m_head.cFill1 << std::endl;
 
-    std::cout << "STIMULUS INFORMATION" << std::endl;
-    
-    std::cout << "SPIKE INFORMATION" << std::endl;
-    for (int i = 0; i < MAX_SWEEPS; ++i)
-    {
-        if (m_nActualPasses[i] > 0) {
-            std::cout << "Stimulus\t" << (i+1) << ":" << std::endl;
-            for (int p = 0; p < m_head.nPasses; ++p)
-            {
-                std::cout << "\t\t";
-                for (unsigned int s = 0; s < m_spikeArray.size(); ++s)
-                {
-                    if (m_spikeArray[s].nSweep == i && m_spikeArray[s].nPass == p)
-                    {
-                        std::cout <<  m_spikeArray[s].fTime << ",";
-                    }
-                }
-                std::cout << std::endl;
-            }
-        }
-    }
     
 }
 

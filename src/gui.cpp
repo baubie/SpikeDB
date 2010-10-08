@@ -130,7 +130,8 @@ void GUI::on_detailscolumn_edited(const Glib::ustring& path_string, const Glib::
 
 void GUI::changeDetailsSelection()
 {
-    m_plotMeans.clear();
+    m_pPlotMeans->clear();
+    curXVariable = "";
     m_refDetailsSelection->selected_foreach_iter(
         sigc::mem_fun(*this, &GUI::addFileToPlot)
         );
@@ -153,14 +154,49 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
         void *header = (void*)sqlite3_column_blob(stmt,0);
         const HEADER *h = new HEADER(*static_cast<HEADER*>(header));
         sd.m_head = *h;
+
+        std::string xVariable = sd.xVariable();
+        if (curXVariable == "") curXVariable = xVariable;
+        else if(curXVariable != xVariable)
+        {
+            std::cerr << "ERROR: Plots have different X-Variables." << std::endl;
+            return;
+        }
         
         SPIKESTRUCT *spikes = (SPIKESTRUCT*)sqlite3_column_blob(stmt,1);
         int spikes_length = sqlite3_column_bytes(stmt,1);
         int numSpikes = spikes_length/sizeof(SPIKESTRUCT);
         sd.m_spikeArray.assign(spikes,spikes+numSpikes);
 
+        std::vector<double> x(sd.m_head.nSweeps,0);
+        std::vector<double> y(sd.m_head.nPasses,0);
 
-        
+        for (int i = 0; i < sd.m_head.nSweeps; ++i)
+        {
+            for (int p = 0; p < sd.m_head.nPasses; ++p)
+            {
+                for (unsigned int s = 0; s < sd.m_spikeArray.size(); ++s)
+                {
+                    if (sd.m_spikeArray[s].nSweep == i && sd.m_spikeArray[s].nPass == p)
+                    {
+                        x[i] = sd.xvalue(i);
+                        if (sd.m_head.nPasses > 0)
+                        {
+                            y[i] = 1.0f / sd.m_head.nPasses;
+                        }
+//                      std::cout <<  sd.m_spikeArray[s].fTime << ",";
+                    }
+                }
+            }
+        }
+
+        for (unsigned int i = 0; i < x.size(); ++i)
+        {
+            for (unsigned int j = 0; j < y.size(); ++j)
+            {
+            //    std::cout << "(" << x[i] << "," << y[i] << ")" << std::endl;
+            }
+        }
 
     } 
     else { std::cerr << "ERROR: Failed to read file from database. " << sqlite3_errmsg(db) << std::endl; }
@@ -238,16 +274,16 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const Glib::ustring 
 {
     sqlite3_stmt *stmt=0;
     if (animalID != "" && cellID != "") {
-        const char query[] = "SELECT animalID, cellID, fileID FROM files WHERE animalID=? AND cellID=? ORDER BY animalID, cellID, fileID";
+        const char query[] = "SELECT animalID, cellID, fileID, header FROM files WHERE animalID=? AND cellID=? ORDER BY animalID, cellID, fileID";
         sqlite3_prepare_v2(db,query,strlen(query), &stmt, NULL);
         sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
         sqlite3_bind_text(stmt, 2, cellID.c_str(), -1, SQLITE_TRANSIENT);
     } else if (animalID != "" && cellID == "") {
-        const char query[] = "SELECT animalID, cellID, fileID FROM files WHERE animalID=? ORDER BY animalID, cellID, fileID";
+        const char query[] = "SELECT animalID, cellID, fileID, header FROM files WHERE animalID=? ORDER BY animalID, cellID, fileID";
         sqlite3_prepare_v2(db,query,strlen(query), &stmt, NULL);
         sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
     } else if (animalID == "" && cellID == "") {
-        const char query[] = "SELECT animalID, cellID, fileID FROM files ORDER BY animalID, cellID, fileID";
+        const char query[] = "SELECT animalID, cellID, fileID, header FROM files ORDER BY animalID, cellID, fileID";
         sqlite3_prepare_v2(db,query,strlen(query), &stmt, NULL);
     }
 
@@ -258,10 +294,16 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const Glib::ustring 
         int r = sqlite3_step(stmt);
         if (r == SQLITE_ROW)
         {
+            SpikeData sd;
             row = *(m_refDetailsList->append());
             row[m_DetailsColumns.m_col_animalID] = (char*)sqlite3_column_text(stmt,0);
             row[m_DetailsColumns.m_col_cellID] = sqlite3_column_int(stmt,1);
             row[m_DetailsColumns.m_col_filenum] = sqlite3_column_int(stmt,2);
+
+            void *header = (void*)sqlite3_column_blob(stmt,0);
+            const HEADER *h = new HEADER(*static_cast<HEADER*>(header));
+            sd.m_head = *h;
+            row[m_DetailsColumns.m_col_xaxis] = sd.xVariable();
         } else { break; }
     }
     sqlite3_finalize(stmt);
@@ -303,6 +345,7 @@ void GUI::on_menuImportFolder_activate()
                         fullfile += dptr->d_name;
                         if (sd.parse(fullfile.c_str()))
                         {
+                            sd.xVariable();
                             std::vector<std::string> fileTokens;
                             std::string shortfilename(dptr->d_name);
                             Tokenize(shortfilename, fileTokens, ".");
