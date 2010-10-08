@@ -20,6 +20,11 @@ void EasyPlotmm::axes(double xmin, double xmax, double ymin, double ymax)
 
 }
 
+void EasyPlotmm::clear()
+{
+
+}
+
 void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, Pen p)
 {
 

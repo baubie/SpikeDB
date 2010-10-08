@@ -130,6 +130,7 @@ void GUI::on_detailscolumn_edited(const Glib::ustring& path_string, const Glib::
 
 void GUI::changeDetailsSelection()
 {
+    m_plotMeans.clear();
     m_refDetailsSelection->selected_foreach_iter(
         sigc::mem_fun(*this, &GUI::addFileToPlot)
         );
@@ -158,7 +159,9 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
         int numSpikes = spikes_length/sizeof(SPIKESTRUCT);
         sd.m_spikeArray.assign(spikes,spikes+numSpikes);
 
-        sd.printfile();
+
+        
+
     } 
     else { std::cerr << "ERROR: Failed to read file from database. " << sqlite3_errmsg(db) << std::endl; }
     sqlite3_finalize(stmt);
