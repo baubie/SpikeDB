@@ -10,3 +10,4 @@ logs
 callgrind.*
 *.log
 spikedb
+spikedb.db
