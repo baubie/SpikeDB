@@ -1,6 +1,7 @@
 #ifndef SPIKEDATA_H
 #define SPIKEDATA_H
 
+
 /*
     These defines and structs were taken from the
     original Spike2 source code.
@@ -14,6 +15,7 @@
 
 // Porting from windows!
 #define DWORD uint32_t
+
 
 // Stimulus types
 #define NOISE		0
@@ -112,7 +114,10 @@ typedef struct
         float fTime;
 } SPIKESTRUCT;
 
-typedef struct
+// g++ doesn't pack to the nearest byte by default
+// Here I turn that on for compatibility with the
+// spike files which are packed to the nearest byte.
+typedef struct __attribute__((__packed__)) 
 {
         short nType;		// stimulus type
         float fBegin;
@@ -122,18 +127,18 @@ typedef struct
         float fStimInt;
         float fAtten;
         float fFreq;	// used for compatibility with old code
+	// (28) 
         
         union
         {
-                SIN	 sin;
-                AMSIN	 amsin;
-                FMSIN	 fmsin;
-                NOISE_EX noise_ex;
-                SWEPTSIN sweptsin;
-                WAV	 wav;		// added for V 6.0
-        } params;
-        
-}  STIM;
+                SIN	 sin; // (8)
+                AMSIN	 amsin; // (16)
+                FMSIN	 fmsin; // (12)
+                NOISE_EX noise_ex; // (16)
+                SWEPTSIN sweptsin; // (10)
+                WAV	 wav;	//(80)	// added for V 6.0
+        } params; // (80)
+} STIM; // (108)        
 
 typedef struct
 {
@@ -171,7 +176,7 @@ typedef struct
                                                         //  (52) -> Total
         char	cFrozenNoise;	//   (1) v 6.1
         char	cAutoAdjPhase;	//   (1) v 18-nov-2002
-        char	cFill1[2];		//   (3)
+        char	cFill1[2];		//   (2)
                                                         //  (56) -> Total
 
         STEP_FLAGS stepFlags[2][2];//(40) [0=chan1,1=chan2][0=X,1=Y]
@@ -183,9 +188,7 @@ typedef struct
         DELTA	deltaCh2;       //  (36) delta step of stimulus variables for channel2
                                                         // (384) -> Total
 
-        char	cFill2[760]; //cFill2[768];
-        // Original Spike code had 768 padding but that makes 1160 bytes for me
-        // Setting to 760 seems to solve the problem.
+        char	cFill2[768]; 
 }  HEADER;				// Total: (1152) bytes
 
 
@@ -206,6 +209,5 @@ class SpikeData
         int m_nActualPasses[MAX_SWEEPS];
         bool parsedata();
 };
-
 
 #endif

@@ -162,29 +162,27 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
             std::cerr << "ERROR: Plots have different X-Variables." << std::endl;
             return;
         }
-        
         SPIKESTRUCT *spikes = (SPIKESTRUCT*)sqlite3_column_blob(stmt,1);
         int spikes_length = sqlite3_column_bytes(stmt,1);
         int numSpikes = spikes_length/sizeof(SPIKESTRUCT);
         sd.m_spikeArray.assign(spikes,spikes+numSpikes);
 
         std::vector<double> x(sd.m_head.nSweeps,0);
-        std::vector<double> y(sd.m_head.nPasses,0);
+        std::vector<double> y(sd.m_head.nSweeps,0);
 
         for (int i = 0; i < sd.m_head.nSweeps; ++i)
         {
+			x[i] = sd.xvalue(i);
             for (int p = 0; p < sd.m_head.nPasses; ++p)
             {
                 for (unsigned int s = 0; s < sd.m_spikeArray.size(); ++s)
                 {
                     if (sd.m_spikeArray[s].nSweep == i && sd.m_spikeArray[s].nPass == p)
                     {
-                        x[i] = sd.xvalue(i);
                         if (sd.m_head.nPasses > 0)
                         {
-                            y[i] = 1.0f / sd.m_head.nPasses;
+                            y[i] += 1.0f / sd.m_head.nPasses;
                         }
-//                      std::cout <<  sd.m_spikeArray[s].fTime << ",";
                     }
                 }
             }
@@ -192,10 +190,7 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 
         for (unsigned int i = 0; i < x.size(); ++i)
         {
-            for (unsigned int j = 0; j < y.size(); ++j)
-            {
-            //    std::cout << "(" << x[i] << "," << y[i] << ")" << std::endl;
-            }
+			std::cout << "(" << x[i] << "," << y[i] << ")" << std::endl;
         }
 
     } 
@@ -300,7 +295,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const Glib::ustring 
             row[m_DetailsColumns.m_col_cellID] = sqlite3_column_int(stmt,1);
             row[m_DetailsColumns.m_col_filenum] = sqlite3_column_int(stmt,2);
 
-            void *header = (void*)sqlite3_column_blob(stmt,0);
+            void *header = (void*)sqlite3_column_blob(stmt,3);
             const HEADER *h = new HEADER(*static_cast<HEADER*>(header));
             sd.m_head = *h;
             row[m_DetailsColumns.m_col_xaxis] = sd.xVariable();
@@ -345,7 +340,6 @@ void GUI::on_menuImportFolder_activate()
                         fullfile += dptr->d_name;
                         if (sd.parse(fullfile.c_str()))
                         {
-                            sd.xVariable();
                             std::vector<std::string> fileTokens;
                             std::string shortfilename(dptr->d_name);
                             Tokenize(shortfilename, fileTokens, ".");
@@ -368,14 +362,15 @@ void GUI::on_menuImportFolder_activate()
                             sqlite3_finalize(stmt_cell);
 
                             // Insert File
-                            const char q_file[] = "INSERT INTO files (animalID,cellID,fileID,header,spikes) VALUES(?,?,?,?,?)";
+                            const char q_file[] = "INSERT INTO files (animalID,cellID,fileID,xvar,header,spikes) VALUES(?,?,?,?,?,?)";
                             sqlite3_stmt *stmt_file=0;
                             sqlite3_prepare_v2(db,q_file,strlen(q_file), &stmt_file, NULL);
                             sqlite3_bind_text(stmt_file, 1, fileTokens[0].c_str(), -1, SQLITE_TRANSIENT);
                             sqlite3_bind_int(stmt_file, 2, atoi(fileTokens[1].c_str()));
                             sqlite3_bind_int(stmt_file, 3, atoi(fileTokens[2].c_str()));
-                            sqlite3_bind_blob(stmt_file, 4, (void*)&sd.m_head, sizeof(sd.m_head), SQLITE_TRANSIENT);
-                            sqlite3_bind_blob(stmt_file, 5, (void*)&sd.m_spikeArray[0], sizeof(SPIKESTRUCT)*sd.m_spikeArray.size(), SQLITE_TRANSIENT);
+                            sqlite3_bind_text(stmt_file, 4, sd.xVariable().c_str(), -1, SQLITE_TRANSIENT);
+                            sqlite3_bind_blob(stmt_file, 5, (void*)&sd.m_head, sizeof(sd.m_head), SQLITE_TRANSIENT);
+                            sqlite3_bind_blob(stmt_file, 6, (void*)&sd.m_spikeArray[0], sizeof(SPIKESTRUCT)*sd.m_spikeArray.size(), SQLITE_TRANSIENT);
                             sqlite3_step(stmt_file);
                             sqlite3_finalize(stmt_file);
                         }

@@ -111,16 +111,25 @@ bool SpikeData::parsedata()
 
 std::string SpikeData::xVariable()
 {
-    std::string xVariable;
-
-    std::cout << (float)m_head.stimFirstCh1.fBegin << ",";
-    std::cout << m_head.stimFirstCh1.fDur << ",";
-    std::cout << m_head.stimFirstCh1.fRfTime << ",";
-    std::cout << m_head.stimFirstCh1.fAtten << ",";
-    std::cout << m_head.stimFirstCh1.fFreq << ",";
-    std::cout << m_head.stimFirstCh1.params.sin.fFreq << std::endl;
- //   if (m_head.stepFlags[0][0].
-    return xVariable;
+	if (m_head.deltaCh1.fBegin != 0) return "Channel 1 Onset";	
+	if (m_head.deltaCh1.fDur != 0) return "Channel 1 Duration";	
+	if (m_head.deltaCh1.fStimInt != 0) return "Channel 1 Stimulus Interval";	
+	if (m_head.deltaCh1.fAtten != 0) return "Channel 1 Attenuation";	
+	if (m_head.deltaCh1.fCarFreq != 0) return "Channel 1 Frequency";	
+	if (m_head.deltaCh1.fPhase != 0) return "Channel 1 Phase";	
+	if (m_head.deltaCh1.fFreqDev != 0) return "Channel 1 Fequency Deviation";	
+	if (m_head.deltaCh1.fAmDepth != 0) return "Channel 1 AM Depth";	
+	if (m_head.deltaCh1.fModFreq != 0) return "Channel 1 Modulation Frequency";	
+	if (m_head.deltaCh2.fBegin != 0) return "Channel 2 Onset";	
+	if (m_head.deltaCh2.fDur != 0) return "Channel 2 Duration";	
+	if (m_head.deltaCh2.fStimInt != 0) return "Channel 2 Stimulus Interval";	
+	if (m_head.deltaCh2.fAtten != 0) return "Channel 2 Attenuation";	
+	if (m_head.deltaCh2.fCarFreq != 0) return "Channel 2 Frequency";	
+	if (m_head.deltaCh2.fPhase != 0) return "Channel 2 Phase";	
+	if (m_head.deltaCh2.fFreqDev != 0) return "Channel 2 Fequency Deviation";	
+	if (m_head.deltaCh2.fAmDepth != 0) return "Channel 2 AM Depth";	
+	if (m_head.deltaCh2.fModFreq != 0) return "Channel 2 Modulation Frequency";	
+	return "Unknown";
 }
 
 double SpikeData::xvalue(int sweep)
