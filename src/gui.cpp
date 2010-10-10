@@ -188,11 +188,7 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
             }
         }
 
-        for (unsigned int i = 0; i < x.size(); ++i)
-        {
-			std::cout << "(" << x[i] << "," << y[i] << ")" << std::endl;
-        }
-
+        m_pPlotMeans->plot(x,y);
     } 
     else { std::cerr << "ERROR: Failed to read file from database. " << sqlite3_errmsg(db) << std::endl; }
     sqlite3_finalize(stmt);

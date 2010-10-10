@@ -161,12 +161,12 @@ typedef struct
 
         // general data
         char	cId[12];		//  (12) file identification / validiation 
-        long	nMagic;			//   (4) for internal use of the spike programs 
+        int	nMagic;			//   (4) for internal use of the spike programs 
         char	cDate[8];       //   (8) date of data acquisition 
         char	cTime[8];       //   (8) time of data acquisition 
         short	nOnCh1;			//   (2) stimulus channel1 on/off 
         short	nOnCh2;			//   (2) stimulus channel2 on/off 
-        long	nRepInt;		//   (4) repetition interval
+        int	nRepInt;		//   (4) repetition interval
         short	nPasses;		//   (2) number of repetitions of each stimulus 
         short	nSweeps;		//   (2) number of values (=stimuli) used 
         short	nStepMode;		//   (2) frequency, attenuation or both
