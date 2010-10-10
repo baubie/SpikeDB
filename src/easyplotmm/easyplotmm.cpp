@@ -142,6 +142,23 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
             }
         }
         cr->stroke();
+
+        // Add the labels
+        int numX = xlength/50;
+        int numY = ylength/50;
+        double dx,dy; 
+        dx = round((xmax-xmin)/numX);
+        dy = round((ymax-ymin)/numY);
+        for (double x = xmin; x <= xmax; x+=dx)
+        {
+            Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
+            cr->move_to(x*xscale,-40);
+            pangoLayout->set_text("2");
+            pangoLayout->update_from_cairo_context(cr);
+            pangoLayout->add_to_cairo_context(cr);
+            cr->stroke();
+        }
+
         cr->clip();
     }
     return true;
