@@ -40,7 +40,7 @@ void EasyPlotmm::clear()
 {
     m_x.clear();
     m_y.clear();
-    m_pen.clear();
+    m_pens.clear();
 }
 
 void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y)
@@ -54,10 +54,15 @@ void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, Pen p)
     // Add plot to vectors
     m_x.push_back(x);
     m_y.push_back(y);
-    m_pen.push_back(p);
+    m_pens.push_back(p);
 
     // Force Redraw
     redraw();
+}
+
+void EasyPlotmm::drawshape(double x, double y, double size, Shape shape)
+{
+
 }
 
 bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
@@ -136,6 +141,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         // Plot data values
         cr->set_source_rgb(0,0,0);
         for (unsigned int i  = 0; i < m_x.size(); ++i) {
+            cr->set_line_width(m_pens[i].linewidth);
             cr->move_to(m_x[i][0]*xscale,m_y[i][0]*yscale);
             for (unsigned int j = 1; j < m_x[i].size(); ++j) {
                 cr->line_to(m_x[i][j]*xscale,m_y[i][j]*yscale);
