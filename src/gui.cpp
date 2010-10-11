@@ -172,7 +172,7 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 
         for (int i = 0; i < sd.m_head.nSweeps; ++i)
         {
-			x[i] = sd.xvalue(i);
+            x[i] = sd.xvalue(i);
             for (int p = 0; p < sd.m_head.nPasses; ++p)
             {
                 for (unsigned int s = 0; s < sd.m_spikeArray.size(); ++s)
@@ -187,8 +187,8 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
                 }
             }
         }
-
-        m_pPlotMeans->plot(x,y);
+        EasyPlotmm::Pen p; 
+        m_pPlotMeans->plot(x,y,p);
     } 
     else { std::cerr << "ERROR: Failed to read file from database. " << sqlite3_errmsg(db) << std::endl; }
     sqlite3_finalize(stmt);

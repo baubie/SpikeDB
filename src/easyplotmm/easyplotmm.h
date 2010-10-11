@@ -14,20 +14,19 @@ class EasyPlotmm : public Gtk::DrawingArea
             CIRCLE,
             TRIANGLE,
             SQUARE,
-            DIAMOND,
-            FCIRCLE,
-            FTRIANGLE,
-            FSQUARE,
-            FDIAMOND
+            DIAMOND
         };
 
         struct Pen {
             Pen() {
-                linewidth = 0.0;
-                pointsize = 2;
+                linewidth = 1.0;
+                pointsize = 10;
+                filled = false;
+                shape = SQUARE;
             }
             float linewidth;
             float pointsize;
+            bool filled;
             Shape shape;
         };
 
@@ -47,7 +46,7 @@ class EasyPlotmm : public Gtk::DrawingArea
     protected:
         // Override default signal handler
         virtual bool on_expose_event(GdkEventExpose* event);
-        void drawshape(double x, double y, double size, Shape shape);
+        void drawshape(Cairo::RefPtr<Cairo::Context> cr, double size, Shape shape, bool filled);
         double m_xmin,m_xmax,m_ymin,m_ymax;
         std::vector< std::vector<double> > m_x;
         std::vector< std::vector<double> > m_y;

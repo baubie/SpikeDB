@@ -60,9 +60,27 @@ void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, Pen p)
     redraw();
 }
 
-void EasyPlotmm::drawshape(double x, double y, double size, Shape shape)
+void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape shape, bool filled)
 {
+    if (s <= 0) return;
 
+    switch(shape)
+    {
+        case SQUARE:
+            cr->set_line_width(1.0);
+            cr->rel_move_to(-s/2, s/2);
+            cr->rel_line_to(s,0);
+            cr->rel_line_to(0,-s);
+            cr->rel_line_to(-s,0);
+            cr->rel_line_to(0,s);
+            // Move back to the middle
+            cr->rel_move_to(s/2,-s/2);
+            break;
+    }
+    if (filled)
+    {
+        cr->paint();
+    }
 }
 
 bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
@@ -108,6 +126,11 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
             std::cout << "ERROR: X and Y vectors are not the same size." << std::endl;
             return true;
         }
+        if (m_x.size() != m_pens.size())
+        {
+            std::cout << "ERROR: Only " << m_pens.size() << " pens for " << m_x.size() << " plots." << std::endl;
+            return true;
+        }
         
         // Draw datasets
         // Determine axes
@@ -143,8 +166,10 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         for (unsigned int i  = 0; i < m_x.size(); ++i) {
             cr->set_line_width(m_pens[i].linewidth);
             cr->move_to(m_x[i][0]*xscale,m_y[i][0]*yscale);
+            drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled);
             for (unsigned int j = 1; j < m_x[i].size(); ++j) {
                 cr->line_to(m_x[i][j]*xscale,m_y[i][j]*yscale);
+                drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled);
             }
         }
         cr->stroke();
