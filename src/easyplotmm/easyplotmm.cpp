@@ -14,6 +14,11 @@ EasyPlotmm::EasyPlotmm() :
     pad_top = 5;
     pad_right = 5;
     pad_bottom = 25;
+    curPen = 0;
+    bg.r = 1;
+    bg.g = 1;
+    bg.b = 1;
+    makeDefaultPens();
 }
 
 EasyPlotmm::~EasyPlotmm()
@@ -41,12 +46,21 @@ void EasyPlotmm::clear()
     m_x.clear();
     m_y.clear();
     m_pens.clear();
+    curPen = 0;
+}
+
+EasyPlotmm::Pen EasyPlotmm::getPen()
+{
+    std::cout << "CURRENT PEN: " << curPen << std::endl;
+    Pen p = m_defPens[curPen];
+    curPen++;
+    if (curPen >= m_defPens.size()) curPen = 0;
+    return p;
 }
 
 void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y)
 {
-    Pen p;
-    plot(x,y,p);    
+    plot(x,y,getPen());    
 }
 
 void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, Pen p)
@@ -60,14 +74,23 @@ void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, Pen p)
     redraw();
 }
 
-void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape shape, bool filled)
+void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape shape, bool filled, RGBA col)
 {
     if (s <= 0) return;
-
+    double h;
+    cr->save();
+    cr->set_line_width(1.0);
     switch(shape)
     {
+        case CIRCLE:
+            double x,y;
+            cr->get_current_point(x,y);
+            cr->move_to(x+s/2,y);
+            cr->arc(x,y,s/2,0.0,2.0*M_PI);
+            cr->move_to(x,y);
+            break;
+
         case SQUARE:
-            cr->set_line_width(1.0);
             cr->rel_move_to(-s/2, s/2);
             cr->rel_line_to(s,0);
             cr->rel_line_to(0,-s);
@@ -76,11 +99,43 @@ void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape sha
             // Move back to the middle
             cr->rel_move_to(s/2,-s/2);
             break;
+
+        case DIAMOND:
+            h = sqrt(2)*s;
+            cr->rel_move_to(0,-h/2);
+            cr->rel_line_to(-h/2,h/2);
+            cr->rel_line_to(h/2,h/2);
+            cr->rel_line_to(h/2,-h/2);
+            cr->rel_line_to(-h/2,-h/2);
+            cr->rel_move_to(0,h/2);
+            break;
+
+        case TRIANGLE:
+            h = sqrt(s*s-(0.25*s*s));
+            cr->rel_move_to(-s/2,h/2);
+            cr->rel_line_to(s,0);
+            cr->rel_line_to(-s/2,-h);
+            cr->rel_line_to(-s/2,h);
+            // Move back to the middle
+            cr->rel_move_to(s/2,-h/2);
+            break; 
+
+        case UTRIANGLE:
+            h = sqrt(s*s-(0.25*s*s));
+            cr->rel_move_to(-s/2,-h/2);
+            cr->rel_line_to(s,0);
+            cr->rel_line_to(-s/2,h);
+            cr->rel_line_to(-s/2,-h);
+            // Move back to the middle
+            cr->rel_move_to(s/2,h/2);
+            break; 
+
     }
-    if (filled)
-    {
-        cr->paint();
-    }
+    if (filled) cr->set_source_rgba(col.r,col.g,col.b,col.a);
+    else cr->set_source_rgba(bg.r,bg.g,bg.b,bg.a);
+
+    cr->fill_preserve();
+    cr->restore();
 }
 
 bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
@@ -108,10 +163,10 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 
         // Draw background and axes
         cr->save();
-        cr->set_source_rgb(1,1,1);
+        cr->set_source_rgb(bg.r,bg.g,bg.b);
         cr->paint();
         cr->restore();
-        cr->set_source_rgb(0,0,1.0);
+        cr->set_source_rgb(0,0,0);
         cr->set_line_width(1);
         cr->move_to(0,0);
         cr->line_to(xlength,0);
@@ -162,14 +217,23 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         double yscale = -ylength/(ymax-ymin);
 
         // Plot data values
-        cr->set_source_rgb(0,0,0);
-        for (unsigned int i  = 0; i < m_x.size(); ++i) {
+        for (unsigned int i  = 0; i < m_x.size(); ++i) 
+        {
+            cr->set_source_rgba(m_pens[i].color.r,m_pens[i].color.g,m_pens[i].color.b,m_pens[i].color.a);
             cr->set_line_width(m_pens[i].linewidth);
             cr->move_to(m_x[i][0]*xscale,m_y[i][0]*yscale);
-            drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled);
-            for (unsigned int j = 1; j < m_x[i].size(); ++j) {
-                cr->line_to(m_x[i][j]*xscale,m_y[i][j]*yscale);
-                drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled);
+            drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
+            for (unsigned int j = 1; j < m_x[i].size(); ++j) 
+            {
+                if (m_pens[i].linewidth > 0)
+                {
+                    cr->line_to(m_x[i][j]*xscale,m_y[i][j]*yscale);
+                }
+                else
+                {
+                    cr->move_to(m_x[i][j]*xscale,m_y[i][j]*yscale);
+                }
+                drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
             }
         }
         cr->stroke();
@@ -212,4 +276,35 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         cr->clip();
     }
     return true;
+}
+
+void EasyPlotmm::set_bg_rgba(double r, double g, double b, double a)
+{
+    bg.r = r;
+    bg.g = g;
+    bg.b = b;
+    bg.a = a;
+}
+
+
+void EasyPlotmm::makeDefaultPens()
+{
+    Pen p;
+    p.linewidth = 1.0;
+    p.pointsize = 8.0;
+    p.shape = CIRCLE;
+    p.filled = true;
+    m_defPens.push_back(p);
+    p.shape = SQUARE;
+    p.filled = false;
+    m_defPens.push_back(p);
+    p.shape = TRIANGLE;
+    p.filled = true;
+    m_defPens.push_back(p);
+    p.shape = UTRIANGLE;
+    p.filled = false;
+    m_defPens.push_back(p);
+    p.shape = DIAMOND;
+    p.filled = true;
+    m_defPens.push_back(p);
 }
