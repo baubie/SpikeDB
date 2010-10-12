@@ -38,7 +38,10 @@ void EasyPlotmm::redraw()
 
 void EasyPlotmm::axes(double xmin, double xmax, double ymin, double ymax)
 {
-
+    m_xmin = xmin;
+    m_xmax = xmax;
+    m_ymin = ymin;
+    m_ymax = ymax;
 }
 
 void EasyPlotmm::clear()
@@ -77,10 +80,17 @@ void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape sha
 {
     if (s <= 0) return;
     double h;
-    cr->save();
     cr->set_line_width(1.0);
+    cr->set_source_rgba(col.r,col.g,col.b,col.a);
     switch(shape)
     {
+        case POINT:
+            cr->set_line_width(s);
+            cr->rel_move_to(-s/2,0);
+            cr->rel_line_to(s,0);
+            cr->rel_move_to(-s/2,0);
+            break;
+
         case CIRCLE:
             double x,y;
             cr->get_current_point(x,y);
@@ -130,11 +140,12 @@ void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape sha
             break; 
 
     }
-    if (filled) cr->set_source_rgba(col.r,col.g,col.b,col.a);
-    else cr->set_source_rgba(bg.r,bg.g,bg.b,bg.a);
-
-    cr->fill_preserve();
-    cr->restore();
+    if (shape != POINT)
+    {
+        if (filled) cr->set_source_rgba(col.r,col.g,col.b,col.a);
+        else cr->set_source_rgba(bg.r,bg.g,bg.b,bg.a);
+        cr->fill_preserve();
+    }
 }
 
 bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
@@ -218,17 +229,23 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         // Plot data values
         for (unsigned int i  = 0; i < m_x.size(); ++i) 
         {
-            cr->set_source_rgba(m_pens[i].color.r,m_pens[i].color.g,m_pens[i].color.b,m_pens[i].color.a);
-            cr->set_line_width(m_pens[i].linewidth);
-            cr->move_to(m_x[i][0]*xscale,m_y[i][0]*yscale);
-            drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
-            for (unsigned int j = 1; j < m_x[i].size(); ++j) 
+            if (m_x[i].size() > 0)
             {
-                cr->line_to(m_x[i][j]*xscale,m_y[i][j]*yscale);
+                cr->set_source_rgba(m_pens[i].color.r,m_pens[i].color.g,m_pens[i].color.b,m_pens[i].color.a);
+                cr->set_line_width(m_pens[i].linewidth);
+                cr->move_to((m_x[i][0]-xmin)*xscale,(m_y[i][0]-ymin)*yscale);
                 drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
+                for (unsigned int j = 1; j < m_x[i].size(); ++j) 
+                {
+                    if (m_pens[i].linewidth > 0)
+                        cr->line_to((m_x[i][j]-xmin)*xscale,(m_y[i][j]-ymin)*yscale);
+                    else
+                        cr->move_to((m_x[i][j]-xmin)*xscale,(m_y[i][j]-ymin)*yscale);
+                    drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
+                }
+                cr->stroke();
             }
         }
-        cr->stroke();
 
         // Add the labels
         int numX = xlength/50;
@@ -236,12 +253,13 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         double dx,dy; 
         dx = ((xmax-xmin)/numX);
         dy = ((ymax-ymin)/numY);
+        cr->set_source_rgba(0,0,0,1);
         if (dx > 0)
         {
             for (double x = xmin; x <= xmax; x+=dx)
             {
                 Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
-                cr->move_to(x*xscale,0);
+                cr->move_to((x-xmin)*xscale,0);
                 char buffer[5];
                 sprintf(buffer,"%.f",x);
                 pangoLayout->set_text(buffer);
@@ -255,7 +273,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
             for (double y = ymin; y <= ymax; y+=dy)
             {
                 Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
-                cr->move_to(-12,y*yscale);
+                cr->move_to(-12,(y-ymin)*yscale);
                 char buffer[5];
                 sprintf(buffer,"%f",y);
                 pangoLayout->set_text(buffer);

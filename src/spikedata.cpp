@@ -132,6 +132,20 @@ std::string SpikeData::xVariable()
 	return "Unknown";
 }
 
+double SpikeData::delta()
+{
+    if (m_head.deltaCh1.fBegin != 0) return m_head.deltaCh1.fBegin;	
+    if (m_head.deltaCh1.fDur != 0) return m_head.deltaCh1.fDur;	
+    if (m_head.deltaCh1.fStimInt != 0) return m_head.deltaCh1.fStimInt;
+    if (m_head.deltaCh1.fAtten != 0) return m_head.deltaCh1.fAtten;
+    if (m_head.deltaCh1.fCarFreq != 0) return m_head.deltaCh1.fCarFreq;
+    if (m_head.deltaCh1.fPhase != 0) return m_head.deltaCh1.fPhase;
+    if (m_head.deltaCh1.fFreqDev != 0) return m_head.deltaCh1.fFreqDev;
+    if (m_head.deltaCh1.fAmDepth != 0) return m_head.deltaCh1.fAmDepth;
+    if (m_head.deltaCh1.fModFreq != 0) return m_head.deltaCh1.fModFreq;
+    return 1;
+}
+
 double SpikeData::xvalue(int sweep)
 {
     if (m_head.deltaCh1.fBegin != 0) {

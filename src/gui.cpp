@@ -95,11 +95,11 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 
     populateAnimalTree();
 
-    m_refGlade->get_widget("hpanedPlots", m_pHPanedPlots);
+    m_refGlade->get_widget("hboxPlots", m_pHBoxPlots);
     m_pPlotSpikes = new EasyPlotmm();
     m_pPlotMeans = new EasyPlotmm();
-    m_pHPanedPlots->add1(*m_pPlotSpikes);
-    m_pHPanedPlots->add2(*m_pPlotMeans);
+    m_pHBoxPlots->pack_start(*m_pPlotSpikes);
+    m_pHBoxPlots->pack_start(*m_pPlotMeans);
     show_all_children();
 }
 
@@ -130,6 +130,7 @@ void GUI::on_detailscolumn_edited(const Glib::ustring& path_string, const Glib::
 void GUI::changeDetailsSelection()
 {
     m_pPlotMeans->clear();
+    m_pPlotSpikes->clear();
     curXVariable = "";
     m_refDetailsSelection->selected_foreach_iter(
         sigc::mem_fun(*this, &GUI::addFileToPlot)
@@ -171,12 +172,16 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 
         std::vector<double> x_spikes;
         std::vector<double> y_spikes; 
-        EasyPlotmm::Pen spikesPen;
-        spikesPen.linewidth = 0;
-        spikesPen.shape = EasyPlotmm::CIRCLE;
-        spikesPen.pointsize = 2;
 
-        double dy = 1/(sd.m_head.nPasses*1.25);
+        EasyPlotmm::Pen spikesPen;
+        spikesPen.linewidth = 0.0;
+        spikesPen.shape = EasyPlotmm::POINT;
+        spikesPen.pointsize = 2;
+        spikesPen.filled = true;
+
+        double dy = sd.delta()/(sd.m_head.nPasses);
+        //DEBUG
+        std::cout << "dy = " << dy << std::endl;
 
         for (int i = 0; i < sd.m_head.nSweeps; ++i)
         {
@@ -193,14 +198,33 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 
                         }
                         x_spikes.push_back(sd.m_spikeArray[s].fTime);
-                        y_spikes.push_back(sd.xvalue(i)+dy*p);
+                        y_spikes.push_back(sd.xvalue(i+1)+dy*p);
                     }
                 }
             }
         }
         m_pPlotMeans->plot(x,y);
-        m_pPlotSpikes->clear();
+        m_pPlotSpikes->axes(0,sd.m_head.nRepInt, sd.xvalue(1), sd.xvalue(sd.m_head.nSweeps));
         m_pPlotSpikes->plot(x_spikes,y_spikes,spikesPen);
+
+        EasyPlotmm::Pen stimPen;
+        spikesPen.linewidth = 3.0;
+        spikesPen.pointsize = 1;
+        spikesPen.shape = EasyPlotmm::POINT;
+        spikesPen.color.r = 1;
+        spikesPen.color.g = 0;
+        spikesPen.color.b = 0;
+        spikesPen.color.a = 1;
+        for (int i = 0; i < sd.m_head.nSweeps; ++i)
+        {
+            std::vector<double> stimX;
+            std::vector<double> stimY;
+            stimX.push_back(sd.m_head.stimFirstCh1.fBegin+sd.m_head.deltaCh1.fBegin*i);
+            stimY.push_back(sd.xvalue(i+1));
+            stimX.push_back(sd.m_head.stimFirstCh1.fBegin+sd.m_head.stimFirstCh1.fDur+sd.m_head.deltaCh1.fBegin*i+sd.m_head.deltaCh1.fDur*i);
+            stimY.push_back(sd.xvalue(i+1));
+            m_pPlotSpikes->plot(stimX,stimY,stimPen);
+        }
     } 
     else { std::cerr << "ERROR: Failed to read file from database. " << sqlite3_errmsg(db) << std::endl; }
     sqlite3_finalize(stmt);
@@ -397,7 +421,7 @@ void GUI::on_menuQuit_activate()
     delete m_pMenuImportFolder;
     delete m_pAnimalTree;
     delete m_pDetailsList;
-    delete m_pHPanedPlots;
+    delete m_pHBoxPlots;
     delete m_pCellDetailsList;
     delete m_pAnimalDetailsList;
     delete m_pPlotSpikes;

@@ -96,15 +96,8 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkHPaned" id="hpanedPlots">
+                      <object class="GtkHBox" id="hboxPlots">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
                       </object>
                       <packing>
                         <property name="resize">True</property>

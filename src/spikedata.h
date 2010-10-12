@@ -199,6 +199,7 @@ class SpikeData
         void printfile();
         std::string xVariable();
         double xvalue(int sweep);
+        double delta();
         double begin(int channel, int sweep);
         double duration(int channel, int sweep);
         HEADER m_head;

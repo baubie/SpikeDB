@@ -31,7 +31,7 @@ class GUI : public Gtk::Window
         Gtk::TreeView* m_pDetailsList;
         Gtk::TreeView* m_pAnimalDetailsList;
         Gtk::TreeView* m_pCellDetailsList;
-        Gtk::HPaned* m_pHPanedPlots;
+        Gtk::HBox* m_pHBoxPlots;
 
         // Child Widgets (created in c++)
         Glib::RefPtr<Gtk::TreeStore> m_refAnimalTree;
