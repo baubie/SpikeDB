@@ -43,7 +43,6 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
     if (m_pMenuQuit)
         m_pMenuQuit->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuQuit_activate));
 
-
     Gtk::TreeModelColumn<int> m_col_filenum;
     Gtk::TreeModelColumn<int> m_col_CF;
     Gtk::TreeModelColumn<int> m_col_depth;
@@ -170,8 +169,14 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
         std::vector<double> x(sd.m_head.nSweeps,0);
         std::vector<double> y(sd.m_head.nSweeps,0);
 
-        std::vector<double> x_spikes(sd.m_spikeArray.size(),0);
-        std::vector<double> y_spikes(sd.m_spikeArray.size(),0);
+        std::vector<double> x_spikes;
+        std::vector<double> y_spikes; 
+        EasyPlotmm::Pen spikesPen;
+        spikesPen.linewidth = 0;
+        spikesPen.shape = EasyPlotmm::CIRCLE;
+        spikesPen.pointsize = 2;
+
+        double dy = 1/(sd.m_head.nPasses*1.25);
 
         for (int i = 0; i < sd.m_head.nSweeps; ++i)
         {
@@ -187,11 +192,15 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
                             y[i] += 1.0f / sd.m_head.nPasses;
 
                         }
+                        x_spikes.push_back(sd.m_spikeArray[s].fTime);
+                        y_spikes.push_back(sd.xvalue(i)+dy*p);
                     }
                 }
             }
         }
         m_pPlotMeans->plot(x,y);
+        m_pPlotSpikes->clear();
+        m_pPlotSpikes->plot(x_spikes,y_spikes,spikesPen);
     } 
     else { std::cerr << "ERROR: Failed to read file from database. " << sqlite3_errmsg(db) << std::endl; }
     sqlite3_finalize(stmt);

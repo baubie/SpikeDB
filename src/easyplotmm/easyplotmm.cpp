@@ -51,7 +51,6 @@ void EasyPlotmm::clear()
 
 EasyPlotmm::Pen EasyPlotmm::getPen()
 {
-    std::cout << "CURRENT PEN: " << curPen << std::endl;
     Pen p = m_defPens[curPen];
     curPen++;
     if (curPen >= m_defPens.size()) curPen = 0;
@@ -166,8 +165,8 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         cr->set_source_rgb(bg.r,bg.g,bg.b);
         cr->paint();
         cr->restore();
-        cr->set_source_rgb(0,0,0);
-        cr->set_line_width(1);
+        cr->set_source_rgba(0,0,0,1);
+        cr->set_line_width(2);
         cr->move_to(0,0);
         cr->line_to(xlength,0);
         cr->move_to(0,0);
@@ -225,14 +224,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
             drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
             for (unsigned int j = 1; j < m_x[i].size(); ++j) 
             {
-                if (m_pens[i].linewidth > 0)
-                {
-                    cr->line_to(m_x[i][j]*xscale,m_y[i][j]*yscale);
-                }
-                else
-                {
-                    cr->move_to(m_x[i][j]*xscale,m_y[i][j]*yscale);
-                }
+                cr->line_to(m_x[i][j]*xscale,m_y[i][j]*yscale);
                 drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
             }
         }
