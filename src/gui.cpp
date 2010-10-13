@@ -134,12 +134,24 @@ void GUI::on_filetags_edited(const Glib::ustring& path_string, const Glib::ustri
     Gtk::TreeModel::iterator iter = m_refDetailsList->get_iter(path);
     if (iter)
     {
+        // Update tree model
         Gtk::TreeModel::Row row = *iter;
         row[m_DetailsColumns.m_col_tags] = new_text;
+
+        // Update sqlite database
+        const char q[] = "UPDATE files SET tags=? WHERE animalID=? AND cellID=? AND fileID=?";
+        sqlite3_stmt *stmt=0;
+        sqlite3_prepare_v2(db,q,strlen(q),&stmt,NULL);
+        sqlite3_bind_text(stmt,1,new_text.c_str(),-1,SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt,2,row.get_value(m_DetailsColumns.m_col_animalID).c_str(),-1,SQLITE_TRANSIENT);
+        sqlite3_bind_int(stmt,3,row[m_DetailsColumns.m_col_cellID]);
+        sqlite3_bind_int(stmt,4,row[m_DetailsColumns.m_col_filenum]);
+        sqlite3_step(stmt);
+        sqlite3_finalize(stmt);
     }
 }
 
-void GUI::filetags_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter)
+void GUI::filetags_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::TreeModel::iterator& iter)
 {
     if (iter)
     {
@@ -338,16 +350,16 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const Glib::ustring 
 {
     sqlite3_stmt *stmt=0;
     if (animalID != "" && cellID != "") {
-        const char query[] = "SELECT animalID, cellID, fileID, header FROM files WHERE animalID=? AND cellID=? ORDER BY animalID, cellID, fileID";
+        const char query[] = "SELECT animalID, cellID, fileID, header,tags FROM files WHERE animalID=? AND cellID=? ORDER BY animalID, cellID, fileID";
         sqlite3_prepare_v2(db,query,strlen(query), &stmt, NULL);
         sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
         sqlite3_bind_text(stmt, 2, cellID.c_str(), -1, SQLITE_TRANSIENT);
     } else if (animalID != "" && cellID == "") {
-        const char query[] = "SELECT animalID, cellID, fileID, header FROM files WHERE animalID=? ORDER BY animalID, cellID, fileID";
+        const char query[] = "SELECT animalID, cellID, fileID, header,tags FROM files WHERE animalID=? ORDER BY animalID, cellID, fileID";
         sqlite3_prepare_v2(db,query,strlen(query), &stmt, NULL);
         sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
     } else if (animalID == "" && cellID == "") {
-        const char query[] = "SELECT animalID, cellID, fileID, header FROM files ORDER BY animalID, cellID, fileID";
+        const char query[] = "SELECT animalID, cellID, fileID, header,tags FROM files ORDER BY animalID, cellID, fileID";
         sqlite3_prepare_v2(db,query,strlen(query), &stmt, NULL);
     }
 
@@ -363,6 +375,10 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const Glib::ustring 
             row[m_DetailsColumns.m_col_animalID] = (char*)sqlite3_column_text(stmt,0);
             row[m_DetailsColumns.m_col_cellID] = sqlite3_column_int(stmt,1);
             row[m_DetailsColumns.m_col_filenum] = sqlite3_column_int(stmt,2);
+            if (sqlite3_column_text(stmt,4) != NULL)
+            {
+                row[m_DetailsColumns.m_col_tags] = (char*)sqlite3_column_text(stmt,4);
+            }
 
             void *header = (void*)sqlite3_column_blob(stmt,3);
             const HEADER *h = new HEADER(*static_cast<HEADER*>(header));
