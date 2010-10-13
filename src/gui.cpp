@@ -134,7 +134,6 @@ void GUI::on_filetags_edited(const Glib::ustring& path_string, const Glib::ustri
     Gtk::TreeModel::iterator iter = m_refDetailsList->get_iter(path);
     if (iter)
     {
-        std::cout << "Found iter" << std::endl;
         Gtk::TreeModel::Row row = *iter;
         row[m_DetailsColumns.m_col_tags] = new_text;
     }
@@ -142,7 +141,11 @@ void GUI::on_filetags_edited(const Glib::ustring& path_string, const Glib::ustri
 
 void GUI::filetags_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter)
 {
-    m_rend_filetags.property_text() = "TAGS";
+    if (iter)
+    {
+        Gtk::TreeModel::Row row = *iter;
+        m_rend_filetags.property_text() = row[m_DetailsColumns.m_col_tags];
+    }
 }
 
 void GUI::changeDetailsSelection()
