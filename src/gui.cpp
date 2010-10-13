@@ -68,16 +68,21 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
     m_pDetailsList->append_column("AnimalID", m_DetailsColumns.m_col_animalID);
     m_pDetailsList->append_column("CellID", m_DetailsColumns.m_col_cellID);
     m_pDetailsList->append_column("#", m_DetailsColumns.m_col_filenum);
-    m_pDetailsList->append_column_editable("CF (kHz)", m_DetailsColumns.m_col_CF);
-    m_pDetailsList->append_column_editable("Depth (um)", m_DetailsColumns.m_col_depth);
-    m_pDetailsList->append_column_editable("X-Var", m_DetailsColumns.m_col_xaxis);
-    m_pDetailsList->append_column_editable("Tags", m_DetailsColumns.m_col_tags);
+    m_pDetailsList->append_column("X-Var", m_DetailsColumns.m_col_xaxis);
+
+    m_tvcol_filetags.set_title("Tags");
+    m_rend_filetags.property_editable() = true;
+    m_tvcol_filetags.pack_start(m_rend_filetags);
+    m_pDetailsList->append_column(m_tvcol_filetags);
+    m_rend_filetags.signal_edited().connect(sigc::mem_fun(*this, &GUI::on_filetags_edited));
+    m_tvcol_filetags.set_cell_data_func(m_rend_filetags,
+        sigc::mem_fun(*this, &GUI::filetags_cell_data) );
+
     m_refDetailsSelection = m_pDetailsList->get_selection();
     m_refDetailsSelection->set_mode(Gtk::SELECTION_MULTIPLE);
     m_refDetailsSelection->signal_changed().connect(
         sigc::mem_fun(*this, &GUI::changeDetailsSelection)
     );
-    m_rend_CF.signal_edited().connect(sigc::mem_fun(*this, &GUI::on_detailscolumn_edited));
 
     // Create Animal Details TreeView
     m_refGlade->get_widget("tvAnimalDetails", m_pAnimalDetailsList);
@@ -122,9 +127,22 @@ int GUI::on_animal_sort(const Gtk::TreeModel::iterator& a_, const Gtk::TreeModel
     return a.compare(b);
 }
 
-void GUI::on_detailscolumn_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)
+void GUI::on_filetags_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)
 {
     Gtk::TreePath path(path_string);
+
+    Gtk::TreeModel::iterator iter = m_refDetailsList->get_iter(path);
+    if (iter)
+    {
+        std::cout << "Found iter" << std::endl;
+        Gtk::TreeModel::Row row = *iter;
+        row[m_DetailsColumns.m_col_tags] = new_text;
+    }
+}
+
+void GUI::filetags_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter)
+{
+    m_rend_filetags.property_text() = "TAGS";
 }
 
 void GUI::changeDetailsSelection()
@@ -179,12 +197,11 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
         spikesPen.pointsize = 2;
         spikesPen.filled = true;
 
-        double dy = sd.delta()/(sd.m_head.nPasses);
+        double dy = sd.delta()/(sd.m_head.nPasses*1.25);
 
         for (int i = 0; i < sd.m_head.nSweeps; ++i)
         {
-            x[i] = sd.xvalue(i);
-            std::cout << x[i] << std::endl;
+            x.at(i) = sd.xvalue(i);
             for (int p = 0; p < sd.m_head.nPasses; ++p)
             {
                 for (unsigned int s = 0; s < sd.m_spikeArray.size(); ++s)
@@ -193,7 +210,7 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
                     {
                         if (sd.m_head.nPasses > 0)
                         {
-                            y[i] += 1.0f / sd.m_head.nPasses;
+                            y.at(i) += 1.0f / sd.m_head.nPasses;
 
                         }
                         x_spikes.push_back(sd.m_spikeArray[s].fTime);
@@ -203,18 +220,19 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
             }
         }
         m_pPlotMeans->plot(x,y);
-        m_pPlotSpikes->axes(0,50, sd.xvalue(1)-2*dy, sd.xvalue(sd.m_head.nSweeps)+sd.m_head.nPasses*dy+2*dy);
+        m_pPlotSpikes->axes(0,sd.m_head.nRepInt, sd.xvalue(0)-2*dy, sd.xvalue(sd.m_head.nSweeps-1)+sd.m_head.nPasses*dy);
         m_pPlotSpikes->plot(x_spikes,y_spikes,spikesPen);
 
+        // Add stimuli to spikes plot
         EasyPlotmm::Pen ch1Pen;
-        ch1Pen.linewidth = 1.0;
+        ch1Pen.linewidth = 2.0;
         ch1Pen.shape = EasyPlotmm::NONE;
         ch1Pen.color.r = 1;
         ch1Pen.color.g = 0;
         ch1Pen.color.b = 0;
         ch1Pen.color.a = 1;
         EasyPlotmm::Pen ch2Pen;
-        ch2Pen.linewidth = 1.0;
+        ch2Pen.linewidth = 2.0;
         ch2Pen.shape = EasyPlotmm::NONE;
         ch2Pen.color.r = 0;
         ch2Pen.color.g = 0;
@@ -225,9 +243,9 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
             std::vector<double> stimX;
             std::vector<double> stimY;
             stimX.push_back(sd.m_head.stimFirstCh1.fBegin+sd.m_head.deltaCh1.fBegin*i);
-            stimY.push_back(sd.xvalue(i+1));
+            stimY.push_back(sd.xvalue(i));
             stimX.push_back(sd.m_head.stimFirstCh1.fBegin+sd.m_head.stimFirstCh1.fDur+sd.m_head.deltaCh1.fBegin*i+sd.m_head.deltaCh1.fDur*i);
-            stimY.push_back(sd.xvalue(i+1));
+            stimY.push_back(sd.xvalue(i));
             m_pPlotSpikes->plot(stimX,stimY,ch1Pen);
 
             if (sd.m_head.nOnCh2 == 1)

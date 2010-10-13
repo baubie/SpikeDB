@@ -57,20 +57,19 @@ class GUI : public Gtk::Window
         {
             public:
                 DetailsColumns()
-                { add(m_col_animalID); add(m_col_cellID); add(m_col_filenum); add(m_col_CF); add(m_col_depth); add(m_col_xaxis); 
+                { add(m_col_animalID); add(m_col_cellID); add(m_col_filenum); add(m_col_xaxis); 
                   add(m_col_tags); 
                 }
                 Gtk::TreeModelColumn<Glib::ustring> m_col_animalID;
                 Gtk::TreeModelColumn<int> m_col_cellID;
                 Gtk::TreeModelColumn<int> m_col_filenum;
-                Gtk::TreeModelColumn<int> m_col_CF;
-                Gtk::TreeModelColumn<int> m_col_depth;
                 Gtk::TreeModelColumn<Glib::ustring> m_col_xaxis;
                 Gtk::TreeModelColumn<Glib::ustring> m_col_tags;
         };
-        Gtk::CellRendererText m_rend_CF;;
-        Gtk::TreeViewColumn m_tvc_CF;
-        void on_detailscolumn_edited(const Glib::ustring& path_string, const Glib::ustring& new_text);
+        Gtk::CellRendererText m_rend_filetags;
+        Gtk::TreeViewColumn m_tvcol_filetags;
+        void on_filetags_edited(const Glib::ustring& path_string, const Glib::ustring& new_text);
+        void filetags_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter);
 
         class AnimalDetailsColumns : public Gtk::TreeModel::ColumnRecord
         {
