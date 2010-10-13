@@ -11,8 +11,8 @@ EasyPlotmm::EasyPlotmm() :
     m_ymax(AUTOMATIC)
 {
     pad_left = 50;
-    pad_top = 5;
-    pad_right = 5;
+    pad_top = 20;
+    pad_right = 50;
     pad_bottom = 25;
     curPen = 0;
     bg.r = 1;
@@ -138,9 +138,12 @@ void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape sha
             // Move back to the middle
             cr->rel_move_to(s/2,h/2);
             break; 
+        case NONE:
+        default:
+            break;
 
     }
-    if (shape != POINT)
+    if (shape != POINT && shape != NONE)
     {
         if (filled) cr->set_source_rgba(col.r,col.g,col.b,col.a);
         else cr->set_source_rgba(bg.r,bg.g,bg.b,bg.a);
@@ -178,10 +181,10 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         cr->restore();
         cr->set_source_rgba(0,0,0,1);
         cr->set_line_width(2);
-        cr->move_to(0,0);
-        cr->line_to(xlength,0);
-        cr->move_to(0,0);
-        cr->line_to(0,-ylength);
+        cr->move_to(-1,-1);
+        cr->line_to(xlength,-1);
+        cr->move_to(-1,-1);
+        cr->line_to(-1,-ylength);
         cr->stroke();
 
         // Stop here if there is no data to plot
@@ -254,6 +257,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         dx = ((xmax-xmin)/numX);
         dy = ((ymax-ymin)/numY);
         cr->set_source_rgba(0,0,0,1);
+        cr->set_line_width(1.0);
         if (dx > 0)
         {
             for (double x = xmin; x <= xmax; x+=dx)
@@ -261,21 +265,21 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
                 Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
                 cr->move_to((x-xmin)*xscale,0);
                 char buffer[5];
-                sprintf(buffer,"%.f",x);
+                sprintf(buffer,"%i",(int)x);
                 pangoLayout->set_text(buffer);
                 pangoLayout->update_from_cairo_context(cr);
                 pangoLayout->add_to_cairo_context(cr);
                 cr->stroke();
             }
         }
-        if (dy > 0)
+        if (dy > 0 && false)
         {
             for (double y = ymin; y <= ymax; y+=dy)
             {
                 Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
                 cr->move_to(-12,(y-ymin)*yscale);
                 char buffer[5];
-                sprintf(buffer,"%f",y);
+                sprintf(buffer,"%i",(int)y);
                 pangoLayout->set_text(buffer);
                 pangoLayout->update_from_cairo_context(cr);
                 pangoLayout->add_to_cairo_context(cr);

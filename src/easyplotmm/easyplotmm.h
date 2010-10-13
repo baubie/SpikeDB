@@ -16,7 +16,8 @@ class EasyPlotmm : public Gtk::DrawingArea
             UTRIANGLE,
             SQUARE,
             DIAMOND,
-            POINT
+            POINT,
+            NONE
         };
 
         struct RGBA {

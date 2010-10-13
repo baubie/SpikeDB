@@ -180,12 +180,11 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
         spikesPen.filled = true;
 
         double dy = sd.delta()/(sd.m_head.nPasses);
-        //DEBUG
-        std::cout << "dy = " << dy << std::endl;
 
         for (int i = 0; i < sd.m_head.nSweeps; ++i)
         {
             x[i] = sd.xvalue(i);
+            std::cout << x[i] << std::endl;
             for (int p = 0; p < sd.m_head.nPasses; ++p)
             {
                 for (unsigned int s = 0; s < sd.m_spikeArray.size(); ++s)
@@ -198,23 +197,29 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 
                         }
                         x_spikes.push_back(sd.m_spikeArray[s].fTime);
-                        y_spikes.push_back(sd.xvalue(i+1)+dy*p);
+                        y_spikes.push_back(sd.xvalue(i)+dy*p);
                     }
                 }
             }
         }
         m_pPlotMeans->plot(x,y);
-        m_pPlotSpikes->axes(0,sd.m_head.nRepInt, sd.xvalue(1), sd.xvalue(sd.m_head.nSweeps));
+        m_pPlotSpikes->axes(0,50, sd.xvalue(1)-2*dy, sd.xvalue(sd.m_head.nSweeps)+sd.m_head.nPasses*dy+2*dy);
         m_pPlotSpikes->plot(x_spikes,y_spikes,spikesPen);
 
-        EasyPlotmm::Pen stimPen;
-        spikesPen.linewidth = 3.0;
-        spikesPen.pointsize = 1;
-        spikesPen.shape = EasyPlotmm::POINT;
-        spikesPen.color.r = 1;
-        spikesPen.color.g = 0;
-        spikesPen.color.b = 0;
-        spikesPen.color.a = 1;
+        EasyPlotmm::Pen ch1Pen;
+        ch1Pen.linewidth = 1.0;
+        ch1Pen.shape = EasyPlotmm::NONE;
+        ch1Pen.color.r = 1;
+        ch1Pen.color.g = 0;
+        ch1Pen.color.b = 0;
+        ch1Pen.color.a = 1;
+        EasyPlotmm::Pen ch2Pen;
+        ch2Pen.linewidth = 1.0;
+        ch2Pen.shape = EasyPlotmm::NONE;
+        ch2Pen.color.r = 0;
+        ch2Pen.color.g = 0;
+        ch2Pen.color.b = 1;
+        ch2Pen.color.a = 1;
         for (int i = 0; i < sd.m_head.nSweeps; ++i)
         {
             std::vector<double> stimX;
@@ -223,7 +228,18 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
             stimY.push_back(sd.xvalue(i+1));
             stimX.push_back(sd.m_head.stimFirstCh1.fBegin+sd.m_head.stimFirstCh1.fDur+sd.m_head.deltaCh1.fBegin*i+sd.m_head.deltaCh1.fDur*i);
             stimY.push_back(sd.xvalue(i+1));
-            m_pPlotSpikes->plot(stimX,stimY,stimPen);
+            m_pPlotSpikes->plot(stimX,stimY,ch1Pen);
+
+            if (sd.m_head.nOnCh2 == 1)
+            {
+                stimX.clear();
+                stimY.clear();
+                stimX.push_back(sd.m_head.stimFirstCh2.fBegin+sd.m_head.deltaCh2.fBegin*i);
+                stimY.push_back(sd.xvalue(i));
+                stimX.push_back(sd.m_head.stimFirstCh2.fBegin+sd.m_head.stimFirstCh2.fDur+sd.m_head.deltaCh2.fBegin*i+sd.m_head.deltaCh2.fDur*i);
+                stimY.push_back(sd.xvalue(i));
+                m_pPlotSpikes->plot(stimX,stimY,ch2Pen);
+            }
         }
     } 
     else { std::cerr << "ERROR: Failed to read file from database. " << sqlite3_errmsg(db) << std::endl; }
