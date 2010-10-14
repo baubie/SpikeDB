@@ -293,7 +293,6 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         if (m_ymin != AUTOMATIC) ymin = m_ymin;
         if (m_ymax != AUTOMATIC) ymax = m_ymax;
 
-
         double maxX = fabs(xmin)>fabs(xmax)?fabs(xmin):fabs(xmax);
         double maxY = fabs(ymin)>fabs(ymax)?fabs(ymin):fabs(ymax);
         double xorder = 1;
@@ -333,7 +332,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         bool x_useint = !((int)(xmin) == (int)(xmin+Xbt));
         bool y_useint = !((int)(ymin) == (int)(ymin+Ybt));
         Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
-        char buffer[6];
+        char buffer[20];
         if (y_useint) sprintf(buffer,"%i",(int)(ymin_bt));
         else sprintf(buffer,"%.1f",ymin_bt); 
         Pango::FontDescription label_font_descr("sans normal 8");
@@ -349,7 +348,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         double xscale = xlength/(xmax-xmin);
         double yscale = -ylength/(ymax-ymin);
 
-        // Scale the window so the bottom left of the graph is
+        // Translate the window so the bottom left of the graph is
         // (0,0) on the screen
         cr->translate(pad_left+ylab_width+y_bt_size+label_pad, height-pad_bottom-lab_height-x_bt_size-label_pad);
 
@@ -410,7 +409,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
             for (double x = fabs(xmin_bt); x <= fabs(xmax_bt); x+=Xbt)
             {
                 Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
-                char buffer[5];
+                char buffer[10];
                 if (x_useint) sprintf(buffer,"%i",(int)x);
                 else sprintf(buffer,"%.1f",x); 
                 pangoLayout->set_font_description(label_font_descr);
@@ -429,7 +428,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
             {
                 Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
                 cr->move_to(-ylab_width-y_bt_size-label_pad,(y-ymin)*yscale-lab_height/2);
-                char buffer[5];
+                char buffer[10];
                 if (y_useint) sprintf(buffer,"%i",(int)y);
                 else sprintf(buffer,"%.1f",y); 
                 pangoLayout->set_font_description(label_font_descr);
@@ -441,7 +440,6 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
                 cr->stroke();
             }
         }
-
 
         // Plot data values
         for (unsigned int i  = 0; i < m_x.size(); ++i) 

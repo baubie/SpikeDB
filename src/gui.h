@@ -103,12 +103,13 @@ class GUI : public Gtk::Window
         CellDetailsColumns m_CellDetailsColumns;
 
         void populateAnimalTree();
-        void populateDetailsList(const Glib::ustring animalID, const Glib::ustring cellID);
+        void populateDetailsList(const Glib::ustring animalID, const int cellID);
         void populateAnimalDetailsList(const Glib::ustring animalID);
-        void populateCellDetailsList(const Glib::ustring animalID, const Glib::ustring cellID);
+        void populateCellDetailsList(const Glib::ustring animalID, const int cellID);
         void changeAnimalSelection();
         void changeDetailsSelection();
         void addFileToPlot(const Gtk::TreeModel::iterator& iter);
+	void updateSideLists(const Gtk::TreeModel::iterator& iter);
         
         // Helper to sort by string for parent and number by child
         int on_animal_sort(const Gtk::TreeModel::iterator& a, const Gtk::TreeModel::iterator& b);
