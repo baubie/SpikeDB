@@ -79,6 +79,10 @@ class GUI : public Gtk::Window
                 Gtk::TreeModelColumn<Glib::ustring> m_col_name;
                 Gtk::TreeModelColumn<Glib::ustring> m_col_value;
         };
+        Gtk::CellRendererText m_rend_animalvalue;
+        Gtk::TreeViewColumn m_tvcol_animalvalue;
+        void on_animalvalue_edited(const Glib::ustring& path_string, const Glib::ustring& new_text);
+        void animalvalue_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter);
 
         class CellDetailsColumns : public Gtk::TreeModel::ColumnRecord
         {
@@ -88,6 +92,10 @@ class GUI : public Gtk::Window
                 Gtk::TreeModelColumn<Glib::ustring> m_col_name;
                 Gtk::TreeModelColumn<Glib::ustring> m_col_value;
         };
+        Gtk::CellRendererText m_rend_cellvalue;
+        Gtk::TreeViewColumn m_tvcol_cellvalue;
+        void on_cellvalue_edited(const Glib::ustring& path_string, const Glib::ustring& new_text);
+        void cellvalue_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter);
 
         AnimalColumns m_AnimalColumns;
         DetailsColumns m_DetailsColumns;

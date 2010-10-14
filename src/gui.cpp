@@ -75,8 +75,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
     m_tvcol_filetags.pack_start(m_rend_filetags);
     m_pDetailsList->append_column(m_tvcol_filetags);
     m_rend_filetags.signal_edited().connect(sigc::mem_fun(*this, &GUI::on_filetags_edited));
-    m_tvcol_filetags.set_cell_data_func(m_rend_filetags,
-        sigc::mem_fun(*this, &GUI::filetags_cell_data) );
+    m_tvcol_filetags.set_cell_data_func(m_rend_filetags,sigc::mem_fun(*this, &GUI::filetags_cell_data));
 
     m_refDetailsSelection = m_pDetailsList->get_selection();
     m_refDetailsSelection->set_mode(Gtk::SELECTION_MULTIPLE);
@@ -88,15 +87,27 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
     m_refGlade->get_widget("tvAnimalDetails", m_pAnimalDetailsList);
     m_refAnimalDetailsList = Gtk::ListStore::create(m_AnimalDetailsColumns);
     m_pAnimalDetailsList->set_model(m_refAnimalDetailsList);
-    m_pAnimalDetailsList->append_column("Variable", m_AnimalDetailsColumns.m_col_name);
-    m_pAnimalDetailsList->append_column_editable("Value", m_AnimalDetailsColumns.m_col_value);
+    m_pAnimalDetailsList->append_column("Name", m_AnimalDetailsColumns.m_col_name);
+    
+    m_tvcol_animalvalue.set_title("Value");
+    m_rend_animalvalue.property_editable() = true;
+    m_tvcol_animalvalue.pack_start(m_rend_animalvalue);
+    m_pAnimalDetailsList->append_column(m_tvcol_animalvalue);
+    m_rend_animalvalue.signal_edited().connect(sigc::mem_fun(*this, &GUI::on_animalvalue_edited));
+    m_tvcol_animalvalue.set_cell_data_func(m_rend_animalvalue,sigc::mem_fun(*this, &GUI::animalvalue_cell_data));
 
     // Create Cell Details TreeView
     m_refGlade->get_widget("tvCellDetails", m_pCellDetailsList);
     m_refCellDetailsList = Gtk::ListStore::create(m_CellDetailsColumns);
     m_pCellDetailsList->set_model(m_refCellDetailsList);
-    m_pCellDetailsList->append_column("Variable", m_CellDetailsColumns.m_col_name);
-    m_pCellDetailsList->append_column_editable("Value", m_CellDetailsColumns.m_col_value);
+    m_pCellDetailsList->append_column("Name", m_CellDetailsColumns.m_col_name);
+
+    m_tvcol_cellvalue.set_title("Value");
+    m_rend_cellvalue.property_editable() = true;
+    m_tvcol_cellvalue.pack_start(m_rend_cellvalue);
+    m_pCellDetailsList->append_column(m_tvcol_cellvalue);
+    m_rend_cellvalue.signal_edited().connect(sigc::mem_fun(*this, &GUI::on_cellvalue_edited));
+    m_tvcol_cellvalue.set_cell_data_func(m_rend_cellvalue,sigc::mem_fun(*this, &GUI::cellvalue_cell_data));
 
     populateAnimalTree();
 
@@ -158,6 +169,22 @@ void GUI::filetags_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::TreeMod
         Gtk::TreeModel::Row row = *iter;
         m_rend_filetags.property_text() = row[m_DetailsColumns.m_col_tags];
     }
+}
+
+void GUI::on_animalvalue_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)
+{
+}
+
+void GUI::animalvalue_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter)
+{
+}
+
+void GUI::on_cellvalue_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)
+{
+}
+
+void GUI::cellvalue_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter)
+{
 }
 
 void GUI::changeDetailsSelection()
