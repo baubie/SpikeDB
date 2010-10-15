@@ -284,7 +284,6 @@ void GUI::on_cellvalue_edited(const Glib::ustring& path_string, const Glib::ustr
         if (r == SQLITE_DONE)
         {
             row[m_CellDetailsColumns.m_col_value] = new_text;
-            std::cerr << "WARNING: Could not update cell. " << sqlite3_errmsg(db) << std::endl; 
         } else {
             std::cerr << "ERROR: Could not update cell. " << sqlite3_errmsg(db) << std::endl; 
         }
@@ -541,26 +540,36 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 
     	row = *(m_refCellDetailsList->append());
 		row[m_CellDetailsColumns.m_col_name] = "CarFreq (Hz)";
+		row[m_CellDetailsColumns.m_col_animalID] = animalID;
+		row[m_CellDetailsColumns.m_col_cellID] = cellID;
         if ((char*)sqlite3_column_text(stmt,1) != NULL)
             row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,1);
 
     	row = *(m_refCellDetailsList->append());
 		row[m_CellDetailsColumns.m_col_name] = "Threshold";
+		row[m_CellDetailsColumns.m_col_animalID] = animalID;
+		row[m_CellDetailsColumns.m_col_cellID] = cellID;
         if ((char*)sqlite3_column_text(stmt,4) != NULL)
             row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,4);
 
     	row = *(m_refCellDetailsList->append());
 		row[m_CellDetailsColumns.m_col_name] = "Depth (um)";
+		row[m_CellDetailsColumns.m_col_animalID] = animalID;
+		row[m_CellDetailsColumns.m_col_cellID] = cellID;
         if ((char*)sqlite3_column_text(stmt,0) != NULL)
             row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,0);
 
     	row = *(m_refCellDetailsList->append());
 		row[m_CellDetailsColumns.m_col_name] = "Tags";
+		row[m_CellDetailsColumns.m_col_animalID] = animalID;
+		row[m_CellDetailsColumns.m_col_cellID] = cellID;
         if ((char*)sqlite3_column_text(stmt,2) != NULL)
             row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,2);
         
     	row = *(m_refCellDetailsList->append());
 		row[m_CellDetailsColumns.m_col_name] = "Notes";
+		row[m_CellDetailsColumns.m_col_animalID] = animalID;
+		row[m_CellDetailsColumns.m_col_cellID] = cellID;
         if ((char*)sqlite3_column_text(stmt,3) != NULL)
             row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,3);
 
