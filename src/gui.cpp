@@ -43,12 +43,6 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
     if (m_pMenuQuit)
         m_pMenuQuit->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuQuit_activate));
 
-    Gtk::TreeModelColumn<int> m_col_filenum;
-    Gtk::TreeModelColumn<int> m_col_CF;
-    Gtk::TreeModelColumn<int> m_col_depth;
-    Gtk::TreeModelColumn<Glib::ustring> m_col_xaxis;
-    Gtk::TreeModelColumn<Glib::ustring> m_col_tags;
-
     // Create Animals TreeView
     m_refGlade->get_widget("tvAnimals", m_pAnimalTree);
     m_refAnimalTree = Gtk::TreeStore::create(m_AnimalColumns);
@@ -69,13 +63,20 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
     m_pDetailsList->append_column("CellID", m_DetailsColumns.m_col_cellID);
     m_pDetailsList->append_column("#", m_DetailsColumns.m_col_filenum);
     m_pDetailsList->append_column("X-Var", m_DetailsColumns.m_col_xaxis);
+    m_pDetailsList->append_column("Type", m_DetailsColumns.m_col_type);
+    m_pDetailsList->append_column("Freq (Hz)", m_DetailsColumns.m_col_freq);
+    m_pDetailsList->append_column("Dur (ms)", m_DetailsColumns.m_col_dur);
+    m_pDetailsList->append_column("Atten (db)", m_DetailsColumns.m_col_atten);
 
+    /*
+    // For the time being, we won't tag individual files
     m_tvcol_filetags.set_title("Tags");
     m_rend_filetags.property_editable() = true;
     m_tvcol_filetags.pack_start(m_rend_filetags);
     m_pDetailsList->append_column(m_tvcol_filetags);
     m_rend_filetags.signal_edited().connect(sigc::mem_fun(*this, &GUI::on_filetags_edited));
     m_tvcol_filetags.set_cell_data_func(m_rend_filetags,sigc::mem_fun(*this, &GUI::filetags_cell_data));
+    */
 
     m_refDetailsSelection = m_pDetailsList->get_selection();
     m_refDetailsSelection->set_mode(Gtk::SELECTION_MULTIPLE);
@@ -175,25 +176,51 @@ void GUI::on_animalvalue_edited(const Glib::ustring& path_string, const Glib::us
 {
     Gtk::TreePath path(path_string);
 
-    Gtk::TreeModel::iterator iter = m_refDetailsList->get_iter(path);
+    Gtk::TreeModel::iterator iter = m_refAnimalDetailsList->get_iter(path);
     if (iter)
     {
         // Update tree model
         Gtk::TreeModel::Row row = *iter;
-        row[m_DetailsColumns.m_col_tags] = new_text;
 
         // Update sqlite database
         Glib::ustring query;
-        if (row.get_value(m_AnimalDetailsColumns.m_col_m_col_name) == "Tags")
+        if (row.get_value(m_AnimalDetailsColumns.m_col_name) == "Tags")
         {
-            query = "UPDATE animals SET tags=? WHERE animalID=?";
+            query = "UPDATE animals SET tags=? WHERE ID=?";
         }
+        if (row.get_value(m_AnimalDetailsColumns.m_col_name) == "Species")
+        {
+            query = "UPDATE animals SET species=? WHERE ID=?";
+        }
+        if (row.get_value(m_AnimalDetailsColumns.m_col_name) == "Sex")
+        {
+            query = "UPDATE animals SET sex=? WHERE ID=?";
+        }
+        if (row.get_value(m_AnimalDetailsColumns.m_col_name) == "Weight (g)")
+        {
+            query = "UPDATE animals SET weight=? WHERE ID=?";
+        }
+        if (row.get_value(m_AnimalDetailsColumns.m_col_name) == "Age")
+        {
+            query = "UPDATE animals SET age=? WHERE ID=?";
+        }
+        if (row.get_value(m_AnimalDetailsColumns.m_col_name) == "Notes")
+        {
+            query = "UPDATE animals SET notes=? WHERE ID=?";
+        }
+
         const char* q = query.c_str();
         sqlite3_stmt *stmt=0;
         sqlite3_prepare_v2(db,q,strlen(q),&stmt,NULL);
         sqlite3_bind_text(stmt,1,new_text.c_str(),-1,SQLITE_TRANSIENT);
         sqlite3_bind_text(stmt,2,row.get_value(m_AnimalDetailsColumns.m_col_animalID).c_str(),-1,SQLITE_TRANSIENT);
-        sqlite3_step(stmt);
+        int r = sqlite3_step(stmt);
+        if (r == SQLITE_DONE)
+        {
+            row[m_AnimalDetailsColumns.m_col_value] = new_text;
+        } else {
+            std::cerr << "ERROR: Could not update animal. " << sqlite3_errmsg(db) << std::endl; 
+        }
         sqlite3_finalize(stmt);
     }
 }
@@ -204,11 +231,65 @@ void GUI::animalvalue_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::Tree
     {
         Gtk::TreeModel::Row row = *iter;
         m_rend_animalvalue.property_text() = row[m_AnimalDetailsColumns.m_col_value];
+        if (row[m_AnimalDetailsColumns.m_col_name] != "ID")
+        {
+            m_rend_animalvalue.property_editable() = true;
+            m_rend_animalvalue.property_cell_background() = "#DDEEFF";
+        } else {
+            m_rend_animalvalue.property_editable() = false;
+            m_rend_animalvalue.property_cell_background() = "#FFDDDD";
+        }
     }
 }
 
 void GUI::on_cellvalue_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)
 {
+    Gtk::TreePath path(path_string);
+
+    Gtk::TreeModel::iterator iter = m_refCellDetailsList->get_iter(path);
+    if (iter)
+    {
+        // Update tree model
+        Gtk::TreeModel::Row row = *iter;
+
+        // Update sqlite database
+        Glib::ustring query;
+        if (row.get_value(m_CellDetailsColumns.m_col_name) == "CarFreq (Hz)")
+        {
+            query = "UPDATE cells SET freq=? WHERE animalID=? AND cellID=?";
+        }
+        if (row.get_value(m_CellDetailsColumns.m_col_name) == "Depth (um)")
+        {
+            query = "UPDATE cells SET depth=? WHERE animalID=? AND cellID=?";
+        }
+        if (row.get_value(m_CellDetailsColumns.m_col_name) == "Threshold")
+        {
+            query = "UPDATE cells SET threshold=? WHERE animalID=? AND cellID=?";
+        }
+        if (row.get_value(m_CellDetailsColumns.m_col_name) == "Tags")
+        {
+            query = "UPDATE cells SET tags=? WHERE animalID=? AND cellID=?";
+        }
+        if (row.get_value(m_CellDetailsColumns.m_col_name) == "Notes")
+        {
+            query = "UPDATE cells SET notes=? WHERE animalID=? AND cellID=?";
+        }
+        const char* q = query.c_str();
+        sqlite3_stmt *stmt=0;
+        sqlite3_prepare_v2(db,q,strlen(q),&stmt,NULL);
+        sqlite3_bind_text(stmt,1,new_text.c_str(),-1,SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt,2,row.get_value(m_CellDetailsColumns.m_col_animalID).c_str(),-1,SQLITE_TRANSIENT);
+        sqlite3_bind_int(stmt,3,row.get_value(m_CellDetailsColumns.m_col_cellID));
+        int r = sqlite3_step(stmt);
+        if (r == SQLITE_DONE)
+        {
+            row[m_CellDetailsColumns.m_col_value] = new_text;
+            std::cerr << "WARNING: Could not update cell. " << sqlite3_errmsg(db) << std::endl; 
+        } else {
+            std::cerr << "ERROR: Could not update cell. " << sqlite3_errmsg(db) << std::endl; 
+        }
+        sqlite3_finalize(stmt);
+    }
 }
 
 void GUI::cellvalue_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::TreeModel::iterator& iter)
@@ -217,6 +298,14 @@ void GUI::cellvalue_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::TreeMo
     {
         Gtk::TreeModel::Row row = *iter;
         m_rend_cellvalue.property_text() = row[m_CellDetailsColumns.m_col_value];
+        if (row[m_CellDetailsColumns.m_col_name] != "Cell ID")
+        {
+            m_rend_cellvalue.property_editable() = true;
+            m_rend_cellvalue.property_cell_background() = "#DDEEFF";
+        } else {
+            m_rend_cellvalue.property_editable() = false;
+            m_rend_cellvalue.property_cell_background() = "#FFDDDD";
+        }
     }
 }
 
@@ -430,7 +519,7 @@ void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID)
 {
     m_refCellDetailsList->clear();
-	char query[] = "SELECT depth, freq, tags, notes FROM cells WHERE animalID=? AND cellID=?";
+	char query[] = "SELECT depth, freq, tags, notes, threshold FROM cells WHERE animalID=? AND cellID=?";
 	sqlite3_stmt *stmt;
 	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
 	sqlite3_bind_text(stmt,1, animalID.c_str(), -1, SQLITE_TRANSIENT);
@@ -454,6 +543,11 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 		row[m_CellDetailsColumns.m_col_name] = "CarFreq (Hz)";
         if ((char*)sqlite3_column_text(stmt,1) != NULL)
             row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,1);
+
+    	row = *(m_refCellDetailsList->append());
+		row[m_CellDetailsColumns.m_col_name] = "Threshold";
+        if ((char*)sqlite3_column_text(stmt,4) != NULL)
+            row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,4);
 
     	row = *(m_refCellDetailsList->append());
 		row[m_CellDetailsColumns.m_col_name] = "Depth (um)";
@@ -550,6 +644,38 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
             const HEADER *h = new HEADER(*static_cast<HEADER*>(header));
             sd.m_head = *h;
             row[m_DetailsColumns.m_col_xaxis] = sd.xVariable();
+            row[m_DetailsColumns.m_col_type] = sd.type();
+
+            if (sd.frequency(1,0) == sd.frequency(1,1))
+            {
+                char buffer[7];
+                sprintf(buffer, "%d", (int)sd.frequency(1,0));
+                row[m_DetailsColumns.m_col_freq] = buffer;
+            }
+            else
+            {
+                row[m_DetailsColumns.m_col_freq] = "Varied";
+            }
+            if (sd.attenuation(1,0) == sd.attenuation(1,1))
+            {
+                char buffer[7];
+                sprintf(buffer, "%d", (int)sd.attenuation(1,0));
+                row[m_DetailsColumns.m_col_atten] = buffer;
+            }
+            else
+            {
+                row[m_DetailsColumns.m_col_atten] = "Varied";
+            }
+            if (sd.duration(1,0) == sd.duration(1,1))
+            {
+                char buffer[7];
+                sprintf(buffer, "%d", (int)sd.duration(1,0));
+                row[m_DetailsColumns.m_col_dur] = buffer;
+            }
+            else
+            {
+                row[m_DetailsColumns.m_col_dur] = "Varied";
+            }
         } else { break; }
     }
     sqlite3_finalize(stmt);

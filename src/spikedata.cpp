@@ -109,26 +109,72 @@ bool SpikeData::parsedata()
     return true;
 }
 
+std::string SpikeData::type()
+{
+#define NOISE		0
+#define SINUS		1
+#define AMSINUS 	2
+#define FMSINUS		3
+#define SWEPTSINUS	4
+#define WAVEFILE	5
+#define FILT_NOISE	6
+
+    switch (m_head.stimFirstCh1.nType)
+    {
+        case NOISE:
+            return "Noise";
+            break;
+
+        case SINUS:
+            return "Sinus";
+            break;
+
+        case AMSINUS:
+            return "AM Sinus";
+            break;
+
+        case FMSINUS:
+            return "FM Sinus";
+            break;
+
+        case SWEPTSINUS:
+            return "Swept Sinus";
+            break;
+
+        case WAVEFILE:
+            return "Wave File";
+            break;
+
+        case FILT_NOISE:
+            return "Filtered Noise";
+            break;
+
+        default:
+            return "Unknown";
+            break;
+    }
+}
+
 std::string SpikeData::xVariable()
 {
-	if (m_head.deltaCh1.fBegin != 0) return "Channel 1 Onset";	
-	if (m_head.deltaCh1.fDur != 0) return "Channel 1 Duration";	
-	if (m_head.deltaCh1.fStimInt != 0) return "Channel 1 Stimulus Interval";	
-	if (m_head.deltaCh1.fAtten != 0) return "Channel 1 Attenuation";	
-	if (m_head.deltaCh1.fCarFreq != 0) return "Channel 1 Frequency";	
-	if (m_head.deltaCh1.fPhase != 0) return "Channel 1 Phase";	
-	if (m_head.deltaCh1.fFreqDev != 0) return "Channel 1 Fequency Deviation";	
-	if (m_head.deltaCh1.fAmDepth != 0) return "Channel 1 AM Depth";	
-	if (m_head.deltaCh1.fModFreq != 0) return "Channel 1 Modulation Frequency";	
-	if (m_head.deltaCh2.fBegin != 0) return "Channel 2 Onset";	
-	if (m_head.deltaCh2.fDur != 0) return "Channel 2 Duration";	
-	if (m_head.deltaCh2.fStimInt != 0) return "Channel 2 Stimulus Interval";	
-	if (m_head.deltaCh2.fAtten != 0) return "Channel 2 Attenuation";	
-	if (m_head.deltaCh2.fCarFreq != 0) return "Channel 2 Frequency";	
-	if (m_head.deltaCh2.fPhase != 0) return "Channel 2 Phase";	
-	if (m_head.deltaCh2.fFreqDev != 0) return "Channel 2 Fequency Deviation";	
-	if (m_head.deltaCh2.fAmDepth != 0) return "Channel 2 AM Depth";	
-	if (m_head.deltaCh2.fModFreq != 0) return "Channel 2 Modulation Frequency";	
+	if (m_head.deltaCh1.fBegin != 0) return "Ch 1 Onset";	
+	if (m_head.deltaCh1.fDur != 0) return "Ch 1 Dur";	
+	if (m_head.deltaCh1.fStimInt != 0) return "Ch 1 Stim Int";	
+	if (m_head.deltaCh1.fAtten != 0) return "Ch 1 Atten";	
+	if (m_head.deltaCh1.fCarFreq != 0) return "Ch 1 Freq";	
+	if (m_head.deltaCh1.fPhase != 0) return "Ch 1 Phase";	
+	if (m_head.deltaCh1.fFreqDev != 0) return "Ch 1 Freq Dev";	
+	if (m_head.deltaCh1.fAmDepth != 0) return "Ch 1 AM Depth";	
+	if (m_head.deltaCh1.fModFreq != 0) return "Ch 1 Mod Freq";	
+	if (m_head.deltaCh2.fBegin != 0) return "Ch 2 Onset";	
+	if (m_head.deltaCh2.fDur != 0) return "Ch 2 Dur";	
+	if (m_head.deltaCh2.fStimInt != 0) return "Ch 2 Stim Int";	
+	if (m_head.deltaCh2.fAtten != 0) return "Ch 2 Atten";	
+	if (m_head.deltaCh2.fCarFreq != 0) return "Ch 2 Freq";	
+	if (m_head.deltaCh2.fPhase != 0) return "Ch 2 Phase";	
+	if (m_head.deltaCh2.fFreqDev != 0) return "Ch 2 Freq Dev";	
+	if (m_head.deltaCh2.fAmDepth != 0) return "Ch 2 AM Depth";	
+	if (m_head.deltaCh2.fModFreq != 0) return "Ch 2 Mod Freq";	
 	return "Unknown";
 }
 
@@ -143,6 +189,15 @@ double SpikeData::delta()
     if (m_head.deltaCh1.fFreqDev != 0) return m_head.deltaCh1.fFreqDev;
     if (m_head.deltaCh1.fAmDepth != 0) return m_head.deltaCh1.fAmDepth;
     if (m_head.deltaCh1.fModFreq != 0) return m_head.deltaCh1.fModFreq;
+    if (m_head.deltaCh2.fBegin != 0) return m_head.deltaCh2.fBegin;	
+    if (m_head.deltaCh2.fDur != 0) return m_head.deltaCh2.fDur;	
+    if (m_head.deltaCh2.fStimInt != 0) return m_head.deltaCh2.fStimInt;
+    if (m_head.deltaCh2.fAtten != 0) return m_head.deltaCh2.fAtten;
+    if (m_head.deltaCh2.fCarFreq != 0) return m_head.deltaCh2.fCarFreq;
+    if (m_head.deltaCh2.fPhase != 0) return m_head.deltaCh2.fPhase;
+    if (m_head.deltaCh2.fFreqDev != 0) return m_head.deltaCh2.fFreqDev;
+    if (m_head.deltaCh2.fAmDepth != 0) return m_head.deltaCh2.fAmDepth;
+    if (m_head.deltaCh2.fModFreq != 0) return m_head.deltaCh2.fModFreq;
     return 1;
 }
 
@@ -223,6 +278,43 @@ double SpikeData::duration(int channel, int sweep)
             return m_head.stimFirstCh1.fDur+m_head.deltaCh1.fDur*sweep;
         case 2:
             return m_head.stimFirstCh2.fDur+m_head.deltaCh2.fDur*sweep;
+    }
+    return 0;
+}
+
+double SpikeData::attenuation(int channel, int sweep)
+{
+    switch(channel)
+    {
+        case 1:
+            return m_head.stimFirstCh1.fAtten+m_head.deltaCh1.fAtten*sweep;
+        case 2:
+            return m_head.stimFirstCh2.fAtten+m_head.deltaCh2.fAtten*sweep;
+    }
+    return 0;
+}
+
+double SpikeData::frequency(int channel, int sweep)
+{
+    if (m_head.stimFirstCh1.nType == SINUS)
+    {
+        switch(channel)
+        {
+            case 1:
+                return m_head.stimFirstCh1.params.sin.fFreq+m_head.deltaCh1.fCarFreq*sweep;
+            case 2:
+                return m_head.stimFirstCh2.params.sin.fFreq+m_head.deltaCh2.fCarFreq*sweep;
+        }
+    }
+    if (m_head.stimFirstCh1.nType == SWEPTSINUS)
+    {
+        switch(channel)
+        {
+            case 1:
+                return m_head.stimFirstCh1.params.sweptsin.fCarFreq+m_head.deltaCh1.fCarFreq*sweep;
+            case 2:
+                return m_head.stimFirstCh2.params.sweptsin.fCarFreq+m_head.deltaCh2.fCarFreq*sweep;
+        }
     }
     return 0;
 }

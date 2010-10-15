@@ -198,10 +198,13 @@ class SpikeData
         bool parse(const char* filename);
         void printfile();
         std::string xVariable();
+        std::string type();
         double xvalue(int sweep);
         double delta();
         double begin(int channel, int sweep);
         double duration(int channel, int sweep);
+        double attenuation(int channel, int sweep);
+        double frequency(int channel, int sweep);
         HEADER m_head;
         std::vector<SPIKESTRUCT> m_spikeArray;
 
