@@ -75,7 +75,8 @@ class GUI : public Gtk::Window
         {
             public:
                 AnimalDetailsColumns()
-                { add(m_col_name); add(m_col_value); }
+                { add(m_col_animalID); add(m_col_name); add(m_col_value); }
+                Gtk::TreeModelColumn<Glib::ustring> m_col_animalID;
                 Gtk::TreeModelColumn<Glib::ustring> m_col_name;
                 Gtk::TreeModelColumn<Glib::ustring> m_col_value;
         };
@@ -88,7 +89,9 @@ class GUI : public Gtk::Window
         {
             public:
                 CellDetailsColumns()
-                { add(m_col_name); add(m_col_value); }
+                { add(m_col_animalID); add(m_col_cellID); add(m_col_name); add(m_col_value); }
+                Gtk::TreeModelColumn<Glib::ustring> m_col_animalID;
+                Gtk::TreeModelColumn<int> m_col_cellID;
                 Gtk::TreeModelColumn<Glib::ustring> m_col_name;
                 Gtk::TreeModelColumn<Glib::ustring> m_col_value;
         };

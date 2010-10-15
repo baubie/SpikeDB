@@ -332,7 +332,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         bool x_useint = !((int)(xmin) == (int)(xmin+Xbt));
         bool y_useint = !((int)(ymin) == (int)(ymin+Ybt));
         Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
-        char buffer[20];
+        char buffer[10];
         if (y_useint) sprintf(buffer,"%i",(int)(ymin_bt));
         else sprintf(buffer,"%.1f",ymin_bt); 
         Pango::FontDescription label_font_descr("sans normal 8");

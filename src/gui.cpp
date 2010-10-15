@@ -173,18 +173,51 @@ void GUI::filetags_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::TreeMod
 
 void GUI::on_animalvalue_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)
 {
+    Gtk::TreePath path(path_string);
+
+    Gtk::TreeModel::iterator iter = m_refDetailsList->get_iter(path);
+    if (iter)
+    {
+        // Update tree model
+        Gtk::TreeModel::Row row = *iter;
+        row[m_DetailsColumns.m_col_tags] = new_text;
+
+        // Update sqlite database
+        Glib::ustring query;
+        if (row.get_value(m_AnimalDetailsColumns.m_col_m_col_name) == "Tags")
+        {
+            query = "UPDATE animals SET tags=? WHERE animalID=?";
+        }
+        const char* q = query.c_str();
+        sqlite3_stmt *stmt=0;
+        sqlite3_prepare_v2(db,q,strlen(q),&stmt,NULL);
+        sqlite3_bind_text(stmt,1,new_text.c_str(),-1,SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt,2,row.get_value(m_AnimalDetailsColumns.m_col_animalID).c_str(),-1,SQLITE_TRANSIENT);
+        sqlite3_step(stmt);
+        sqlite3_finalize(stmt);
+    }
 }
 
-void GUI::animalvalue_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter)
+void GUI::animalvalue_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::TreeModel::iterator& iter)
 {
+    if (iter)
+    {
+        Gtk::TreeModel::Row row = *iter;
+        m_rend_animalvalue.property_text() = row[m_AnimalDetailsColumns.m_col_value];
+    }
 }
 
 void GUI::on_cellvalue_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)
 {
 }
 
-void GUI::cellvalue_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter)
+void GUI::cellvalue_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::TreeModel::iterator& iter)
 {
+    if (iter)
+    {
+        Gtk::TreeModel::Row row = *iter;
+        m_rend_cellvalue.property_text() = row[m_CellDetailsColumns.m_col_value];
+    }
 }
 
 void GUI::changeDetailsSelection()
@@ -338,7 +371,8 @@ void GUI::changeAnimalSelection()
 
 void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 {
-	char query[] = "SELECT ID, species, sex, weight, age, tags, notes FROM animals WHERE ID=?";
+    m_refAnimalDetailsList->clear();
+	char query[] = "SELECT species, sex, weight, age, tags, notes FROM animals WHERE ID=?";
 	sqlite3_stmt *stmt;
 	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
 	sqlite3_bind_text(stmt,1, animalID.c_str(), -1, SQLITE_TRANSIENT);
@@ -351,13 +385,93 @@ void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 	{
     	row = *(m_refAnimalDetailsList->append());
 		row[m_AnimalDetailsColumns.m_col_name] = "ID";
-		row[m_AnimalDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,0);
+		row[m_AnimalDetailsColumns.m_col_value] = animalID;
+		row[m_AnimalDetailsColumns.m_col_animalID] = animalID;
+
+    	row = *(m_refAnimalDetailsList->append());
+		row[m_AnimalDetailsColumns.m_col_name] = "Species";
+		row[m_AnimalDetailsColumns.m_col_animalID] = animalID;
+        if ((char*)sqlite3_column_text(stmt,0) != NULL)
+            row[m_AnimalDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,0);
+
+    	row = *(m_refAnimalDetailsList->append());
+		row[m_AnimalDetailsColumns.m_col_name] = "Sex";
+		row[m_AnimalDetailsColumns.m_col_animalID] = animalID;
+        if ((char*)sqlite3_column_text(stmt,1) != NULL)
+            row[m_AnimalDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,1);
+
+    	row = *(m_refAnimalDetailsList->append());
+		row[m_AnimalDetailsColumns.m_col_name] = "Weight (g)";
+		row[m_AnimalDetailsColumns.m_col_animalID] = animalID;
+        if ((char*)sqlite3_column_text(stmt,2) != NULL)
+            row[m_AnimalDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,2);
+        
+    	row = *(m_refAnimalDetailsList->append());
+		row[m_AnimalDetailsColumns.m_col_name] = "Age";
+		row[m_AnimalDetailsColumns.m_col_animalID] = animalID;
+        if ((char*)sqlite3_column_text(stmt,3) != NULL)
+            row[m_AnimalDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,3);
+        
+    	row = *(m_refAnimalDetailsList->append());
+		row[m_AnimalDetailsColumns.m_col_name] = "Tags";
+		row[m_AnimalDetailsColumns.m_col_animalID] = animalID;
+        if ((char*)sqlite3_column_text(stmt,4) != NULL)
+            row[m_AnimalDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,4);
+
+    	row = *(m_refAnimalDetailsList->append());
+		row[m_AnimalDetailsColumns.m_col_name] = "Notes";
+		row[m_AnimalDetailsColumns.m_col_animalID] = animalID;
+        if ((char*)sqlite3_column_text(stmt,5) != NULL)
+            row[m_AnimalDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,5);
 	}
 	sqlite3_finalize(stmt);
 }
 
 void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID)
 {
+    m_refCellDetailsList->clear();
+	char query[] = "SELECT depth, freq, tags, notes FROM cells WHERE animalID=? AND cellID=?";
+	sqlite3_stmt *stmt;
+	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
+	sqlite3_bind_text(stmt,1, animalID.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_int(stmt,2, cellID);
+	int r;
+	r = sqlite3_step(stmt);
+
+	Gtk::TreeModel::Row row;
+
+	if (r == SQLITE_ROW)
+	{
+    	row = *(m_refCellDetailsList->append());
+		row[m_CellDetailsColumns.m_col_name] = "Cell ID";
+		row[m_CellDetailsColumns.m_col_animalID] = animalID;
+		row[m_CellDetailsColumns.m_col_cellID] = cellID;
+        char buffer[4];
+        sprintf(buffer,"%d", cellID);
+		row[m_CellDetailsColumns.m_col_value] = buffer;
+
+    	row = *(m_refCellDetailsList->append());
+		row[m_CellDetailsColumns.m_col_name] = "CarFreq (Hz)";
+        if ((char*)sqlite3_column_text(stmt,1) != NULL)
+            row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,1);
+
+    	row = *(m_refCellDetailsList->append());
+		row[m_CellDetailsColumns.m_col_name] = "Depth (um)";
+        if ((char*)sqlite3_column_text(stmt,0) != NULL)
+            row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,0);
+
+    	row = *(m_refCellDetailsList->append());
+		row[m_CellDetailsColumns.m_col_name] = "Tags";
+        if ((char*)sqlite3_column_text(stmt,2) != NULL)
+            row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,2);
+        
+    	row = *(m_refCellDetailsList->append());
+		row[m_CellDetailsColumns.m_col_name] = "Notes";
+        if ((char*)sqlite3_column_text(stmt,3) != NULL)
+            row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,3);
+
+	}
+	sqlite3_finalize(stmt);
 }
 
 void GUI::populateAnimalTree()
@@ -370,7 +484,7 @@ void GUI::populateAnimalTree()
     Gtk::TreeModel::Row row;
     Gtk::TreeModel::Row childrow;
     base = *(m_refAnimalTree->append());
-    base[m_AnimalColumns.m_col_name] = "Animals";
+    base[m_AnimalColumns.m_col_name] = "All Animals";
     int r_animals, r_cells;
     while (true)
     {
