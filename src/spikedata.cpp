@@ -201,6 +201,11 @@ double SpikeData::delta()
     return 1;
 }
 
+int SpikeData::trials()
+{
+    return m_head.nPasses;
+}
+
 double SpikeData::xvalue(int sweep)
 {
     if (m_head.deltaCh1.fBegin != 0) {

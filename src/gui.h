@@ -3,6 +3,7 @@
 
 #include <gtkmm.h>
 #include <string>
+#include <vector>
 #include <dirent.h>
 #include <sqlite3.h>
 #include "easyplotmm/easyplotmm.h"
@@ -58,7 +59,8 @@ class GUI : public Gtk::Window
             public:
                 DetailsColumns()
                 { add(m_col_animalID); add(m_col_cellID); add(m_col_filenum); add(m_col_xaxis); 
-                  add(m_col_type); add(m_col_freq); add(m_col_dur); add(m_col_atten); add(m_col_tags); 
+                  add(m_col_type); add(m_col_freq); add(m_col_trials); add(m_col_onset); add(m_col_dur); add(m_col_atten); 
+                  add(m_col_tags); 
                 }
                 Gtk::TreeModelColumn<Glib::ustring> m_col_animalID;
                 Gtk::TreeModelColumn<int> m_col_cellID;
@@ -66,7 +68,9 @@ class GUI : public Gtk::Window
                 Gtk::TreeModelColumn<Glib::ustring> m_col_xaxis;
                 Gtk::TreeModelColumn<Glib::ustring> m_col_type;
                 Gtk::TreeModelColumn<Glib::ustring> m_col_freq;
+                Gtk::TreeModelColumn<int> m_col_trials;
                 Gtk::TreeModelColumn<Glib::ustring> m_col_dur;
+                Gtk::TreeModelColumn<Glib::ustring> m_col_onset;
                 Gtk::TreeModelColumn<Glib::ustring> m_col_atten;
                 Gtk::TreeModelColumn<Glib::ustring> m_col_tags;
         };

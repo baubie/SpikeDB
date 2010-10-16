@@ -64,8 +64,10 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
     m_pDetailsList->append_column("#", m_DetailsColumns.m_col_filenum);
     m_pDetailsList->append_column("X-Var", m_DetailsColumns.m_col_xaxis);
     m_pDetailsList->append_column("Type", m_DetailsColumns.m_col_type);
-    m_pDetailsList->append_column("Freq (Hz)", m_DetailsColumns.m_col_freq);
+    m_pDetailsList->append_column("Trials", m_DetailsColumns.m_col_trials);
+    m_pDetailsList->append_column("CarFreq (Hz)", m_DetailsColumns.m_col_freq);
     m_pDetailsList->append_column("Dur (ms)", m_DetailsColumns.m_col_dur);
+    m_pDetailsList->append_column("Onset (ms)", m_DetailsColumns.m_col_onset);
     m_pDetailsList->append_column("Atten (db)", m_DetailsColumns.m_col_atten);
 
     /*
@@ -654,37 +656,85 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
             sd.m_head = *h;
             row[m_DetailsColumns.m_col_xaxis] = sd.xVariable();
             row[m_DetailsColumns.m_col_type] = sd.type();
+            row[m_DetailsColumns.m_col_trials] = sd.trials();
 
-            if (sd.frequency(1,0) == sd.frequency(1,1))
+            char bufferCh1[10];
+            char bufferCh2[10];
+            char buffer[22];
+
+            if (sd.m_head.nOnCh1 == 0) strcpy(bufferCh1,"-");
+            else 
             {
-                char buffer[7];
-                sprintf(buffer, "%d", (int)sd.frequency(1,0));
-                row[m_DetailsColumns.m_col_freq] = buffer;
+                if (sd.frequency(1,0) == sd.frequency(1,1)) sprintf(bufferCh1, "%d", (int)sd.frequency(1,0));
+                else strcpy(bufferCh1,"Var");
             }
-            else
+            if (sd.m_head.nOnCh2 == 0) strcpy(bufferCh2,"-");
+            else 
             {
-                row[m_DetailsColumns.m_col_freq] = "Varied";
+                if (sd.frequency(2,0) == sd.frequency(2,1)) sprintf(bufferCh2, "%d", (int)sd.frequency(2,0));
+                else strcpy(bufferCh2,"Var");
             }
-            if (sd.attenuation(1,0) == sd.attenuation(1,1))
+            sprintf(buffer, "%s/%s", bufferCh1,bufferCh2);
+            row[m_DetailsColumns.m_col_freq] = buffer;
+            bufferCh1[0] = '\0';
+            bufferCh2[0] = '\0';
+            buffer[0] = '\0';
+
+
+            if (sd.m_head.nOnCh1 == 0) strcpy(bufferCh1,"-");
+            else 
             {
-                char buffer[7];
-                sprintf(buffer, "%d", (int)sd.attenuation(1,0));
-                row[m_DetailsColumns.m_col_atten] = buffer;
+                if (sd.attenuation(1,0) == sd.attenuation(1,1)) sprintf(bufferCh1, "%d", (int)sd.attenuation(1,0));
+                else strcpy(bufferCh1,"Var");
             }
-            else
+            if (sd.m_head.nOnCh2 == 0) strcpy(bufferCh2,"-");
+            else 
             {
-                row[m_DetailsColumns.m_col_atten] = "Varied";
+                if (sd.attenuation(2,0) == sd.attenuation(2,1)) sprintf(bufferCh2, "%d", (int)sd.attenuation(2,0));
+                else strcpy(bufferCh2,"Var");
             }
-            if (sd.duration(1,0) == sd.duration(1,1))
+            sprintf(buffer, "%s/%s", bufferCh1,bufferCh2);
+            row[m_DetailsColumns.m_col_atten] = buffer;
+            bufferCh1[0] = '\0';
+            bufferCh2[0] = '\0';
+            buffer[0] = '\0';
+
+            if (sd.m_head.nOnCh1 == 0) strcpy(bufferCh1,"-");
+            else 
             {
-                char buffer[7];
-                sprintf(buffer, "%d", (int)sd.duration(1,0));
-                row[m_DetailsColumns.m_col_dur] = buffer;
+                if (sd.duration(1,0) == sd.duration(1,1)) sprintf(bufferCh1, "%d", (int)sd.duration(1,0));
+                else strcpy(bufferCh1,"Var");
             }
-            else
+            if (sd.m_head.nOnCh2 == 0) strcpy(bufferCh2,"-");
+            else 
             {
-                row[m_DetailsColumns.m_col_dur] = "Varied";
+                if (sd.duration(2,0) == sd.duration(2,1)) sprintf(bufferCh2, "%d", (int)sd.duration(2,0));
+                else strcpy(bufferCh2,"Var");
             }
+            sprintf(buffer, "%s/%s", bufferCh1,bufferCh2);
+            row[m_DetailsColumns.m_col_dur] = buffer;
+            bufferCh1[0] = '\0';
+            bufferCh2[0] = '\0';
+            buffer[0] = '\0';
+
+            if (sd.m_head.nOnCh1 == 0) strcpy(bufferCh1,"-");
+            else 
+            {
+                if (sd.begin(1,0) == sd.begin(1,1)) sprintf(bufferCh1, "%d", (int)sd.begin(1,0));
+                else strcpy(bufferCh1,"Var");
+            }
+            if (sd.m_head.nOnCh2 == 0) strcpy(bufferCh2,"-");
+            else 
+            {
+                if (sd.begin(2,0) == sd.begin(2,1)) sprintf(bufferCh2, "%d", (int)sd.begin(2,0));
+                else strcpy(bufferCh2,"Var");
+            }
+            sprintf(buffer, "%s/%s", bufferCh1,bufferCh2);
+            row[m_DetailsColumns.m_col_onset] = buffer;
+            bufferCh1[0] = '\0';
+            bufferCh2[0] = '\0';
+            buffer[0] = '\0';
+
         } else { break; }
     }
     sqlite3_finalize(stmt);
@@ -697,6 +747,7 @@ void GUI::on_menuImportFolder_activate()
 {
     Gtk::FileChooserDialog dialog("Select a Folder Containing Spike Data Files",
         Gtk::FILE_CHOOSER_ACTION_SELECT_FOLDER);
+    dialog.set_select_multiple(true);
     dialog.set_transient_for(*this);
 
     // Add response buttons to the dialog:
@@ -711,58 +762,67 @@ void GUI::on_menuImportFolder_activate()
         case(Gtk::RESPONSE_OK):
             struct dirent *dptr;
             DIR *dirp;
-            std::string filename = dialog.get_filename();
-            if ((dirp=opendir(filename.c_str()))==NULL)
+            std::vector<std::string> filenames = dialog.get_filenames();
+            std::vector<std::string>::iterator it;
+            std::string filename;
+
+            for (it = filenames.begin(); it != filenames.end(); it++)
             {
-                std::cerr << "ERROR: Unable to open " << filename << std::endl;
-            } else {
-                while ((dptr=readdir(dirp)))
+                filename = *it;
+                if ((dirp=opendir(filename.c_str()))==NULL)
                 {
-                    SpikeData sd;
-                    if (dptr->d_type == 0x8)
+                    std::cerr << "ERROR: Unable to open " << filename << std::endl;
+                } 
+                else 
+                {
+                    while ((dptr=readdir(dirp)))
                     {
-                        std::string fullfile(filename);
-                        fullfile += "/";
-                        fullfile += dptr->d_name;
-                        if (sd.parse(fullfile.c_str()))
+                        SpikeData sd;
+                        if (dptr->d_type == 0x8)
                         {
-                            std::vector<std::string> fileTokens;
-                            std::string shortfilename(dptr->d_name);
-                            Tokenize(shortfilename, fileTokens, ".");
+                            std::string fullfile(filename);
+                            fullfile += "/";
+                            fullfile += dptr->d_name;
+                            if (sd.parse(fullfile.c_str()))
+                            {
+                                std::vector<std::string> fileTokens;
+                                std::string shortfilename(dptr->d_name);
+                                Tokenize(shortfilename, fileTokens, ".");
 
-                            // Insert animal 
-                            const char q_animal[] = "INSERT INTO animals (ID) VALUES(?)";
-                            sqlite3_stmt *stmt_animal=0;
-                            sqlite3_prepare_v2(db,q_animal,strlen(q_animal),&stmt_animal,NULL);
-                            sqlite3_bind_text(stmt_animal,1,fileTokens[0].c_str(),-1,SQLITE_TRANSIENT);
-                            sqlite3_step(stmt_animal);
-                            sqlite3_finalize(stmt_animal);
+                                // Insert animal 
+                                const char q_animal[] = "INSERT INTO animals (ID) VALUES(?)";
+                                sqlite3_stmt *stmt_animal=0;
+                                sqlite3_prepare_v2(db,q_animal,strlen(q_animal),&stmt_animal,NULL);
+                                sqlite3_bind_text(stmt_animal,1,fileTokens[0].c_str(),-1,SQLITE_TRANSIENT);
+                                sqlite3_step(stmt_animal);
+                                sqlite3_finalize(stmt_animal);
 
-                            // Insert Cell
-                            const char q_cell[] = "INSERT INTO cells (animalID,cellID) VALUES(?,?)";
-                            sqlite3_stmt *stmt_cell=0;
-                            sqlite3_prepare_v2(db,q_cell,strlen(q_cell), &stmt_cell, NULL);
-                            sqlite3_bind_text(stmt_cell,1,fileTokens[0].c_str(),-1,SQLITE_TRANSIENT);
-                            sqlite3_bind_int(stmt_cell,2,atoi(fileTokens[1].c_str()));
-                            sqlite3_step(stmt_cell);
-                            sqlite3_finalize(stmt_cell);
+                                // Insert Cell
+                                const char q_cell[] = "INSERT INTO cells (animalID,cellID) VALUES(?,?)";
+                                sqlite3_stmt *stmt_cell=0;
+                                sqlite3_prepare_v2(db,q_cell,strlen(q_cell), &stmt_cell, NULL);
+                                sqlite3_bind_text(stmt_cell,1,fileTokens[0].c_str(),-1,SQLITE_TRANSIENT);
+                                sqlite3_bind_int(stmt_cell,2,atoi(fileTokens[1].c_str()));
+                                sqlite3_step(stmt_cell);
+                                sqlite3_finalize(stmt_cell);
 
-                            // Insert File
-                            const char q_file[] = "INSERT INTO files (animalID,cellID,fileID,header,spikes) VALUES(?,?,?,?,?)";
-                            sqlite3_stmt *stmt_file=0;
-                            sqlite3_prepare_v2(db,q_file,strlen(q_file), &stmt_file, NULL);
-                            sqlite3_bind_text(stmt_file, 1, fileTokens[0].c_str(), -1, SQLITE_TRANSIENT);
-                            sqlite3_bind_int(stmt_file, 2, atoi(fileTokens[1].c_str()));
-                            sqlite3_bind_int(stmt_file, 3, atoi(fileTokens[2].c_str()));
-                            sqlite3_bind_blob(stmt_file, 4, (void*)&sd.m_head, sizeof(sd.m_head), SQLITE_TRANSIENT);
-                            sqlite3_bind_blob(stmt_file, 5, (void*)&sd.m_spikeArray[0], sizeof(SPIKESTRUCT)*sd.m_spikeArray.size(), SQLITE_TRANSIENT);
-                            sqlite3_step(stmt_file);
-                            sqlite3_finalize(stmt_file);
+                                // Insert File
+                                const char q_file[] = "INSERT INTO files (animalID,cellID,fileID,header,spikes) VALUES(?,?,?,?,?)";
+                                sqlite3_stmt *stmt_file=0;
+                                sqlite3_prepare_v2(db,q_file,strlen(q_file), &stmt_file, NULL);
+                                sqlite3_bind_text(stmt_file, 1, fileTokens[0].c_str(), -1, SQLITE_TRANSIENT);
+                                sqlite3_bind_int(stmt_file, 2, atoi(fileTokens[1].c_str()));
+                                sqlite3_bind_int(stmt_file, 3, atoi(fileTokens[2].c_str()));
+                                sqlite3_bind_blob(stmt_file, 4, (void*)&sd.m_head, sizeof(sd.m_head), SQLITE_TRANSIENT);
+                                sqlite3_bind_blob(stmt_file, 5, (void*)&sd.m_spikeArray[0], sizeof(SPIKESTRUCT)*sd.m_spikeArray.size(), SQLITE_TRANSIENT);
+                                sqlite3_step(stmt_file);
+                                sqlite3_finalize(stmt_file);
+                            }
                         }
                     }
                 }
+                closedir(dirp);
             }
-            closedir(dirp);
             break;
     }
     populateAnimalTree();

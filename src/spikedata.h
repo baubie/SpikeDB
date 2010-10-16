@@ -201,6 +201,7 @@ class SpikeData
         std::string type();
         double xvalue(int sweep);
         double delta();
+        int trials();
         double begin(int channel, int sweep);
         double duration(int channel, int sweep);
         double attenuation(int channel, int sweep);
