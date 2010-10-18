@@ -49,6 +49,8 @@ class EasyPlotmm : public Gtk::DrawingArea
         void axes(double xmin, double xmax, double ymin, double ymax);
         void clear();
         void plot(std::vector<double> x, std::vector<double> y);
+        void plot(std::vector<double> x, std::vector<double> y, std::vector<double> err);
+        void plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p);
         void plot(std::vector<double> x, std::vector<double> y, Pen p);
         void redraw();
         Pen getPen();
@@ -73,11 +75,13 @@ class EasyPlotmm : public Gtk::DrawingArea
         virtual bool on_event_motion(GdkEventMotion* event);
         virtual bool on_event_button_release(GdkEventButton* event);
         void drawshape(Cairo::RefPtr<Cairo::Context> cr, double size, Shape shape, bool filled, RGBA col);
+        void drawerr(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col);
         void makeDefaultPens();
 
         // Store plots
         std::vector< std::vector<double> > m_x;
         std::vector< std::vector<double> > m_y;
+        std::vector< std::vector<double> > m_err;
         std::vector< Pen > m_pens;
 
         RGBA bg; // Plot background color

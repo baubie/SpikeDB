@@ -11,7 +11,7 @@ EasyPlotmm::EasyPlotmm() :
     m_ymax(AUTOMATIC),
     pad_left(10),
     pad_top(10),
-    pad_right(10),
+    pad_right(20),
     pad_bottom(10),
     x_st_size(5),
     x_bt_size(10),
@@ -36,7 +36,6 @@ EasyPlotmm::EasyPlotmm() :
     this->signal_button_press_event().connect(sigc::mem_fun(*this, &EasyPlotmm::on_event_button_press) );
     this->signal_motion_notify_event().connect(sigc::mem_fun(*this, &EasyPlotmm::on_event_motion) );
     this->signal_button_release_event().connect(sigc::mem_fun(*this, &EasyPlotmm::on_event_button_release) );
-
 }
 
 EasyPlotmm::~EasyPlotmm()
@@ -127,6 +126,7 @@ void EasyPlotmm::clear()
 {
     m_x.clear();
     m_y.clear();
+	m_err.clear();
     m_pens.clear();
     curPen = 0;
     redraw();
@@ -143,14 +143,29 @@ EasyPlotmm::Pen EasyPlotmm::getPen()
 
 void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y)
 {
-    plot(x,y,getPen());    
+	std::vector<double> err(x.size(),0);
+    plot(x,y,err,getPen());    
 }
 
 void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, Pen p)
 {
     // Add plot to vectors
+	std::vector<double> err(x.size(),0);
+    plot(x,y,err,p);    
+}
+
+void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<double> err)
+{
+    // Add plot to vectors
+    plot(x,y,err,getPen());    
+}
+
+void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p)
+{
+    // Add plot to vectors
     m_x.push_back(x);
     m_y.push_back(y);
+	m_err.push_back(err);
     m_pens.push_back(p);
 
     // Force Redraw
@@ -235,6 +250,17 @@ void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape sha
     }
 }
 
+void EasyPlotmm::drawerr(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col)
+{
+	if (err <= 0) return;
+
+    cr->set_line_width(1.0);
+    cr->set_source_rgba(col.r,col.g,col.b,col.a);
+	cr->rel_move_to(0, err*scale);
+	cr->rel_line_to(0, -2*err*scale);
+	cr->rel_move_to(0, err*scale);
+}
+
 bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 {
 
@@ -262,6 +288,11 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         if (m_x.size() != m_pens.size())
         {
             std::cout << "ERROR: Only " << m_pens.size() << " pens for " << m_x.size() << " plots." << std::endl;
+            return true;
+        }
+        if (m_x.size() != m_err.size())
+        {
+            std::cout << "ERROR: X and ERR vectors are not the same size." << std::endl;
             return true;
         }
         
@@ -445,13 +476,14 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         for (unsigned int i  = 0; i < m_x.size(); ++i) 
         {
             // Cull data to be within the x,y axes
-            std::vector<double> cull_x, cull_y;
+            std::vector<double> cull_x, cull_y, cull_err;
             for (unsigned int j = 0; j < m_x[i].size(); ++j)
             {
                 if (m_x[i][j] >= xmin && m_x[i][j] <= xmax && m_y[i][j] >= ymin && m_y[i][j] <= ymax)
                 {
                     cull_x.push_back(m_x[i][j]);
                     cull_y.push_back(m_y[i][j]);
+                    cull_err.push_back(m_err.at(i).at(j));
                 }
             }
 
@@ -461,6 +493,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
                 cr->set_line_width(m_pens[i].linewidth);
                 cr->move_to((cull_x[0]-xmin)*xscale,(cull_y[0]-ymin)*yscale);
                 drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
+				drawerr(cr, cull_err[0],yscale,m_pens[i].pointsize,m_pens[i].color); 
                 for (unsigned int j = 1; j < cull_x.size(); ++j) 
                 {
                     if (m_pens[i].linewidth > 0)
@@ -468,8 +501,11 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
                         cr->line_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
                     }
                     else
+					{
                         cr->move_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
+					}
                     drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
+					drawerr(cr,cull_err[j],yscale,m_pens[i].pointsize,m_pens[i].color); 
                 }
                 cr->stroke();
             }
