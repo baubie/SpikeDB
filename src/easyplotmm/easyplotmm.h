@@ -44,6 +44,7 @@ class EasyPlotmm : public Gtk::DrawingArea
             bool filled;
             Shape shape;
             RGBA color;
+            RGBA errcolor;
         };
 
         void axes(double xmin, double xmax, double ymin, double ymax);

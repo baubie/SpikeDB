@@ -432,14 +432,14 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 						numSpikes++;
                     }
                 }
-				if (numSpikes > 0) ++(N.at(i));
-				err.at(i) += (numSpikes-y.at(i))*(numSpikes-y.at(i));
+                N.at(i)++;
+                err.at(i) += (numSpikes-y.at(i))*(numSpikes-y.at(i));
             }
         }
 		for (int i = 0; i < sd.m_head.nSweeps; ++i)
 		{
 			if (N.at(i) > 1)
-				err.at(i) = sqrt(err.at(i)/(N.at(i)-1)); // N-1 as we have a sample of points
+				err.at(i) = (sqrt(err.at(i)/(N.at(i)-1)))/(sqrt(N.at(i)-1)); // N-1 as we have a sample of points
 			else
 				err.at(i) = 0;
 		}
