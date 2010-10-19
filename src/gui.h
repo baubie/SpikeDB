@@ -33,8 +33,11 @@ class GUI : public Gtk::Window
         Gtk::TreeView* m_pAnimalDetailsList;
         Gtk::TreeView* m_pCellDetailsList;
         Gtk::HBox* m_pHBoxPlots;
+		Gtk::Statusbar* m_pStatusbar;
+		Gtk::SpinButton* m_pMinFiles;
 
         // Child Widgets (created in c++)
+		Gtk::Adjustment m_adjMinFiles;
         Glib::RefPtr<Gtk::TreeStore> m_refAnimalTree;
         Glib::RefPtr<Gtk::ListStore> m_refDetailsList;
         Glib::RefPtr<Gtk::TreeSelection> m_refAnimalSelection;
@@ -120,7 +123,8 @@ class GUI : public Gtk::Window
         void changeAnimalSelection();
         void changeDetailsSelection();
         void addFileToPlot(const Gtk::TreeModel::iterator& iter);
-	void updateSideLists(const Gtk::TreeModel::iterator& iter);
+		void updateSideLists(const Gtk::TreeModel::iterator& iter);
+		void updateFilter();
         
         // Helper to sort by string for parent and number by child
         int on_animal_sort(const Gtk::TreeModel::iterator& a, const Gtk::TreeModel::iterator& b);

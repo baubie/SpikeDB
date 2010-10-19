@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
@@ -8,7 +8,6 @@
     <child>
       <object class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <child>
           <object class="GtkMenuBar" id="menubar1">
             <property name="visible">True</property>
@@ -57,7 +56,6 @@
                 <child>
                   <object class="GtkVBox" id="vbox3">
                     <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkFrame" id="frame3">
                         <property name="visible">True</property>
@@ -68,14 +66,41 @@
                             <property name="visible">True</property>
                             <property name="left_padding">12</property>
                             <child>
-                              <placeholder/>
+                              <object class="GtkVBox" id="VBox6">
+                                <property name="visible">True</property>
+                                <child>
+                                  <object class="GtkLabel" id="label7">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">Min # of cell files</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkSpinButton" id="sbMinFiles">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">•</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
                             </child>
                           </object>
                         </child>
                         <child type="label">
                           <object class="GtkLabel" id="label6">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">&lt;b&gt;File Filter&lt;/b&gt;</property>
+                            <property name="xalign">0.4699999988079071</property>
+                            <property name="label" translatable="yes">&lt;b&gt;Filter&lt;/b&gt;</property>
                             <property name="use_markup">True</property>
                           </object>
                         </child>
@@ -114,7 +139,6 @@
                   <object class="GtkVPaned" id="vpaned1">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkScrolledWindow" id="scrolledwindow1">
                         <property name="visible">True</property>
@@ -152,7 +176,6 @@
                   <object class="GtkVBox" id="vbox2">
                     <property name="width_request">200</property>
                     <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkFrame" id="frame1">
                         <property name="visible">True</property>

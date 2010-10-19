@@ -26,8 +26,10 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
   m_refGlade(refGlade),
   m_pMenuQuit(0),
   m_pAnimalTree(0),
-  m_pDetailsList(0)
+  m_pDetailsList(0),
+  m_adjMinFiles(5,0,10,1,3,0)
 {
+
     set_title("Spike Database");
 
     if (sqlite3_open("spikedb.db", &db) != SQLITE_OK) {
@@ -42,6 +44,14 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
     m_refGlade->get_widget("menuQuit", m_pMenuQuit);
     if (m_pMenuQuit)
         m_pMenuQuit->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuQuit_activate));
+
+	// Setup the statusbar
+	m_refGlade->get_widget("statusbar", m_pStatusbar);
+
+	// Setup the filter widgets
+	m_refGlade->get_widget("sbMinFiles", m_pMinFiles);
+	m_pMinFiles->set_adjustment(m_adjMinFiles);
+	m_adjMinFiles.signal_value_changed().connect(sigc::mem_fun(*this,&GUI::updateFilter));
 
     // Create Animals TreeView
     m_refGlade->get_widget("tvAnimals", m_pAnimalTree);
@@ -125,6 +135,13 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 GUI::~GUI()
 {
 }
+
+void GUI::updateFilter()
+{
+	// Pretend we clicked on an animal to repopulate details list
+	changeAnimalSelection();
+}
+
 
 int GUI::on_animal_sort(const Gtk::TreeModel::iterator& a_, const Gtk::TreeModel::iterator& b_)
 {
@@ -649,6 +666,7 @@ void GUI::populateAnimalTree()
 void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 {
     sqlite3_stmt *stmt=0;
+	int minFiles = (int)m_adjMinFiles.get_value();
     if (animalID != "" && cellID != -1) {
         const char query[] = "SELECT animalID, cellID, fileID, header,tags FROM files WHERE animalID=? AND cellID=? ORDER BY animalID, cellID, fileID";
         sqlite3_prepare_v2(db,query,strlen(query), &stmt, NULL);
