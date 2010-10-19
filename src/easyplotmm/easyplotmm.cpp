@@ -492,8 +492,8 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
                 cr->set_source_rgba(m_pens[i].color.r,m_pens[i].color.g,m_pens[i].color.b,m_pens[i].color.a);
                 cr->set_line_width(m_pens[i].linewidth);
                 cr->move_to((cull_x[0]-xmin)*xscale,(cull_y[0]-ymin)*yscale);
+				drawerr(cr, cull_err[0],yscale,m_pens[i].pointsize,m_pens[i].errcolor); 
                 drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
-				drawerr(cr, cull_err[0],yscale,m_pens[i].pointsize,m_pens[i].color); 
                 for (unsigned int j = 1; j < cull_x.size(); ++j) 
                 {
                     if (m_pens[i].linewidth > 0)
@@ -504,8 +504,8 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 					{
                         cr->move_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
 					}
+					drawerr(cr,cull_err[j],yscale,m_pens[i].pointsize,m_pens[i].errcolor); 
                     drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
-					drawerr(cr,cull_err[j],yscale,m_pens[i].pointsize,m_pens[i].color); 
                 }
                 cr->stroke();
             }
@@ -561,6 +561,13 @@ void EasyPlotmm::set_bg_rgba(double r, double g, double b, double a)
 void EasyPlotmm::makeDefaultPens()
 {
     Pen p;
+    p.color.r = 0;
+    p.color.g = 0;
+    p.color.b = 0;
+    p.errcolor.r = 0.5;
+    p.errcolor.g = 0.5;
+    p.errcolor.b = 0.5;
+
     p.linewidth = 1.0;
     p.pointsize = 8.0;
     p.shape = CIRCLE;
