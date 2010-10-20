@@ -667,34 +667,33 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 {
     sqlite3_stmt *stmt=0;
 	int minFiles = (int)m_adjMinFiles.get_value();
-    std::cout << "minFiles: " << minFiles << std::endl;
     if (animalID != "" && cellID != -1) {
-        const char query[] = "SELECT animalID, cellID, fileID, header,tags FROM files WHERE "
-                             "animalID=? AND cellID=? "
-                             "AND cellID IN (SELECT cellID FROM files GROUP BY animalID,cellID HAVING COUNT(*) >= ?) "
-                             "AND animalID IN (SELECT animalID FROM files GROUP BY animalID,cellID HAVING COUNT(*) >= ?) "
+        const char query[] = "SELECT animalID, cellID, fileID, header,tags FROM files "
+							 "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
+							 "USING(animalID, cellID) "
+                             "WHERE animalID=? AND cellID=? AND file_count >= ? "
                              "ORDER BY animalID, cellID, fileID";
         sqlite3_prepare_v2(db,query,strlen(query), &stmt, NULL);
         sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
         sqlite3_bind_int(stmt, 2, cellID);
         sqlite3_bind_int(stmt, 3, minFiles);
-        sqlite3_bind_int(stmt, 4, minFiles);
     } else if (animalID != "" && cellID == -1) {
-        const char query[] = "SELECT animalID, cellID, fileID, header,tags FROM files WHERE animalID=? "
-                             "AND cellID IN (SELECT cellID FROM files GROUP BY animalID,cellID HAVING COUNT(*) >= ?) "
+        const char query[] = "SELECT animalID, cellID, fileID, header,tags FROM files "
+							 "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
+							 "USING(animalID, cellID) "
+                             "WHERE animalID=? AND file_count >= ? "
                              "ORDER BY animalID, cellID, fileID";
         sqlite3_prepare_v2(db,query,strlen(query), &stmt, NULL);
         sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
         sqlite3_bind_int(stmt, 2, minFiles);
-        sqlite3_bind_int(stmt, 3, minFiles);
     } else if (animalID == "" && cellID == -1) {
         const char query[] = "SELECT animalID, cellID, fileID, header,tags FROM files "
-                             "WHERE cellID IN (SELECT cellID FROM files GROUP BY animalID,cellID HAVING COUNT(*) >= ?) "
-                             "AND animalID IN (SELECT animalID FROM files GROUP BY animalID,cellID HAVING COUNT(*) >= ?) "
+							 "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
+							 "USING(animalID, cellID) "
+                             "WHERE file_count >= ? "
                              "ORDER BY animalID, cellID, fileID";
         sqlite3_prepare_v2(db,query,strlen(query), &stmt, NULL);
         sqlite3_bind_int(stmt, 1, minFiles);
-        sqlite3_bind_int(stmt, 2, minFiles);
     }
 
     m_refDetailsList->clear();
