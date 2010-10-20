@@ -116,6 +116,7 @@ class GUI : public Gtk::Window
         AnimalDetailsColumns m_AnimalDetailsColumns;
         CellDetailsColumns m_CellDetailsColumns;
 
+	    void importSpikeFile(std::string filename, char* d_name);
         void populateAnimalTree();
         void populateDetailsList(const Glib::ustring animalID, const int cellID);
         void populateAnimalDetailsList(const Glib::ustring animalID);

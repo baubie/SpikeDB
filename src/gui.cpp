@@ -27,7 +27,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
   m_pMenuQuit(0),
   m_pAnimalTree(0),
   m_pDetailsList(0),
-  m_adjMinFiles(5,0,10,1,3,0)
+  m_adjMinFiles(5,1,10,1,3,0)
 {
 
     set_title("Spike Database");
@@ -439,7 +439,8 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 		for (int i = 0; i < sd.m_head.nSweeps; ++i)
 		{
 			if (N.at(i) > 1)
-				err.at(i) = sqrt(err.at(i)/(N.at(i)-1)); // N-1 as we have a sample of points
+				// Calculate Standard Error from the Standard Deviation
+				err.at(i) = sqrt(err.at(i)/(N.at(i)-1))/sqrt(N.at(i)); // N-1 as we have a sample of points
 			else
 				err.at(i) = 0;
 		}
@@ -627,7 +628,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 
 void GUI::populateAnimalTree()
 {
-    char query_animals[] = "SELECT ID FROM animals";
+    char query_animals[] = "SELECT ID FROM animals ORDER BY ID";
     sqlite3_stmt *stmt_animals, *stmt_cells;
     sqlite3_prepare_v2(db, query_animals, -1, &stmt_animals, 0);
     m_refAnimalTree->clear();
@@ -839,47 +840,9 @@ void GUI::on_menuImportFolder_activate()
                 {
                     while ((dptr=readdir(dirp)))
                     {
-                        SpikeData sd;
-                        if (dptr->d_type == 0x8)
+                        if (dptr->d_type == DT_REG)
                         {
-                            std::string fullfile(filename);
-                            fullfile += "/";
-                            fullfile += dptr->d_name;
-                            if (sd.parse(fullfile.c_str()))
-                            {
-                                std::vector<std::string> fileTokens;
-                                std::string shortfilename(dptr->d_name);
-                                Tokenize(shortfilename, fileTokens, ".");
-
-                                // Insert animal 
-                                const char q_animal[] = "INSERT INTO animals (ID) VALUES(?)";
-                                sqlite3_stmt *stmt_animal=0;
-                                sqlite3_prepare_v2(db,q_animal,strlen(q_animal),&stmt_animal,NULL);
-                                sqlite3_bind_text(stmt_animal,1,fileTokens[0].c_str(),-1,SQLITE_TRANSIENT);
-                                sqlite3_step(stmt_animal);
-                                sqlite3_finalize(stmt_animal);
-
-                                // Insert Cell
-                                const char q_cell[] = "INSERT INTO cells (animalID,cellID) VALUES(?,?)";
-                                sqlite3_stmt *stmt_cell=0;
-                                sqlite3_prepare_v2(db,q_cell,strlen(q_cell), &stmt_cell, NULL);
-                                sqlite3_bind_text(stmt_cell,1,fileTokens[0].c_str(),-1,SQLITE_TRANSIENT);
-                                sqlite3_bind_int(stmt_cell,2,atoi(fileTokens[1].c_str()));
-                                sqlite3_step(stmt_cell);
-                                sqlite3_finalize(stmt_cell);
-
-                                // Insert File
-                                const char q_file[] = "INSERT INTO files (animalID,cellID,fileID,header,spikes) VALUES(?,?,?,?,?)";
-                                sqlite3_stmt *stmt_file=0;
-                                sqlite3_prepare_v2(db,q_file,strlen(q_file), &stmt_file, NULL);
-                                sqlite3_bind_text(stmt_file, 1, fileTokens[0].c_str(), -1, SQLITE_TRANSIENT);
-                                sqlite3_bind_int(stmt_file, 2, atoi(fileTokens[1].c_str()));
-                                sqlite3_bind_int(stmt_file, 3, atoi(fileTokens[2].c_str()));
-                                sqlite3_bind_blob(stmt_file, 4, (void*)&sd.m_head, sizeof(sd.m_head), SQLITE_TRANSIENT);
-                                sqlite3_bind_blob(stmt_file, 5, (void*)&sd.m_spikeArray[0], sizeof(SPIKESTRUCT)*sd.m_spikeArray.size(), SQLITE_TRANSIENT);
-                                sqlite3_step(stmt_file);
-                                sqlite3_finalize(stmt_file);
-                            }
+							importSpikeFile(filename, dptr->d_name);
                         }
                     }
                 }
@@ -889,6 +852,50 @@ void GUI::on_menuImportFolder_activate()
     }
     populateAnimalTree();
 }
+
+void GUI::importSpikeFile(std::string filename, char* d_name)
+{
+	SpikeData sd;
+	std::string fullfile(filename);
+	fullfile += "/";
+	fullfile += d_name;
+	if (sd.parse(fullfile.c_str()))
+	{
+		std::vector<std::string> fileTokens;
+		std::string shortfilename(d_name);
+		Tokenize(shortfilename, fileTokens, ".");
+
+		// Insert animal 
+		const char q_animal[] = "INSERT INTO animals (ID) VALUES(?)";
+		sqlite3_stmt *stmt_animal=0;
+		sqlite3_prepare_v2(db,q_animal,strlen(q_animal),&stmt_animal,NULL);
+		sqlite3_bind_text(stmt_animal,1,fileTokens[0].c_str(),-1,SQLITE_TRANSIENT);
+		sqlite3_step(stmt_animal);
+		sqlite3_finalize(stmt_animal);
+
+		// Insert Cell
+		const char q_cell[] = "INSERT INTO cells (animalID,cellID) VALUES(?,?)";
+		sqlite3_stmt *stmt_cell=0;
+		sqlite3_prepare_v2(db,q_cell,strlen(q_cell), &stmt_cell, NULL);
+		sqlite3_bind_text(stmt_cell,1,fileTokens[0].c_str(),-1,SQLITE_TRANSIENT);
+		sqlite3_bind_int(stmt_cell,2,atoi(fileTokens[1].c_str()));
+		sqlite3_step(stmt_cell);
+		sqlite3_finalize(stmt_cell);
+
+		// Insert File
+		const char q_file[] = "INSERT INTO files (animalID,cellID,fileID,header,spikes) VALUES(?,?,?,?,?)";
+		sqlite3_stmt *stmt_file=0;
+		sqlite3_prepare_v2(db,q_file,strlen(q_file), &stmt_file, NULL);
+		sqlite3_bind_text(stmt_file, 1, fileTokens[0].c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int(stmt_file, 2, atoi(fileTokens[1].c_str()));
+		sqlite3_bind_int(stmt_file, 3, atoi(fileTokens[2].c_str()));
+		sqlite3_bind_blob(stmt_file, 4, (void*)&sd.m_head, sizeof(sd.m_head), SQLITE_TRANSIENT);
+		sqlite3_bind_blob(stmt_file, 5, (void*)&sd.m_spikeArray[0], sizeof(SPIKESTRUCT)*sd.m_spikeArray.size(), SQLITE_TRANSIENT);
+		sqlite3_step(stmt_file);
+		sqlite3_finalize(stmt_file);
+	}
+}
+
 
 void GUI::on_menuQuit_activate()
 {

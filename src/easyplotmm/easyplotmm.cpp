@@ -178,6 +178,11 @@ void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape sha
 {
     if (s <= 0) return;
     double h;
+	double x,y;
+	cr->push_group();
+	cr->get_current_point(x,y);
+	cr->begin_new_path();
+    cr->move_to(x,y);
     cr->set_line_width(1.0);
     cr->set_source_rgba(col.r,col.g,col.b,col.a);
     switch(shape)
@@ -187,12 +192,11 @@ void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape sha
             cr->rel_move_to(-s/2,0);
             cr->rel_line_to(s,0);
             cr->rel_move_to(-s/2,0);
+			cr->stroke();
             break;
 
         case CIRCLE:
-            double x,y;
-            cr->get_current_point(x,y);
-            cr->move_to(x+s/2,y);
+            cr->rel_move_to(s/2,0);
             cr->arc(x,y,s/2,0.0,2.0*M_PI);
             cr->move_to(x,y);
             break;
@@ -205,6 +209,7 @@ void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape sha
             cr->rel_line_to(0,s);
             // Move back to the middle
             cr->rel_move_to(s/2,-s/2);
+			cr->stroke();
             break;
 
         case DIAMOND:
@@ -215,6 +220,7 @@ void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape sha
             cr->rel_line_to(h/2,-h/2);
             cr->rel_line_to(-h/2,-h/2);
             cr->rel_move_to(0,h/2);
+			cr->stroke();
             break;
 
         case TRIANGLE:
@@ -225,6 +231,7 @@ void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape sha
             cr->rel_line_to(-s/2,h);
             // Move back to the middle
             cr->rel_move_to(s/2,-h/2);
+			cr->stroke();
             break; 
 
         case UTRIANGLE:
@@ -235,6 +242,7 @@ void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape sha
             cr->rel_line_to(-s/2,-h);
             // Move back to the middle
             cr->rel_move_to(s/2,h/2);
+			cr->stroke();
             break; 
         case NONE:
         default:
@@ -248,17 +256,27 @@ void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape sha
         cr->fill_preserve();
         cr->set_source_rgba(col.r,col.g,col.b,col.a);
     }
+	cr->pop_group();
 }
 
 void EasyPlotmm::drawerr(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col)
 {
-	if (err <= 0) return;
+	if (err <= 0 || true) return;
 
+	double x, y;
+	cr->get_current_point(x,y);
+	cr->begin_new_path();
+    cr->move_to(x,y);
     cr->set_line_width(1.0);
     cr->set_source_rgba(col.r,col.g,col.b,col.a);
-	cr->rel_move_to(0, err*scale);
+	cr->rel_move_to(-size, err*scale);
+	cr->rel_line_to(2*size, 0);
+	cr->rel_move_to(-size, 0);
 	cr->rel_line_to(0, -2*err*scale);
-	cr->rel_move_to(0, err*scale);
+	cr->rel_move_to(-size, 0);
+	cr->rel_line_to(2*size, 0);
+	cr->rel_move_to(-size, err*scale);
+	cr->stroke();
 }
 
 bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
@@ -360,8 +378,9 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         for (double y = 0; y <= ymax; y+=Yst) ymax_st = y;
         for (double y = 0; y <= ymax; y+=Ybt) ymax_bt = y;
 
-        bool x_useint = !((int)(xmin) == (int)(xmin+Xbt));
-        bool y_useint = !((int)(ymin) == (int)(ymin+Ybt));
+        bool x_useint = !((int)(xmin-0.5) == (int)(xmin+Xbt-0.5));
+        bool y_useint = !((int)(ymin-0.5) == (int)(ymin+Ybt-0.5));
+
         Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
         char buffer[10];
         if (y_useint) sprintf(buffer,"%i",(int)(ymin_bt));
@@ -489,25 +508,35 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 
             if (cull_x.size() > 0)
             {
-                cr->set_source_rgba(m_pens[i].color.r,m_pens[i].color.g,m_pens[i].color.b,m_pens[i].color.a);
-                cr->set_line_width(m_pens[i].linewidth);
+			 	// First draw the error bars
                 cr->move_to((cull_x[0]-xmin)*xscale,(cull_y[0]-ymin)*yscale);
 				drawerr(cr, cull_err[0],yscale,m_pens[i].pointsize,m_pens[i].errcolor); 
+                for (unsigned int j = 1; j < cull_x.size(); ++j) 
+                {
+					cr->move_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
+					drawerr(cr,cull_err[j],yscale,m_pens[i].pointsize,m_pens[i].errcolor); 
+                }
+
+				// Next draw the lines
+				if (m_pens[i].linewidth > 0)
+				{
+					cr->set_source_rgba(m_pens[i].color.r,m_pens[i].color.g,m_pens[i].color.b,m_pens[i].color.a);
+					cr->set_line_width(m_pens[i].linewidth);
+					cr->move_to((cull_x[0]-xmin)*xscale,(cull_y[0]-ymin)*yscale);
+					for (unsigned int j = 1; j < cull_x.size(); ++j) 
+					{
+						cr->line_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
+					}
+				}
+
+				// Next draw the shapes
+                cr->move_to((cull_x[0]-xmin)*xscale,(cull_y[0]-ymin)*yscale);
                 drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
                 for (unsigned int j = 1; j < cull_x.size(); ++j) 
                 {
-                    if (m_pens[i].linewidth > 0)
-                    {
-                        cr->line_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
-                    }
-                    else
-					{
-                        cr->move_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
-					}
-					drawerr(cr,cull_err[j],yscale,m_pens[i].pointsize,m_pens[i].errcolor); 
+					cr->move_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
                     drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
                 }
-                cr->stroke();
             }
         }
 
@@ -564,7 +593,7 @@ void EasyPlotmm::makeDefaultPens()
     p.color.r = 0;
     p.color.g = 0;
     p.color.b = 0;
-    p.errcolor.r = 0.5;
+    p.errcolor.r = 1.0;
     p.errcolor.g = 0.5;
     p.errcolor.b = 0.5;
 
