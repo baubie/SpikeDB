@@ -179,7 +179,6 @@ void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape sha
     if (s <= 0) return;
     double h;
 	double x,y;
-	cr->push_group();
 	cr->get_current_point(x,y);
 	cr->begin_new_path();
     cr->move_to(x,y);
@@ -256,16 +255,14 @@ void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape sha
         cr->fill_preserve();
         cr->set_source_rgba(col.r,col.g,col.b,col.a);
     }
-	cr->pop_group();
 }
 
 void EasyPlotmm::drawerr(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col)
 {
-	if (err <= 0 || true) return;
+	if (err <= 0) return;
 
 	double x, y;
 	cr->get_current_point(x,y);
-	cr->begin_new_path();
     cr->move_to(x,y);
     cr->set_line_width(1.0);
     cr->set_source_rgba(col.r,col.g,col.b,col.a);
@@ -276,7 +273,6 @@ void EasyPlotmm::drawerr(Cairo::RefPtr<Cairo::Context> cr, double err, double sc
 	cr->rel_move_to(-size, 0);
 	cr->rel_line_to(2*size, 0);
 	cr->rel_move_to(-size, err*scale);
-	cr->stroke();
 }
 
 bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
@@ -333,9 +329,10 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         for (unsigned int ys = 0; ys < m_y.size(); ++ys) {
             for (unsigned int y = 0; y < m_y[ys].size(); ++y) {
                 ymin = ymin > m_y[ys][y] ? m_y[ys][y] : ymin;
-                ymax = ymax < m_y[ys][y] ? m_y[ys][y] : ymax;
+                ymax = ymax < m_y[ys][y]+m_err[ys][y] ? m_y[ys][y]+m_err[ys][y] : ymax;
             }
         }
+		if (ymin <= 1 && ymin > 0) ymin = 0;
 
         if (m_xmin != AUTOMATIC) xmin = m_xmin;
         if (m_xmax != AUTOMATIC) xmax = m_xmax;
@@ -516,6 +513,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 					cr->move_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
 					drawerr(cr,cull_err[j],yscale,m_pens[i].pointsize,m_pens[i].errcolor); 
                 }
+				cr->stroke();
 
 				// Next draw the lines
 				if (m_pens[i].linewidth > 0)
@@ -527,6 +525,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 					{
 						cr->line_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
 					}
+					cr->stroke();
 				}
 
 				// Next draw the shapes
@@ -593,7 +592,7 @@ void EasyPlotmm::makeDefaultPens()
     p.color.r = 0;
     p.color.g = 0;
     p.color.b = 0;
-    p.errcolor.r = 1.0;
+    p.errcolor.r = 0.5;
     p.errcolor.g = 0.5;
     p.errcolor.b = 0.5;
 
