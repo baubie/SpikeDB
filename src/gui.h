@@ -9,6 +9,8 @@
 #include "easyplotmm/easyplotmm.h"
 #include "spikedata.h"
 
+#define CURRENT_DB_VERSION 1.1
+
 class GUI : public Gtk::Window
 {
     public:
@@ -21,13 +23,16 @@ class GUI : public Gtk::Window
         sqlite3 *db;
 
         // Signal handlers
-        void on_menuQuit_activate();
+        void on_menuOpenDatabase_activate();
         void on_menuImportFolder_activate();
+        void on_menuQuit_activate();
+		void on_analyze_changed();
 
         // Child Widgets (from glade file)
         Glib::RefPtr<Gtk::Builder> m_refGlade;
         Gtk::ImageMenuItem* m_pMenuImportFolder;
         Gtk::ImageMenuItem* m_pMenuQuit;
+        Gtk::ImageMenuItem* m_pMenuOpenDatabase;
         Gtk::TreeView* m_pAnimalTree;
         Gtk::TreeView* m_pDetailsList;
         Gtk::TreeView* m_pAnimalDetailsList;
@@ -35,6 +40,10 @@ class GUI : public Gtk::Window
         Gtk::HBox* m_pHBoxPlots;
 		Gtk::Statusbar* m_pStatusbar;
 		Gtk::SpinButton* m_pMinFiles;
+        Gtk::VBox* m_pVBoxAnalyze;
+		Gtk::ComboBox* m_pDataSource;
+		Gtk::ComboBox* m_pXVar;
+		Gtk::ComboBox* m_pYVar;
 
         // Child Widgets (created in c++)
 		Gtk::Adjustment m_adjMinFiles;
@@ -44,10 +53,24 @@ class GUI : public Gtk::Window
         Glib::RefPtr<Gtk::TreeSelection> m_refDetailsSelection;
         Glib::RefPtr<Gtk::ListStore> m_refAnimalDetailsList;
         Glib::RefPtr<Gtk::ListStore> m_refCellDetailsList;
+        Glib::RefPtr<Gtk::ListStore> m_refDataSource;
+        Glib::RefPtr<Gtk::ListStore> m_refXVar;
+        Glib::RefPtr<Gtk::ListStore> m_refYVar;
         EasyPlotmm* m_pPlotSpikes;
         EasyPlotmm* m_pPlotMeans;
+        EasyPlotmm* m_pPlotAnalyze;
 
-        // Network Tree Model Columns
+
+		// Models for the Data Source combobox
+		class AnalyzeColumns : public Gtk::TreeModel::ColumnRecord
+		{
+        	public:
+				AnalyzeColumns()
+				{ add(m_col_name); }
+                Gtk::TreeModelColumn<Glib::ustring> m_col_name;
+		};
+
+        // Animal Tree Model Columns
         class AnimalColumns : public Gtk::TreeModel::ColumnRecord
         {
             public:
@@ -116,6 +139,11 @@ class GUI : public Gtk::Window
         AnimalDetailsColumns m_AnimalDetailsColumns;
         CellDetailsColumns m_CellDetailsColumns;
 
+		AnalyzeColumns m_DataSourceColumns;
+		AnalyzeColumns m_XVarColumns;
+		AnalyzeColumns m_YVarColumns;
+
+		bool openDatabase(std::string filename);
 	    void importSpikeFile(std::string filename, char* d_name);
         void populateAnimalTree();
         void populateDetailsList(const Glib::ustring animalID, const int cellID);

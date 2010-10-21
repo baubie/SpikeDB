@@ -30,14 +30,12 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
   m_adjMinFiles(5,1,10,1,3,0)
 {
 
-    set_title("Spike Database");
-
-    if (sqlite3_open("spikedb.db", &db) != SQLITE_OK) {
-        std::cerr << "CRITICAL ERROR: Unable to open database file." << std::endl;
-        return;
-    }
+    set_title("Spike Database - No database open");
 
     // Setup the toolbar
+    m_refGlade->get_widget("menuOpenDatabase", m_pMenuOpenDatabase);
+    if (m_pMenuOpenDatabase)
+        m_pMenuOpenDatabase->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuOpenDatabase_activate));
     m_refGlade->get_widget("menuImportFolder", m_pMenuImportFolder);
     if (m_pMenuImportFolder)
         m_pMenuImportFolder->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuImportFolder_activate));
@@ -52,6 +50,30 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	m_refGlade->get_widget("sbMinFiles", m_pMinFiles);
 	m_pMinFiles->set_adjustment(m_adjMinFiles);
 	m_adjMinFiles.signal_value_changed().connect(sigc::mem_fun(*this,&GUI::updateFilter));
+
+	// Setup the analyze widgets
+	m_refGlade->get_widget("vboxAnalyze", m_pVBoxAnalyze);
+	m_refGlade->get_widget("cbDataSource", m_pDataSource);
+	m_refGlade->get_widget("cbXVar", m_pYVar);
+	m_refGlade->get_widget("cbYVar", m_pXVar);
+	m_refDataSource = Gtk::ListStore::create(m_DataSourceColumns);
+	m_refXVar = Gtk::ListStore::create(m_XVarColumns);
+	m_refYVar = Gtk::ListStore::create(m_YVarColumns);
+    m_pDataSource->set_model(m_refDataSource); 
+    m_pXVar->set_model(m_refXVar); 
+    m_pYVar->set_model(m_refYVar); 
+	m_pDataSource->pack_start(m_DataSourceColumns.m_col_name);
+	m_pXVar->pack_start(m_XVarColumns.m_col_name);
+	m_pYVar->pack_start(m_YVarColumns.m_col_name);
+	m_pDataSource->signal_changed().connect( sigc::mem_fun(*this, &GUI::on_analyze_changed));
+	m_pXVar->signal_changed().connect( sigc::mem_fun(*this, &GUI::on_analyze_changed));
+	m_pYVar->signal_changed().connect( sigc::mem_fun(*this, &GUI::on_analyze_changed));
+	Gtk::TreeModel::Row row = *(m_refDataSource->append());
+	row[m_DataSourceColumns.m_col_name] = "Animals";
+	row = *(m_refDataSource->append());
+	row[m_DataSourceColumns.m_col_name] = "Cells";
+	m_pDataSource->set_active(0);
+	on_analyze_changed();
 
     // Create Animals TreeView
     m_refGlade->get_widget("tvAnimals", m_pAnimalTree);
@@ -122,18 +144,95 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
     m_rend_cellvalue.signal_edited().connect(sigc::mem_fun(*this, &GUI::on_cellvalue_edited));
     m_tvcol_cellvalue.set_cell_data_func(m_rend_cellvalue,sigc::mem_fun(*this, &GUI::cellvalue_cell_data));
 
-    populateAnimalTree();
 
     m_refGlade->get_widget("hboxPlots", m_pHBoxPlots);
     m_pPlotSpikes = new EasyPlotmm();
     m_pPlotMeans = new EasyPlotmm();
+    m_pPlotAnalyze = new EasyPlotmm();
     m_pHBoxPlots->pack_start(*m_pPlotSpikes);
     m_pHBoxPlots->pack_start(*m_pPlotMeans);
+	m_pVBoxAnalyze->pack_start(*m_pPlotAnalyze);
     show_all_children();
 }
 
 GUI::~GUI()
 {
+}
+
+void GUI::on_menuOpenDatabase_activate()
+{
+
+    Gtk::FileChooserDialog dialog("Select a Folder Containing Spike Data Files",
+        Gtk::FILE_CHOOSER_ACTION_OPEN);
+    dialog.set_transient_for(*this);
+
+    // Add response buttons to the dialog:
+    dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+    dialog.add_button(Gtk::Stock::OPEN, Gtk::RESPONSE_OK);
+
+    // Show the dialog
+    int result = dialog.run();
+
+    switch(result)
+    {
+        case(Gtk::RESPONSE_OK):
+            std::string filename = dialog.get_filename();
+			openDatabase(filename);
+    		break;
+	}
+}
+
+bool GUI::openDatabase(std::string filename)
+{
+    if (sqlite3_open(filename.c_str(), &db) != SQLITE_OK) {
+        std::cerr << "CRITICAL ERROR: Unable to open database file." << std::endl;
+        return false;
+    }
+	set_title("Spike Database - " + filename);
+
+    // Do we have to update the database?
+    sqlite3_stmt *stmt=0;
+    const char query[] = "SELECT value FROM properties WHERE variable=?";
+    sqlite3_prepare_v2(db,query,strlen(query), &stmt, NULL);
+    sqlite3_bind_text(stmt, 1, "version", -1, SQLITE_TRANSIENT);
+    int r = sqlite3_step(stmt);
+	float version = 0;
+    if (r == SQLITE_ROW)
+	{
+		version = (float)sqlite3_column_double(stmt,0);
+	}
+	int count = 0;
+	while (version < CURRENT_DB_VERSION)
+	{
+		++count;
+		if (count > 1000) {
+			Gtk::MessageDialog dialog(*this, "Unable to update database file.", false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
+			dialog.set_secondary_text("This could be due to database corruption or a version too old to get updated.  Contact Brandon Aubie at brandon@aubie.ca for more information.");
+			dialog.run();
+			return false;
+		}
+
+		if (version == 1.0)
+		{
+			sqlite3_stmt *stmt_fix=0;
+			const char query[] = "ALTER TABLE cells ADD COLUMN recordedby TEXT";
+			sqlite3_prepare_v2(db,query,strlen(query), &stmt_fix, NULL);
+			int r_fix = sqlite3_step(stmt_fix);
+			if (r_fix == SQLITE_DONE)
+			{
+				version = 1.1;
+				const char query[] = "UPDATE properties SET value=1.1 WHERE variable=?";
+				sqlite3_prepare_v2(db,query,strlen(query), &stmt_fix, NULL);
+				sqlite3_bind_text(stmt_fix, 1, "version", -1, SQLITE_TRANSIENT);
+				r_fix = sqlite3_step(stmt_fix);
+			Gtk::MessageDialog dialog(*this, "Database successfully upgraded from version 1.0 to version 1.1.", false, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK);
+			dialog.run();
+			}
+		}
+	}
+
+    populateAnimalTree();
+	return true;
 }
 
 void GUI::updateFilter()
@@ -142,6 +241,47 @@ void GUI::updateFilter()
 	changeAnimalSelection();
 }
 
+void GUI::on_analyze_changed()
+{
+	// Update the analyze plot
+	Gtk::TreeModel::Row row;
+	static int dataSource = -1;
+
+	if (m_pDataSource->get_active_row_number() != dataSource)
+	{
+		dataSource = m_pDataSource->get_active_row_number();
+		if (m_pDataSource->get_active_row_number() == 0)
+		{
+			m_refXVar->clear();
+			m_refYVar->clear();
+			row = *(m_refXVar->append());
+			row[m_XVarColumns.m_col_name] = "Weight";
+
+			row = *(m_refYVar->append());
+			row[m_YVarColumns.m_col_name] = "Weight";
+		}
+		if (m_pDataSource->get_active_row_number() == 1)
+		{
+			m_refXVar->clear();
+			m_refYVar->clear();
+			row = *(m_refXVar->append());
+			row[m_XVarColumns.m_col_name] = "CarFreq (Hz)";
+			row = *(m_refXVar->append());
+			row[m_XVarColumns.m_col_name] = "Threshold (dB SPL)";
+			row = *(m_refXVar->append());
+			row[m_XVarColumns.m_col_name] = "Depth (um)";
+
+			row = *(m_refYVar->append());
+			row[m_YVarColumns.m_col_name] = "CarFreq (Hz)";
+			row = *(m_refYVar->append());
+			row[m_YVarColumns.m_col_name] = "Threshold (dB SPL)";
+			row = *(m_refYVar->append());
+			row[m_YVarColumns.m_col_name] = "Depth (um)";
+		}
+		m_pXVar->set_active(0);
+		m_pYVar->set_active(0);
+	}
+}
 
 int GUI::on_animal_sort(const Gtk::TreeModel::iterator& a_, const Gtk::TreeModel::iterator& b_)
 {
@@ -281,7 +421,7 @@ void GUI::on_cellvalue_edited(const Glib::ustring& path_string, const Glib::ustr
         {
             query = "UPDATE cells SET depth=? WHERE animalID=? AND cellID=?";
         }
-        if (row.get_value(m_CellDetailsColumns.m_col_name) == "Threshold")
+        if (row.get_value(m_CellDetailsColumns.m_col_name) == "Threshold (dB SPL)")
         {
             query = "UPDATE cells SET threshold=? WHERE animalID=? AND cellID=?";
         }
@@ -499,9 +639,14 @@ void GUI::changeAnimalSelection()
         } else if (row->parent()->parent() == 0) {
             // First Level
             populateDetailsList(row->get_value(m_AnimalColumns.m_col_name),-1);
+			populateAnimalDetailsList(row->get_value(m_AnimalColumns.m_col_name));
         } else if (row->parent()->parent()->parent() == 0) {
            // Second Level 
-            populateDetailsList(row->parent()->get_value(m_AnimalColumns.m_col_name),atoi(row->get_value(m_AnimalColumns.m_col_name).c_str()));
+            populateDetailsList(row->parent()->get_value(m_AnimalColumns.m_col_name),
+							atoi(row->get_value(m_AnimalColumns.m_col_name).c_str()));
+			populateAnimalDetailsList(row->parent()->get_value(m_AnimalColumns.m_col_name));
+			populateCellDetailsList(row->parent()->get_value(m_AnimalColumns.m_col_name),
+							atoi(row->get_value(m_AnimalColumns.m_col_name).c_str()));
         }
     }
 }
@@ -595,7 +740,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
             row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt,1);
 
     	row = *(m_refCellDetailsList->append());
-		row[m_CellDetailsColumns.m_col_name] = "Threshold";
+		row[m_CellDetailsColumns.m_col_name] = "Threshold (dB SPL)";
 		row[m_CellDetailsColumns.m_col_animalID] = animalID;
 		row[m_CellDetailsColumns.m_col_cellID] = cellID;
         if ((char*)sqlite3_column_text(stmt,4) != NULL)
@@ -906,8 +1051,12 @@ void GUI::on_menuQuit_activate()
     delete m_pHBoxPlots;
     delete m_pCellDetailsList;
     delete m_pAnimalDetailsList;
+	delete m_pDataSource;
+	delete m_pXVar;
+	delete m_pYVar;
     delete m_pPlotSpikes;
     delete m_pPlotMeans;
+    delete m_pPlotAnalyze;
     sqlite3_close(db);
     hide();
 }
