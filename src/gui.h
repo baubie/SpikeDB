@@ -1,6 +1,9 @@
 #ifndef GUI_H
 #define GUI_H
 
+#define CURRENT_DB_VERSION 1.2
+#define CURRENT_VERSION 1.2
+
 #include <gtkmm.h>
 #include <string>
 #include <vector>
@@ -8,8 +11,7 @@
 #include <sqlite3.h>
 #include "easyplotmm/easyplotmm.h"
 #include "spikedata.h"
-
-#define CURRENT_DB_VERSION 1.1
+#include "settings.h"
 
 class GUI : public Gtk::Window
 {
@@ -22,7 +24,11 @@ class GUI : public Gtk::Window
         // SQLite Database
         sqlite3 *db;
 
+		// Settings
+		Settings settings;
+
         // Signal handlers
+        void on_menuNewDatabase_activate();
         void on_menuOpenDatabase_activate();
         void on_menuImportFolder_activate();
         void on_menuQuit_activate();
@@ -33,6 +39,7 @@ class GUI : public Gtk::Window
         Gtk::ImageMenuItem* m_pMenuImportFolder;
         Gtk::ImageMenuItem* m_pMenuQuit;
         Gtk::ImageMenuItem* m_pMenuOpenDatabase;
+        Gtk::ImageMenuItem* m_pMenuNewDatabase;
         Gtk::TreeView* m_pAnimalTree;
         Gtk::TreeView* m_pDetailsList;
         Gtk::TreeView* m_pAnimalDetailsList;
@@ -56,6 +63,8 @@ class GUI : public Gtk::Window
         Glib::RefPtr<Gtk::ListStore> m_refDataSource;
         Glib::RefPtr<Gtk::ListStore> m_refXVar;
         Glib::RefPtr<Gtk::ListStore> m_refYVar;
+
+		// Plots
         EasyPlotmm* m_pPlotSpikes;
         EasyPlotmm* m_pPlotMeans;
         EasyPlotmm* m_pPlotAnalyze;
@@ -154,6 +163,9 @@ class GUI : public Gtk::Window
         void addFileToPlot(const Gtk::TreeModel::iterator& iter);
 		void updateSideLists(const Gtk::TreeModel::iterator& iter);
 		void updateFilter();
+		void updateAnalyzePlot();
+		void getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID);
+		void getCellsStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID);
         
         // Helper to sort by string for parent and number by child
         int on_animal_sort(const Gtk::TreeModel::iterator& a, const Gtk::TreeModel::iterator& b);

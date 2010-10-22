@@ -7,69 +7,22 @@
 AMSIN	spikedata.h	/^} AMSIN;$/;"	t	typeref:struct:__anon3
 AMSINUS	spikedata.cpp	116;"	d	file:
 AMSINUS	spikedata.h	23;"	d
-ARCHITECTURE_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	181;"	d	file:
-ARCHITECTURE_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	184;"	d	file:
-ARCHITECTURE_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	187;"	d	file:
-ARCHITECTURE_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	190;"	d	file:
-ARCHITECTURE_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	194;"	d	file:
-ARCHITECTURE_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	172;"	d	file:
-ARCHITECTURE_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	175;"	d	file:
-ARCHITECTURE_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	178;"	d	file:
-ARCHITECTURE_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	181;"	d	file:
-ARCHITECTURE_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	185;"	d	file:
 ATT_STEP	spikedata.h	32;"	d
 AUTOMATIC	easyplotmm/easyplotmm.cpp	/^const double EasyPlotmm::AUTOMATIC = (DBL_MAX -1);$/;"	m	class:EasyPlotmm	file:
 AUTOMATIC	easyplotmm/easyplotmm.h	/^        static const double AUTOMATIC;$/;"	m	class:EasyPlotmm	access:public
 AUTOMATIC	spikedata.h	39;"	d
+AnalyzeColumns	gui.h	/^				AnalyzeColumns()$/;"	f	class:GUI::AnalyzeColumns	access:public	signature:()
+AnalyzeColumns	gui.h	/^		class AnalyzeColumns : public Gtk::TreeModel::ColumnRecord$/;"	c	class:GUI	inherits:Gtk::TreeModel::ColumnRecord	access:protected
 AnimalColumns	gui.h	/^                AnimalColumns()$/;"	f	class:GUI::AnimalColumns	access:public	signature:()
 AnimalColumns	gui.h	/^        class AnimalColumns : public Gtk::TreeModel::ColumnRecord$/;"	c	class:GUI	inherits:Gtk::TreeModel::ColumnRecord	access:protected
 AnimalDetailsColumns	gui.h	/^                AnimalDetailsColumns()$/;"	f	class:GUI::AnimalDetailsColumns	access:public	signature:()
 AnimalDetailsColumns	gui.h	/^        class AnimalDetailsColumns : public Gtk::TreeModel::ColumnRecord$/;"	c	class:GUI	inherits:Gtk::TreeModel::ColumnRecord	access:protected
 CIRCLE	easyplotmm/easyplotmm.h	/^            CIRCLE,$/;"	e	enum:EasyPlotmm::Shape
-CMAKE_BINARY_DIR	Makefile	/^CMAKE_BINARY_DIR = \/home\/brandon\/SpikeDB$/;"	m
+CMAKE_BINARY_DIR	Makefile	/^CMAKE_BINARY_DIR = \/home\/batlab\/SpikeDB$/;"	m
 CMAKE_COMMAND	Makefile	/^CMAKE_COMMAND = \/usr\/bin\/cmake$/;"	m
-CMAKE_EDIT_COMMAND	Makefile	/^CMAKE_EDIT_COMMAND = \/usr\/bin\/ccmake$/;"	m
-CMAKE_SOURCE_DIR	Makefile	/^CMAKE_SOURCE_DIR = \/home\/brandon\/SpikeDB$/;"	m
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	10;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	13;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	16;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	19;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	22;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	25;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	28;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	32;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	34;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	36;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	40;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	43;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	46;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	49;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	54;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	65;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	68;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	74;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	77;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	80;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	12;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	15;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	18;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	21;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	24;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	27;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	30;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	34;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	36;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	38;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	42;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	45;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	48;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	51;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	56;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	59;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	65;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	68;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	71;"	d	file:
-COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	9;"	d	file:
+CMAKE_SOURCE_DIR	Makefile	/^CMAKE_SOURCE_DIR = \/home\/batlab\/SpikeDB$/;"	m
+CURRENT_DB_VERSION	gui.h	4;"	d
+CURRENT_VERSION	gui.h	5;"	d
 CellDetailsColumns	gui.h	/^                CellDetailsColumns()$/;"	f	class:GUI::CellDetailsColumns	access:public	signature:()
 CellDetailsColumns	gui.h	/^        class CellDetailsColumns : public Gtk::TreeModel::ColumnRecord$/;"	c	class:GUI	inherits:Gtk::TreeModel::ColumnRecord	access:protected
 DELTA	spikedata.h	/^}  DELTA;$/;"	t	typeref:struct:__anon11
@@ -94,6 +47,7 @@ EasyPlotmm::POINT	easyplotmm/easyplotmm.h	/^            POINT,$/;"	e	enum:EasyPl
 EasyPlotmm::Pen	easyplotmm/easyplotmm.h	/^        struct Pen {$/;"	s	class:EasyPlotmm	access:public
 EasyPlotmm::Pen::Pen	easyplotmm/easyplotmm.h	/^            Pen() {$/;"	f	struct:EasyPlotmm::Pen	access:public	signature:()
 EasyPlotmm::Pen::color	easyplotmm/easyplotmm.h	/^            RGBA color;$/;"	m	struct:EasyPlotmm::Pen	access:public
+EasyPlotmm::Pen::errcolor	easyplotmm/easyplotmm.h	/^            RGBA errcolor;$/;"	m	struct:EasyPlotmm::Pen	access:public
 EasyPlotmm::Pen::filled	easyplotmm/easyplotmm.h	/^            bool filled;$/;"	m	struct:EasyPlotmm::Pen	access:public
 EasyPlotmm::Pen::linewidth	easyplotmm/easyplotmm.h	/^            float linewidth;$/;"	m	struct:EasyPlotmm::Pen	access:public
 EasyPlotmm::Pen::pointsize	easyplotmm/easyplotmm.h	/^            float pointsize;$/;"	m	struct:EasyPlotmm::Pen	access:public
@@ -114,6 +68,8 @@ EasyPlotmm::bg	easyplotmm/easyplotmm.h	/^        RGBA bg; \/\/ Plot background c
 EasyPlotmm::clear	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::clear()$/;"	f	class:EasyPlotmm	signature:()
 EasyPlotmm::clear	easyplotmm/easyplotmm.h	/^        void clear();$/;"	p	class:EasyPlotmm	access:public	signature:()
 EasyPlotmm::curPen	easyplotmm/easyplotmm.h	/^        unsigned int curPen;$/;"	m	class:EasyPlotmm	access:protected
+EasyPlotmm::drawerr	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::drawerr(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col)$/;"	f	class:EasyPlotmm	signature:(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col)
+EasyPlotmm::drawerr	easyplotmm/easyplotmm.h	/^        void drawerr(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col);$/;"	p	class:EasyPlotmm	access:protected	signature:(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col)
 EasyPlotmm::drawshape	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape shape, bool filled, RGBA col)$/;"	f	class:EasyPlotmm	signature:(Cairo::RefPtr<Cairo::Context> cr, double s, Shape shape, bool filled, RGBA col)
 EasyPlotmm::drawshape	easyplotmm/easyplotmm.h	/^        void drawshape(Cairo::RefPtr<Cairo::Context> cr, double size, Shape shape, bool filled, RGBA col);$/;"	p	class:EasyPlotmm	access:protected	signature:(Cairo::RefPtr<Cairo::Context> cr, double size, Shape shape, bool filled, RGBA col)
 EasyPlotmm::getPen	easyplotmm/easyplotmm.cpp	/^EasyPlotmm::Pen EasyPlotmm::getPen()$/;"	f	class:EasyPlotmm	signature:()
@@ -123,6 +79,7 @@ EasyPlotmm::in_zoom	easyplotmm/easyplotmm.h	/^        bool in_zoom;$/;"	m	class:
 EasyPlotmm::lab_height	easyplotmm/easyplotmm.h	/^        int ylab_width,lab_height;$/;"	m	class:EasyPlotmm	access:protected
 EasyPlotmm::label_pad	easyplotmm/easyplotmm.h	/^        double label_pad;$/;"	m	class:EasyPlotmm	access:public
 EasyPlotmm::m_defPens	easyplotmm/easyplotmm.h	/^        std::vector< Pen > m_defPens;$/;"	m	class:EasyPlotmm	access:protected
+EasyPlotmm::m_err	easyplotmm/easyplotmm.h	/^        std::vector< std::vector<double> > m_err;$/;"	m	class:EasyPlotmm	access:protected
 EasyPlotmm::m_ixmax	easyplotmm/easyplotmm.h	/^        double m_ixmin,m_ixmax,m_iymin,m_iymax; \/\/ Axes$/;"	m	class:EasyPlotmm	access:protected
 EasyPlotmm::m_ixmin	easyplotmm/easyplotmm.h	/^        double m_ixmin,m_ixmax,m_iymin,m_iymax; \/\/ Axes$/;"	m	class:EasyPlotmm	access:protected
 EasyPlotmm::m_iymax	easyplotmm/easyplotmm.h	/^        double m_ixmin,m_ixmax,m_iymin,m_iymax; \/\/ Axes$/;"	m	class:EasyPlotmm	access:protected
@@ -150,8 +107,12 @@ EasyPlotmm::pad_right	easyplotmm/easyplotmm.h	/^        double pad_left,pad_top,
 EasyPlotmm::pad_top	easyplotmm/easyplotmm.h	/^        double pad_left,pad_top,pad_right,pad_bottom;$/;"	m	class:EasyPlotmm	access:public
 EasyPlotmm::plot	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y)$/;"	f	class:EasyPlotmm	signature:(std::vector<double> x, std::vector<double> y)
 EasyPlotmm::plot	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, Pen p)$/;"	f	class:EasyPlotmm	signature:(std::vector<double> x, std::vector<double> y, Pen p)
+EasyPlotmm::plot	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<double> err)$/;"	f	class:EasyPlotmm	signature:(std::vector<double> x, std::vector<double> y, std::vector<double> err)
+EasyPlotmm::plot	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p)$/;"	f	class:EasyPlotmm	signature:(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p)
 EasyPlotmm::plot	easyplotmm/easyplotmm.h	/^        void plot(std::vector<double> x, std::vector<double> y);$/;"	p	class:EasyPlotmm	access:public	signature:(std::vector<double> x, std::vector<double> y)
 EasyPlotmm::plot	easyplotmm/easyplotmm.h	/^        void plot(std::vector<double> x, std::vector<double> y, Pen p);$/;"	p	class:EasyPlotmm	access:public	signature:(std::vector<double> x, std::vector<double> y, Pen p)
+EasyPlotmm::plot	easyplotmm/easyplotmm.h	/^        void plot(std::vector<double> x, std::vector<double> y, std::vector<double> err);$/;"	p	class:EasyPlotmm	access:public	signature:(std::vector<double> x, std::vector<double> y, std::vector<double> err)
+EasyPlotmm::plot	easyplotmm/easyplotmm.h	/^        void plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p);$/;"	p	class:EasyPlotmm	access:public	signature:(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p)
 EasyPlotmm::redraw	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::redraw()$/;"	f	class:EasyPlotmm	signature:()
 EasyPlotmm::redraw	easyplotmm/easyplotmm.h	/^        void redraw();$/;"	p	class:EasyPlotmm	access:public	signature:()
 EasyPlotmm::set_bg_rgba	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::set_bg_rgba(double r, double g, double b, double a)$/;"	f	class:EasyPlotmm	signature:(double r, double g, double b, double a)
@@ -176,6 +137,9 @@ FREQ_STEP	spikedata.h	31;"	d
 GUI	gui.cpp	/^GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)$/;"	f	class:GUI	signature:(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 GUI	gui.h	/^        GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade);$/;"	p	class:GUI	access:public	signature:(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 GUI	gui.h	/^class GUI : public Gtk::Window$/;"	c	inherits:Gtk::Window
+GUI::AnalyzeColumns	gui.h	/^		class AnalyzeColumns : public Gtk::TreeModel::ColumnRecord$/;"	c	class:GUI	inherits:Gtk::TreeModel::ColumnRecord	access:protected
+GUI::AnalyzeColumns::AnalyzeColumns	gui.h	/^				AnalyzeColumns()$/;"	f	class:GUI::AnalyzeColumns	access:public	signature:()
+GUI::AnalyzeColumns::m_col_name	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_name;$/;"	m	class:GUI::AnalyzeColumns	access:public
 GUI::AnimalColumns	gui.h	/^        class AnimalColumns : public Gtk::TreeModel::ColumnRecord$/;"	c	class:GUI	inherits:Gtk::TreeModel::ColumnRecord	access:protected
 GUI::AnimalColumns::AnimalColumns	gui.h	/^                AnimalColumns()$/;"	f	class:GUI::AnimalColumns	access:public	signature:()
 GUI::AnimalColumns::m_col_name	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_name;$/;"	m	class:GUI::AnimalColumns	access:public
@@ -198,7 +162,9 @@ GUI::DetailsColumns::m_col_cellID	gui.h	/^                Gtk::TreeModelColumn<i
 GUI::DetailsColumns::m_col_dur	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_dur;$/;"	m	class:GUI::DetailsColumns	access:public
 GUI::DetailsColumns::m_col_filenum	gui.h	/^                Gtk::TreeModelColumn<int> m_col_filenum;$/;"	m	class:GUI::DetailsColumns	access:public
 GUI::DetailsColumns::m_col_freq	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_freq;$/;"	m	class:GUI::DetailsColumns	access:public
+GUI::DetailsColumns::m_col_onset	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_onset;$/;"	m	class:GUI::DetailsColumns	access:public
 GUI::DetailsColumns::m_col_tags	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_tags;$/;"	m	class:GUI::DetailsColumns	access:public
+GUI::DetailsColumns::m_col_trials	gui.h	/^                Gtk::TreeModelColumn<int> m_col_trials;$/;"	m	class:GUI::DetailsColumns	access:public
 GUI::DetailsColumns::m_col_type	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_type;$/;"	m	class:GUI::DetailsColumns	access:public
 GUI::DetailsColumns::m_col_xaxis	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_xaxis;$/;"	m	class:GUI::DetailsColumns	access:public
 GUI::GUI	gui.cpp	/^GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)$/;"	f	class:GUI	signature:(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
@@ -217,32 +183,51 @@ GUI::curXVariable	gui.h	/^        std::string curXVariable;$/;"	m	class:GUI	acce
 GUI::db	gui.h	/^        sqlite3 *db;$/;"	m	class:GUI	access:protected
 GUI::filetags_cell_data	gui.cpp	/^void GUI::filetags_cell_data(Gtk::CellRenderer* \/*renderer*\/, const Gtk::TreeModel::iterator& iter)$/;"	f	class:GUI	signature:(Gtk::CellRenderer* , const Gtk::TreeModel::iterator& iter)
 GUI::filetags_cell_data	gui.h	/^        void filetags_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter);$/;"	p	class:GUI	access:protected	signature:(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter)
+GUI::importSpikeFile	gui.cpp	/^void GUI::importSpikeFile(std::string filename, char* d_name)$/;"	f	class:GUI	signature:(std::string filename, char* d_name)
+GUI::importSpikeFile	gui.h	/^	    void importSpikeFile(std::string filename, char* d_name);$/;"	p	class:GUI	access:protected	signature:(std::string filename, char* d_name)
 GUI::m_AnimalColumns	gui.h	/^        AnimalColumns m_AnimalColumns;$/;"	m	class:GUI	access:protected
 GUI::m_AnimalDetailsColumns	gui.h	/^        AnimalDetailsColumns m_AnimalDetailsColumns;$/;"	m	class:GUI	access:protected
 GUI::m_CellDetailsColumns	gui.h	/^        CellDetailsColumns m_CellDetailsColumns;$/;"	m	class:GUI	access:protected
+GUI::m_DataSourceColumns	gui.h	/^		AnalyzeColumns m_DataSourceColumns;$/;"	m	class:GUI	access:protected
 GUI::m_DetailsColumns	gui.h	/^        DetailsColumns m_DetailsColumns;$/;"	m	class:GUI	access:protected
+GUI::m_XVarColumns	gui.h	/^		AnalyzeColumns m_XVarColumns;$/;"	m	class:GUI	access:protected
+GUI::m_YVarColumns	gui.h	/^		AnalyzeColumns m_YVarColumns;$/;"	m	class:GUI	access:protected
+GUI::m_adjMinFiles	gui.h	/^		Gtk::Adjustment m_adjMinFiles;$/;"	m	class:GUI	access:protected
 GUI::m_pAnimalDetailsList	gui.h	/^        Gtk::TreeView* m_pAnimalDetailsList;$/;"	m	class:GUI	access:protected
 GUI::m_pAnimalTree	gui.h	/^        Gtk::TreeView* m_pAnimalTree;$/;"	m	class:GUI	access:protected
 GUI::m_pCellDetailsList	gui.h	/^        Gtk::TreeView* m_pCellDetailsList;$/;"	m	class:GUI	access:protected
+GUI::m_pDataSource	gui.h	/^		Gtk::ComboBox* m_pDataSource;$/;"	m	class:GUI	access:protected
 GUI::m_pDetailsList	gui.h	/^        Gtk::TreeView* m_pDetailsList;$/;"	m	class:GUI	access:protected
 GUI::m_pHBoxPlots	gui.h	/^        Gtk::HBox* m_pHBoxPlots;$/;"	m	class:GUI	access:protected
 GUI::m_pMenuImportFolder	gui.h	/^        Gtk::ImageMenuItem* m_pMenuImportFolder;$/;"	m	class:GUI	access:protected
+GUI::m_pMenuOpenDatabase	gui.h	/^        Gtk::ImageMenuItem* m_pMenuOpenDatabase;$/;"	m	class:GUI	access:protected
 GUI::m_pMenuQuit	gui.h	/^        Gtk::ImageMenuItem* m_pMenuQuit;$/;"	m	class:GUI	access:protected
+GUI::m_pMinFiles	gui.h	/^		Gtk::SpinButton* m_pMinFiles;$/;"	m	class:GUI	access:protected
+GUI::m_pPlotAnalyze	gui.h	/^        EasyPlotmm* m_pPlotAnalyze;$/;"	m	class:GUI	access:protected
 GUI::m_pPlotMeans	gui.h	/^        EasyPlotmm* m_pPlotMeans;$/;"	m	class:GUI	access:protected
 GUI::m_pPlotSpikes	gui.h	/^        EasyPlotmm* m_pPlotSpikes;$/;"	m	class:GUI	access:protected
+GUI::m_pStatusbar	gui.h	/^		Gtk::Statusbar* m_pStatusbar;$/;"	m	class:GUI	access:protected
+GUI::m_pVBoxAnalyze	gui.h	/^        Gtk::VBox* m_pVBoxAnalyze;$/;"	m	class:GUI	access:protected
+GUI::m_pXVar	gui.h	/^		Gtk::ComboBox* m_pXVar;$/;"	m	class:GUI	access:protected
+GUI::m_pYVar	gui.h	/^		Gtk::ComboBox* m_pYVar;$/;"	m	class:GUI	access:protected
 GUI::m_refAnimalDetailsList	gui.h	/^        Glib::RefPtr<Gtk::ListStore> m_refAnimalDetailsList;$/;"	m	class:GUI	access:protected
 GUI::m_refAnimalSelection	gui.h	/^        Glib::RefPtr<Gtk::TreeSelection> m_refAnimalSelection;$/;"	m	class:GUI	access:protected
 GUI::m_refAnimalTree	gui.h	/^        Glib::RefPtr<Gtk::TreeStore> m_refAnimalTree;$/;"	m	class:GUI	access:protected
 GUI::m_refCellDetailsList	gui.h	/^        Glib::RefPtr<Gtk::ListStore> m_refCellDetailsList;$/;"	m	class:GUI	access:protected
+GUI::m_refDataSource	gui.h	/^        Glib::RefPtr<Gtk::ListStore> m_refDataSource;$/;"	m	class:GUI	access:protected
 GUI::m_refDetailsList	gui.h	/^        Glib::RefPtr<Gtk::ListStore> m_refDetailsList;$/;"	m	class:GUI	access:protected
 GUI::m_refDetailsSelection	gui.h	/^        Glib::RefPtr<Gtk::TreeSelection> m_refDetailsSelection;$/;"	m	class:GUI	access:protected
 GUI::m_refGlade	gui.h	/^        Glib::RefPtr<Gtk::Builder> m_refGlade;$/;"	m	class:GUI	access:protected
+GUI::m_refXVar	gui.h	/^        Glib::RefPtr<Gtk::ListStore> m_refXVar;$/;"	m	class:GUI	access:protected
+GUI::m_refYVar	gui.h	/^        Glib::RefPtr<Gtk::ListStore> m_refYVar;$/;"	m	class:GUI	access:protected
 GUI::m_rend_animalvalue	gui.h	/^        Gtk::CellRendererText m_rend_animalvalue;$/;"	m	class:GUI	access:protected
 GUI::m_rend_cellvalue	gui.h	/^        Gtk::CellRendererText m_rend_cellvalue;$/;"	m	class:GUI	access:protected
 GUI::m_rend_filetags	gui.h	/^        Gtk::CellRendererText m_rend_filetags;$/;"	m	class:GUI	access:protected
 GUI::m_tvcol_animalvalue	gui.h	/^        Gtk::TreeViewColumn m_tvcol_animalvalue;$/;"	m	class:GUI	access:protected
 GUI::m_tvcol_cellvalue	gui.h	/^        Gtk::TreeViewColumn m_tvcol_cellvalue;$/;"	m	class:GUI	access:protected
 GUI::m_tvcol_filetags	gui.h	/^        Gtk::TreeViewColumn m_tvcol_filetags;$/;"	m	class:GUI	access:protected
+GUI::on_analyze_changed	gui.cpp	/^void GUI::on_analyze_changed()$/;"	f	class:GUI	signature:()
+GUI::on_analyze_changed	gui.h	/^		void on_analyze_changed();$/;"	p	class:GUI	access:protected	signature:()
 GUI::on_animal_sort	gui.cpp	/^int GUI::on_animal_sort(const Gtk::TreeModel::iterator& a_, const Gtk::TreeModel::iterator& b_)$/;"	f	class:GUI	signature:(const Gtk::TreeModel::iterator& a_, const Gtk::TreeModel::iterator& b_)
 GUI::on_animal_sort	gui.h	/^        int on_animal_sort(const Gtk::TreeModel::iterator& a, const Gtk::TreeModel::iterator& b);$/;"	p	class:GUI	access:protected	signature:(const Gtk::TreeModel::iterator& a, const Gtk::TreeModel::iterator& b)
 GUI::on_animalvalue_edited	gui.cpp	/^void GUI::on_animalvalue_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)$/;"	f	class:GUI	signature:(const Glib::ustring& path_string, const Glib::ustring& new_text)
@@ -253,8 +238,12 @@ GUI::on_filetags_edited	gui.cpp	/^void GUI::on_filetags_edited(const Glib::ustri
 GUI::on_filetags_edited	gui.h	/^        void on_filetags_edited(const Glib::ustring& path_string, const Glib::ustring& new_text);$/;"	p	class:GUI	access:protected	signature:(const Glib::ustring& path_string, const Glib::ustring& new_text)
 GUI::on_menuImportFolder_activate	gui.cpp	/^void GUI::on_menuImportFolder_activate()$/;"	f	class:GUI	signature:()
 GUI::on_menuImportFolder_activate	gui.h	/^        void on_menuImportFolder_activate();$/;"	p	class:GUI	access:protected	signature:()
+GUI::on_menuOpenDatabase_activate	gui.cpp	/^void GUI::on_menuOpenDatabase_activate()$/;"	f	class:GUI	signature:()
+GUI::on_menuOpenDatabase_activate	gui.h	/^        void on_menuOpenDatabase_activate();$/;"	p	class:GUI	access:protected	signature:()
 GUI::on_menuQuit_activate	gui.cpp	/^void GUI::on_menuQuit_activate()$/;"	f	class:GUI	signature:()
 GUI::on_menuQuit_activate	gui.h	/^        void on_menuQuit_activate();$/;"	p	class:GUI	access:protected	signature:()
+GUI::openDatabase	gui.cpp	/^bool GUI::openDatabase(std::string filename)$/;"	f	class:GUI	signature:(std::string filename)
+GUI::openDatabase	gui.h	/^		bool openDatabase(std::string filename);$/;"	p	class:GUI	access:protected	signature:(std::string filename)
 GUI::populateAnimalDetailsList	gui.cpp	/^void GUI::populateAnimalDetailsList(const Glib::ustring animalID)$/;"	f	class:GUI	signature:(const Glib::ustring animalID)
 GUI::populateAnimalDetailsList	gui.h	/^        void populateAnimalDetailsList(const Glib::ustring animalID);$/;"	p	class:GUI	access:protected	signature:(const Glib::ustring animalID)
 GUI::populateAnimalTree	gui.cpp	/^void GUI::populateAnimalTree()$/;"	f	class:GUI	signature:()
@@ -263,13 +252,15 @@ GUI::populateCellDetailsList	gui.cpp	/^void GUI::populateCellDetailsList(const G
 GUI::populateCellDetailsList	gui.h	/^        void populateCellDetailsList(const Glib::ustring animalID, const int cellID);$/;"	p	class:GUI	access:protected	signature:(const Glib::ustring animalID, const int cellID)
 GUI::populateDetailsList	gui.cpp	/^void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)$/;"	f	class:GUI	signature:(const Glib::ustring animalID, const int cellID)
 GUI::populateDetailsList	gui.h	/^        void populateDetailsList(const Glib::ustring animalID, const int cellID);$/;"	p	class:GUI	access:protected	signature:(const Glib::ustring animalID, const int cellID)
+GUI::settings	gui.h	/^		Settings settings;$/;"	m	class:GUI	access:protected
+GUI::updateFilter	gui.cpp	/^void GUI::updateFilter()$/;"	f	class:GUI	signature:()
+GUI::updateFilter	gui.h	/^		void updateFilter();$/;"	p	class:GUI	access:protected	signature:()
 GUI::updateSideLists	gui.cpp	/^void GUI::updateSideLists(const Gtk::TreeModel::iterator& iter)$/;"	f	class:GUI	signature:(const Gtk::TreeModel::iterator& iter)
-GUI::updateSideLists	gui.h	/^	void updateSideLists(const Gtk::TreeModel::iterator& iter);$/;"	p	class:GUI	access:protected	signature:(const Gtk::TreeModel::iterator& iter)
+GUI::updateSideLists	gui.h	/^		void updateSideLists(const Gtk::TreeModel::iterator& iter);$/;"	p	class:GUI	access:protected	signature:(const Gtk::TreeModel::iterator& iter)
 GUI::~GUI	gui.cpp	/^GUI::~GUI()$/;"	f	class:GUI	signature:()
 GUI::~GUI	gui.h	/^        virtual ~GUI();$/;"	p	class:GUI	access:public	signature:()
 GUI_H	gui.h	2;"	d
 HEADER	spikedata.h	/^}  HEADER;				\/\/ Total: (1152) bytes$/;"	t	typeref:struct:__anon12
-ID_VOID_MAIN	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	6;"	d	file:
 INTERNAL	spikedata.h	37;"	d
 LINEAR	spikedata.h	46;"	d
 LOGARITHMIC	spikedata.h	47;"	d
@@ -280,58 +271,6 @@ NOISE_EX	spikedata.h	/^} NOISE_EX;$/;"	t	typeref:struct:__anon5
 NONE	easyplotmm/easyplotmm.h	/^            NONE$/;"	e	enum:EasyPlotmm::Shape
 NONINTERLEAVED	spikedata.h	44;"	d
 NO_STEP	spikedata.h	30;"	d
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	101;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	104;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	107;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	110;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	113;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	116;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	119;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	122;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	125;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	128;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	134;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	137;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	140;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	143;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	146;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	149;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	152;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	155;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	158;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	161;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	164;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	167;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	170;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	92;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	95;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	98;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	101;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	104;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	107;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	110;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	113;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	116;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	119;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	125;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	128;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	131;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	134;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	137;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	140;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	143;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	146;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	149;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	152;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	155;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	158;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	161;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	83;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	86;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	89;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	92;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	95;"	d	file:
-PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	98;"	d	file:
 POINT	easyplotmm/easyplotmm.h	/^            POINT,$/;"	e	enum:EasyPlotmm::Shape
 Pen	easyplotmm/easyplotmm.h	/^            Pen() {$/;"	f	struct:EasyPlotmm::Pen	access:public	signature:()
 Pen	easyplotmm/easyplotmm.h	/^        struct Pen {$/;"	s	class:EasyPlotmm	access:public
@@ -341,6 +280,7 @@ RGBA	easyplotmm/easyplotmm.h	/^            RGBA() {$/;"	f	struct:EasyPlotmm::RGB
 RGBA	easyplotmm/easyplotmm.h	/^        struct RGBA {$/;"	s	class:EasyPlotmm	access:public
 RM	Makefile	/^RM = \/usr\/bin\/cmake -E remove -f$/;"	m
 SEQUENTIAL	spikedata.h	42;"	d
+SETTINGS_H	settings.h	2;"	d
 SHELL	Makefile	/^SHELL = \/bin\/sh$/;"	m
 SIN	spikedata.h	/^} SIN;$/;"	t	typeref:struct:__anon2
 SINUS	spikedata.cpp	115;"	d	file:
@@ -355,6 +295,33 @@ SWEEP_MARK	spikedata.h	49;"	d
 SWEPTSIN	spikedata.h	/^} SWEPTSIN;$/;"	t	typeref:struct:__anon6
 SWEPTSINUS	spikedata.cpp	118;"	d	file:
 SWEPTSINUS	spikedata.h	25;"	d
+Settings	settings.cpp	/^Settings::Settings()$/;"	f	class:Settings	signature:()
+Settings	settings.h	/^    	Settings();$/;"	p	class:Settings	access:public	signature:()
+Settings	settings.h	/^class Settings {$/;"	c
+Settings::Settings	settings.cpp	/^Settings::Settings()$/;"	f	class:Settings	signature:()
+Settings::Settings	settings.h	/^    	Settings();$/;"	p	class:Settings	access:public	signature:()
+Settings::db	settings.h	/^        sqlite3 *db;$/;"	m	class:Settings	access:private
+Settings::get_bool	settings.cpp	/^bool Settings::get_bool(std::string key)$/;"	f	class:Settings	signature:(std::string key)
+Settings::get_bool	settings.cpp	/^bool Settings::get_bool(std::string key, bool default)$/;"	f	class:Settings	signature:(std::string key, bool default)
+Settings::get_bool	settings.h	/^		bool get_bool(std::string key);$/;"	p	class:Settings	access:public	signature:(std::string key)
+Settings::get_bool	settings.h	/^		bool get_bool(std::string key, bool default);$/;"	p	class:Settings	access:public	signature:(std::string key, bool default)
+Settings::get_double	settings.cpp	/^double Settings::get_double(std::string key)$/;"	f	class:Settings	signature:(std::string key)
+Settings::get_double	settings.cpp	/^double Settings::get_double(std::string key, double default)$/;"	f	class:Settings	signature:(std::string key, double default)
+Settings::get_double	settings.h	/^		double get_double(std::string key);$/;"	p	class:Settings	access:public	signature:(std::string key)
+Settings::get_double	settings.h	/^		double get_double(std::string key, double default);$/;"	p	class:Settings	access:public	signature:(std::string key, double default)
+Settings::get_float	settings.cpp	/^float Settings::get_float(std::string key)$/;"	f	class:Settings	signature:(std::string key)
+Settings::get_float	settings.cpp	/^float Settings::get_float(std::string key, float default)$/;"	f	class:Settings	signature:(std::string key, float default)
+Settings::get_float	settings.h	/^		float get_float(std::string key);$/;"	p	class:Settings	access:public	signature:(std::string key)
+Settings::get_float	settings.h	/^		float get_float(std::string key, float default);$/;"	p	class:Settings	access:public	signature:(std::string key, float default)
+Settings::get_int	settings.cpp	/^int Settings::get_int(std::string key)$/;"	f	class:Settings	signature:(std::string key)
+Settings::get_int	settings.cpp	/^int Settings::get_int(std::string key, int default)$/;"	f	class:Settings	signature:(std::string key, int default)
+Settings::get_int	settings.h	/^		int get_int(std::string key);$/;"	p	class:Settings	access:public	signature:(std::string key)
+Settings::get_int	settings.h	/^		int get_int(std::string key, int default);$/;"	p	class:Settings	access:public	signature:(std::string key, int default)
+Settings::get_string	settings.cpp	/^std::string Settings::get_string(std::string key)$/;"	f	class:Settings	signature:(std::string key)
+Settings::get_string	settings.cpp	/^std::string Settings::get_string(std::string key, std::string default)$/;"	f	class:Settings	signature:(std::string key, std::string default)
+Settings::get_string	settings.h	/^		std::string get_string(std::string key);$/;"	p	class:Settings	access:public	signature:(std::string key)
+Settings::get_string	settings.h	/^		std::string get_string(std::string key, std::string default);$/;"	p	class:Settings	access:public	signature:(std::string key, std::string default)
+Settings::get_value	settings.h	/^		std::string get_value(std::string key);$/;"	p	class:Settings	access:private	signature:(std::string key)
 Shape	easyplotmm/easyplotmm.h	/^        enum Shape {$/;"	g	class:EasyPlotmm	access:public
 SpikeData	spikedata.h	/^class SpikeData$/;"	c
 SpikeData::attenuation	spikedata.cpp	/^double SpikeData::attenuation(int channel, int sweep)$/;"	f	class:SpikeData	signature:(int channel, int sweep)
@@ -377,6 +344,8 @@ SpikeData::parsedata	spikedata.cpp	/^bool SpikeData::parsedata()$/;"	f	class:Spi
 SpikeData::parsedata	spikedata.h	/^        bool parsedata();$/;"	p	class:SpikeData	access:private	signature:()
 SpikeData::printfile	spikedata.cpp	/^void SpikeData::printfile()$/;"	f	class:SpikeData	signature:()
 SpikeData::printfile	spikedata.h	/^        void printfile();$/;"	p	class:SpikeData	access:public	signature:()
+SpikeData::trials	spikedata.cpp	/^int SpikeData::trials()$/;"	f	class:SpikeData	signature:()
+SpikeData::trials	spikedata.h	/^        int trials();$/;"	p	class:SpikeData	access:public	signature:()
 SpikeData::type	spikedata.cpp	/^std::string SpikeData::type()$/;"	f	class:SpikeData	signature:()
 SpikeData::type	spikedata.h	/^        std::string type();$/;"	p	class:SpikeData	access:public	signature:()
 SpikeData::xVariable	spikedata.cpp	/^std::string SpikeData::xVariable()$/;"	f	class:SpikeData	signature:()
@@ -467,29 +436,16 @@ __anon9::nStimPerSweep	spikedata.h	/^        short nStimPerSweep;$/;"	m	struct:_
 __anon9::nType	spikedata.h	/^        short nType;		\/\/ stimulus type$/;"	m	struct:__anon9	access:public
 __anon9::params	spikedata.h	/^        } params; \/\/ (80)$/;"	m	struct:__anon9	typeref:union:__anon9::__anon10	access:public
 a	easyplotmm/easyplotmm.h	/^            double a;$/;"	m	struct:EasyPlotmm::RGBA	access:public
-a	gui.cpp	/^    Glib::ustring a = a__.get_value(m_AnimalColumns.m_col_name);$/;"	l
-a__	gui.cpp	/^    const Gtk::TreeModel::Row a__ = *a_;$/;"	l
 addFileToPlot	gui.cpp	/^void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)$/;"	f	class:GUI	signature:(const Gtk::TreeModel::iterator& iter)
 addFileToPlot	gui.h	/^        void addFileToPlot(const Gtk::TreeModel::iterator& iter);$/;"	p	class:GUI	access:protected	signature:(const Gtk::TreeModel::iterator& iter)
-add_button	gui.cpp	/^    dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);$/;"	p	file:	signature:(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL)
-add_button	gui.cpp	/^    dialog.add_button(Gtk::Stock::OPEN, Gtk::RESPONSE_OK);$/;"	p	file:	signature:(Gtk::Stock::OPEN, Gtk::RESPONSE_OK)
-add_to_cairo_context	easyplotmm/easyplotmm.cpp	/^                pangoLayout->add_to_cairo_context(cr);$/;"	p	file:	signature:(cr)
-allocation	easyplotmm/easyplotmm.cpp	/^        Gtk::Allocation allocation = get_allocation();$/;"	l
 amsin	spikedata.h	/^                AMSIN	 amsin; \/\/ (16)$/;"	m	union:__anon9::__anon10	access:public
-animalID	gui.cpp	/^            char* animalID = (char*)sqlite3_column_text(stmt_animals,0);$/;"	l
 animalvalue_cell_data	gui.cpp	/^void GUI::animalvalue_cell_data(Gtk::CellRenderer* \/*renderer*\/, const Gtk::TreeModel::iterator& iter)$/;"	f	class:GUI	signature:(Gtk::CellRenderer* , const Gtk::TreeModel::iterator& iter)
 animalvalue_cell_data	gui.h	/^        void animalvalue_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter);$/;"	p	class:GUI	access:protected	signature:(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter)
-append_column	gui.cpp	/^    m_pAnimalDetailsList->append_column(m_tvcol_animalvalue);$/;"	p	file:	signature:(m_tvcol_animalvalue)
-append_column	gui.cpp	/^    m_pCellDetailsList->append_column(m_tvcol_cellvalue);$/;"	p	file:	signature:(m_tvcol_cellvalue)
-arc	easyplotmm/easyplotmm.cpp	/^            cr->arc(x,y,s\/2,0.0,2.0*M_PI);$/;"	p	file:	signature:(x,y,s/2,0.0,2.0*M_PI)
-assign	gui.cpp	/^        sd.m_spikeArray.assign(spikes,spikes+numSpikes);$/;"	p	file:	signature:(spikes,spikes+numSpikes)
-at	gui.cpp	/^                            y.at(i) += 1.0f \/ sd.m_head.nPasses;$/;"	p	file:	signature:(i)
 attenuation	spikedata.cpp	/^double SpikeData::attenuation(int channel, int sweep)$/;"	f	class:SpikeData	signature:(int channel, int sweep)
 attenuation	spikedata.h	/^        double attenuation(int channel, int sweep);$/;"	p	class:SpikeData	access:public	signature:(int channel, int sweep)
 axes	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::axes(double xmin, double xmax, double ymin, double ymax)$/;"	f	class:EasyPlotmm	signature:(double xmin, double xmax, double ymin, double ymax)
 axes	easyplotmm/easyplotmm.h	/^        void axes(double xmin, double xmax, double ymin, double ymax);$/;"	p	class:EasyPlotmm	access:public	signature:(double xmin, double xmax, double ymin, double ymax)
 b	easyplotmm/easyplotmm.h	/^            double b;$/;"	m	struct:EasyPlotmm::RGBA	access:public
-b	gui.cpp	/^    Glib::ustring b = b__.get_value(m_AnimalColumns.m_col_name);$/;"	l
 bAmDepth	spikedata.h	/^        char bAmDepth;$/;"	m	struct:__anon1	access:public
 bAtten	spikedata.h	/^        char bAtten;$/;"	m	struct:__anon1	access:public
 bBegin	spikedata.h	/^        char bBegin;$/;"	m	struct:__anon1	access:public
@@ -500,15 +456,9 @@ bModFreq	spikedata.h	/^        char bModFreq;$/;"	m	struct:__anon1	access:public
 bPhase	spikedata.h	/^        char bPhase;$/;"	m	struct:__anon1	access:public
 bStimInt	spikedata.h	/^        char bStimInt;$/;"	m	struct:__anon1	access:public
 bWav	spikedata.h	/^        char bWav;$/;"	m	struct:__anon1	access:public
-b__	gui.cpp	/^    const Gtk::TreeModel::Row b__ = *b_;$/;"	l
-base	gui.cpp	/^    Gtk::TreeModel::Row base;$/;"	l
 begin	spikedata.cpp	/^double SpikeData::begin(int channel, int sweep)$/;"	f	class:SpikeData	signature:(int channel, int sweep)
 begin	spikedata.h	/^        double begin(int channel, int sweep);$/;"	p	class:SpikeData	access:public	signature:(int channel, int sweep)
-begin_pos	spikedata.cpp	/^        std::ifstream::pos_type begin_pos = in.tellg();$/;"	l
 bg	easyplotmm/easyplotmm.h	/^        RGBA bg; \/\/ Plot background color$/;"	m	class:EasyPlotmm	access:protected
-buffer	easyplotmm/easyplotmm.cpp	/^                char buffer[10];$/;"	l
-buffer	gui.cpp	/^                char buffer[7];$/;"	l
-buffer	gui.cpp	/^        char buffer[4];$/;"	l
 cAutoAdjPhase	spikedata.h	/^        char	cAutoAdjPhase;	\/\/   (1) v 18-nov-2002$/;"	m	struct:__anon12	access:public
 cDate	spikedata.h	/^        char	cDate[8];       \/\/   (8) date of data acquisition $/;"	m	struct:__anon12	access:public
 cFill1	spikedata.h	/^        char	cFill1[2];		\/\/   (2)$/;"	m	struct:__anon12	access:public
@@ -516,69 +466,30 @@ cFill2	spikedata.h	/^        char	cFill2[768]; $/;"	m	struct:__anon12	access:pub
 cFrozenNoise	spikedata.h	/^        char	cFrozenNoise;	\/\/   (1) v 6.1$/;"	m	struct:__anon12	access:public
 cId	spikedata.h	/^        char	cId[12];		\/\/  (12) file identification \/ validiation $/;"	m	struct:__anon12	access:public
 cTime	spikedata.h	/^        char	cTime[8];       \/\/   (8) time of data acquisition $/;"	m	struct:__anon12	access:public
-cellID	gui.cpp	/^                    char* cellID = (char*)sqlite3_column_text(stmt_cells,0);$/;"	l
 cellvalue_cell_data	gui.cpp	/^void GUI::cellvalue_cell_data(Gtk::CellRenderer* \/*renderer*\/, const Gtk::TreeModel::iterator& iter)$/;"	f	class:GUI	signature:(Gtk::CellRenderer* , const Gtk::TreeModel::iterator& iter)
 cellvalue_cell_data	gui.h	/^        void cellvalue_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter);$/;"	p	class:GUI	access:protected	signature:(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter)
-ch1Pen	gui.cpp	/^        EasyPlotmm::Pen ch1Pen;$/;"	l
-ch2Pen	gui.cpp	/^        EasyPlotmm::Pen ch2Pen;$/;"	l
 changeAnimalSelection	gui.cpp	/^void GUI::changeAnimalSelection()$/;"	f	class:GUI	signature:()
 changeAnimalSelection	gui.h	/^        void changeAnimalSelection();$/;"	p	class:GUI	access:protected	signature:()
 changeDetailsSelection	gui.cpp	/^void GUI::changeDetailsSelection()$/;"	f	class:GUI	signature:()
 changeDetailsSelection	gui.h	/^        void changeDetailsSelection();$/;"	p	class:GUI	access:protected	signature:()
-childrow	gui.cpp	/^    Gtk::TreeModel::Row childrow;$/;"	l
-clear	easyplotmm/easyplotmm.cpp	/^    m_pens.clear();$/;"	p	file:	signature:()
-clear	easyplotmm/easyplotmm.cpp	/^    m_x.clear();$/;"	p	file:	signature:()
-clear	easyplotmm/easyplotmm.cpp	/^    m_y.clear();$/;"	p	file:	signature:()
 clear	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::clear()$/;"	f	class:EasyPlotmm	signature:()
 clear	easyplotmm/easyplotmm.h	/^        void clear();$/;"	p	class:EasyPlotmm	access:public	signature:()
-clear	gui.cpp	/^                stimX.clear();$/;"	p	file:	signature:()
-clear	gui.cpp	/^                stimY.clear();$/;"	p	file:	signature:()
-clear	gui.cpp	/^    m_pPlotMeans->clear();$/;"	p	file:	signature:()
-clear	gui.cpp	/^    m_pPlotSpikes->clear();$/;"	p	file:	signature:()
-clear	gui.cpp	/^    m_refAnimalDetailsList->clear();$/;"	p	file:	signature:()
-clear	gui.cpp	/^    m_refAnimalTree->clear();$/;"	p	file:	signature:()
-clear	gui.cpp	/^    m_refCellDetailsList->clear();$/;"	p	file:	signature:()
-clear	gui.cpp	/^    m_refDetailsList->clear();$/;"	p	file:	signature:()
-clip	easyplotmm/easyplotmm.cpp	/^        cr->clip();$/;"	p	file:	signature:()
 color	easyplotmm/easyplotmm.h	/^            RGBA color;$/;"	m	struct:EasyPlotmm::Pen	access:public
-cr	easyplotmm/easyplotmm.cpp	/^                        cr->line_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);$/;"	p	file:	signature:(cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale
-cr	easyplotmm/easyplotmm.cpp	/^                        cr->move_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);$/;"	p	file:	signature:(cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale
-cr	easyplotmm/easyplotmm.cpp	/^                cr->move_to((cull_x[0]-xmin)*xscale,(cull_y[0]-ymin)*yscale);$/;"	p	file:	signature:(cull_x[0]-xmin)*xscale,(cull_y[0]-ymin)*yscale
-cr	easyplotmm/easyplotmm.cpp	/^                cr->move_to((x-xmin)*xscale, 0);$/;"	p	file:	signature:(x-xmin)*xscale, 0
-cr	easyplotmm/easyplotmm.cpp	/^                cr->move_to((x-xmin)*xscale-(w\/Pango::SCALE)\/2.0,x_bt_size+label_pad);$/;"	p	file:	signature:(x-xmin)*xscale-(w/Pango::SCALE)/2.0,x_bt_size+label_pad
-cr	easyplotmm/easyplotmm.cpp	/^        Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();$/;"	l
-cull_x	easyplotmm/easyplotmm.cpp	/^            std::vector<double> cull_x, cull_y;$/;"	l
-cull_y	easyplotmm/easyplotmm.cpp	/^            std::vector<double> cull_x, cull_y;$/;"	l
 curPen	easyplotmm/easyplotmm.h	/^        unsigned int curPen;$/;"	m	class:EasyPlotmm	access:protected
 curXVariable	gui.h	/^        std::string curXVariable;$/;"	m	class:GUI	access:private
 db	gui.h	/^        sqlite3 *db;$/;"	m	class:GUI	access:protected
+db	settings.h	/^        sqlite3 *db;$/;"	m	class:Settings	access:private
 delta	spikedata.cpp	/^double SpikeData::delta()$/;"	f	class:SpikeData	signature:()
 delta	spikedata.h	/^        double delta();$/;"	p	class:SpikeData	access:public	signature:()
 deltaCh1	spikedata.h	/^        DELTA	deltaCh1;	\/\/  (36) delta step of stimulus variables for channel1$/;"	m	struct:__anon12	access:public
 deltaCh2	spikedata.h	/^        DELTA	deltaCh2;       \/\/  (36) delta step of stimulus variables for channel2$/;"	m	struct:__anon12	access:public
-dirp	gui.cpp	/^            DIR *dirp;$/;"	l
-dptr	gui.cpp	/^            struct dirent *dptr;$/;"	l
+drawerr	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::drawerr(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col)$/;"	f	class:EasyPlotmm	signature:(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col)
+drawerr	easyplotmm/easyplotmm.h	/^        void drawerr(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col);$/;"	p	class:EasyPlotmm	access:protected	signature:(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col)
 drawshape	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape shape, bool filled, RGBA col)$/;"	f	class:EasyPlotmm	signature:(Cairo::RefPtr<Cairo::Context> cr, double s, Shape shape, bool filled, RGBA col)
 drawshape	easyplotmm/easyplotmm.h	/^        void drawshape(Cairo::RefPtr<Cairo::Context> cr, double size, Shape shape, bool filled, RGBA col);$/;"	p	class:EasyPlotmm	access:protected	signature:(Cairo::RefPtr<Cairo::Context> cr, double size, Shape shape, bool filled, RGBA col)
 duration	spikedata.cpp	/^double SpikeData::duration(int channel, int sweep)$/;"	f	class:SpikeData	signature:(int channel, int sweep)
 duration	spikedata.h	/^        double duration(int channel, int sweep);$/;"	p	class:SpikeData	access:public	signature:(int channel, int sweep)
-dw	spikedata.cpp	/^            DWORD dw;$/;"	l
-dy	gui.cpp	/^        double dy = sd.delta()\/(sd.m_head.nPasses*1.25);$/;"	l
-end	easyplotmm/easyplotmm.cpp	/^            double start, end;$/;"	l
-endl	easyplotmm/easyplotmm.cpp	/^                std::cout << "ERROR: Plot #" << xs << " do not have same X and Y vector sizes." << std::endl;$/;"	m	class:std	file:
-endl	easyplotmm/easyplotmm.cpp	/^            std::cout << "ERROR: Only " << m_pens.size() << " pens for " << m_x.size() << " plots." << std::endl;$/;"	m	class:std	file:
-endl	easyplotmm/easyplotmm.cpp	/^            std::cout << "ERROR: X and Y vectors are not the same size." << std::endl;$/;"	m	class:std	file:
-endl	gui.cpp	/^                std::cerr << "ERROR: Unable to open " << filename << std::endl;$/;"	m	class:std	file:
-endl	gui.cpp	/^            std::cerr << "ERROR: Could not update animal. " << sqlite3_errmsg(db) << std::endl; $/;"	m	class:std	file:
-endl	gui.cpp	/^            std::cerr << "ERROR: Could not update cell. " << sqlite3_errmsg(db) << std::endl; $/;"	m	class:std	file:
-endl	gui.cpp	/^            std::cerr << "ERROR: Plots have different X-Variables." << std::endl;$/;"	m	class:std	file:
-endl	gui.cpp	/^            std::cerr << "WARNING: Could not update cell. " << sqlite3_errmsg(db) << std::endl; $/;"	m	class:std	file:
-endl	gui.cpp	/^        std::cerr << "CRITICAL ERROR: Unable to open database file." << std::endl;$/;"	m	class:std	file:
-endl	gui.cpp	/^    else { std::cerr << "ERROR: Failed to read file from database. " << sqlite3_errmsg(db) << std::endl; }$/;"	m	class:std	file:
-endl	spikedata.cpp	/^                        std::cerr << "ERROR: Bad sweep number found. Corrupt data file." << std::endl;$/;"	m	class:std	file:
-endl	spikedata.cpp	/^                        std::cerr << "ERROR: Unexpected pass number (" << nPass << "). Corrupt data file." << std::endl;$/;"	m	class:std	file:
-endl	spikedata.cpp	/^                    std::cerr << "ERROR: NONINTERLEAVED is not supported." << std::endl;$/;"	m	class:std	file:
-endl	spikedata.cpp	/^    std::cout << "HEADER INFORMATION" << std::endl;$/;"	m	class:std	file:
+errcolor	easyplotmm/easyplotmm.h	/^            RGBA errcolor;$/;"	m	struct:EasyPlotmm::Pen	access:public
 fAmDepth	spikedata.h	/^        float fAmDepth; \/\/ >0 = AM$/;"	m	struct:__anon5	access:public
 fAmDepth	spikedata.h	/^        float fAmDepth;$/;"	m	struct:__anon11	access:public
 fAmDepth	spikedata.h	/^        float fAmDepth;$/;"	m	struct:__anon3	access:public
@@ -610,61 +521,53 @@ fRfTime	spikedata.h	/^        float fRfTime;$/;"	m	struct:__anon9	access:public
 fStimInt	spikedata.h	/^        float fStimInt;$/;"	m	struct:__anon11	access:public
 fStimInt	spikedata.h	/^        float fStimInt;$/;"	m	struct:__anon9	access:public
 fTime	spikedata.h	/^        float fTime;$/;"	m	struct:__anon8	access:public
-fileTokens	gui.cpp	/^                            std::vector<std::string> fileTokens;$/;"	l
-filename	gui.cpp	/^            std::string filename = dialog.get_filename();$/;"	l
 filetags_cell_data	gui.cpp	/^void GUI::filetags_cell_data(Gtk::CellRenderer* \/*renderer*\/, const Gtk::TreeModel::iterator& iter)$/;"	f	class:GUI	signature:(Gtk::CellRenderer* , const Gtk::TreeModel::iterator& iter)
 filetags_cell_data	gui.h	/^        void filetags_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter);$/;"	p	class:GUI	access:protected	signature:(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter)
-fill	easyplotmm/easyplotmm.cpp	/^            cr->fill();$/;"	p	file:	signature:()
-fill_preserve	easyplotmm/easyplotmm.cpp	/^        cr->fill_preserve();$/;"	p	file:	signature:()
 filled	easyplotmm/easyplotmm.h	/^            bool filled;$/;"	m	struct:EasyPlotmm::Pen	access:public
 fmsin	spikedata.h	/^                FMSIN	 fmsin; \/\/ (12)$/;"	m	union:__anon9::__anon10	access:public
 frequency	spikedata.cpp	/^double SpikeData::frequency(int channel, int sweep)$/;"	f	class:SpikeData	signature:(int channel, int sweep)
 frequency	spikedata.h	/^        double frequency(int channel, int sweep);$/;"	p	class:SpikeData	access:public	signature:(int channel, int sweep)
-fsize	spikedata.cpp	/^        int fsize = static_cast<int>(in.tellg()-begin_pos);$/;"	l
-fullfile	gui.cpp	/^                        std::string fullfile(filename);$/;"	p	file:	signature:(filename)
 g	easyplotmm/easyplotmm.h	/^            double g;$/;"	m	struct:EasyPlotmm::RGBA	access:public
 getPen	easyplotmm/easyplotmm.cpp	/^EasyPlotmm::Pen EasyPlotmm::getPen()$/;"	f	class:EasyPlotmm	signature:()
 getPen	easyplotmm/easyplotmm.h	/^        Pen getPen();$/;"	p	class:EasyPlotmm	access:public	signature:()
-get_current_point	easyplotmm/easyplotmm.cpp	/^            cr->get_current_point(x,y);$/;"	p	file:	signature:(x,y)
-get_size	easyplotmm/easyplotmm.cpp	/^                pangoLayout->get_size(w,h);$/;"	p	file:	signature:(w,h)
-h	easyplotmm/easyplotmm.cpp	/^                int w,h;$/;"	l
-h	easyplotmm/easyplotmm.cpp	/^    double h;$/;"	l
-h	gui.cpp	/^            const HEADER *h = new HEADER(*static_cast<HEADER*>(header));$/;"	l
-h	gui.cpp	/^        const HEADER *h = new HEADER(*static_cast<HEADER*>(header));$/;"	l
+get_bool	settings.cpp	/^bool Settings::get_bool(std::string key)$/;"	f	class:Settings	signature:(std::string key)
+get_bool	settings.cpp	/^bool Settings::get_bool(std::string key, bool default)$/;"	f	class:Settings	signature:(std::string key, bool default)
+get_bool	settings.h	/^		bool get_bool(std::string key);$/;"	p	class:Settings	access:public	signature:(std::string key)
+get_bool	settings.h	/^		bool get_bool(std::string key, bool default);$/;"	p	class:Settings	access:public	signature:(std::string key, bool default)
+get_double	settings.cpp	/^double Settings::get_double(std::string key)$/;"	f	class:Settings	signature:(std::string key)
+get_double	settings.cpp	/^double Settings::get_double(std::string key, double default)$/;"	f	class:Settings	signature:(std::string key, double default)
+get_double	settings.h	/^		double get_double(std::string key);$/;"	p	class:Settings	access:public	signature:(std::string key)
+get_double	settings.h	/^		double get_double(std::string key, double default);$/;"	p	class:Settings	access:public	signature:(std::string key, double default)
+get_float	settings.cpp	/^float Settings::get_float(std::string key)$/;"	f	class:Settings	signature:(std::string key)
+get_float	settings.cpp	/^float Settings::get_float(std::string key, float default)$/;"	f	class:Settings	signature:(std::string key, float default)
+get_float	settings.h	/^		float get_float(std::string key);$/;"	p	class:Settings	access:public	signature:(std::string key)
+get_float	settings.h	/^		float get_float(std::string key, float default);$/;"	p	class:Settings	access:public	signature:(std::string key, float default)
+get_int	settings.cpp	/^int Settings::get_int(std::string key)$/;"	f	class:Settings	signature:(std::string key)
+get_int	settings.cpp	/^int Settings::get_int(std::string key, int default)$/;"	f	class:Settings	signature:(std::string key, int default)
+get_int	settings.h	/^		int get_int(std::string key);$/;"	p	class:Settings	access:public	signature:(std::string key)
+get_int	settings.h	/^		int get_int(std::string key, int default);$/;"	p	class:Settings	access:public	signature:(std::string key, int default)
+get_string	settings.cpp	/^std::string Settings::get_string(std::string key)$/;"	f	class:Settings	signature:(std::string key)
+get_string	settings.cpp	/^std::string Settings::get_string(std::string key, std::string default)$/;"	f	class:Settings	signature:(std::string key, std::string default)
+get_string	settings.h	/^		std::string get_string(std::string key);$/;"	p	class:Settings	access:public	signature:(std::string key)
+get_string	settings.h	/^		std::string get_string(std::string key, std::string default);$/;"	p	class:Settings	access:public	signature:(std::string key, std::string default)
+get_value	settings.cpp	/^std::string get_value(std::string key)$/;"	f	signature:(std::string key)
+get_value	settings.h	/^		std::string get_value(std::string key);$/;"	p	class:Settings	access:private	signature:(std::string key)
 has_plot	easyplotmm/easyplotmm.h	/^        bool has_plot;$/;"	m	class:EasyPlotmm	access:protected
-header	gui.cpp	/^            void *header = (void*)sqlite3_column_blob(stmt,3);$/;"	l
-header	gui.cpp	/^        void *header = (void*)sqlite3_column_blob(stmt,0);$/;"	l
-height	easyplotmm/easyplotmm.cpp	/^        const int height = allocation.get_height();$/;"	l
-hsize	spikedata.cpp	/^        int hsize = sizeof(m_head);$/;"	l
-i	spikedata.cpp	/^        int i = 0;$/;"	l
-in	spikedata.cpp	/^    std::ifstream in(filename, std::ios::binary);$/;"	p	file:	signature:(filename, std::ios::binary)
+importSpikeFile	gui.cpp	/^void GUI::importSpikeFile(std::string filename, char* d_name)$/;"	f	class:GUI	signature:(std::string filename, char* d_name)
+importSpikeFile	gui.h	/^	    void importSpikeFile(std::string filename, char* d_name);$/;"	p	class:GUI	access:protected	signature:(std::string filename, char* d_name)
 in_zoom	easyplotmm/easyplotmm.h	/^        bool in_zoom;$/;"	m	class:EasyPlotmm	access:protected
-info_arch	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	/^char* info_arch = "INFO" ":" "arch[" ARCHITECTURE_ID "]";$/;"	v
-info_arch	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char* info_arch = "INFO" ":" "arch[" ARCHITECTURE_ID "]";$/;"	v
-info_compiler	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	/^char* info_compiler = "INFO" ":" "compiler[" COMPILER_ID "]";$/;"	v
-info_compiler	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char* info_compiler = "INFO" ":" "compiler[" COMPILER_ID "]";$/;"	v
-info_platform	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	/^char* info_platform = "INFO" ":" "platform[" PLATFORM_ID "]";$/;"	v
-info_platform	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char* info_platform = "INFO" ":" "platform[" PLATFORM_ID "]";$/;"	v
-invalidate_rect	easyplotmm/easyplotmm.cpp	/^        win->invalidate_rect(r, false);$/;"	p	file:	signature:(r, false)
 isSPL	spikedata.h	/^        short	isSPL;			\/\/	 (2) 0=atten, 1=SPL$/;"	m	struct:__anon12	access:public
-iter	gui.cpp	/^    Gtk::TreeModel::iterator iter = m_refAnimalDetailsList->get_iter(path);$/;"	l
-iter	gui.cpp	/^    Gtk::TreeModel::iterator iter = m_refAnimalSelection->get_selected();$/;"	l
-iter	gui.cpp	/^    Gtk::TreeModel::iterator iter = m_refCellDetailsList->get_iter(path);$/;"	l
-iter	gui.cpp	/^    Gtk::TreeModel::iterator iter = m_refDetailsList->get_iter(path);$/;"	l
-kit	spikedb.cpp	/^    Gtk::Main kit(argc, argv);$/;"	p	file:	signature:(argc, argv)
 lab_height	easyplotmm/easyplotmm.h	/^        int ylab_width,lab_height;$/;"	m	class:EasyPlotmm	access:protected
 label_pad	easyplotmm/easyplotmm.h	/^        double label_pad;$/;"	m	class:EasyPlotmm	access:public
-lastPos	gui.cpp	/^    std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);$/;"	l
-line_to	easyplotmm/easyplotmm.cpp	/^            cr->line_to(end,-ylength);$/;"	p	file:	signature:(end,-ylength)
-line_to	easyplotmm/easyplotmm.cpp	/^            cr->line_to(end,0);$/;"	p	file:	signature:(end,0)
-line_to	easyplotmm/easyplotmm.cpp	/^            cr->line_to(start,-ylength);$/;"	p	file:	signature:(start,-ylength)
-line_to	easyplotmm/easyplotmm.cpp	/^            cr->line_to(start,0);$/;"	p	file:	signature:(start,0)
-line_to	easyplotmm/easyplotmm.cpp	/^        cr->line_to(xlength,0);$/;"	p	file:	signature:(xlength,0)
 linewidth	easyplotmm/easyplotmm.h	/^            float linewidth;$/;"	m	struct:EasyPlotmm::Pen	access:public
 m_AnimalColumns	gui.h	/^        AnimalColumns m_AnimalColumns;$/;"	m	class:GUI	access:protected
 m_AnimalDetailsColumns	gui.h	/^        AnimalDetailsColumns m_AnimalDetailsColumns;$/;"	m	class:GUI	access:protected
 m_CellDetailsColumns	gui.h	/^        CellDetailsColumns m_CellDetailsColumns;$/;"	m	class:GUI	access:protected
+m_DataSourceColumns	gui.h	/^		AnalyzeColumns m_DataSourceColumns;$/;"	m	class:GUI	access:protected
 m_DetailsColumns	gui.h	/^        DetailsColumns m_DetailsColumns;$/;"	m	class:GUI	access:protected
+m_XVarColumns	gui.h	/^		AnalyzeColumns m_XVarColumns;$/;"	m	class:GUI	access:protected
+m_YVarColumns	gui.h	/^		AnalyzeColumns m_YVarColumns;$/;"	m	class:GUI	access:protected
+m_adjMinFiles	gui.h	/^		Gtk::Adjustment m_adjMinFiles;$/;"	m	class:GUI	access:protected
 m_col_animalID	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_animalID;$/;"	m	class:GUI::AnimalDetailsColumns	access:public
 m_col_animalID	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_animalID;$/;"	m	class:GUI::CellDetailsColumns	access:public
 m_col_animalID	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_animalID;$/;"	m	class:GUI::DetailsColumns	access:public
@@ -674,16 +577,20 @@ m_col_cellID	gui.h	/^                Gtk::TreeModelColumn<int> m_col_cellID;$/;"
 m_col_dur	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_dur;$/;"	m	class:GUI::DetailsColumns	access:public
 m_col_filenum	gui.h	/^                Gtk::TreeModelColumn<int> m_col_filenum;$/;"	m	class:GUI::DetailsColumns	access:public
 m_col_freq	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_freq;$/;"	m	class:GUI::DetailsColumns	access:public
+m_col_name	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_name;$/;"	m	class:GUI::AnalyzeColumns	access:public
 m_col_name	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_name;$/;"	m	class:GUI::AnimalColumns	access:public
 m_col_name	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_name;$/;"	m	class:GUI::AnimalDetailsColumns	access:public
 m_col_name	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_name;$/;"	m	class:GUI::CellDetailsColumns	access:public
+m_col_onset	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_onset;$/;"	m	class:GUI::DetailsColumns	access:public
 m_col_tags	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_tags;$/;"	m	class:GUI::DetailsColumns	access:public
+m_col_trials	gui.h	/^                Gtk::TreeModelColumn<int> m_col_trials;$/;"	m	class:GUI::DetailsColumns	access:public
 m_col_type	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_type;$/;"	m	class:GUI::DetailsColumns	access:public
 m_col_value	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_value;$/;"	m	class:GUI::AnimalDetailsColumns	access:public
 m_col_value	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_value;$/;"	m	class:GUI::CellDetailsColumns	access:public
 m_col_xaxis	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_xaxis;$/;"	m	class:GUI::DetailsColumns	access:public
 m_defPens	easyplotmm/easyplotmm.h	/^        std::vector< Pen > m_defPens;$/;"	m	class:EasyPlotmm	access:protected
 m_dwDataArray	spikedata.h	/^        std::vector<DWORD> m_dwDataArray;$/;"	m	class:SpikeData	access:private
+m_err	easyplotmm/easyplotmm.h	/^        std::vector< std::vector<double> > m_err;$/;"	m	class:EasyPlotmm	access:protected
 m_head	spikedata.h	/^        HEADER m_head;$/;"	m	class:SpikeData	access:public
 m_ixmax	easyplotmm/easyplotmm.h	/^        double m_ixmin,m_ixmax,m_iymin,m_iymax; \/\/ Axes$/;"	m	class:EasyPlotmm	access:protected
 m_ixmin	easyplotmm/easyplotmm.h	/^        double m_ixmin,m_ixmax,m_iymin,m_iymax; \/\/ Axes$/;"	m	class:EasyPlotmm	access:protected
@@ -693,20 +600,31 @@ m_nActualPasses	spikedata.h	/^        int m_nActualPasses[MAX_SWEEPS];$/;"	m	cla
 m_pAnimalDetailsList	gui.h	/^        Gtk::TreeView* m_pAnimalDetailsList;$/;"	m	class:GUI	access:protected
 m_pAnimalTree	gui.h	/^        Gtk::TreeView* m_pAnimalTree;$/;"	m	class:GUI	access:protected
 m_pCellDetailsList	gui.h	/^        Gtk::TreeView* m_pCellDetailsList;$/;"	m	class:GUI	access:protected
+m_pDataSource	gui.h	/^		Gtk::ComboBox* m_pDataSource;$/;"	m	class:GUI	access:protected
 m_pDetailsList	gui.h	/^        Gtk::TreeView* m_pDetailsList;$/;"	m	class:GUI	access:protected
 m_pHBoxPlots	gui.h	/^        Gtk::HBox* m_pHBoxPlots;$/;"	m	class:GUI	access:protected
 m_pMenuImportFolder	gui.h	/^        Gtk::ImageMenuItem* m_pMenuImportFolder;$/;"	m	class:GUI	access:protected
+m_pMenuOpenDatabase	gui.h	/^        Gtk::ImageMenuItem* m_pMenuOpenDatabase;$/;"	m	class:GUI	access:protected
 m_pMenuQuit	gui.h	/^        Gtk::ImageMenuItem* m_pMenuQuit;$/;"	m	class:GUI	access:protected
+m_pMinFiles	gui.h	/^		Gtk::SpinButton* m_pMinFiles;$/;"	m	class:GUI	access:protected
+m_pPlotAnalyze	gui.h	/^        EasyPlotmm* m_pPlotAnalyze;$/;"	m	class:GUI	access:protected
 m_pPlotMeans	gui.h	/^        EasyPlotmm* m_pPlotMeans;$/;"	m	class:GUI	access:protected
 m_pPlotSpikes	gui.h	/^        EasyPlotmm* m_pPlotSpikes;$/;"	m	class:GUI	access:protected
+m_pStatusbar	gui.h	/^		Gtk::Statusbar* m_pStatusbar;$/;"	m	class:GUI	access:protected
+m_pVBoxAnalyze	gui.h	/^        Gtk::VBox* m_pVBoxAnalyze;$/;"	m	class:GUI	access:protected
+m_pXVar	gui.h	/^		Gtk::ComboBox* m_pXVar;$/;"	m	class:GUI	access:protected
+m_pYVar	gui.h	/^		Gtk::ComboBox* m_pYVar;$/;"	m	class:GUI	access:protected
 m_pens	easyplotmm/easyplotmm.h	/^        std::vector< Pen > m_pens;$/;"	m	class:EasyPlotmm	access:protected
 m_refAnimalDetailsList	gui.h	/^        Glib::RefPtr<Gtk::ListStore> m_refAnimalDetailsList;$/;"	m	class:GUI	access:protected
 m_refAnimalSelection	gui.h	/^        Glib::RefPtr<Gtk::TreeSelection> m_refAnimalSelection;$/;"	m	class:GUI	access:protected
 m_refAnimalTree	gui.h	/^        Glib::RefPtr<Gtk::TreeStore> m_refAnimalTree;$/;"	m	class:GUI	access:protected
 m_refCellDetailsList	gui.h	/^        Glib::RefPtr<Gtk::ListStore> m_refCellDetailsList;$/;"	m	class:GUI	access:protected
+m_refDataSource	gui.h	/^        Glib::RefPtr<Gtk::ListStore> m_refDataSource;$/;"	m	class:GUI	access:protected
 m_refDetailsList	gui.h	/^        Glib::RefPtr<Gtk::ListStore> m_refDetailsList;$/;"	m	class:GUI	access:protected
 m_refDetailsSelection	gui.h	/^        Glib::RefPtr<Gtk::TreeSelection> m_refDetailsSelection;$/;"	m	class:GUI	access:protected
 m_refGlade	gui.h	/^        Glib::RefPtr<Gtk::Builder> m_refGlade;$/;"	m	class:GUI	access:protected
+m_refXVar	gui.h	/^        Glib::RefPtr<Gtk::ListStore> m_refXVar;$/;"	m	class:GUI	access:protected
+m_refYVar	gui.h	/^        Glib::RefPtr<Gtk::ListStore> m_refYVar;$/;"	m	class:GUI	access:protected
 m_rend_animalvalue	gui.h	/^        Gtk::CellRendererText m_rend_animalvalue;$/;"	m	class:GUI	access:protected
 m_rend_cellvalue	gui.h	/^        Gtk::CellRendererText m_rend_cellvalue;$/;"	m	class:GUI	access:protected
 m_rend_filetags	gui.h	/^        Gtk::CellRendererText m_rend_filetags;$/;"	m	class:GUI	access:protected
@@ -720,36 +638,26 @@ m_xmin	easyplotmm/easyplotmm.h	/^        double m_xmin,m_xmax,m_ymin,m_ymax; \/\
 m_y	easyplotmm/easyplotmm.h	/^        std::vector< std::vector<double> > m_y;$/;"	m	class:EasyPlotmm	access:protected
 m_ymax	easyplotmm/easyplotmm.h	/^        double m_xmin,m_xmax,m_ymin,m_ymax; \/\/ Axes$/;"	m	class:EasyPlotmm	access:public
 m_ymin	easyplotmm/easyplotmm.h	/^        double m_xmin,m_xmax,m_ymin,m_ymax; \/\/ Axes$/;"	m	class:EasyPlotmm	access:public
-main	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	/^int main(int argc, char* argv[])$/;"	f	signature:(int argc, char* argv[])
-main	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	/^void main() {}$/;"	f
-main	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^int main(int argc, char* argv[])$/;"	f	signature:(int argc, char* argv[])
 main	spikedb.cpp	/^int main(int argc, char** argv)$/;"	f	signature:(int argc, char** argv)
 makeDefaultPens	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::makeDefaultPens()$/;"	f	class:EasyPlotmm	signature:()
 makeDefaultPens	easyplotmm/easyplotmm.h	/^        void makeDefaultPens();$/;"	p	class:EasyPlotmm	access:protected	signature:()
-move_to	easyplotmm/easyplotmm.cpp	/^            cr->move_to(end, 0);$/;"	p	file:	signature:(end, 0)
-move_to	easyplotmm/easyplotmm.cpp	/^            cr->move_to(start,0);$/;"	p	file:	signature:(start,0)
-move_to	easyplotmm/easyplotmm.cpp	/^            cr->move_to(x,y);$/;"	p	file:	signature:(x,y)
 nMagic	spikedata.h	/^        int	nMagic;			\/\/   (4) for internal use of the spike programs $/;"	m	struct:__anon12	access:public
 nOnCh1	spikedata.h	/^        short	nOnCh1;			\/\/   (2) stimulus channel1 on\/off $/;"	m	struct:__anon12	access:public
 nOnCh2	spikedata.h	/^        short	nOnCh2;			\/\/   (2) stimulus channel2 on\/off $/;"	m	struct:__anon12	access:public
-nPass	spikedata.cpp	/^    int nPass = 0;$/;"	l
 nPass	spikedata.h	/^        short nPass;$/;"	m	struct:__anon8	access:public
 nPasses	spikedata.h	/^        short	nPasses;		\/\/   (2) number of repetitions of each stimulus $/;"	m	struct:__anon12	access:public
 nPresentation	spikedata.h	/^        short	nPresentation;	\/\/   (2) presentation -> sequential\/randomized\/seq-noninterleaved$/;"	m	struct:__anon12	access:public
 nRepInt	spikedata.h	/^        int	nRepInt;		\/\/   (4) repetition interval$/;"	m	struct:__anon12	access:public
 nScaling	spikedata.h	/^        short	nScaling;		\/\/   (2) scaling steps -> linear\/logarithmic $/;"	m	struct:__anon12	access:public
-nSpikeCount	spikedata.cpp	/^    int nSpikeCount = 0;$/;"	l
 nStepMode	spikedata.h	/^        short	nStepMode;		\/\/   (2) frequency, attenuation or both$/;"	m	struct:__anon12	access:public
 nStimPerSweep	spikedata.h	/^        short nStimPerSweep;$/;"	m	struct:__anon9	access:public
-nSweep	spikedata.cpp	/^    int nSweep = 0;$/;"	l
 nSweep	spikedata.h	/^        short nSweep;$/;"	m	struct:__anon8	access:public
-nSweepCount	spikedata.cpp	/^    int nSweepCount = 0;$/;"	l
 nSweeps	spikedata.h	/^        short	nSweeps;		\/\/   (2) number of values (=stimuli) used $/;"	m	struct:__anon12	access:public
 nType	spikedata.h	/^        short nType;		\/\/ stimulus type$/;"	m	struct:__anon9	access:public
 nType	spikedata.h	/^        short nType;$/;"	m	struct:__anon6	access:public
-nbytes	spikedata.cpp	/^        int nbytes = fsize-hsize;$/;"	l
 noise_ex	spikedata.h	/^                NOISE_EX noise_ex; \/\/ (16)$/;"	m	union:__anon9::__anon10	access:public
-numSpikes	gui.cpp	/^        int numSpikes = spikes_length\/sizeof(SPIKESTRUCT);$/;"	l
+on_analyze_changed	gui.cpp	/^void GUI::on_analyze_changed()$/;"	f	class:GUI	signature:()
+on_analyze_changed	gui.h	/^		void on_analyze_changed();$/;"	p	class:GUI	access:protected	signature:()
 on_animal_sort	gui.cpp	/^int GUI::on_animal_sort(const Gtk::TreeModel::iterator& a_, const Gtk::TreeModel::iterator& b_)$/;"	f	class:GUI	signature:(const Gtk::TreeModel::iterator& a_, const Gtk::TreeModel::iterator& b_)
 on_animal_sort	gui.h	/^        int on_animal_sort(const Gtk::TreeModel::iterator& a, const Gtk::TreeModel::iterator& b);$/;"	p	class:GUI	access:protected	signature:(const Gtk::TreeModel::iterator& a, const Gtk::TreeModel::iterator& b)
 on_animalvalue_edited	gui.cpp	/^void GUI::on_animalvalue_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)$/;"	f	class:GUI	signature:(const Glib::ustring& path_string, const Glib::ustring& new_text)
@@ -768,32 +676,29 @@ on_filetags_edited	gui.cpp	/^void GUI::on_filetags_edited(const Glib::ustring& p
 on_filetags_edited	gui.h	/^        void on_filetags_edited(const Glib::ustring& path_string, const Glib::ustring& new_text);$/;"	p	class:GUI	access:protected	signature:(const Glib::ustring& path_string, const Glib::ustring& new_text)
 on_menuImportFolder_activate	gui.cpp	/^void GUI::on_menuImportFolder_activate()$/;"	f	class:GUI	signature:()
 on_menuImportFolder_activate	gui.h	/^        void on_menuImportFolder_activate();$/;"	p	class:GUI	access:protected	signature:()
+on_menuOpenDatabase_activate	gui.cpp	/^void GUI::on_menuOpenDatabase_activate()$/;"	f	class:GUI	signature:()
+on_menuOpenDatabase_activate	gui.h	/^        void on_menuOpenDatabase_activate();$/;"	p	class:GUI	access:protected	signature:()
 on_menuQuit_activate	gui.cpp	/^void GUI::on_menuQuit_activate()$/;"	f	class:GUI	signature:()
 on_menuQuit_activate	gui.h	/^        void on_menuQuit_activate();$/;"	p	class:GUI	access:protected	signature:()
-p	easyplotmm/easyplotmm.cpp	/^    Pen p = m_defPens[curPen];$/;"	l
-p	easyplotmm/easyplotmm.cpp	/^    Pen p;$/;"	l
-pWindow	spikedb.cpp	/^    GUI* pWindow = 0;$/;"	l
-pack_start	gui.cpp	/^    m_tvcol_animalvalue.pack_start(m_rend_animalvalue);$/;"	p	file:	signature:(m_rend_animalvalue)
-pack_start	gui.cpp	/^    m_tvcol_cellvalue.pack_start(m_rend_cellvalue);$/;"	p	file:	signature:(m_rend_cellvalue)
+openDatabase	gui.cpp	/^bool GUI::openDatabase(std::string filename)$/;"	f	class:GUI	signature:(std::string filename)
+openDatabase	gui.h	/^		bool openDatabase(std::string filename);$/;"	p	class:GUI	access:protected	signature:(std::string filename)
 pad_bottom	easyplotmm/easyplotmm.h	/^        double pad_left,pad_top,pad_right,pad_bottom;$/;"	m	class:EasyPlotmm	access:public
 pad_left	easyplotmm/easyplotmm.h	/^        double pad_left,pad_top,pad_right,pad_bottom;$/;"	m	class:EasyPlotmm	access:public
 pad_right	easyplotmm/easyplotmm.h	/^        double pad_left,pad_top,pad_right,pad_bottom;$/;"	m	class:EasyPlotmm	access:public
 pad_top	easyplotmm/easyplotmm.h	/^        double pad_left,pad_top,pad_right,pad_bottom;$/;"	m	class:EasyPlotmm	access:public
-pangoLayout	easyplotmm/easyplotmm.cpp	/^                Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);$/;"	l
 params	spikedata.h	/^        } params; \/\/ (80)$/;"	m	struct:__anon9	typeref:union:__anon9::__anon10	access:public
 parse	spikedata.cpp	/^bool SpikeData::parse(const char* filename)$/;"	f	class:SpikeData	signature:(const char* filename)
 parse	spikedata.h	/^        bool parse(const char* filename);$/;"	p	class:SpikeData	access:public	signature:(const char* filename)
 parsedata	spikedata.cpp	/^bool SpikeData::parsedata()$/;"	f	class:SpikeData	signature:()
 parsedata	spikedata.h	/^        bool parsedata();$/;"	p	class:SpikeData	access:private	signature:()
-path	gui.cpp	/^    Gtk::TreePath path(path_string);$/;"	p	file:	signature:(path_string)
 plot	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y)$/;"	f	class:EasyPlotmm	signature:(std::vector<double> x, std::vector<double> y)
 plot	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, Pen p)$/;"	f	class:EasyPlotmm	signature:(std::vector<double> x, std::vector<double> y, Pen p)
+plot	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<double> err)$/;"	f	class:EasyPlotmm	signature:(std::vector<double> x, std::vector<double> y, std::vector<double> err)
+plot	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p)$/;"	f	class:EasyPlotmm	signature:(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p)
 plot	easyplotmm/easyplotmm.h	/^        void plot(std::vector<double> x, std::vector<double> y);$/;"	p	class:EasyPlotmm	access:public	signature:(std::vector<double> x, std::vector<double> y)
 plot	easyplotmm/easyplotmm.h	/^        void plot(std::vector<double> x, std::vector<double> y, Pen p);$/;"	p	class:EasyPlotmm	access:public	signature:(std::vector<double> x, std::vector<double> y, Pen p)
-plot	gui.cpp	/^                m_pPlotSpikes->plot(stimX,stimY,ch2Pen);$/;"	p	file:	signature:(stimX,stimY,ch2Pen)
-plot	gui.cpp	/^            m_pPlotSpikes->plot(stimX,stimY,ch1Pen);$/;"	p	file:	signature:(stimX,stimY,ch1Pen)
-plot	gui.cpp	/^        m_pPlotMeans->plot(x,y);$/;"	p	file:	signature:(x,y)
-plot	gui.cpp	/^        m_pPlotSpikes->plot(x_spikes,y_spikes,spikesPen);$/;"	p	file:	signature:(x_spikes,y_spikes,spikesPen)
+plot	easyplotmm/easyplotmm.h	/^        void plot(std::vector<double> x, std::vector<double> y, std::vector<double> err);$/;"	p	class:EasyPlotmm	access:public	signature:(std::vector<double> x, std::vector<double> y, std::vector<double> err)
+plot	easyplotmm/easyplotmm.h	/^        void plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p);$/;"	p	class:EasyPlotmm	access:public	signature:(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p)
 pointsize	easyplotmm/easyplotmm.h	/^            float pointsize;$/;"	m	struct:EasyPlotmm::Pen	access:public
 populateAnimalDetailsList	gui.cpp	/^void GUI::populateAnimalDetailsList(const Glib::ustring animalID)$/;"	f	class:GUI	signature:(const Glib::ustring animalID)
 populateAnimalDetailsList	gui.h	/^        void populateAnimalDetailsList(const Glib::ustring animalID);$/;"	p	class:GUI	access:protected	signature:(const Glib::ustring animalID)
@@ -803,173 +708,39 @@ populateCellDetailsList	gui.cpp	/^void GUI::populateCellDetailsList(const Glib::
 populateCellDetailsList	gui.h	/^        void populateCellDetailsList(const Glib::ustring animalID, const int cellID);$/;"	p	class:GUI	access:protected	signature:(const Glib::ustring animalID, const int cellID)
 populateDetailsList	gui.cpp	/^void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)$/;"	f	class:GUI	signature:(const Glib::ustring animalID, const int cellID)
 populateDetailsList	gui.h	/^        void populateDetailsList(const Glib::ustring animalID, const int cellID);$/;"	p	class:GUI	access:protected	signature:(const Glib::ustring animalID, const int cellID)
-pos	gui.cpp	/^    std::string::size_type pos     = str.find_first_of(delimiters, lastPos);$/;"	l
 printfile	spikedata.cpp	/^void SpikeData::printfile()$/;"	f	class:SpikeData	signature:()
 printfile	spikedata.h	/^        void printfile();$/;"	p	class:SpikeData	access:public	signature:()
-property_cell_background	gui.cpp	/^            m_rend_animalvalue.property_cell_background() = "#DDEEFF";$/;"	p	file:	signature:()
-property_cell_background	gui.cpp	/^            m_rend_animalvalue.property_cell_background() = "#FFDDDD";$/;"	p	file:	signature:()
-property_cell_background	gui.cpp	/^            m_rend_cellvalue.property_cell_background() = "#DDEEFF";$/;"	p	file:	signature:()
-property_cell_background	gui.cpp	/^            m_rend_cellvalue.property_cell_background() = "#FFDDDD";$/;"	p	file:	signature:()
-property_editable	gui.cpp	/^            m_rend_animalvalue.property_editable() = false;$/;"	p	file:	signature:()
-property_editable	gui.cpp	/^            m_rend_animalvalue.property_editable() = true;$/;"	p	file:	signature:()
-property_editable	gui.cpp	/^            m_rend_cellvalue.property_editable() = false;$/;"	p	file:	signature:()
-property_editable	gui.cpp	/^            m_rend_cellvalue.property_editable() = true;$/;"	p	file:	signature:()
-property_editable	gui.cpp	/^    m_rend_animalvalue.property_editable() = true;$/;"	p	file:	signature:()
-property_editable	gui.cpp	/^    m_rend_cellvalue.property_editable() = true;$/;"	p	file:	signature:()
-property_text	gui.cpp	/^        m_rend_animalvalue.property_text() = row[m_AnimalDetailsColumns.m_col_value];$/;"	p	file:	signature:()
-property_text	gui.cpp	/^        m_rend_cellvalue.property_text() = row[m_CellDetailsColumns.m_col_value];$/;"	p	file:	signature:()
-property_text	gui.cpp	/^        m_rend_filetags.property_text() = row[m_DetailsColumns.m_col_tags];$/;"	p	file:	signature:()
-push_back	easyplotmm/easyplotmm.cpp	/^                    cull_x.push_back(m_x[i][j]);$/;"	p	file:	signature:(m_x[i][j])
-push_back	easyplotmm/easyplotmm.cpp	/^                    cull_y.push_back(m_y[i][j]);$/;"	p	file:	signature:(m_y[i][j])
-push_back	easyplotmm/easyplotmm.cpp	/^    m_defPens.push_back(p);$/;"	p	file:	signature:(p)
-push_back	easyplotmm/easyplotmm.cpp	/^    m_pens.push_back(p);$/;"	p	file:	signature:(p)
-push_back	easyplotmm/easyplotmm.cpp	/^    m_x.push_back(x);$/;"	p	file:	signature:(x)
-push_back	easyplotmm/easyplotmm.cpp	/^    m_y.push_back(y);$/;"	p	file:	signature:(y)
-push_back	gui.cpp	/^                        x_spikes.push_back(sd.m_spikeArray[s].fTime);$/;"	p	file:	signature:(sd.m_spikeArray[s].fTime)
-push_back	gui.cpp	/^                        y_spikes.push_back(sd.xvalue(i)+dy*p);$/;"	p	file:	signature:(sd.xvalue(i)+dy*p)
-push_back	gui.cpp	/^                stimX.push_back(sd.m_head.stimFirstCh2.fBegin+sd.m_head.deltaCh2.fBegin*i);$/;"	p	file:	signature:(sd.m_head.stimFirstCh2.fBegin+sd.m_head.deltaCh2.fBegin*i)
-push_back	gui.cpp	/^                stimX.push_back(sd.m_head.stimFirstCh2.fBegin+sd.m_head.stimFirstCh2.fDur+sd.m_head.deltaCh2.fBegin*i+sd.m_head.deltaCh2.fDur*i);$/;"	p	file:	signature:(sd.m_head.stimFirstCh2.fBegin+sd.m_head.stimFirstCh2.fDur+sd.m_head.deltaCh2.fBegin*i+sd.m_head.deltaCh2.fDur*i)
-push_back	gui.cpp	/^                stimY.push_back(sd.xvalue(i));$/;"	p	file:	signature:(sd.xvalue(i))
-push_back	gui.cpp	/^            stimX.push_back(sd.m_head.stimFirstCh1.fBegin+sd.m_head.deltaCh1.fBegin*i);$/;"	p	file:	signature:(sd.m_head.stimFirstCh1.fBegin+sd.m_head.deltaCh1.fBegin*i)
-push_back	gui.cpp	/^            stimX.push_back(sd.m_head.stimFirstCh1.fBegin+sd.m_head.stimFirstCh1.fDur+sd.m_head.deltaCh1.fBegin*i+sd.m_head.deltaCh1.fDur*i);$/;"	p	file:	signature:(sd.m_head.stimFirstCh1.fBegin+sd.m_head.stimFirstCh1.fDur+sd.m_head.deltaCh1.fBegin*i+sd.m_head.deltaCh1.fDur*i)
-push_back	gui.cpp	/^            stimY.push_back(sd.xvalue(i));$/;"	p	file:	signature:(sd.xvalue(i))
-push_back	gui.cpp	/^        tokens.push_back(str.substr(lastPos, pos - lastPos));$/;"	p	file:	signature:(str.substr(lastPos, pos - lastPos))
-push_back	spikedata.cpp	/^                m_spikeArray.push_back(spikeAct);$/;"	p	file:	signature:(spikeAct)
-push_back	spikedata.cpp	/^            m_dwDataArray.push_back(dw);$/;"	p	file:	signature:(dw)
-q	gui.cpp	/^        const char q[] = "UPDATE files SET tags=? WHERE animalID=? AND cellID=? AND fileID=?";$/;"	l
-q	gui.cpp	/^        const char* q = query.c_str();$/;"	l
-q_animal	gui.cpp	/^                            const char q_animal[] = "INSERT INTO animals (ID) VALUES(?)";$/;"	l
-q_cell	gui.cpp	/^                            const char q_cell[] = "INSERT INTO cells (animalID,cellID) VALUES(?,?)";$/;"	l
-q_file	gui.cpp	/^                            const char q_file[] = "INSERT INTO files (animalID,cellID,fileID,header,spikes) VALUES(?,?,?,?,?)";$/;"	l
-query	gui.cpp	/^	char query[] = "SELECT depth, freq, tags, notes, threshold FROM cells WHERE animalID=? AND cellID=?";$/;"	l
-query	gui.cpp	/^	char query[] = "SELECT species, sex, weight, age, tags, notes FROM animals WHERE ID=?";$/;"	l
-query	gui.cpp	/^        Glib::ustring query;$/;"	l
-query	gui.cpp	/^        const char query[] = "SELECT animalID, cellID, fileID, header,tags FROM files ORDER BY animalID, cellID, fileID";$/;"	l
-query	gui.cpp	/^        const char query[] = "SELECT animalID, cellID, fileID, header,tags FROM files WHERE animalID=? AND cellID=? ORDER BY animalID, cellID, fileID";$/;"	l
-query	gui.cpp	/^        const char query[] = "SELECT animalID, cellID, fileID, header,tags FROM files WHERE animalID=? ORDER BY animalID, cellID, fileID";$/;"	l
-query	gui.cpp	/^    const char query[] = "SELECT header,spikes FROM files WHERE animalID=? AND cellID=? AND fileID=?";$/;"	l
-query_animals	gui.cpp	/^    char query_animals[] = "SELECT ID FROM animals";$/;"	l
-query_cells	gui.cpp	/^            char query_cells[] = "SELECT cellID FROM cells WHERE animalID=?";$/;"	l
 r	easyplotmm/easyplotmm.h	/^            double r;$/;"	m	struct:EasyPlotmm::RGBA	access:public
-r	gui.cpp	/^	int r;$/;"	l
-r	gui.cpp	/^        int r = sqlite3_step(stmt);$/;"	l
-r	gui.cpp	/^    int r;$/;"	l
-r_animals	gui.cpp	/^    int r_animals, r_cells;$/;"	l
-r_cells	gui.cpp	/^    int r_animals, r_cells;$/;"	l
 redraw	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::redraw()$/;"	f	class:EasyPlotmm	signature:()
 redraw	easyplotmm/easyplotmm.h	/^        void redraw();$/;"	p	class:EasyPlotmm	access:public	signature:()
-refBuilder	spikedb.cpp	/^    Glib::RefPtr<Gtk::Builder> refBuilder = Gtk::Builder::create();$/;"	l
-rel_line_to	easyplotmm/easyplotmm.cpp	/^            cr->rel_line_to(s,0);$/;"	p	file:	signature:(s,0)
-require	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	/^  int require = 0;$/;"	l
-require	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^  int require = 0;$/;"	l
-reserve	spikedata.cpp	/^        m_dwDataArray.reserve(size);$/;"	p	file:	signature:(size)
-restore	easyplotmm/easyplotmm.cpp	/^        cr->restore();$/;"	p	file:	signature:()
-result	gui.cpp	/^    int result = dialog.run();$/;"	l
-row	gui.cpp	/^	Gtk::TreeModel::Row row = *iter;$/;"	l
-row	gui.cpp	/^	Gtk::TreeModel::Row row;$/;"	l
-row	gui.cpp	/^        Gtk::TreeModel::Row row = *iter;$/;"	l
-row	gui.cpp	/^    Gtk::TreeModel::Row row = *iter;$/;"	l
-row	gui.cpp	/^    Gtk::TreeModel::Row row;$/;"	l
-save	easyplotmm/easyplotmm.cpp	/^        cr->save();$/;"	p	file:	signature:()
-sd	gui.cpp	/^                    SpikeData sd;$/;"	l
-sd	gui.cpp	/^            SpikeData sd;$/;"	l
-sd	gui.cpp	/^    SpikeData sd;$/;"	l
-selected_foreach_iter	gui.cpp	/^    m_refDetailsSelection->selected_foreach_iter($/;"	p	file:	signature:( sigc::mem_fun(this, &GUI::addFileToPlot) )
-selected_foreach_iter	gui.cpp	/^    m_refDetailsSelection->selected_foreach_iter($/;"	p	file:	signature:( sigc::mem_fun(this, &GUI::updateSideLists) )
-set_alignment	easyplotmm/easyplotmm.cpp	/^                pangoLayout->set_alignment(Pango::ALIGN_RIGHT);$/;"	p	file:	signature:(Pango::ALIGN_RIGHT)
 set_bg_rgba	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::set_bg_rgba(double r, double g, double b, double a)$/;"	f	class:EasyPlotmm	signature:(double r, double g, double b, double a)
 set_bg_rgba	easyplotmm/easyplotmm.h	/^        void set_bg_rgba(double r, double g, double b, double a);$/;"	p	class:EasyPlotmm	access:public	signature:(double r, double g, double b, double a)
-set_cell_data_func	gui.cpp	/^    m_tvcol_animalvalue.set_cell_data_func(m_rend_animalvalue,sigc::mem_fun(*this, &GUI::animalvalue_cell_data));$/;"	p	file:	signature:(m_rend_animalvalue,sigc::mem_fun(*this, &GUI::animalvalue_cell_data))
-set_cell_data_func	gui.cpp	/^    m_tvcol_cellvalue.set_cell_data_func(m_rend_cellvalue,sigc::mem_fun(*this, &GUI::cellvalue_cell_data));$/;"	p	file:	signature:(m_rend_cellvalue,sigc::mem_fun(*this, &GUI::cellvalue_cell_data))
-set_font_description	easyplotmm/easyplotmm.cpp	/^                pangoLayout->set_font_description(label_font_descr);$/;"	p	file:	signature:(label_font_descr)
-set_line_width	easyplotmm/easyplotmm.cpp	/^                cr->set_line_width(m_pens[i].linewidth);$/;"	p	file:	signature:(m_pens[i].linewidth)
-set_line_width	easyplotmm/easyplotmm.cpp	/^            cr->set_line_width(s);$/;"	p	file:	signature:(s)
-set_mode	gui.cpp	/^    m_refDetailsSelection->set_mode(Gtk::SELECTION_MULTIPLE);$/;"	p	file:	signature:(Gtk::SELECTION_MULTIPLE)
-set_model	gui.cpp	/^    m_pAnimalDetailsList->set_model(m_refAnimalDetailsList);$/;"	p	file:	signature:(m_refAnimalDetailsList)
-set_model	gui.cpp	/^    m_pAnimalTree->set_model(m_refAnimalTree);$/;"	p	file:	signature:(m_refAnimalTree)
-set_model	gui.cpp	/^    m_pCellDetailsList->set_model(m_refCellDetailsList);$/;"	p	file:	signature:(m_refCellDetailsList)
-set_model	gui.cpp	/^    m_pDetailsList->set_model(m_refDetailsList);$/;"	p	file:	signature:(m_refDetailsList)
-set_sort_column	gui.cpp	/^    m_refAnimalTree->set_sort_column(m_AnimalColumns.m_col_name,Gtk::SORT_ASCENDING);$/;"	p	file:	signature:(m_AnimalColumns.m_col_name,Gtk::SORT_ASCENDING)
-set_source_rgba	easyplotmm/easyplotmm.cpp	/^                cr->set_source_rgba(m_pens[i].color.r,m_pens[i].color.g,m_pens[i].color.b,m_pens[i].color.a);$/;"	p	file:	signature:(m_pens[i].color.r,m_pens[i].color.g,m_pens[i].color.b,m_pens[i].color.a)
-set_source_rgba	easyplotmm/easyplotmm.cpp	/^        cr->set_source_rgba(col.r,col.g,col.b,col.a);$/;"	p	file:	signature:(col.r,col.g,col.b,col.a)
-set_source_rgba	easyplotmm/easyplotmm.cpp	/^        else cr->set_source_rgba(bg.r,bg.g,bg.b,bg.a);$/;"	p	file:	signature:(bg.r,bg.g,bg.b,bg.a)
-set_source_rgba	easyplotmm/easyplotmm.cpp	/^        if (filled) cr->set_source_rgba(col.r,col.g,col.b,col.a);$/;"	p	file:	signature:(col.r,col.g,col.b,col.a)
-set_source_rgba	easyplotmm/easyplotmm.cpp	/^    cr->set_source_rgba(col.r,col.g,col.b,col.a);$/;"	p	file:	signature:(col.r,col.g,col.b,col.a)
-set_text	easyplotmm/easyplotmm.cpp	/^                pangoLayout->set_text(buffer);$/;"	p	file:	signature:(buffer)
-set_width	easyplotmm/easyplotmm.cpp	/^                pangoLayout->set_width(Pango::SCALE*(ylab_width));$/;"	p	file:	signature:(Pango::SCALE*(ylab_width))
+settings	gui.h	/^		Settings settings;$/;"	m	class:GUI	access:protected
 shape	easyplotmm/easyplotmm.h	/^            Shape shape;$/;"	m	struct:EasyPlotmm::Pen	access:public
 sin	spikedata.h	/^                SIN	 sin; \/\/ (8)$/;"	m	union:__anon9::__anon10	access:public
-size	spikedata.cpp	/^        int size = nbytes \/ sizeof(DWORD);$/;"	l
-sizeof	spikedata.cpp	/^            in.read(reinterpret_cast<char*>(&dw), sizeof(dw));$/;"	p	file:	signature:(dw)
-sizeof	spikedata.cpp	/^        in.read(reinterpret_cast<char*>(&m_head), sizeof(m_head));$/;"	p	file:	signature:(m_head)
-spikeAct	spikedata.cpp	/^    SPIKESTRUCT spikeAct;$/;"	l
-spikes	gui.cpp	/^        SPIKESTRUCT *spikes = (SPIKESTRUCT*)sqlite3_column_blob(stmt,1);$/;"	l
-spikesPen	gui.cpp	/^        EasyPlotmm::Pen spikesPen;$/;"	l
-spikes_length	gui.cpp	/^        int spikes_length = sqlite3_column_bytes(stmt,1);$/;"	l
-start	easyplotmm/easyplotmm.cpp	/^            double start, end;$/;"	l
-std::endl	easyplotmm/easyplotmm.cpp	/^                std::cout << "ERROR: Plot #" << xs << " do not have same X and Y vector sizes." << std::endl;$/;"	m	class:std	file:
-std::endl	easyplotmm/easyplotmm.cpp	/^            std::cout << "ERROR: Only " << m_pens.size() << " pens for " << m_x.size() << " plots." << std::endl;$/;"	m	class:std	file:
-std::endl	easyplotmm/easyplotmm.cpp	/^            std::cout << "ERROR: X and Y vectors are not the same size." << std::endl;$/;"	m	class:std	file:
-std::endl	gui.cpp	/^                std::cerr << "ERROR: Unable to open " << filename << std::endl;$/;"	m	class:std	file:
-std::endl	gui.cpp	/^            std::cerr << "ERROR: Could not update animal. " << sqlite3_errmsg(db) << std::endl; $/;"	m	class:std	file:
-std::endl	gui.cpp	/^            std::cerr << "ERROR: Could not update cell. " << sqlite3_errmsg(db) << std::endl; $/;"	m	class:std	file:
-std::endl	gui.cpp	/^            std::cerr << "ERROR: Plots have different X-Variables." << std::endl;$/;"	m	class:std	file:
-std::endl	gui.cpp	/^            std::cerr << "WARNING: Could not update cell. " << sqlite3_errmsg(db) << std::endl; $/;"	m	class:std	file:
-std::endl	gui.cpp	/^        std::cerr << "CRITICAL ERROR: Unable to open database file." << std::endl;$/;"	m	class:std	file:
-std::endl	gui.cpp	/^    else { std::cerr << "ERROR: Failed to read file from database. " << sqlite3_errmsg(db) << std::endl; }$/;"	m	class:std	file:
-std::endl	spikedata.cpp	/^                        std::cerr << "ERROR: Bad sweep number found. Corrupt data file." << std::endl;$/;"	m	class:std	file:
-std::endl	spikedata.cpp	/^                        std::cerr << "ERROR: Unexpected pass number (" << nPass << "). Corrupt data file." << std::endl;$/;"	m	class:std	file:
-std::endl	spikedata.cpp	/^                    std::cerr << "ERROR: NONINTERLEAVED is not supported." << std::endl;$/;"	m	class:std	file:
-std::endl	spikedata.cpp	/^    std::cout << "HEADER INFORMATION" << std::endl;$/;"	m	class:std	file:
 stepFlags	spikedata.h	/^        STEP_FLAGS stepFlags[2][2];\/\/(40) [0=chan1,1=chan2][0=X,1=Y]$/;"	m	struct:__anon12	access:public
 stimFirstCh1	spikedata.h	/^        STIM	stimFirstCh1;	\/\/ (108) first stimulus parameters for channel1$/;"	m	struct:__anon12	access:public
 stimFirstCh2	spikedata.h	/^        STIM	stimFirstCh2;	\/\/ (108) first stimulus parameters for channel2$/;"	m	struct:__anon12	access:public
-stimX	gui.cpp	/^            std::vector<double> stimX;$/;"	l
-stimY	gui.cpp	/^            std::vector<double> stimY;$/;"	l
-stmt	gui.cpp	/^	sqlite3_stmt *stmt;$/;"	l
-stmt	gui.cpp	/^        sqlite3_stmt *stmt=0;$/;"	l
-stmt	gui.cpp	/^    sqlite3_stmt *stmt=0;$/;"	l
-stmt_animal	gui.cpp	/^                            sqlite3_stmt *stmt_animal=0;$/;"	l
-stmt_animals	gui.cpp	/^    sqlite3_stmt *stmt_animals, *stmt_cells;$/;"	l
-stmt_cell	gui.cpp	/^                            sqlite3_stmt *stmt_cell=0;$/;"	l
-stmt_cells	gui.cpp	/^    sqlite3_stmt *stmt_animals, *stmt_cells;$/;"	l
-stmt_file	gui.cpp	/^                            sqlite3_stmt *stmt_file=0;$/;"	l
 strFileName	spikedata.h	/^        char strFileName[80];$/;"	m	struct:__anon7	access:public
-stroke	easyplotmm/easyplotmm.cpp	/^                cr->stroke();$/;"	p	file:	signature:()
-stroke	easyplotmm/easyplotmm.cpp	/^            cr->stroke();$/;"	p	file:	signature:()
-stroke	easyplotmm/easyplotmm.cpp	/^        cr->stroke();$/;"	p	file:	signature:()
 sweptsin	spikedata.h	/^                SWEPTSIN sweptsin; \/\/ (10)$/;"	m	union:__anon9::__anon10	access:public
+trials	spikedata.cpp	/^int SpikeData::trials()$/;"	f	class:SpikeData	signature:()
+trials	spikedata.h	/^        int trials();$/;"	p	class:SpikeData	access:public	signature:()
 type	spikedata.cpp	/^std::string SpikeData::type()$/;"	f	class:SpikeData	signature:()
 type	spikedata.h	/^        std::string type();$/;"	p	class:SpikeData	access:public	signature:()
+updateFilter	gui.cpp	/^void GUI::updateFilter()$/;"	f	class:GUI	signature:()
+updateFilter	gui.h	/^		void updateFilter();$/;"	p	class:GUI	access:protected	signature:()
 updateSideLists	gui.cpp	/^void GUI::updateSideLists(const Gtk::TreeModel::iterator& iter)$/;"	f	class:GUI	signature:(const Gtk::TreeModel::iterator& iter)
-updateSideLists	gui.h	/^	void updateSideLists(const Gtk::TreeModel::iterator& iter);$/;"	p	class:GUI	access:protected	signature:(const Gtk::TreeModel::iterator& iter)
-update_from_cairo_context	easyplotmm/easyplotmm.cpp	/^                pangoLayout->update_from_cairo_context(cr);$/;"	p	file:	signature:(cr)
-val	spikedata.cpp	/^        DWORD val = m_dwDataArray[i];$/;"	l
-w	easyplotmm/easyplotmm.cpp	/^                int w,h;$/;"	l
+updateSideLists	gui.h	/^		void updateSideLists(const Gtk::TreeModel::iterator& iter);$/;"	p	class:GUI	access:protected	signature:(const Gtk::TreeModel::iterator& iter)
 wav	spikedata.h	/^                WAV	 wav;	\/\/(80)	\/\/ added for V 6.0$/;"	m	union:__anon9::__anon10	access:public
-width	easyplotmm/easyplotmm.cpp	/^        const int width = allocation.get_width();$/;"	l
-win	easyplotmm/easyplotmm.cpp	/^    Glib::RefPtr<Gdk::Window> win = get_window();$/;"	l
-window	easyplotmm/easyplotmm.cpp	/^    Glib::RefPtr<Gdk::Window> window = get_window();$/;"	l
-x	easyplotmm/easyplotmm.cpp	/^            double x,y;$/;"	l
-x	gui.cpp	/^        std::vector<double> x(sd.m_head.nSweeps,0);$/;"	p	file:	signature:(sd.m_head.nSweeps,0)
-xVariable	gui.cpp	/^        std::string xVariable = sd.xVariable();$/;"	l
 xVariable	spikedata.cpp	/^std::string SpikeData::xVariable()$/;"	f	class:SpikeData	signature:()
 xVariable	spikedata.h	/^        std::string xVariable();$/;"	p	class:SpikeData	access:public	signature:()
 x_bt_size	easyplotmm/easyplotmm.h	/^        double x_st_size,x_bt_size,y_st_size,y_bt_size;$/;"	m	class:EasyPlotmm	access:public
-x_spikes	gui.cpp	/^        std::vector<double> x_spikes;$/;"	l
 x_st_size	easyplotmm/easyplotmm.h	/^        double x_st_size,x_bt_size,y_st_size,y_bt_size;$/;"	m	class:EasyPlotmm	access:public
-xmax	easyplotmm/easyplotmm.cpp	/^        double xmin,xmax,ymin,ymax;$/;"	l
-xmin	easyplotmm/easyplotmm.cpp	/^        double xmin,xmax,ymin,ymax;$/;"	l
 xvalue	spikedata.cpp	/^double SpikeData::xvalue(int sweep)$/;"	f	class:SpikeData	signature:(int sweep)
 xvalue	spikedata.h	/^        double xvalue(int sweep);$/;"	p	class:SpikeData	access:public	signature:(int sweep)
-y	easyplotmm/easyplotmm.cpp	/^            double x,y;$/;"	l
-y	gui.cpp	/^        std::vector<double> y(sd.m_head.nSweeps,0);$/;"	p	file:	signature:(sd.m_head.nSweeps,0)
 y_bt_size	easyplotmm/easyplotmm.h	/^        double x_st_size,x_bt_size,y_st_size,y_bt_size;$/;"	m	class:EasyPlotmm	access:public
-y_spikes	gui.cpp	/^        std::vector<double> y_spikes; $/;"	l
 y_st_size	easyplotmm/easyplotmm.h	/^        double x_st_size,x_bt_size,y_st_size,y_bt_size;$/;"	m	class:EasyPlotmm	access:public
 ylab_width	easyplotmm/easyplotmm.h	/^        int ylab_width,lab_height;$/;"	m	class:EasyPlotmm	access:protected
-ymax	easyplotmm/easyplotmm.cpp	/^        double xmin,xmax,ymin,ymax;$/;"	l
-ymin	easyplotmm/easyplotmm.cpp	/^        double xmin,xmax,ymin,ymax;$/;"	l
 zoom_end	easyplotmm/easyplotmm.h	/^        int zoom_start, zoom_end;$/;"	m	class:EasyPlotmm	access:protected
 zoom_end_scale	easyplotmm/easyplotmm.h	/^        double zoom_start_scale, zoom_end_scale;$/;"	m	class:EasyPlotmm	access:protected
 zoom_start	easyplotmm/easyplotmm.h	/^        int zoom_start, zoom_end;$/;"	m	class:EasyPlotmm	access:protected

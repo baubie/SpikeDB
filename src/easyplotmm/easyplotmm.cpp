@@ -29,6 +29,9 @@ EasyPlotmm::EasyPlotmm() :
     m_iymin = m_ymin;
     m_iymax = m_ymax;
 
+	in_zoom = false;
+	in_crosshairs = false;
+
     makeDefaultPens();
     this->add_events(Gdk::BUTTON_PRESS_MASK);
     this->add_events(Gdk::BUTTON_MOTION_MASK);
@@ -36,10 +39,16 @@ EasyPlotmm::EasyPlotmm() :
     this->signal_button_press_event().connect(sigc::mem_fun(*this, &EasyPlotmm::on_event_button_press) );
     this->signal_motion_notify_event().connect(sigc::mem_fun(*this, &EasyPlotmm::on_event_motion) );
     this->signal_button_release_event().connect(sigc::mem_fun(*this, &EasyPlotmm::on_event_button_release) );
+
 }
 
 EasyPlotmm::~EasyPlotmm()
 {
+}
+
+double EasyPlotmm::automatic()
+{
+	return AUTOMATIC;
 }
 
 void EasyPlotmm::redraw()
@@ -60,12 +69,20 @@ bool EasyPlotmm::on_event_button_press(GdkEventButton* event)
         case GDK_BUTTON_PRESS:
             if (event->button == 1)
             {
-               in_zoom = true && has_plot;
+               in_zoom = has_plot;
                zoom_start = event->x;
                zoom_end = event->x;
                redraw();
             }
+            if (event->button == 3)
+            {
+               in_crosshairs = has_plot;
+               ch_x = event->x;
+               ch_y = event->y;
+               redraw();
+            }
             break;
+
         case GDK_2BUTTON_PRESS:
             in_zoom = false;
             m_xmin = m_ixmin;
@@ -86,6 +103,12 @@ bool EasyPlotmm::on_event_motion(GdkEventMotion* event)
         zoom_end = event->x;
         redraw();
     }
+	if (in_crosshairs)
+	{
+    	ch_x = event->x;
+		ch_y = event->y;
+		redraw();
+	}
     return true;
 }
 
@@ -111,24 +134,43 @@ bool EasyPlotmm::on_event_button_release(GdkEventButton* event)
            redraw();
        }
     }
+	if (event->button == 3)
+	{
+    	in_crosshairs = false;
+		redraw();
+	}
     return true;
+}
+
+void EasyPlotmm::xname(std::string name)
+{
+	m_xname = name;
+}
+
+void EasyPlotmm::yname(std::string name)
+{
+	m_yname = name;
 }
 
 void EasyPlotmm::axes(double xmin, double xmax, double ymin, double ymax)
 {
-    m_xmin = m_ixmin = xmin;
-    m_xmax = m_ixmax = xmax;
-    m_ymin = m_iymin = ymin;
-    m_ymax = m_iymax = ymax;
+	m_xmin = m_ixmin = xmin;
+	m_xmax = m_ixmax = xmax;
+	m_ymin = m_iymin = ymin;
+	m_ymax = m_iymax = ymax;
 }
 
 void EasyPlotmm::clear()
 {
-    m_x.clear();
-    m_y.clear();
+	m_x.clear();
+	m_y.clear();
 	m_err.clear();
-    m_pens.clear();
+	m_pens.clear();
     curPen = 0;
+	xname_width = 0;
+	xname_height = 0;
+	yname_width = 0;
+	yname_height = 0;
     redraw();
     has_plot = false;
 }
@@ -162,6 +204,7 @@ void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<
 
 void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p)
 {
+	if (x.empty() || y.empty() || err.empty()) return;
     // Add plot to vectors
     m_x.push_back(x);
     m_y.push_back(y);
@@ -341,15 +384,17 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 
         double maxX = fabs(xmin)>fabs(xmax)?fabs(xmin):fabs(xmax);
         double maxY = fabs(ymin)>fabs(ymax)?fabs(ymin):fabs(ymax);
+        double minX = fabs(xmin)>fabs(xmax)?fabs(xmax):fabs(xmin);
+        double minY = fabs(ymin)>fabs(ymax)?fabs(ymax):fabs(ymin);
         double xorder = 1;
         double yorder = 1;
         if (maxX < 0) maxX = 1;
         if (maxY < 0) maxY = 1;
 
-        if (maxX > 10) while (maxX / xorder > 10) { xorder *= 10; }
-        if (maxX != 0 && maxX <= 10) while (maxX / xorder <= 1) { xorder /= 10; }
-        if (maxY > 10) while (maxY / yorder > 10) { yorder *= 10; }
-        if (maxY != 0 && maxY <= 10) while (maxY / yorder <= 1 ) { yorder /= 10; }
+        if ((maxX-minX) > 10) while ((maxX-minX) / xorder > 10) { xorder *= 10; }
+        if ((maxX-minX) != 0 && (maxX-minX) <= 10) while ((maxX-minX) / xorder <= 1) { xorder /= 10; }
+        if ((maxY-minY) > 10) while ((maxY-minY) / yorder > 10) { yorder *= 10; }
+        if ((maxY-minY) != 0 && (maxY-minY) <= 10) while ((maxY-minY) / yorder <= 1 ) { yorder /= 10; }
 
         double Xst, Xbt, Yst, Ybt;
         Xst = xorder/10.0;
@@ -367,37 +412,60 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         double ymax_st = ymax;
         double ymax_bt = ymax;
         for (double x = 0; x <= xmin; x+=Xst) xmin_st = x+Xst;
-        for (double x = 0; x <= xmin; x+=Xbt) xmin_bt = x+Xbt;
+        for (double x = 0; x <= xmin; x+=Xbt) xmin_bt = x;
         for (double x = 0; x <= xmax; x+=Xst) xmax_st = x;
         for (double x = 0; x <= xmax; x+=Xbt) xmax_bt = x;
         for (double y = 0; y <= ymin; y+=Yst) ymin_st = y+Yst;
-        for (double y = 0; y <= ymin; y+=Ybt) ymin_bt = y+Ybt;
+        for (double y = 0; y <= ymin; y+=Ybt) ymin_bt = y;
         for (double y = 0; y <= ymax; y+=Yst) ymax_st = y;
         for (double y = 0; y <= ymax; y+=Ybt) ymax_bt = y;
+		if (xmin_bt < xmin) xmin_bt += Xbt;
+		if (ymin_bt < ymin) ymin_bt += Ybt;
 
         bool x_useint = !((int)(xmin-0.5) == (int)(xmin+Xbt-0.5));
         bool y_useint = !((int)(ymin-0.5) == (int)(ymin+Ybt-0.5));
 
         Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
         char buffer[10];
-        if (y_useint) sprintf(buffer,"%i",(int)(ymin_bt));
-        else sprintf(buffer,"%.1f",ymin_bt); 
+        if (y_useint) sprintf(buffer,"%i",(int)(ymax_bt));
+        else sprintf(buffer,"%.1f",ymax_bt); 
         Pango::FontDescription label_font_descr("sans normal 8");
+        Pango::FontDescription name_font_descr("sans normal 10");
         pangoLayout->set_font_description(label_font_descr);
+
         pangoLayout->set_text(buffer);
         pangoLayout->update_from_cairo_context(cr);
         pangoLayout->get_size(ylab_width,lab_height);
         ylab_width /= Pango::SCALE;
         lab_height /= Pango::SCALE;
 
-        const int xlength = width-pad_left-pad_right-ylab_width-y_bt_size-label_pad;
-        const int ylength = height-pad_top-pad_bottom-lab_height-x_bt_size-label_pad;
+		if (m_xname != "")
+		{
+			pangoLayout->set_font_description(name_font_descr);
+			pangoLayout->set_text(m_xname);
+			pangoLayout->get_size(xname_width,xname_height);
+			pangoLayout->update_from_cairo_context(cr);
+			xname_width /= Pango::SCALE;
+			xname_height /= Pango::SCALE;
+		}
+		if (m_yname != "")
+		{
+			pangoLayout->set_font_description(name_font_descr);
+			pangoLayout->set_text(m_yname);
+			pangoLayout->get_size(yname_height,yname_width);
+			pangoLayout->update_from_cairo_context(cr);
+			yname_width /= Pango::SCALE;
+			yname_height /= Pango::SCALE;
+		}
+
+        const int xlength = width-pad_left-pad_right-ylab_width-y_bt_size-label_pad-yname_width;
+        const int ylength = height-pad_top-pad_bottom-lab_height-x_bt_size-label_pad-xname_height;
         double xscale = xlength/(xmax-xmin);
         double yscale = -ylength/(ymax-ymin);
 
         // Translate the window so the bottom left of the graph is
         // (0,0) on the screen
-        cr->translate(pad_left+ylab_width+y_bt_size+label_pad, height-pad_bottom-lab_height-x_bt_size-label_pad);
+        cr->translate(pad_left+ylab_width+y_bt_size+2*label_pad+yname_width, height-pad_bottom-lab_height-x_bt_size-2*label_pad-xname_height);
 
         // Draw background and axes
         cr->save();
@@ -448,7 +516,33 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         }
         cr->restore();
 
-        // Add the labels
+		// Add x label
+		if (m_xname != "")
+		{
+			Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
+			pangoLayout->set_font_description(name_font_descr);
+			pangoLayout->set_text(m_xname);
+			pangoLayout->update_from_cairo_context(cr);
+			cr->move_to(xscale*(xmax-xmin)/2-(xname_width)/2.0,x_bt_size+xname_height+2*label_pad);
+			pangoLayout->add_to_cairo_context(cr);
+		}
+
+		// Add y label
+		if (m_yname != "")
+		{
+			Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
+			pangoLayout->set_font_description(name_font_descr);
+			pangoLayout->set_text(m_yname);
+			pangoLayout->update_from_cairo_context(cr);
+			cr->move_to(-y_bt_size-yname_width-3*label_pad-ylab_width, yscale*(ymax-ymin)/2+(yname_height)/2);
+			cr->save();
+		    cr->rotate(-3.14159/2);
+			pangoLayout->add_to_cairo_context(cr);
+			cr->restore();
+		}
+
+
+        // Add the tick labels
         cr->set_source_rgba(0,0,0,1);
         cr->set_line_width(1.0);
         if (xmax != 0 && Xbt != 0)
@@ -466,7 +560,6 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
                 pangoLayout->get_size(w,h);
                 cr->move_to((x-xmin)*xscale-(w/Pango::SCALE)/2.0,x_bt_size+label_pad);
                 pangoLayout->add_to_cairo_context(cr);
-                cr->stroke();
             }
         }
         if (ymax > 0 && Ybt != 0)
@@ -474,7 +567,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
             for (double y = fabs(ymin_bt); y <= fabs(ymax_bt); y+=Ybt)
             {
                 Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
-                cr->move_to(-ylab_width-y_bt_size-label_pad,(y-ymin)*yscale-lab_height/2);
+                cr->move_to(-ylab_width-y_bt_size-2*label_pad,(y-ymin)*yscale-lab_height/2);
                 char buffer[10];
                 if (y_useint) sprintf(buffer,"%i",(int)y);
                 else sprintf(buffer,"%.1f",y); 
@@ -484,9 +577,9 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
                 pangoLayout->set_text(buffer);
                 pangoLayout->update_from_cairo_context(cr);
                 pangoLayout->add_to_cairo_context(cr);
-                cr->stroke();
             }
         }
+		cr->stroke();
 
         // Plot data values
         for (unsigned int i  = 0; i < m_x.size(); ++i) 
@@ -536,6 +629,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 					cr->move_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
                     drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
                 }
+				cr->stroke();
             }
         }
 
@@ -544,8 +638,8 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         if (in_zoom)
         {
             double start, end;
-            start = (zoom_start - pad_left-ylab_width-y_bt_size-label_pad);
-            end = (zoom_end - pad_left-ylab_width-y_bt_size-label_pad);
+            start = (zoom_start - pad_left-ylab_width-y_bt_size-2*label_pad-yname_width);
+            end = (zoom_end - pad_left-ylab_width-y_bt_size-2*label_pad-yname_width);
 
             if (start < 0) start = 0;
             if (end < 0) end = 0;
@@ -572,8 +666,29 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
             cr->fill();
         }
 
+		// Add crosshairs
+		if (in_crosshairs)
+		{
+            double y = (ch_y - ylength-pad_top);//-pad_bottom-lab_height-x_bt_size-2*label_pad-xname_height);
+            double x = (ch_x - pad_left-ylab_width-y_bt_size-2*label_pad-yname_width);
+			cr->set_line_width(2.0);
+
+			// Draw horizonal line
+			cr->set_source_rgba(0,0.5,0,0.75);
+			cr->move_to(0, y);
+			cr->rel_line_to(xlength,0);
+			cr->stroke();
+
+			// Draw vertical line
+			cr->set_source_rgba(0.5,0,0.5,0.75);
+			cr->move_to(x, 0);
+			cr->rel_line_to(0,-ylength);
+			cr->stroke();
+		}
+
         cr->clip();
     }
+
     return true;
 }
 

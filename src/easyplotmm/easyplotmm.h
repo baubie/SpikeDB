@@ -47,7 +47,10 @@ class EasyPlotmm : public Gtk::DrawingArea
             RGBA errcolor;
         };
 
+		double automatic();
         void axes(double xmin, double xmax, double ymin, double ymax);
+		void xname(std::string name);
+		void yname(std::string name);
         void clear();
         void plot(std::vector<double> x, std::vector<double> y);
         void plot(std::vector<double> x, std::vector<double> y, std::vector<double> err);
@@ -92,12 +95,16 @@ class EasyPlotmm : public Gtk::DrawingArea
         unsigned int curPen;
 
         // Store the passed values for safe keeping
-        int ylab_width,lab_height;
+        int ylab_width,lab_height,xname_width,xname_height,yname_width,yname_height;
+		std::string m_xname, m_yname;
         double m_ixmin,m_ixmax,m_iymin,m_iymax; // Axes
         int zoom_start, zoom_end;
         double zoom_start_scale, zoom_end_scale;
         bool in_zoom;
+		bool in_crosshairs;
+		int ch_x, ch_y;
         bool has_plot;
+
 };
 
 #endif
