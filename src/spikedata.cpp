@@ -269,8 +269,10 @@ double SpikeData::begin(int channel, int sweep)
     {
         case 1:
             return m_head.stimFirstCh1.fBegin+m_head.deltaCh1.fBegin*sweep;
+            break;
         case 2:
             return m_head.stimFirstCh2.fBegin+m_head.deltaCh2.fBegin*sweep;
+            break;
     }
     return 0;
 }
@@ -281,8 +283,10 @@ double SpikeData::duration(int channel, int sweep)
     {
         case 1:
             return m_head.stimFirstCh1.fDur+m_head.deltaCh1.fDur*sweep;
+            break;
         case 2:
             return m_head.stimFirstCh2.fDur+m_head.deltaCh2.fDur*sweep;
+            break;
     }
     return 0;
 }
@@ -293,33 +297,35 @@ double SpikeData::attenuation(int channel, int sweep)
     {
         case 1:
             return m_head.stimFirstCh1.fAtten+m_head.deltaCh1.fAtten*sweep;
+            break;
         case 2:
             return m_head.stimFirstCh2.fAtten+m_head.deltaCh2.fAtten*sweep;
+            break;
     }
     return 0;
 }
 
 double SpikeData::frequency(int channel, int sweep)
 {
-    if (m_head.stimFirstCh1.nType == SINUS)
+    switch(channel)
     {
-        switch(channel)
-        {
-            case 1:
+        case 1:
+            if (m_head.stimFirstCh1.nType == SINUS)
                 return m_head.stimFirstCh1.params.sin.fFreq+m_head.deltaCh1.fCarFreq*sweep;
-            case 2:
-                return m_head.stimFirstCh2.params.sin.fFreq+m_head.deltaCh2.fCarFreq*sweep;
-        }
-    }
-    if (m_head.stimFirstCh1.nType == SWEPTSINUS)
-    {
-        switch(channel)
-        {
-            case 1:
+            if (m_head.stimFirstCh1.nType == SWEPTSINUS)
                 return m_head.stimFirstCh1.params.sweptsin.fCarFreq+m_head.deltaCh1.fCarFreq*sweep;
-            case 2:
+            if (m_head.stimFirstCh1.nType == FMSINUS)
+                return m_head.stimFirstCh1.params.fmsin.fCarFreq+m_head.deltaCh1.fCarFreq*sweep;
+            break;
+
+        case 2:
+            if (m_head.stimFirstCh2.nType == SINUS)
+                return m_head.stimFirstCh2.params.sin.fFreq+m_head.deltaCh2.fCarFreq*sweep;
+            if (m_head.stimFirstCh2.nType == SWEPTSINUS)
                 return m_head.stimFirstCh2.params.sweptsin.fCarFreq+m_head.deltaCh2.fCarFreq*sweep;
-        }
+            if (m_head.stimFirstCh1.nType == FMSINUS)
+                return m_head.stimFirstCh2.params.fmsin.fCarFreq+m_head.deltaCh2.fCarFreq*sweep;
+            break;
     }
     return 0;
 }

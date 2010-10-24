@@ -422,13 +422,27 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 		if (xmin_bt < xmin) xmin_bt += Xbt;
 		if (ymin_bt < ymin) ymin_bt += Ybt;
 
-        bool x_useint = !((int)(xmin-0.5) == (int)(xmin+Xbt-0.5));
-        bool y_useint = !((int)(ymin-0.5) == (int)(ymin+Ybt-0.5));
+        // Determine the number of required decimal places
+        int y_numdec = 0;
+        char y_fmt[5];
+        while (y_numdec < 4 && ((int)(pow(10,y_numdec)*ymin-0.5) == (int)(pow(10,y_numdec)*(ymin+Ybt)-0.5)))
+        {
+            ++y_numdec;
+        }
+        sprintf(y_fmt, "%%.%df", y_numdec);
+
+        int x_numdec = 0;
+        char x_fmt[5];
+        while (x_numdec < 4 && ((int)(pow(10,x_numdec)*xmin_bt) == (int)(pow(10,x_numdec)*(xmin_bt+Xbt))))
+        {
+            ++x_numdec;
+        }
+        sprintf(x_fmt, "%%.%df", x_numdec);
 
         Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
         char buffer[10];
-        if (y_useint) sprintf(buffer,"%i",(int)(ymax_bt));
-        else sprintf(buffer,"%.1f",ymax_bt); 
+        if (y_numdec == 0) sprintf(buffer,"%i",(int)(ymax_bt));
+        else sprintf(buffer,y_fmt,ymax_bt); 
         Pango::FontDescription label_font_descr("sans normal 8");
         Pango::FontDescription name_font_descr("sans normal 10");
         pangoLayout->set_font_description(label_font_descr);
@@ -551,8 +565,8 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
             {
                 Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
                 char buffer[10];
-                if (x_useint) sprintf(buffer,"%i",(int)x);
-                else sprintf(buffer,"%.1f",x); 
+                if (x_numdec == 0) sprintf(buffer,"%i",(int)x);
+                else sprintf(buffer,x_fmt,x); 
                 pangoLayout->set_font_description(label_font_descr);
                 pangoLayout->set_text(buffer);
                 pangoLayout->update_from_cairo_context(cr);
@@ -569,8 +583,8 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
                 Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
                 cr->move_to(-ylab_width-y_bt_size-2*label_pad,(y-ymin)*yscale-lab_height/2);
                 char buffer[10];
-                if (y_useint) sprintf(buffer,"%i",(int)y);
-                else sprintf(buffer,"%.1f",y); 
+                if (y_numdec == 0) sprintf(buffer,"%i",(int)y);
+                else sprintf(buffer,y_fmt,y); 
                 pangoLayout->set_font_description(label_font_descr);
                 pangoLayout->set_alignment(Pango::ALIGN_RIGHT);
                 pangoLayout->set_width(Pango::SCALE*(ylab_width));
