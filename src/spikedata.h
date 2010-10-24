@@ -201,7 +201,7 @@ class SpikeData
         bool parse(const char* filename);
         void printfile();
         std::string xVariable();
-        std::string type();
+        std::string type(int channel);
         double xvalue(int sweep);
         double delta();
         int trials();

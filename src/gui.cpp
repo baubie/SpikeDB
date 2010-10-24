@@ -799,23 +799,40 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
         ch2Pen.color.a = 1;
         for (int i = 0; i < sd.m_head.nSweeps; ++i)
         {
-            std::vector<double> stimX;
-            std::vector<double> stimY;
-            stimX.push_back(sd.m_head.stimFirstCh1.fBegin+sd.m_head.deltaCh1.fBegin*i);
-            stimY.push_back(sd.xvalue(i));
-            stimX.push_back(sd.m_head.stimFirstCh1.fBegin+sd.m_head.stimFirstCh1.fDur+sd.m_head.deltaCh1.fBegin*i+sd.m_head.deltaCh1.fDur*i);
-            stimY.push_back(sd.xvalue(i));
-            m_pPlotSpikes->plot(stimX,stimY,ch1Pen);
-
+            if (sd.m_head.nOnCh1 == 1)
+            {
+                double start = sd.m_head.stimFirstCh1.fBegin+sd.m_head.deltaCh1.fBegin*i;
+                double end = sd.m_head.stimFirstCh1.fBegin+sd.m_head.stimFirstCh1.fDur+sd.m_head.deltaCh1.fBegin*i+sd.m_head.deltaCh1.fDur*i;
+                for (int j = 1; j <= sd.m_head.stimFirstCh1.nStimPerSweep; ++j)
+                {
+                    std::vector<double> stimX;
+                    std::vector<double> stimY;
+                    stimX.push_back(start);
+                    stimY.push_back(sd.xvalue(i));
+                    stimX.push_back(end);
+                    stimY.push_back(sd.xvalue(i));
+                    m_pPlotSpikes->plot(stimX,stimY,ch1Pen);
+                    start = end + sd.m_head.stimFirstCh1.fStimInt+sd.m_head.deltaCh1.fStimInt*i;
+                    end = start + sd.m_head.stimFirstCh1.fDur+sd.m_head.deltaCh1.fDur*i;
+                }
+            }
             if (sd.m_head.nOnCh2 == 1)
             {
-                stimX.clear();
-                stimY.clear();
-                stimX.push_back(sd.m_head.stimFirstCh2.fBegin+sd.m_head.deltaCh2.fBegin*i);
-                stimY.push_back(sd.xvalue(i));
-                stimX.push_back(sd.m_head.stimFirstCh2.fBegin+sd.m_head.stimFirstCh2.fDur+sd.m_head.deltaCh2.fBegin*i+sd.m_head.deltaCh2.fDur*i);
-                stimY.push_back(sd.xvalue(i));
-                m_pPlotSpikes->plot(stimX,stimY,ch2Pen);
+                double start = sd.m_head.stimFirstCh2.fBegin+sd.m_head.deltaCh2.fBegin*i;
+                double end = sd.m_head.stimFirstCh2.fBegin+sd.m_head.stimFirstCh2.fDur+sd.m_head.deltaCh2.fBegin*i+sd.m_head.deltaCh2.fDur*i;
+                for (int j = 1; j <= sd.m_head.stimFirstCh2.nStimPerSweep; ++j)
+                {
+                    std::cout << sd.xvalue(i) << std::endl;
+                    std::vector<double> stimX;
+                    std::vector<double> stimY;
+                    stimX.push_back(start);
+                    stimY.push_back(sd.xvalue(i));
+                    stimX.push_back(end);
+                    stimY.push_back(sd.xvalue(i));
+                    m_pPlotSpikes->plot(stimX,stimY,ch2Pen);
+                    start = end + sd.m_head.stimFirstCh2.fStimInt+sd.m_head.deltaCh2.fStimInt*i;
+                    end = start + sd.m_head.stimFirstCh2.fDur+sd.m_head.deltaCh2.fDur*i;
+                }
             }
         }
     } 
@@ -1100,12 +1117,28 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
             const HEADER *h = new HEADER(*static_cast<HEADER*>(header));
             sd.m_head = *h;
             row[m_DetailsColumns.m_col_xaxis] = sd.xVariable();
-            row[m_DetailsColumns.m_col_type] = sd.type();
             row[m_DetailsColumns.m_col_trials] = sd.trials();
 
             char bufferCh1[20];
             char bufferCh2[20];
             char buffer[50];
+
+            if (sd.m_head.nOnCh1 == 0) strcpy(bufferCh1,"-");
+            else 
+            {
+                sprintf(bufferCh1, "%s", sd.type(1).c_str());
+            }
+            if (sd.m_head.nOnCh2 == 0) strcpy(bufferCh2,"-");
+            else 
+            {
+                sprintf(bufferCh2, "%s", sd.type(2).c_str());
+            }
+            sprintf(buffer, "%s/%s", bufferCh1,bufferCh2);
+            row[m_DetailsColumns.m_col_type] = buffer;
+            bufferCh1[0] = '\0';
+            bufferCh2[0] = '\0';
+            buffer[0] = '\0';
+
 
             if (sd.m_head.nOnCh1 == 0) strcpy(bufferCh1,"-");
             else 
