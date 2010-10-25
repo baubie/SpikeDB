@@ -143,10 +143,23 @@ class GUI : public Gtk::Window
         void on_cellvalue_edited(const Glib::ustring& path_string, const Glib::ustring& new_text);
         void cellvalue_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter);
 
+        class FileDetailsColumns : public Gtk::TreeModel::ColumnRecord
+        {
+            public:
+                FileDetailsColumns()
+                { add(m_col_animalID); add(m_col_cellID); add(m_col_fileID); add(m_col_name); add(m_col_value); }
+                Gtk::TreeModelColumn<Glib::ustring> m_col_animalID;
+                Gtk::TreeModelColumn<int> m_col_cellID;
+                Gtk::TreeModelColumn<int> m_col_fileID;
+                Gtk::TreeModelColumn<Glib::ustring> m_col_name;
+                Gtk::TreeModelColumn<Glib::ustring> m_col_value;
+        };
+
         AnimalColumns m_AnimalColumns;
         DetailsColumns m_DetailsColumns;
         AnimalDetailsColumns m_AnimalDetailsColumns;
         CellDetailsColumns m_CellDetailsColumns;
+        FileDetailsColumns m_FileDetailsColumns;
 
 		AnalyzeColumns m_DataSourceColumns;
 		AnalyzeColumns m_XVarColumns;

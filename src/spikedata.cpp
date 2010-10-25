@@ -109,7 +109,7 @@ bool SpikeData::parsedata()
     return true;
 }
 
-std::string SpikeData::type()
+std::string SpikeData::type(int channel)
 {
 #define NOISE		0
 #define SINUS		1
@@ -119,62 +119,110 @@ std::string SpikeData::type()
 #define WAVEFILE	5
 #define FILT_NOISE	6
 
-    switch (m_head.stimFirstCh1.nType)
+    switch(channel)
     {
-        case NOISE:
-            return "Noise";
-            break;
+        case 1:
+            switch (m_head.stimFirstCh1.nType)
+            {
+                case NOISE:
+                    return "Noise";
+                    break;
 
-        case SINUS:
-            return "Sinus";
-            break;
+                case SINUS:
+                    return "Sinus";
+                    break;
 
-        case AMSINUS:
-            return "AM Sinus";
-            break;
+                case AMSINUS:
+                    return "AM Sinus";
+                    break;
 
-        case FMSINUS:
-            return "FM Sinus";
-            break;
+                case FMSINUS:
+                    return "FM Sinus";
+                    break;
 
-        case SWEPTSINUS:
-            return "Swept Sinus";
-            break;
+                case SWEPTSINUS:
+                    return "FM Sweep";
+                    break;
 
-        case WAVEFILE:
-            return "Wave File";
-            break;
+                case WAVEFILE:
+                    return "Wave File";
+                    break;
 
-        case FILT_NOISE:
-            return "Filtered Noise";
-            break;
+                case FILT_NOISE:
+                    return "Filtered Noise";
+                    break;
 
-        default:
-            return "Unknown";
+                default:
+                    return "Unknown";
+                    break;
+            }
+            break;
+        case 2:
+            switch (m_head.stimFirstCh2.nType)
+            {
+                case NOISE:
+                    return "Noise";
+                    break;
+
+                case SINUS:
+                    return "Sinus";
+                    break;
+
+                case AMSINUS:
+                    return "AM Sinus";
+                    break;
+
+                case FMSINUS:
+                    return "FM Sinus";
+                    break;
+
+                case SWEPTSINUS:
+                    return "FM Sweep";
+                    break;
+
+                case WAVEFILE:
+                    return "Wave File";
+                    break;
+
+                case FILT_NOISE:
+                    return "Filtered Noise";
+                    break;
+
+                default:
+                    return "Unknown";
+                    break;
+            }
             break;
     }
+    return "Unknown";
 }
 
 std::string SpikeData::xVariable()
 {
-	if (m_head.deltaCh1.fBegin != 0) return "Ch 1 Onset";	
-	if (m_head.deltaCh1.fDur != 0) return "Ch 1 Dur";	
-	if (m_head.deltaCh1.fStimInt != 0) return "Ch 1 Stim Int";	
-	if (m_head.deltaCh1.fAtten != 0) return "Ch 1 Atten";	
-	if (m_head.deltaCh1.fCarFreq != 0) return "Ch 1 Freq";	
-	if (m_head.deltaCh1.fPhase != 0) return "Ch 1 Phase";	
-	if (m_head.deltaCh1.fFreqDev != 0) return "Ch 1 Freq Dev";	
-	if (m_head.deltaCh1.fAmDepth != 0) return "Ch 1 AM Depth";	
-	if (m_head.deltaCh1.fModFreq != 0) return "Ch 1 Mod Freq";	
-	if (m_head.deltaCh2.fBegin != 0) return "Ch 2 Onset";	
-	if (m_head.deltaCh2.fDur != 0) return "Ch 2 Dur";	
-	if (m_head.deltaCh2.fStimInt != 0) return "Ch 2 Stim Int";	
-	if (m_head.deltaCh2.fAtten != 0) return "Ch 2 Atten";	
-	if (m_head.deltaCh2.fCarFreq != 0) return "Ch 2 Freq";	
-	if (m_head.deltaCh2.fPhase != 0) return "Ch 2 Phase";	
-	if (m_head.deltaCh2.fFreqDev != 0) return "Ch 2 Freq Dev";	
-	if (m_head.deltaCh2.fAmDepth != 0) return "Ch 2 AM Depth";	
-	if (m_head.deltaCh2.fModFreq != 0) return "Ch 2 Mod Freq";	
+    if (m_head.nOnCh1 == 1)
+    {
+        if (m_head.deltaCh1.fBegin != 0) return "Ch 1 Onset";	
+        if (m_head.deltaCh1.fDur != 0) return "Ch 1 Dur";	
+        if (m_head.deltaCh1.fStimInt != 0) return "Ch 1 Stim Int";	
+        if (m_head.deltaCh1.fAtten != 0) return "Ch 1 Atten";	
+        if (m_head.deltaCh1.fCarFreq != 0) return "Ch 1 Freq";	
+        if (m_head.deltaCh1.fPhase != 0) return "Ch 1 Phase";	
+        if (m_head.deltaCh1.fFreqDev != 0) return "Ch 1 Freq Dev";	
+        if (m_head.deltaCh1.fAmDepth != 0) return "Ch 1 AM Depth";	
+        if (m_head.deltaCh1.fModFreq != 0) return "Ch 1 Mod Freq";	
+    }
+    if (m_head.nOnCh2 == 1)
+    {
+        if (m_head.deltaCh2.fBegin != 0) return "Ch 2 Onset";	
+        if (m_head.deltaCh2.fDur != 0) return "Ch 2 Dur";	
+        if (m_head.deltaCh2.fStimInt != 0) return "Ch 2 Stim Int";	
+        if (m_head.deltaCh2.fAtten != 0) return "Ch 2 Atten";	
+        if (m_head.deltaCh2.fCarFreq != 0) return "Ch 2 Freq";	
+        if (m_head.deltaCh2.fPhase != 0) return "Ch 2 Phase";	
+        if (m_head.deltaCh2.fFreqDev != 0) return "Ch 2 Freq Dev";	
+        if (m_head.deltaCh2.fAmDepth != 0) return "Ch 2 AM Depth";	
+        if (m_head.deltaCh2.fModFreq != 0) return "Ch 2 Mod Freq";	
+    }
 	return "Unknown";
 }
 
@@ -208,58 +256,64 @@ int SpikeData::trials()
 
 double SpikeData::xvalue(int sweep)
 {
-    if (m_head.deltaCh1.fBegin != 0) {
-        return m_head.stimFirstCh1.fBegin+m_head.deltaCh1.fBegin*sweep;
+    if (m_head.nOnCh1 == 1)
+    {
+        if (m_head.deltaCh1.fBegin != 0) {
+            return m_head.stimFirstCh1.fBegin+m_head.deltaCh1.fBegin*sweep;
+        }
+        if (m_head.deltaCh1.fDur != 0) {
+            return m_head.stimFirstCh1.fDur+m_head.deltaCh1.fDur*sweep;
+        }
+        if (m_head.deltaCh1.fStimInt != 0) {
+            return m_head.stimFirstCh1.fStimInt+m_head.deltaCh1.fStimInt*sweep;
+        }
+        if (m_head.deltaCh1.fAtten != 0) {
+            return m_head.stimFirstCh1.fAtten+m_head.deltaCh1.fAtten*sweep;
+        }
+        if (m_head.deltaCh1.fCarFreq != 0) {
+            if (m_head.stimFirstCh1.nType == SINUS)
+                return m_head.stimFirstCh1.params.sin.fFreq+m_head.deltaCh1.fCarFreq*sweep;
+            if (m_head.stimFirstCh1.nType == SWEPTSINUS)
+                return m_head.stimFirstCh1.params.sweptsin.fCarFreq+m_head.deltaCh1.fCarFreq*sweep;
+        }
+        /*
+        if (m_head.deltaCh1.fAmDepth != 0) {
+            return m_head.stimFirstCh1.fAmDepth+m_head.deltaCh1.fAmDepth*sweep;
+        }
+        if (m_head.deltaCh1.fModFreq != 0) {
+            return m_head.stimFirstCh1.fModFreq+m_head.deltaCh1.fModFreq*sweep;
+        }
+        */
     }
-    if (m_head.deltaCh1.fDur != 0) {
-        return m_head.stimFirstCh1.fDur+m_head.deltaCh1.fDur*sweep;
+    if (m_head.nOnCh2 == 1)
+    {
+        if (m_head.deltaCh2.fBegin != 0) {
+            return m_head.stimFirstCh2.fBegin+m_head.deltaCh2.fBegin*sweep;
+        }
+        if (m_head.deltaCh2.fDur != 0) {
+            return m_head.stimFirstCh2.fDur+m_head.deltaCh2.fDur*sweep;
+        }
+        if (m_head.deltaCh2.fStimInt != 0) {
+            return m_head.stimFirstCh2.fStimInt+m_head.deltaCh2.fStimInt*sweep;
+        }
+        if (m_head.deltaCh2.fAtten != 0) {
+            return m_head.stimFirstCh2.fAtten+m_head.deltaCh2.fAtten*sweep;
+        }
+        if (m_head.deltaCh2.fCarFreq != 0) {
+            if (m_head.stimFirstCh2.nType == SINUS)
+                return m_head.stimFirstCh2.params.sin.fFreq+m_head.deltaCh2.fCarFreq*sweep;
+            if (m_head.stimFirstCh2.nType == SWEPTSINUS)
+                return m_head.stimFirstCh2.params.sweptsin.fCarFreq+m_head.deltaCh2.fCarFreq*sweep;
+        }
+        /*
+        if (m_head.deltaCh2.fAmDepth != 0) {
+            return m_head.stimFirstCh2.fAmDepth+m_head.deltaCh2.fAmDepth*sweep;
+        }
+        if (m_head.deltaCh2.fModFreq != 0) {
+            return m_head.stimFirstCh2.fModFreq+m_head.deltaCh2.fModFreq*sweep;
+        }
+        */
     }
-    if (m_head.deltaCh1.fStimInt != 0) {
-        return m_head.stimFirstCh1.fStimInt+m_head.deltaCh1.fStimInt*sweep;
-    }
-    if (m_head.deltaCh1.fAtten != 0) {
-        return m_head.stimFirstCh1.fAtten+m_head.deltaCh1.fAtten*sweep;
-    }
-    if (m_head.deltaCh1.fCarFreq != 0) {
-        if (m_head.stimFirstCh1.nType == SINUS)
-            return m_head.stimFirstCh1.params.sin.fFreq+m_head.deltaCh1.fCarFreq*sweep;
-        if (m_head.stimFirstCh1.nType == SWEPTSINUS)
-            return m_head.stimFirstCh1.params.sweptsin.fCarFreq+m_head.deltaCh1.fCarFreq*sweep;
-    }
-    /*
-    if (m_head.deltaCh1.fAmDepth != 0) {
-        return m_head.stimFirstCh1.fAmDepth+m_head.deltaCh1.fAmDepth*sweep;
-    }
-    if (m_head.deltaCh1.fModFreq != 0) {
-        return m_head.stimFirstCh1.fModFreq+m_head.deltaCh1.fModFreq*sweep;
-    }
-    */
-    if (m_head.deltaCh2.fBegin != 0) {
-        return m_head.stimFirstCh2.fBegin+m_head.deltaCh2.fBegin*sweep;
-    }
-    if (m_head.deltaCh2.fDur != 0) {
-        return m_head.stimFirstCh2.fDur+m_head.deltaCh2.fDur*sweep;
-    }
-    if (m_head.deltaCh2.fStimInt != 0) {
-        return m_head.stimFirstCh2.fStimInt+m_head.deltaCh2.fStimInt*sweep;
-    }
-    if (m_head.deltaCh2.fAtten != 0) {
-        return m_head.stimFirstCh2.fAtten+m_head.deltaCh2.fAtten*sweep;
-    }
-    if (m_head.deltaCh2.fCarFreq != 0) {
-        if (m_head.stimFirstCh2.nType == SINUS)
-            return m_head.stimFirstCh2.params.sin.fFreq+m_head.deltaCh2.fCarFreq*sweep;
-        if (m_head.stimFirstCh2.nType == SWEPTSINUS)
-            return m_head.stimFirstCh2.params.sweptsin.fCarFreq+m_head.deltaCh2.fCarFreq*sweep;
-    }
-    /*
-    if (m_head.deltaCh2.fAmDepth != 0) {
-        return m_head.stimFirstCh2.fAmDepth+m_head.deltaCh2.fAmDepth*sweep;
-    }
-    if (m_head.deltaCh2.fModFreq != 0) {
-        return m_head.stimFirstCh2.fModFreq+m_head.deltaCh2.fModFreq*sweep;
-    }
-    */
     return 0;
 }
 
@@ -269,8 +323,10 @@ double SpikeData::begin(int channel, int sweep)
     {
         case 1:
             return m_head.stimFirstCh1.fBegin+m_head.deltaCh1.fBegin*sweep;
+            break;
         case 2:
             return m_head.stimFirstCh2.fBegin+m_head.deltaCh2.fBegin*sweep;
+            break;
     }
     return 0;
 }
@@ -281,8 +337,10 @@ double SpikeData::duration(int channel, int sweep)
     {
         case 1:
             return m_head.stimFirstCh1.fDur+m_head.deltaCh1.fDur*sweep;
+            break;
         case 2:
             return m_head.stimFirstCh2.fDur+m_head.deltaCh2.fDur*sweep;
+            break;
     }
     return 0;
 }
@@ -293,33 +351,35 @@ double SpikeData::attenuation(int channel, int sweep)
     {
         case 1:
             return m_head.stimFirstCh1.fAtten+m_head.deltaCh1.fAtten*sweep;
+            break;
         case 2:
             return m_head.stimFirstCh2.fAtten+m_head.deltaCh2.fAtten*sweep;
+            break;
     }
     return 0;
 }
 
 double SpikeData::frequency(int channel, int sweep)
 {
-    if (m_head.stimFirstCh1.nType == SINUS)
+    switch(channel)
     {
-        switch(channel)
-        {
-            case 1:
+        case 1:
+            if (m_head.stimFirstCh1.nType == SINUS)
                 return m_head.stimFirstCh1.params.sin.fFreq+m_head.deltaCh1.fCarFreq*sweep;
-            case 2:
-                return m_head.stimFirstCh2.params.sin.fFreq+m_head.deltaCh2.fCarFreq*sweep;
-        }
-    }
-    if (m_head.stimFirstCh1.nType == SWEPTSINUS)
-    {
-        switch(channel)
-        {
-            case 1:
+            if (m_head.stimFirstCh1.nType == SWEPTSINUS)
                 return m_head.stimFirstCh1.params.sweptsin.fCarFreq+m_head.deltaCh1.fCarFreq*sweep;
-            case 2:
+            if (m_head.stimFirstCh1.nType == FMSINUS)
+                return m_head.stimFirstCh1.params.fmsin.fCarFreq+m_head.deltaCh1.fCarFreq*sweep;
+            break;
+
+        case 2:
+            if (m_head.stimFirstCh2.nType == SINUS)
+                return m_head.stimFirstCh2.params.sin.fFreq+m_head.deltaCh2.fCarFreq*sweep;
+            if (m_head.stimFirstCh2.nType == SWEPTSINUS)
                 return m_head.stimFirstCh2.params.sweptsin.fCarFreq+m_head.deltaCh2.fCarFreq*sweep;
-        }
+            if (m_head.stimFirstCh1.nType == FMSINUS)
+                return m_head.stimFirstCh2.params.fmsin.fCarFreq+m_head.deltaCh2.fCarFreq*sweep;
+            break;
     }
     return 0;
 }
@@ -342,6 +402,10 @@ void SpikeData::printfile()
     std::cout << "isSPL: " << m_head.isSPL << std::endl;
     std::cout << "cFrozenNoise: " << m_head.cFrozenNoise << std::endl;
     std::cout << "cAutoAdjPhase: " << m_head.cAutoAdjPhase << std::endl;
+    std::cout << "stimFirstCh1.nType: " << m_head.stimFirstCh1.nType << std::endl;
+    std::cout << "stimFirstCh1.fBegin: " << m_head.stimFirstCh1.fBegin << std::endl;
+    std::cout << "stimFirstCh2.nType: " << m_head.stimFirstCh2.nType << std::endl;
+    std::cout << "stimFirstCh2.fBegin: " << m_head.stimFirstCh2.fBegin << std::endl;
 
     
 }

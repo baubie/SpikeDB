@@ -95,7 +95,10 @@ typedef struct
         float fAmDepth; // >0 = AM
 } NOISE_EX;
 
-typedef struct
+// g++ doesn't pack to the nearest byte by default
+// Here I turn that on for compatibility with the
+// spike files which are packed to the nearest byte.
+typedef struct __attribute__((__packed__)) 
 {
         short nType;
         float fCarFreq;
@@ -198,7 +201,7 @@ class SpikeData
         bool parse(const char* filename);
         void printfile();
         std::string xVariable();
-        std::string type();
+        std::string type(int channel);
         double xvalue(int sweep);
         double delta();
         int trials();
