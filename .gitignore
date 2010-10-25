@@ -11,3 +11,4 @@ callgrind.*
 *.log
 spikedb
 spikedb.db
+spikedb.settings

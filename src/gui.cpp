@@ -822,7 +822,6 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
                 double end = sd.m_head.stimFirstCh2.fBegin+sd.m_head.stimFirstCh2.fDur+sd.m_head.deltaCh2.fBegin*i+sd.m_head.deltaCh2.fDur*i;
                 for (int j = 1; j <= sd.m_head.stimFirstCh2.nStimPerSweep; ++j)
                 {
-                    std::cout << sd.xvalue(i) << std::endl;
                     std::vector<double> stimX;
                     std::vector<double> stimY;
                     stimX.push_back(start);
