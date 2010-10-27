@@ -687,9 +687,7 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
     if (r == SQLITE_ROW)
     {
         void *header = (void*)sqlite3_column_blob(stmt,0);
-        const HEADER *h = new HEADER(*static_cast<HEADER*>(header));
-        sd.m_head = *h;
-
+        sd.setHeader(header);
         std::string xVariable = sd.xVariable();
         if (curXVariable == "") curXVariable = xVariable;
         else if(curXVariable != xVariable)
@@ -1113,8 +1111,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
             }
 
             void *header = (void*)sqlite3_column_blob(stmt,3);
-            const HEADER *h = new HEADER(*static_cast<HEADER*>(header));
-            sd.m_head = *h;
+            sd.setHeader(header);
             row[m_DetailsColumns.m_col_xaxis] = sd.xVariable();
             row[m_DetailsColumns.m_col_trials] = sd.trials();
 

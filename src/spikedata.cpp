@@ -12,9 +12,30 @@ bool SpikeData::parse(const char* filename)
         int fsize = static_cast<int>(in.tellg()-begin_pos);
         in.seekg(0, std::ios_base::beg);
 
+        // Read in the header ID
+        char cID[12];
+        in.read(reinterpret_cast<char*>(&cID), sizeof(cID));
+        int VERSION = headerversion(cID);
+        if (VERSION < HEADER_50)
+        {
+            std::cerr << "ERROR: Spike data file is too old." << std::endl;
+            return false;
+        }
+        version = VERSION;
+
         // Read in the header
-        in.read(reinterpret_cast<char*>(&m_head), sizeof(m_head));
-        int hsize = sizeof(m_head);
+        in.seekg(0, std::ios_base::beg);
+        int hsize;
+        if (VERSION == HEADER_50)
+        {
+            in.read(reinterpret_cast<char*>(&m_head50), sizeof(m_head50));
+            hsize = sizeof(m_head50);
+        }
+        if (VERSION == HEADER_62)
+        {
+            in.read(reinterpret_cast<char*>(&m_head), sizeof(m_head));
+            hsize = sizeof(m_head);
+        }
         int nbytes = fsize-hsize;
         if (nbytes < 0) {
 //            std::cerr << "ERROR: Invalid spike data file." << std::endl;
@@ -41,6 +62,45 @@ bool SpikeData::parse(const char* filename)
         return false;
     }
     return true;
+}
+
+int SpikeData::headerversion(char *ID)
+{
+    if (strcmp(ID, "SPIKE V 6.2") == 0)
+        return HEADER_62;
+    if (strcmp(ID, "SPIKE V 6.1") == 0)
+        return HEADER_61;
+    if (strcmp(ID, "SPIKE V 6.0") == 0)
+        return HEADER_60;
+    if (strcmp(ID, "SPIKE V 5.0") == 0)
+        return HEADER_50;
+
+    return HEADER_UNKNOWN;
+}
+
+int SpikeData::headerversion(void *header)
+{
+    // Crudely cast our pointer to a string
+    // If it is a header than the \n character at the
+    // end of the cID field will truncate the string.
+    // Else strcmp will != 0 and we move on with life.
+    char *ID = static_cast<char*>(header);
+    return headerversion(ID);
+}
+
+bool SpikeData::setheader(void *header)
+{
+    int VERSION = sd.headerversion(header);
+    if (VERSION == HEADER_62)
+    {
+        const HEADER *h = new HEADER(*static_cast<HEADER*>(header));
+        sd.m_head = *h;
+    }
+    if (VERSION == HEADER_50)
+    {
+        const HEADER50 *h = new HEADER50(*static_cast<HEADER50*>(header));
+        sd.m_head50 = *h;
+    }
 }
 
 bool SpikeData::parsedata()

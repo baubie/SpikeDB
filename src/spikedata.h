@@ -12,10 +12,18 @@
 #include <stdint.h>
 #include <vector>
 #include <string>
+#include <string.h>
 
 // Porting from windows!
 #define DWORD uint32_t
 
+// HEADER VERSION
+
+#define HEADER_UNKNOWN 0
+#define HEADER_50 1
+#define HEADER_60 2
+#define HEADER_61 3
+#define HEADER_62 4
 
 // Stimulus types
 #define NOISE		0
@@ -143,6 +151,27 @@ typedef struct __attribute__((__packed__))
         } params; // (80)
 } STIM; // (108)        
 
+typedef struct __attribute__((__packed__)) 
+{
+	short nType;		// stimulus type
+	float fBegin;
+	float fDur;
+	float fRfTime;
+	short nStimPerSweep;
+	float fStimInt;
+	float fAtten;
+	float fFreq;	// used for compatibility with old code
+	
+	union
+	{
+		SIN		 sin;
+		AMSIN	 amsin;
+		FMSIN	 fmsin;
+		SWEPTSIN sweptsin;
+	} params;
+	
+}  STIM_50; // 5.0 and earlier
+
 typedef struct
 {
         float fBegin;
@@ -155,6 +184,39 @@ typedef struct
         float fAmDepth;
         float fModFreq;
 }  DELTA;
+
+typedef struct
+{
+	// general data
+	char	cId[12];		//  (12) file identification / validiation 
+	int	    nMagic;			//   (4) for internal use of the spike programs 
+	char	cDate[8];       //   (8) date of data acquisition 
+	char	cTime[8];       //   (8) time of data acquisition 
+	short	nOnCh1;			//   (2) stimulus channel1 on/off 
+	short	nOnCh2;			//   (2) stimulus channel2 on/off 
+	int	    nRepInt;		//   (4) repetition interval
+	short	nPasses;		//   (2) number of repetitions of each stimulus 
+	short	nSweeps;		//   (2) number of values (=stimuli) used 
+	short	nStepMode;		//   (2) frequency, attenuation or both
+	short	nScaling;		//   (2) scaling steps -> linear/logarithmic 
+	short	nPresentation;	//   (2) presentation -> sequential/randomized 
+							//  (50) -> Total
+	char	cFill1[6];		//  (6)
+							//  (56) -> Total
+
+	STEP_FLAGS stepFlags[2][2];//(40) [0=chan1,1=chan2][0=X,1=Y]
+							//  (96) -> Total
+	// special data
+	STIM_50	stimFirstCh1;	//  (44) first stimulus parameters for channel1
+	DELTA	deltaCh1;		//  (36) delta step of stimulus variables for channel1
+	STIM_50	stimFirstCh2;	//  (44) first stimulus parameters for channel2
+	DELTA	deltaCh2;		//  (36) delta step of stimulus variables for channel2
+							// (256) -> Total
+
+	// now follows user specific data 
+	// ??
+	char	cFill2[768];
+}  HEADER50;				// Total: (1024) bytes ?
 
 typedef struct
 {
@@ -209,6 +271,10 @@ class SpikeData
         double duration(int channel, int sweep);
         double attenuation(int channel, int sweep);
         double frequency(int channel, int sweep);
+
+
+        bool setHeader(void *header);
+
         HEADER m_head;
         std::vector<SPIKESTRUCT> m_spikeArray;
 
@@ -216,6 +282,8 @@ class SpikeData
         std::vector<DWORD> m_dwDataArray;
         int m_nActualPasses[MAX_SWEEPS];
         bool parsedata();
+        int headerversion(void *header);
+        int headerversion(char *ID);
 };
 
 #endif
