@@ -4,9 +4,10 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
+AFX_SPIKEDOC_H__B37A511B_568C_11D1_91CC_00A0244F3C96__INCLUDED_	spikeDoc.h	6;"	d
 AMSIN	spikedata.h	/^} AMSIN;$/;"	t	typeref:struct:__anon3
-AMSINUS	spikedata.cpp	122;"	d	file:
-AMSINUS	spikedata.h	29;"	d
+AMSINUS	spikedata.cpp	176;"	d	file:
+AMSINUS	spikedata.h	31;"	d
 ARCHITECTURE_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	181;"	d	file:
 ARCHITECTURE_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	184;"	d	file:
 ARCHITECTURE_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	187;"	d	file:
@@ -17,16 +18,25 @@ ARCHITECTURE_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	175;"	d	file:
 ARCHITECTURE_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	178;"	d	file:
 ARCHITECTURE_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	181;"	d	file:
 ARCHITECTURE_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	185;"	d	file:
-ATT_STEP	spikedata.h	38;"	d
+ATT_STEP	spikedata.h	40;"	d
 AUTOMATIC	easyplotmm/easyplotmm.cpp	/^const double EasyPlotmm::AUTOMATIC = (DBL_MAX -1);$/;"	m	class:EasyPlotmm	file:
 AUTOMATIC	easyplotmm/easyplotmm.h	/^        static const double AUTOMATIC;$/;"	m	class:EasyPlotmm	access:public
-AUTOMATIC	spikedata.h	45;"	d
+AUTOMATIC	spikedata.h	47;"	d
+Add	spikeDoc.cpp	/^				m_spikeArray.Add(spikeAct);$/;"	p	file:	signature:(spikeAct)
 AnalyzeColumns	gui.h	/^				AnalyzeColumns()$/;"	f	class:GUI::AnalyzeColumns	access:public	signature:()
 AnalyzeColumns	gui.h	/^		class AnalyzeColumns : public Gtk::TreeModel::ColumnRecord$/;"	c	class:GUI	inherits:Gtk::TreeModel::ColumnRecord	access:protected
 AnimalColumns	gui.h	/^                AnimalColumns()$/;"	f	class:GUI::AnimalColumns	access:public	signature:()
 AnimalColumns	gui.h	/^        class AnimalColumns : public Gtk::TreeModel::ColumnRecord$/;"	c	class:GUI	inherits:Gtk::TreeModel::ColumnRecord	access:protected
 AnimalDetailsColumns	gui.h	/^                AnimalDetailsColumns()$/;"	f	class:GUI::AnimalDetailsColumns	access:public	signature:()
 AnimalDetailsColumns	gui.h	/^        class AnimalDetailsColumns : public Gtk::TreeModel::ColumnRecord$/;"	c	class:GUI	inherits:Gtk::TreeModel::ColumnRecord	access:protected
+AssertValid	spikeDoc.cpp	/^	CDocument::AssertValid();$/;"	p	class:CDocument	file:	signature:()
+AssertValid	spikeDoc.cpp	/^void CSpikeDoc::AssertValid() const$/;"	f	class:CSpikeDoc	signature:() const
+AssertValid	spikeDoc.h	/^	virtual void AssertValid() const;$/;"	p	class:CSpikeDoc	access:public	signature:() const
+CATCH	spikeDoc.cpp	/^		CATCH( CFileException, e )$/;"	f	signature:( CFileException, e )
+CATCH	spikeDoc.cpp	/^	CATCH( CFileException, e )$/;"	f	signature:( CFileException, e )
+CDocument::AssertValid	spikeDoc.cpp	/^	CDocument::AssertValid();$/;"	p	class:CDocument	file:	signature:()
+CDocument::Dump	spikeDoc.cpp	/^	CDocument::Dump(dc);$/;"	p	class:CDocument	file:	signature:(dc)
+CDocument::OnCloseDocument	spikeDoc.cpp	/^	CDocument::OnCloseDocument();$/;"	p	class:CDocument	file:	signature:()
 CIRCLE	easyplotmm/easyplotmm.h	/^            CIRCLE,$/;"	e	enum:EasyPlotmm::Shape
 CMAKE_BINARY_DIR	Makefile	/^CMAKE_BINARY_DIR = \/home\/brandon\/SpikeDB$/;"	m
 CMAKE_COMMAND	Makefile	/^CMAKE_COMMAND = \/usr\/bin\/cmake$/;"	m
@@ -72,18 +82,108 @@ COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	65;"	d	file:
 COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	68;"	d	file:
 COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	71;"	d	file:
 COMPILER_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	9;"	d	file:
+CObject::Serialize	spikeDoc.cpp	/^	CObject::Serialize(ar);$/;"	p	class:CObject	file:	signature:(ar)
+CSpikeDoc	spikeDoc.cpp	/^CSpikeDoc::CSpikeDoc()$/;"	f	class:CSpikeDoc	signature:()
+CSpikeDoc	spikeDoc.h	/^	CSpikeDoc();$/;"	p	class:CSpikeDoc	access:protected	signature:()
+CSpikeDoc	spikeDoc.h	/^class CSpikeDoc : public CDocument$/;"	c	inherits:CDocument
+CSpikeDoc::AssertValid	spikeDoc.cpp	/^void CSpikeDoc::AssertValid() const$/;"	f	class:CSpikeDoc	signature:() const
+CSpikeDoc::AssertValid	spikeDoc.h	/^	virtual void AssertValid() const;$/;"	p	class:CSpikeDoc	access:public	signature:() const
+CSpikeDoc::CSpikeDoc	spikeDoc.cpp	/^CSpikeDoc::CSpikeDoc()$/;"	f	class:CSpikeDoc	signature:()
+CSpikeDoc::CSpikeDoc	spikeDoc.h	/^	CSpikeDoc();$/;"	p	class:CSpikeDoc	access:protected	signature:()
+CSpikeDoc::CalcHistogram	spikeDoc.cpp	/^BOOL CSpikeDoc::CalcHistogram(int nBegin, int nEnd)$/;"	f	class:CSpikeDoc	signature:(int nBegin, int nEnd)
+CSpikeDoc::CalcHistogram	spikeDoc.h	/^	BOOL CalcHistogram(int nBegin, int nEnd);$/;"	p	class:CSpikeDoc	access:public	signature:(int nBegin, int nEnd)
+CSpikeDoc::CalcPreWindow	spikeDoc.cpp	/^float CSpikeDoc::CalcPreWindow(STIM *pStim0, STIM *pStim1)$/;"	f	class:CSpikeDoc	signature:(STIM *pStim0, STIM *pStim1)
+CSpikeDoc::CalcPreWindow	spikeDoc.h	/^	float CalcPreWindow(STIM *pStim0, STIM *pStim1);$/;"	p	class:CSpikeDoc	access:private	signature:(STIM *pStim0, STIM *pStim1)
+CSpikeDoc::CalcStimuliCh1	spikeDoc.cpp	/^void CSpikeDoc::CalcStimuliCh1()$/;"	f	class:CSpikeDoc	signature:()
+CSpikeDoc::CalcStimuliCh1	spikeDoc.h	/^	void CalcStimuliCh1();$/;"	p	class:CSpikeDoc	access:public	signature:()
+CSpikeDoc::CalcStimuliCh2	spikeDoc.cpp	/^void CSpikeDoc::CalcStimuliCh2()$/;"	f	class:CSpikeDoc	signature:()
+CSpikeDoc::CalcStimuliCh2	spikeDoc.h	/^	void CalcStimuliCh2();$/;"	p	class:CSpikeDoc	access:public	signature:()
+CSpikeDoc::ConvertOldHead	spikeDoc.cpp	/^void CSpikeDoc::ConvertOldHead()$/;"	f	class:CSpikeDoc	signature:()
+CSpikeDoc::ConvertOldHead	spikeDoc.h	/^	void ConvertOldHead();$/;"	p	class:CSpikeDoc	access:public	signature:()
+CSpikeDoc::Dump	spikeDoc.cpp	/^void CSpikeDoc::Dump(CDumpContext& dc) const$/;"	f	class:CSpikeDoc	signature:(CDumpContext& dc) const
+CSpikeDoc::Dump	spikeDoc.h	/^	virtual void Dump(CDumpContext& dc) const;$/;"	p	class:CSpikeDoc	access:public	signature:(CDumpContext& dc) const
+CSpikeDoc::Exist	spikeDoc.cpp	/^BOOL CSpikeDoc::Exist(LPCTSTR lpszFileName)$/;"	f	class:CSpikeDoc	signature:(LPCTSTR lpszFileName)
+CSpikeDoc::Exist	spikeDoc.h	/^	BOOL Exist(LPCTSTR lpszFileName);$/;"	p	class:CSpikeDoc	access:public	signature:(LPCTSTR lpszFileName)
+CSpikeDoc::FileExcelExport	spikeDoc.cpp	/^void CSpikeDoc::FileExcelExport()$/;"	f	class:CSpikeDoc	signature:()
+CSpikeDoc::FileExcelExport	spikeDoc.h	/^	void FileExcelExport();$/;"	p	class:CSpikeDoc	access:public	signature:()
+CSpikeDoc::FileExport	spikeDoc.cpp	/^void CSpikeDoc::FileExport()$/;"	f	class:CSpikeDoc	signature:()
+CSpikeDoc::FileExport	spikeDoc.h	/^	void FileExport();$/;"	p	class:CSpikeDoc	access:public	signature:()
+CSpikeDoc::FileWarExport	spikeDoc.cpp	/^void CSpikeDoc::FileWarExport()$/;"	f	class:CSpikeDoc	signature:()
+CSpikeDoc::FileWarExport	spikeDoc.h	/^	void FileWarExport();$/;"	p	class:CSpikeDoc	access:public	signature:()
+CSpikeDoc::GetData	spikeDoc.cpp	/^BOOL CSpikeDoc::GetData()$/;"	f	class:CSpikeDoc	signature:()
+CSpikeDoc::GetData	spikeDoc.h	/^	BOOL GetData();$/;"	p	class:CSpikeDoc	access:public	signature:()
+CSpikeDoc::IsOpen	spikeDoc.cpp	/^BOOL CSpikeDoc::IsOpen(LPCTSTR lpszFileName)$/;"	f	class:CSpikeDoc	signature:(LPCTSTR lpszFileName)
+CSpikeDoc::IsOpen	spikeDoc.h	/^	BOOL IsOpen(LPCTSTR lpszFileName);$/;"	p	class:CSpikeDoc	access:public	signature:(LPCTSTR lpszFileName)
+CSpikeDoc::MakeName	spikeDoc.cpp	/^BOOL CSpikeDoc::MakeName()$/;"	f	class:CSpikeDoc	signature:()
+CSpikeDoc::MakeName	spikeDoc.h	/^	BOOL MakeName();$/;"	p	class:CSpikeDoc	access:public	signature:()
+CSpikeDoc::OnCloseDocument	spikeDoc.cpp	/^void CSpikeDoc::OnCloseDocument() $/;"	f	class:CSpikeDoc	signature:()
+CSpikeDoc::OnCloseDocument	spikeDoc.h	/^	virtual void OnCloseDocument();$/;"	p	class:CSpikeDoc	access:public	signature:()
+CSpikeDoc::OnFileExport	spikeDoc.cpp	/^void CSpikeDoc::OnFileExport() $/;"	f	class:CSpikeDoc	signature:()
+CSpikeDoc::OnFileExport	spikeDoc.h	/^	afx_msg void OnFileExport();$/;"	p	class:CSpikeDoc	access:protected	signature:()
+CSpikeDoc::OnNewDocument	spikeDoc.cpp	/^BOOL CSpikeDoc::OnNewDocument()$/;"	f	class:CSpikeDoc	signature:()
+CSpikeDoc::OnNewDocument	spikeDoc.h	/^	virtual BOOL OnNewDocument();$/;"	p	class:CSpikeDoc	access:public	signature:()
+CSpikeDoc::OnOpenDocument	spikeDoc.cpp	/^BOOL CSpikeDoc::OnOpenDocument(LPCTSTR lpszPathName) $/;"	f	class:CSpikeDoc	signature:(LPCTSTR lpszPathName)
+CSpikeDoc::OnOpenDocument	spikeDoc.h	/^	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);$/;"	p	class:CSpikeDoc	access:public	signature:(LPCTSTR lpszPathName)
+CSpikeDoc::OnSaveDocument	spikeDoc.cpp	/^BOOL CSpikeDoc::OnSaveDocument(LPCTSTR lpszPathName) $/;"	f	class:CSpikeDoc	signature:(LPCTSTR lpszPathName)
+CSpikeDoc::OnSaveDocument	spikeDoc.h	/^	virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);$/;"	p	class:CSpikeDoc	access:public	signature:(LPCTSTR lpszPathName)
+CSpikeDoc::RedrawSpikeView	spikeDoc.cpp	/^void CSpikeDoc::RedrawSpikeView()$/;"	f	class:CSpikeDoc	signature:()
+CSpikeDoc::RedrawSpikeView	spikeDoc.h	/^	void RedrawSpikeView();$/;"	p	class:CSpikeDoc	access:public	signature:()
+CSpikeDoc::Serialize	spikeDoc.cpp	/^void CSpikeDoc::Serialize(CArchive& ar)$/;"	f	class:CSpikeDoc	signature:(CArchive& ar)
+CSpikeDoc::Serialize	spikeDoc.h	/^	virtual void Serialize(CArchive& ar);$/;"	p	class:CSpikeDoc	access:public	signature:(CArchive& ar)
+CSpikeDoc::SetDeltaStimCh1	spikeDoc.cpp	/^void CSpikeDoc::SetDeltaStimCh1(CStimulusPage* pPgStim)$/;"	f	class:CSpikeDoc	signature:(CStimulusPage* pPgStim)
+CSpikeDoc::SetDeltaStimCh1	spikeDoc.h	/^	void SetDeltaStimCh1(CStimulusPage* pPgStim);$/;"	p	class:CSpikeDoc	access:public	signature:(CStimulusPage* pPgStim)
+CSpikeDoc::SetDeltaStimCh2	spikeDoc.cpp	/^void CSpikeDoc::SetDeltaStimCh2(CStimulusPage* pPgStim)$/;"	f	class:CSpikeDoc	signature:(CStimulusPage* pPgStim)
+CSpikeDoc::SetDeltaStimCh2	spikeDoc.h	/^	void SetDeltaStimCh2(CStimulusPage* pPgStim);$/;"	p	class:CSpikeDoc	access:public	signature:(CStimulusPage* pPgStim)
+CSpikeDoc::SetFirstStimCh1	spikeDoc.cpp	/^void CSpikeDoc::SetFirstStimCh1(CStimulusPage* pPgStim)$/;"	f	class:CSpikeDoc	signature:(CStimulusPage* pPgStim)
+CSpikeDoc::SetFirstStimCh1	spikeDoc.h	/^	void SetFirstStimCh1(CStimulusPage* pPgStim);$/;"	p	class:CSpikeDoc	access:public	signature:(CStimulusPage* pPgStim)
+CSpikeDoc::SetFirstStimCh2	spikeDoc.cpp	/^void CSpikeDoc::SetFirstStimCh2(CStimulusPage* pPgStim)$/;"	f	class:CSpikeDoc	signature:(CStimulusPage* pPgStim)
+CSpikeDoc::SetFirstStimCh2	spikeDoc.h	/^	void SetFirstStimCh2(CStimulusPage* pPgStim);$/;"	p	class:CSpikeDoc	access:public	signature:(CStimulusPage* pPgStim)
+CSpikeDoc::SetHeader	spikeDoc.cpp	/^void CSpikeDoc::SetHeader()$/;"	f	class:CSpikeDoc	signature:()
+CSpikeDoc::SetHeader	spikeDoc.h	/^	void SetHeader();$/;"	p	class:CSpikeDoc	access:public	signature:()
+CSpikeDoc::m_bSpikeFile	spikeDoc.h	/^	BOOL	m_bSpikeFile;$/;"	m	class:CSpikeDoc	access:public
+CSpikeDoc::m_cHeadId	spikeDoc.h	/^	char		m_cHeadId[12];$/;"	m	class:CSpikeDoc	access:public
+CSpikeDoc::m_dwDataArray	spikeDoc.h	/^	CDWordArray	m_dwDataArray;		\/\/ for storing data from spike file$/;"	m	class:CSpikeDoc	access:public
+CSpikeDoc::m_head	spikeDoc.h	/^	HEADER60	m_head;				\/\/ for storing header from spike file$/;"	m	class:CSpikeDoc	access:public
+CSpikeDoc::m_head_v30	spikeDoc.h	/^	HEADER30	m_head_v30;			\/\/ for storing header from spike file$/;"	m	class:CSpikeDoc	access:public
+CSpikeDoc::m_head_v40	spikeDoc.h	/^	HEADER40	m_head_v40;			\/\/ for storing header from spike file$/;"	m	class:CSpikeDoc	access:public
+CSpikeDoc::m_head_v50	spikeDoc.h	/^	HEADER50	m_head_v50;			\/\/ for storing header from spike file$/;"	m	class:CSpikeDoc	access:public
+CSpikeDoc::m_nActualPasses	spikeDoc.h	/^	int			m_nActualPasses[MAX_SWEEPS];	\/\/ how many passes for a given sweep$/;"	m	class:CSpikeDoc	access:public
+CSpikeDoc::m_spikeArray	spikeDoc.h	/^	CArray<SPIKESTRUCT, SPIKESTRUCT> m_spikeArray;	\/\/ for storing spikes$/;"	m	class:CSpikeDoc	access:public
+CSpikeDoc::m_stimArrayCh1	spikeDoc.h	/^	CArray<STIM, STIM> m_stimArrayCh1;	\/\/ for storing stimuli$/;"	m	class:CSpikeDoc	access:public
+CSpikeDoc::m_stimArrayCh2	spikeDoc.h	/^	CArray<STIM, STIM> m_stimArrayCh2;	\/\/ for storing stimuli$/;"	m	class:CSpikeDoc	access:public
+CSpikeDoc::m_strFileName	spikeDoc.h	/^	CString	m_strFileName;$/;"	m	class:CSpikeDoc	access:public
+CSpikeDoc::m_wDataArray	spikeDoc.h	/^	CWordArray	m_wDataArray;		\/\/ for storing data from spike file$/;"	m	class:CSpikeDoc	access:public
+CSpikeDoc::m_wHistoArray	spikeDoc.h	/^	CWordArray	m_wHistoArray;		\/\/ for storing histogram$/;"	m	class:CSpikeDoc	access:public
+CSpikeDoc::~CSpikeDoc	spikeDoc.cpp	/^CSpikeDoc::~CSpikeDoc()$/;"	f	class:CSpikeDoc	signature:()
+CSpikeDoc::~CSpikeDoc	spikeDoc.h	/^	virtual ~CSpikeDoc();$/;"	p	class:CSpikeDoc	access:public	signature:()
 CURRENT_DB_VERSION	gui.h	4;"	d
 CURRENT_VERSION	gui.h	5;"	d
+CalcHistogram	spikeDoc.cpp	/^BOOL CSpikeDoc::CalcHistogram(int nBegin, int nEnd)$/;"	f	class:CSpikeDoc	signature:(int nBegin, int nEnd)
+CalcHistogram	spikeDoc.h	/^	BOOL CalcHistogram(int nBegin, int nEnd);$/;"	p	class:CSpikeDoc	access:public	signature:(int nBegin, int nEnd)
+CalcPreWindow	spikeDoc.cpp	/^float CSpikeDoc::CalcPreWindow(STIM *pStim0, STIM *pStim1)$/;"	f	class:CSpikeDoc	signature:(STIM *pStim0, STIM *pStim1)
+CalcPreWindow	spikeDoc.h	/^	float CalcPreWindow(STIM *pStim0, STIM *pStim1);$/;"	p	class:CSpikeDoc	access:private	signature:(STIM *pStim0, STIM *pStim1)
+CalcStimuliCh1	spikeDoc.cpp	/^void CSpikeDoc::CalcStimuliCh1()$/;"	f	class:CSpikeDoc	signature:()
+CalcStimuliCh1	spikeDoc.h	/^	void CalcStimuliCh1();$/;"	p	class:CSpikeDoc	access:public	signature:()
+CalcStimuliCh2	spikeDoc.cpp	/^void CSpikeDoc::CalcStimuliCh2()$/;"	f	class:CSpikeDoc	signature:()
+CalcStimuliCh2	spikeDoc.h	/^	void CalcStimuliCh2();$/;"	p	class:CSpikeDoc	access:public	signature:()
+CalcYarray	spikeDoc.cpp	/^	pPgStim->CalcYarray();$/;"	p	file:	signature:()
 CellDetailsColumns	gui.h	/^                CellDetailsColumns()$/;"	f	class:GUI::CellDetailsColumns	access:public	signature:()
 CellDetailsColumns	gui.h	/^        class CellDetailsColumns : public Gtk::TreeModel::ColumnRecord$/;"	c	class:GUI	inherits:Gtk::TreeModel::ColumnRecord	access:protected
+Close	spikeDoc.cpp	/^			dataFile.Close();$/;"	p	file:	signature:()
+Close	spikeDoc.cpp	/^		dataFile.Close();$/;"	p	file:	signature:()
+ConvertOldHead	spikeDoc.cpp	/^void CSpikeDoc::ConvertOldHead()$/;"	f	class:CSpikeDoc	signature:()
+ConvertOldHead	spikeDoc.h	/^	void ConvertOldHead();$/;"	p	class:CSpikeDoc	access:public	signature:()
 DELTA	spikedata.h	/^}  DELTA;$/;"	t	typeref:struct:__anon13
 DIAMOND	easyplotmm/easyplotmm.h	/^            DIAMOND,$/;"	e	enum:EasyPlotmm::Shape
-DWORD	spikedata.h	17;"	d
+DWORD	spikedata.h	18;"	d
 DetailsColumns	gui.h	/^                DetailsColumns()$/;"	f	class:GUI::DetailsColumns	access:public	signature:()
 DetailsColumns	gui.h	/^        class DetailsColumns : public Gtk::TreeModel::ColumnRecord$/;"	c	class:GUI	inherits:Gtk::TreeModel::ColumnRecord	access:protected
+Dump	spikeDoc.cpp	/^	CDocument::Dump(dc);$/;"	p	class:CDocument	file:	signature:(dc)
+Dump	spikeDoc.cpp	/^void CSpikeDoc::Dump(CDumpContext& dc) const$/;"	f	class:CSpikeDoc	signature:(CDumpContext& dc) const
+Dump	spikeDoc.h	/^	virtual void Dump(CDumpContext& dc) const;$/;"	p	class:CSpikeDoc	access:public	signature:(CDumpContext& dc) const
 EASYPLOTMM_H	easyplotmm/easyplotmm.h	2;"	d
-EOF_MARK	spikedata.h	56;"	d
-EXTERNAL	spikedata.h	42;"	d
+EOF_MARK	spikedata.h	58;"	d
+EXTERNAL	spikedata.h	44;"	d
 EasyPlotmm	easyplotmm/easyplotmm.cpp	/^EasyPlotmm::EasyPlotmm() :$/;"	f	class:EasyPlotmm	signature:()
 EasyPlotmm	easyplotmm/easyplotmm.h	/^        EasyPlotmm();$/;"	p	class:EasyPlotmm	access:public	signature:()
 EasyPlotmm	easyplotmm/easyplotmm.h	/^class EasyPlotmm : public Gtk::DrawingArea$/;"	c	inherits:Gtk::DrawingArea
@@ -127,6 +227,8 @@ EasyPlotmm::drawerr	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::drawerr(Cairo::
 EasyPlotmm::drawerr	easyplotmm/easyplotmm.h	/^        void drawerr(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col);$/;"	p	class:EasyPlotmm	access:protected	signature:(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col)
 EasyPlotmm::drawshape	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape shape, bool filled, RGBA col)$/;"	f	class:EasyPlotmm	signature:(Cairo::RefPtr<Cairo::Context> cr, double s, Shape shape, bool filled, RGBA col)
 EasyPlotmm::drawshape	easyplotmm/easyplotmm.h	/^        void drawshape(Cairo::RefPtr<Cairo::Context> cr, double size, Shape shape, bool filled, RGBA col);$/;"	p	class:EasyPlotmm	access:protected	signature:(Cairo::RefPtr<Cairo::Context> cr, double size, Shape shape, bool filled, RGBA col)
+EasyPlotmm::export_data	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::export_data()$/;"	f	class:EasyPlotmm	signature:()
+EasyPlotmm::export_data	easyplotmm/easyplotmm.h	/^        void export_data();$/;"	p	class:EasyPlotmm	access:protected	signature:()
 EasyPlotmm::getPen	easyplotmm/easyplotmm.cpp	/^EasyPlotmm::Pen EasyPlotmm::getPen()$/;"	f	class:EasyPlotmm	signature:()
 EasyPlotmm::getPen	easyplotmm/easyplotmm.h	/^        Pen getPen();$/;"	p	class:EasyPlotmm	access:public	signature:()
 EasyPlotmm::has_plot	easyplotmm/easyplotmm.h	/^        bool has_plot;$/;"	m	class:EasyPlotmm	access:protected
@@ -134,6 +236,7 @@ EasyPlotmm::in_crosshairs	easyplotmm/easyplotmm.h	/^		bool in_crosshairs;$/;"	m	
 EasyPlotmm::in_zoom	easyplotmm/easyplotmm.h	/^        bool in_zoom;$/;"	m	class:EasyPlotmm	access:protected
 EasyPlotmm::lab_height	easyplotmm/easyplotmm.h	/^        int ylab_width,lab_height,xname_width,xname_height,yname_width,yname_height;$/;"	m	class:EasyPlotmm	access:protected
 EasyPlotmm::label_pad	easyplotmm/easyplotmm.h	/^        double label_pad;$/;"	m	class:EasyPlotmm	access:public
+EasyPlotmm::m_Menu_Popup	easyplotmm/easyplotmm.h	/^        Gtk::Menu m_Menu_Popup;$/;"	m	class:EasyPlotmm	access:protected
 EasyPlotmm::m_defPens	easyplotmm/easyplotmm.h	/^        std::vector< Pen > m_defPens;$/;"	m	class:EasyPlotmm	access:protected
 EasyPlotmm::m_err	easyplotmm/easyplotmm.h	/^        std::vector< std::vector<double> > m_err;$/;"	m	class:EasyPlotmm	access:protected
 EasyPlotmm::m_ixmax	easyplotmm/easyplotmm.h	/^        double m_ixmin,m_ixmax,m_iymin,m_iymax; \/\/ Axes$/;"	m	class:EasyPlotmm	access:protected
@@ -194,14 +297,22 @@ EasyPlotmm::zoom_start	easyplotmm/easyplotmm.h	/^        int zoom_start, zoom_en
 EasyPlotmm::zoom_start_scale	easyplotmm/easyplotmm.h	/^        double zoom_start_scale, zoom_end_scale;$/;"	m	class:EasyPlotmm	access:protected
 EasyPlotmm::~EasyPlotmm	easyplotmm/easyplotmm.cpp	/^EasyPlotmm::~EasyPlotmm()$/;"	f	class:EasyPlotmm	signature:()
 EasyPlotmm::~EasyPlotmm	easyplotmm/easyplotmm.h	/^        virtual ~EasyPlotmm();$/;"	p	class:EasyPlotmm	access:public	signature:()
-FILT_NOISE	spikedata.cpp	126;"	d	file:
-FILT_NOISE	spikedata.h	33;"	d
+Exist	spikeDoc.cpp	/^BOOL CSpikeDoc::Exist(LPCTSTR lpszFileName)$/;"	f	class:CSpikeDoc	signature:(LPCTSTR lpszFileName)
+Exist	spikeDoc.h	/^	BOOL Exist(LPCTSTR lpszFileName);$/;"	p	class:CSpikeDoc	access:public	signature:(LPCTSTR lpszFileName)
+FILT_NOISE	spikedata.cpp	180;"	d	file:
+FILT_NOISE	spikedata.h	35;"	d
 FMSIN	spikedata.h	/^} FMSIN;$/;"	t	typeref:struct:__anon4
-FMSINUS	spikedata.cpp	123;"	d	file:
-FMSINUS	spikedata.h	30;"	d
-FREQ_STEP	spikedata.h	37;"	d
+FMSINUS	spikedata.cpp	177;"	d	file:
+FMSINUS	spikedata.h	32;"	d
+FREQ_STEP	spikedata.h	39;"	d
 FileDetailsColumns	gui.h	/^                FileDetailsColumns()$/;"	f	class:GUI::FileDetailsColumns	access:public	signature:()
 FileDetailsColumns	gui.h	/^        class FileDetailsColumns : public Gtk::TreeModel::ColumnRecord$/;"	c	class:GUI	inherits:Gtk::TreeModel::ColumnRecord	access:protected
+FileExcelExport	spikeDoc.cpp	/^void CSpikeDoc::FileExcelExport()$/;"	f	class:CSpikeDoc	signature:()
+FileExcelExport	spikeDoc.h	/^	void FileExcelExport();$/;"	p	class:CSpikeDoc	access:public	signature:()
+FileExport	spikeDoc.cpp	/^void CSpikeDoc::FileExport()$/;"	f	class:CSpikeDoc	signature:()
+FileExport	spikeDoc.h	/^	void FileExport();$/;"	p	class:CSpikeDoc	access:public	signature:()
+FileWarExport	spikeDoc.cpp	/^void CSpikeDoc::FileWarExport()$/;"	f	class:CSpikeDoc	signature:()
+FileWarExport	spikeDoc.h	/^	void FileWarExport();$/;"	p	class:CSpikeDoc	access:public	signature:()
 GUI	gui.cpp	/^GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)$/;"	f	class:GUI	signature:(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 GUI	gui.h	/^        GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade);$/;"	p	class:GUI	access:public	signature:(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 GUI	gui.h	/^class GUI : public Gtk::Window$/;"	c	inherits:Gtk::Window
@@ -345,25 +456,44 @@ GUI::updateSideLists	gui.h	/^		void updateSideLists(const Gtk::TreeModel::iterat
 GUI::~GUI	gui.cpp	/^GUI::~GUI()$/;"	f	class:GUI	signature:()
 GUI::~GUI	gui.h	/^        virtual ~GUI();$/;"	p	class:GUI	access:public	signature:()
 GUI_H	gui.h	2;"	d
+GetData	spikeDoc.cpp	/^BOOL CSpikeDoc::GetData()$/;"	f	class:CSpikeDoc	signature:()
+GetData	spikeDoc.h	/^	BOOL GetData();$/;"	p	class:CSpikeDoc	access:public	signature:()
 HEADER	spikedata.h	/^}  HEADER;				\/\/ Total: (1152) bytes$/;"	t	typeref:struct:__anon15
 HEADER50	spikedata.h	/^}  HEADER50;				\/\/ Total: (1024) bytes ?$/;"	t	typeref:struct:__anon14
-HEADER_50	spikedata.h	21;"	d
-HEADER_60	spikedata.h	22;"	d
-HEADER_61	spikedata.h	23;"	d
-HEADER_62	spikedata.h	24;"	d
-ID	spikedata.cpp	/^    char *ID = *static_cast<char*>(header);$/;"	l
+HEADER_50	spikedata.h	23;"	d
+HEADER_60	spikedata.h	24;"	d
+HEADER_61	spikedata.h	25;"	d
+HEADER_62	spikedata.h	26;"	d
+HEADER_UNKNOWN	spikedata.h	22;"	d
+ID	spikedata.cpp	/^    char *ID = static_cast<char*>(header);$/;"	l
 ID_VOID_MAIN	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	6;"	d	file:
-INTERNAL	spikedata.h	43;"	d
-LINEAR	spikedata.h	52;"	d
-LOGARITHMIC	spikedata.h	53;"	d
-MAX_SWEEPS	spikedata.h	57;"	d
+INTERNAL	spikedata.h	45;"	d
+Invalidate	spikeDoc.cpp	/^			pView->Invalidate();$/;"	p	file:	signature:()
+IsOpen	spikeDoc.cpp	/^BOOL CSpikeDoc::IsOpen(LPCTSTR lpszFileName)$/;"	f	class:CSpikeDoc	signature:(LPCTSTR lpszFileName)
+IsOpen	spikeDoc.h	/^	BOOL IsOpen(LPCTSTR lpszFileName);$/;"	p	class:CSpikeDoc	access:public	signature:(LPCTSTR lpszFileName)
+LINEAR	spikedata.h	54;"	d
+LOGARITHMIC	spikedata.h	55;"	d
+MAX_SWEEPS	spikedata.h	59;"	d
+MakeName	spikeDoc.cpp	/^BOOL CSpikeDoc::MakeName()$/;"	f	class:CSpikeDoc	signature:()
+MakeName	spikeDoc.h	/^	BOOL MakeName();$/;"	p	class:CSpikeDoc	access:public	signature:()
 N	gui.cpp	/^        std::vector<double> N(sd.m_head.nSweeps,0);$/;"	p	file:	signature:(sd.m_head.nSweeps,0)
-NOISE	spikedata.cpp	120;"	d	file:
-NOISE	spikedata.h	27;"	d
+NOISE	spikedata.cpp	174;"	d	file:
+NOISE	spikedata.h	29;"	d
 NOISE_EX	spikedata.h	/^} NOISE_EX;$/;"	t	typeref:struct:__anon5
 NONE	easyplotmm/easyplotmm.h	/^            NONE$/;"	e	enum:EasyPlotmm::Shape
-NONINTERLEAVED	spikedata.h	50;"	d
-NO_STEP	spikedata.h	36;"	d
+NONINTERLEAVED	spikedata.h	52;"	d
+NO_STEP	spikedata.h	38;"	d
+OnCloseDocument	spikeDoc.cpp	/^	CDocument::OnCloseDocument();$/;"	p	class:CDocument	file:	signature:()
+OnCloseDocument	spikeDoc.cpp	/^void CSpikeDoc::OnCloseDocument() $/;"	f	class:CSpikeDoc	signature:()
+OnCloseDocument	spikeDoc.h	/^	virtual void OnCloseDocument();$/;"	p	class:CSpikeDoc	access:public	signature:()
+OnFileExport	spikeDoc.cpp	/^void CSpikeDoc::OnFileExport() $/;"	f	class:CSpikeDoc	signature:()
+OnFileExport	spikeDoc.h	/^	afx_msg void OnFileExport();$/;"	p	class:CSpikeDoc	access:protected	signature:()
+OnNewDocument	spikeDoc.cpp	/^BOOL CSpikeDoc::OnNewDocument()$/;"	f	class:CSpikeDoc	signature:()
+OnNewDocument	spikeDoc.h	/^	virtual BOOL OnNewDocument();$/;"	p	class:CSpikeDoc	access:public	signature:()
+OnOpenDocument	spikeDoc.cpp	/^BOOL CSpikeDoc::OnOpenDocument(LPCTSTR lpszPathName) $/;"	f	class:CSpikeDoc	signature:(LPCTSTR lpszPathName)
+OnOpenDocument	spikeDoc.h	/^	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);$/;"	p	class:CSpikeDoc	access:public	signature:(LPCTSTR lpszPathName)
+OnSaveDocument	spikeDoc.cpp	/^BOOL CSpikeDoc::OnSaveDocument(LPCTSTR lpszPathName) $/;"	f	class:CSpikeDoc	signature:(LPCTSTR lpszPathName)
+OnSaveDocument	spikeDoc.h	/^	virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);$/;"	p	class:CSpikeDoc	access:public	signature:(LPCTSTR lpszPathName)
 PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	101;"	d	file:
 PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	104;"	d	file:
 PLATFORM_ID	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	107;"	d	file:
@@ -419,17 +549,22 @@ PLATFORM_ID	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	98;"	d	file:
 POINT	easyplotmm/easyplotmm.h	/^            POINT,$/;"	e	enum:EasyPlotmm::Shape
 Pen	easyplotmm/easyplotmm.h	/^            Pen() {$/;"	f	struct:EasyPlotmm::Pen	access:public	signature:()
 Pen	easyplotmm/easyplotmm.h	/^        struct Pen {$/;"	s	class:EasyPlotmm	access:public
-RANDOMIZED	spikedata.h	49;"	d
-RASTER_STEP	spikedata.h	39;"	d
+RANDOMIZED	spikedata.h	51;"	d
+RASTER_STEP	spikedata.h	41;"	d
 RGBA	easyplotmm/easyplotmm.h	/^            RGBA() {$/;"	f	struct:EasyPlotmm::RGBA	access:public	signature:()
 RGBA	easyplotmm/easyplotmm.h	/^        struct RGBA {$/;"	s	class:EasyPlotmm	access:public
 RM	Makefile	/^RM = \/usr\/bin\/cmake -E remove -f$/;"	m
-SEQUENTIAL	spikedata.h	48;"	d
+Read	spikeDoc.cpp	/^				analogFile.Read(anaBuf, nAnalogSampsPerTrace*2);$/;"	p	file:	signature:(anaBuf, nAnalogSampsPerTrace*2)
+Read	spikeDoc.cpp	/^			analogFile.Read(anaBuf, nAnalogSampsPerTrace*2);$/;"	p	file:	signature:(anaBuf, nAnalogSampsPerTrace*2)
+Read	spikeDoc.cpp	/^		fp->Read(m_cHeadId, sizeof(m_cHeadId));$/;"	p	file:	signature:(m_cHeadId, sizeof(m_cHeadId))
+RedrawSpikeView	spikeDoc.cpp	/^void CSpikeDoc::RedrawSpikeView()$/;"	f	class:CSpikeDoc	signature:()
+RedrawSpikeView	spikeDoc.h	/^	void RedrawSpikeView();$/;"	p	class:CSpikeDoc	access:public	signature:()
+SEQUENTIAL	spikedata.h	50;"	d
 SETTINGS_H	settings.h	2;"	d
 SHELL	Makefile	/^SHELL = \/bin\/sh$/;"	m
 SIN	spikedata.h	/^} SIN;$/;"	t	typeref:struct:__anon2
-SINUS	spikedata.cpp	121;"	d	file:
-SINUS	spikedata.h	28;"	d
+SINUS	spikedata.cpp	175;"	d	file:
+SINUS	spikedata.h	30;"	d
 SPIKEDATA_H	spikedata.h	2;"	d
 SPIKESTRUCT	spikedata.h	/^} SPIKESTRUCT;$/;"	t	typeref:struct:__anon8
 SQUARE	easyplotmm/easyplotmm.h	/^            SQUARE,$/;"	e	enum:EasyPlotmm::Shape
@@ -437,10 +572,31 @@ STEP_FLAGS	spikedata.h	/^} STEP_FLAGS;$/;"	t	typeref:struct:__anon1
 STIM	spikedata.h	/^} STIM; \/\/ (108)        $/;"	t	typeref:struct:__anon9
 STIM_50	spikedata.h	/^}  STIM_50; \/\/ 5.0 and earlier$/;"	t	typeref:struct:__anon11
 SUFFIXES	Makefile	/^SUFFIXES =$/;"	m
-SWEEP_MARK	spikedata.h	55;"	d
+SWEEP_MARK	spikedata.h	57;"	d
 SWEPTSIN	spikedata.h	/^} SWEPTSIN;$/;"	t	typeref:struct:__anon6
-SWEPTSINUS	spikedata.cpp	124;"	d	file:
-SWEPTSINUS	spikedata.h	31;"	d
+SWEPTSINUS	spikedata.cpp	178;"	d	file:
+SWEPTSINUS	spikedata.h	33;"	d
+SeekToBegin	spikeDoc.cpp	/^			fp->SeekToBegin(); \/\/ put back to where it was$/;"	p	file:	signature:()
+SeekToBegin	spikeDoc.cpp	/^		analogFile.SeekToBegin();$/;"	p	file:	signature:()
+SeekToBegin	spikeDoc.cpp	/^		fp->SeekToBegin();$/;"	p	file:	signature:()
+Serialize	spikeDoc.cpp	/^	CObject::Serialize(ar);$/;"	p	class:CObject	file:	signature:(ar)
+Serialize	spikeDoc.cpp	/^void CSpikeDoc::Serialize(CArchive& ar)$/;"	f	class:CSpikeDoc	signature:(CArchive& ar)
+Serialize	spikeDoc.h	/^	virtual void Serialize(CArchive& ar);$/;"	p	class:CSpikeDoc	access:public	signature:(CArchive& ar)
+SetAt	spikeDoc.cpp	/^				m_dwDataArray.SetAt(i, dwBuf);$/;"	p	file:	signature:(i, dwBuf)
+SetAt	spikeDoc.cpp	/^			mainFileName.SetAt(i, '_');$/;"	p	file:	signature:(i, Ã)
+SetDeltaStimCh1	spikeDoc.cpp	/^void CSpikeDoc::SetDeltaStimCh1(CStimulusPage* pPgStim)$/;"	f	class:CSpikeDoc	signature:(CStimulusPage* pPgStim)
+SetDeltaStimCh1	spikeDoc.h	/^	void SetDeltaStimCh1(CStimulusPage* pPgStim);$/;"	p	class:CSpikeDoc	access:public	signature:(CStimulusPage* pPgStim)
+SetDeltaStimCh2	spikeDoc.cpp	/^void CSpikeDoc::SetDeltaStimCh2(CStimulusPage* pPgStim)$/;"	f	class:CSpikeDoc	signature:(CStimulusPage* pPgStim)
+SetDeltaStimCh2	spikeDoc.h	/^	void SetDeltaStimCh2(CStimulusPage* pPgStim);$/;"	p	class:CSpikeDoc	access:public	signature:(CStimulusPage* pPgStim)
+SetFirstStimCh1	spikeDoc.cpp	/^void CSpikeDoc::SetFirstStimCh1(CStimulusPage* pPgStim)$/;"	f	class:CSpikeDoc	signature:(CStimulusPage* pPgStim)
+SetFirstStimCh1	spikeDoc.h	/^	void SetFirstStimCh1(CStimulusPage* pPgStim);$/;"	p	class:CSpikeDoc	access:public	signature:(CStimulusPage* pPgStim)
+SetFirstStimCh2	spikeDoc.cpp	/^void CSpikeDoc::SetFirstStimCh2(CStimulusPage* pPgStim)$/;"	f	class:CSpikeDoc	signature:(CStimulusPage* pPgStim)
+SetFirstStimCh2	spikeDoc.h	/^	void SetFirstStimCh2(CStimulusPage* pPgStim);$/;"	p	class:CSpikeDoc	access:public	signature:(CStimulusPage* pPgStim)
+SetHeader	spikeDoc.cpp	/^void CSpikeDoc::SetHeader()$/;"	f	class:CSpikeDoc	signature:()
+SetHeader	spikeDoc.h	/^	void SetHeader();$/;"	p	class:CSpikeDoc	access:public	signature:()
+SetSize	spikeDoc.cpp	/^			m_dwDataArray.SetSize(siz); $/;"	p	file:	signature:(siz)
+SetSize	spikeDoc.cpp	/^	m_stimArrayCh1.SetSize(m_head.nSweeps);		\/\/ Arraygröße festlegen$/;"	p	file:	signature:(m_head.nSweeps)
+SetSize	spikeDoc.cpp	/^	m_stimArrayCh2.SetSize(m_head.nSweeps);		\/\/ Arraygröße festlegen$/;"	p	file:	signature:(m_head.nSweeps)
 Settings	settings.cpp	/^Settings::Settings()$/;"	f	class:Settings	signature:()
 Settings	settings.h	/^    	Settings();$/;"	p	class:Settings	access:public	signature:()
 Settings	settings.h	/^class Settings {$/;"	c
@@ -493,11 +649,12 @@ SpikeData::duration	spikedata.cpp	/^double SpikeData::duration(int channel, int 
 SpikeData::duration	spikedata.h	/^        double duration(int channel, int sweep);$/;"	p	class:SpikeData	access:public	signature:(int channel, int sweep)
 SpikeData::frequency	spikedata.cpp	/^double SpikeData::frequency(int channel, int sweep)$/;"	f	class:SpikeData	signature:(int channel, int sweep)
 SpikeData::frequency	spikedata.h	/^        double frequency(int channel, int sweep);$/;"	p	class:SpikeData	access:public	signature:(int channel, int sweep)
+SpikeData::headerversion	spikedata.cpp	/^int SpikeData::headerversion(char *ID)$/;"	f	class:SpikeData	signature:(char *ID)
 SpikeData::headerversion	spikedata.cpp	/^int SpikeData::headerversion(void *header)$/;"	f	class:SpikeData	signature:(void *header)
-SpikeData::headerversion	spikedata.h	/^        int headerversion(void *header);$/;"	p	class:SpikeData	access:public	signature:(void *header)
+SpikeData::headerversion	spikedata.h	/^        int headerversion(char *ID);$/;"	p	class:SpikeData	access:private	signature:(char *ID)
+SpikeData::headerversion	spikedata.h	/^        int headerversion(void *header);$/;"	p	class:SpikeData	access:private	signature:(void *header)
 SpikeData::m_dwDataArray	spikedata.h	/^        std::vector<DWORD> m_dwDataArray;$/;"	m	class:SpikeData	access:private
 SpikeData::m_head	spikedata.h	/^        HEADER m_head;$/;"	m	class:SpikeData	access:public
-SpikeData::m_head50	spikedata.h	/^        HEADER50 m_head50;$/;"	m	class:SpikeData	access:public
 SpikeData::m_nActualPasses	spikedata.h	/^        int m_nActualPasses[MAX_SWEEPS];$/;"	m	class:SpikeData	access:private
 SpikeData::m_spikeArray	spikedata.h	/^        std::vector<SPIKESTRUCT> m_spikeArray;$/;"	m	class:SpikeData	access:public
 SpikeData::parse	spikedata.cpp	/^bool SpikeData::parse(const char* filename)$/;"	f	class:SpikeData	signature:(const char* filename)
@@ -506,6 +663,8 @@ SpikeData::parsedata	spikedata.cpp	/^bool SpikeData::parsedata()$/;"	f	class:Spi
 SpikeData::parsedata	spikedata.h	/^        bool parsedata();$/;"	p	class:SpikeData	access:private	signature:()
 SpikeData::printfile	spikedata.cpp	/^void SpikeData::printfile()$/;"	f	class:SpikeData	signature:()
 SpikeData::printfile	spikedata.h	/^        void printfile();$/;"	p	class:SpikeData	access:public	signature:()
+SpikeData::setHeader	spikedata.h	/^        bool setHeader(void *header);$/;"	p	class:SpikeData	access:public	signature:(void *header)
+SpikeData::setheader	spikedata.cpp	/^bool SpikeData::setheader(void *header)$/;"	f	class:SpikeData	signature:(void *header)
 SpikeData::trials	spikedata.cpp	/^int SpikeData::trials()$/;"	f	class:SpikeData	signature:()
 SpikeData::trials	spikedata.h	/^        int trials();$/;"	p	class:SpikeData	access:public	signature:()
 SpikeData::type	spikedata.cpp	/^std::string SpikeData::type(int channel)$/;"	f	class:SpikeData	signature:(int channel)
@@ -514,14 +673,32 @@ SpikeData::xVariable	spikedata.cpp	/^std::string SpikeData::xVariable()$/;"	f	cl
 SpikeData::xVariable	spikedata.h	/^        std::string xVariable();$/;"	p	class:SpikeData	access:public	signature:()
 SpikeData::xvalue	spikedata.cpp	/^double SpikeData::xvalue(int sweep)$/;"	f	class:SpikeData	signature:(int sweep)
 SpikeData::xvalue	spikedata.h	/^        double xvalue(int sweep);$/;"	p	class:SpikeData	access:public	signature:(int sweep)
-TABLE	spikedata.h	46;"	d
+TABLE	spikedata.h	48;"	d
+THIS_FILE	spikeDoc.cpp	/^static char THIS_FILE[] = __FILE__;$/;"	v	file:
+THIS_FILE	spikeDoc.cpp	18;"	d	file:
 TRIANGLE	easyplotmm/easyplotmm.h	/^            TRIANGLE,$/;"	e	enum:EasyPlotmm::Shape
 Tokenize	gui.cpp	/^void Tokenize(const std::string& str,$/;"	f	signature:(const std::string& str, std::vector<std::string>& tokens, const std::string& delimiters = Ó)
 UTRIANGLE	easyplotmm/easyplotmm.h	/^            UTRIANGLE,$/;"	e	enum:EasyPlotmm::Shape
+VERSION	spikedata.cpp	/^        int VERSION = headerversion(cID);$/;"	l
+VERSION	spikedata.cpp	/^    int VERSION = sd.headerversion(header);$/;"	l
 WAV	spikedata.h	/^} WAV;$/;"	t	typeref:struct:__anon7
-WAVEFILE	spikedata.cpp	125;"	d	file:
-WAVEFILE	spikedata.h	32;"	d
+WAVEFILE	spikedata.cpp	179;"	d	file:
+WAVEFILE	spikedata.h	34;"	d
+Write	spikeDoc.cpp	/^			dataFile.Write(zeros, nZerosToWrite);$/;"	p	file:	signature:(zeros, nZerosToWrite)
+WriteString	spikeDoc.cpp	/^								dataFile.WriteString(outStr);$/;"	p	file:	signature:(outStr)
+WriteString	spikeDoc.cpp	/^							dataFile.WriteString(lineTerm);$/;"	p	file:	signature:(lineTerm)
+WriteString	spikeDoc.cpp	/^						dataFile.WriteString(g_strPlaceHolder);$/;"	p	file:	signature:(g_strPlaceHolder)
+WriteString	spikeDoc.cpp	/^						dataFile.WriteString(lineTerm);$/;"	p	file:	signature:(lineTerm)
+WriteString	spikeDoc.cpp	/^						dataFile.WriteString(outStr);$/;"	p	file:	signature:(outStr)
+WriteString	spikeDoc.cpp	/^					dataFile.WriteString(g_strPlaceHolder);$/;"	p	file:	signature:(g_strPlaceHolder)
+WriteString	spikeDoc.cpp	/^					dataFile.WriteString(outStr);$/;"	p	file:	signature:(outStr)
+WriteString	spikeDoc.cpp	/^				dataFile.WriteString(outStr);$/;"	p	file:	signature:(outStr)
+WriteString	spikeDoc.cpp	/^				if (g_export_file_fmt != ALL_IN_1_COL) dataFile.WriteString(lineTerm);$/;"	p	file:	signature:(lineTerm)
+WriteString	spikeDoc.cpp	/^			dataFile.WriteString(outStr);$/;"	p	file:	signature:(outStr)
+WriteString	spikeDoc.cpp	/^		dataFile.WriteString(lineTerm);$/;"	p	file:	signature:(lineTerm)
+WriteString	spikeDoc.cpp	/^		dataFile.WriteString(outStr);$/;"	p	file:	signature:(outStr)
 X	gui.cpp	/^	std::vector<double> X, Y;$/;"	l
+X_Val	spikeDoc.cpp	/^		CString X_Val;$/;"	l
 Xbt	easyplotmm/easyplotmm.cpp	/^        double Xst, Xbt, Yst, Ybt;$/;"	l
 Xst	easyplotmm/easyplotmm.cpp	/^        double Xst, Xbt, Yst, Ybt;$/;"	l
 Y	gui.cpp	/^	std::vector<double> X, Y;$/;"	l
@@ -556,12 +733,12 @@ __anon14::cId	spikedata.h	/^	char	cId[12];		\/\/  (12) file identification \/ va
 __anon14::cTime	spikedata.h	/^	char	cTime[8];       \/\/   (8) time of data acquisition $/;"	m	struct:__anon14	access:public
 __anon14::deltaCh1	spikedata.h	/^	DELTA	deltaCh1;		\/\/  (36) delta step of stimulus variables for channel1$/;"	m	struct:__anon14	access:public
 __anon14::deltaCh2	spikedata.h	/^	DELTA	deltaCh2;		\/\/  (36) delta step of stimulus variables for channel2$/;"	m	struct:__anon14	access:public
-__anon14::nMagic	spikedata.h	/^	long	nMagic;			\/\/   (4) for internal use of the spike programs $/;"	m	struct:__anon14	access:public
+__anon14::nMagic	spikedata.h	/^	int	    nMagic;			\/\/   (4) for internal use of the spike programs $/;"	m	struct:__anon14	access:public
 __anon14::nOnCh1	spikedata.h	/^	short	nOnCh1;			\/\/   (2) stimulus channel1 on\/off $/;"	m	struct:__anon14	access:public
 __anon14::nOnCh2	spikedata.h	/^	short	nOnCh2;			\/\/   (2) stimulus channel2 on\/off $/;"	m	struct:__anon14	access:public
 __anon14::nPasses	spikedata.h	/^	short	nPasses;		\/\/   (2) number of repetitions of each stimulus $/;"	m	struct:__anon14	access:public
 __anon14::nPresentation	spikedata.h	/^	short	nPresentation;	\/\/   (2) presentation -> sequential\/randomized $/;"	m	struct:__anon14	access:public
-__anon14::nRepInt	spikedata.h	/^	long	nRepInt;		\/\/   (4) repetition interval$/;"	m	struct:__anon14	access:public
+__anon14::nRepInt	spikedata.h	/^	int	    nRepInt;		\/\/   (4) repetition interval$/;"	m	struct:__anon14	access:public
 __anon14::nScaling	spikedata.h	/^	short	nScaling;		\/\/   (2) scaling steps -> linear\/logarithmic $/;"	m	struct:__anon14	access:public
 __anon14::nStepMode	spikedata.h	/^	short	nStepMode;		\/\/   (2) frequency, attenuation or both$/;"	m	struct:__anon14	access:public
 __anon14::nSweeps	spikedata.h	/^	short	nSweeps;		\/\/   (2) number of values (=stimuli) used $/;"	m	struct:__anon14	access:public
@@ -647,6 +824,15 @@ add_to_cairo_context	easyplotmm/easyplotmm.cpp	/^                pangoLayout->ad
 allocation	easyplotmm/easyplotmm.cpp	/^        Gtk::Allocation allocation = get_allocation();$/;"	l
 amsin	spikedata.h	/^		AMSIN	 amsin;$/;"	m	union:__anon11::__anon12	access:public
 amsin	spikedata.h	/^                AMSIN	 amsin; \/\/ (16)$/;"	m	union:__anon9::__anon10	access:public
+anaBuf	spikeDoc.cpp	/^	short *anaBuf;$/;"	l
+anaHeader	spikeDoc.cpp	/^	ANA_HEAD	anaHeader;$/;"	l
+anaMax	spikeDoc.cpp	/^	short anaMin=32767, anaMax=-32768;$/;"	l
+anaMin	spikeDoc.cpp	/^	short anaMin=32767, anaMax=-32768;$/;"	l
+anaMult	spikeDoc.cpp	/^	short anaMult = 1;$/;"	l
+analogFile	spikeDoc.cpp	/^	CStdioFile dataFile, analogFile;$/;"	l
+analogFile	spikeDoc.cpp	/^	analogFile.Read((void*)&anaHeader, sizeof(anaHeader));$/;"	p	file:	signature:(void*)&anaHeader, sizeof(anaHeader)
+analogFileName	spikeDoc.cpp	/^	CString mainFileName, analogFileName;$/;"	l
+analogFileOffset	spikeDoc.cpp	/^	int analogFileOffset;$/;"	l
 animalID	gui.cpp	/^	Glib::ustring animalID = "";$/;"	l
 animalID	gui.cpp	/^            char* animalID = (char*)sqlite3_column_text(stmt_animals,0);$/;"	l
 animalvalue_cell_data	gui.cpp	/^void GUI::animalvalue_cell_data(Gtk::CellRenderer* \/*renderer*\/, const Gtk::TreeModel::iterator& iter)$/;"	f	class:GUI	signature:(Gtk::CellRenderer* , const Gtk::TreeModel::iterator& iter)
@@ -671,10 +857,13 @@ bAtten	spikedata.h	/^        char bAtten;$/;"	m	struct:__anon1	access:public
 bBegin	spikedata.h	/^        char bBegin;$/;"	m	struct:__anon1	access:public
 bCarFreq	spikedata.h	/^        char bCarFreq;$/;"	m	struct:__anon1	access:public
 bDur	spikedata.h	/^        char bDur;$/;"	m	struct:__anon1	access:public
+bFirstSpikeWritten	spikeDoc.cpp	/^		BOOL bFirstSpikeWritten = 0;$/;"	l
 bFreqDev	spikedata.h	/^        char bFreqDev;$/;"	m	struct:__anon1	access:public
+bIsNum	spikeDoc.cpp	/^					BOOL bIsNum;$/;"	l
 bModFreq	spikedata.h	/^        char bModFreq;$/;"	m	struct:__anon1	access:public
 bPhase	spikedata.h	/^        char bPhase;$/;"	m	struct:__anon1	access:public
 bStimInt	spikedata.h	/^        char bStimInt;$/;"	m	struct:__anon1	access:public
+bTraceFound	spikeDoc.cpp	/^				int bTraceFound=0;$/;"	l
 bWav	spikedata.h	/^        char bWav;$/;"	m	struct:__anon1	access:public
 b__	gui.cpp	/^    const Gtk::TreeModel::Row b__ = *b_;$/;"	l
 base	gui.cpp	/^    Gtk::TreeModel::Row base;$/;"	l
@@ -697,6 +886,7 @@ cFill1	spikedata.h	/^        char	cFill1[2];		\/\/   (2)$/;"	m	struct:__anon15	a
 cFill2	spikedata.h	/^	char	cFill2[768];$/;"	m	struct:__anon14	access:public
 cFill2	spikedata.h	/^        char	cFill2[768]; $/;"	m	struct:__anon15	access:public
 cFrozenNoise	spikedata.h	/^        char	cFrozenNoise;	\/\/   (1) v 6.1$/;"	m	struct:__anon15	access:public
+cID	spikedata.cpp	/^        char cID[12];$/;"	l
 cId	spikedata.h	/^	char	cId[12];		\/\/  (12) file identification \/ validiation $/;"	m	struct:__anon14	access:public
 cId	spikedata.h	/^        char	cId[12];		\/\/  (12) file identification \/ validiation $/;"	m	struct:__anon15	access:public
 cTime	spikedata.h	/^	char	cTime[8];       \/\/   (8) time of data acquisition $/;"	m	struct:__anon14	access:public
@@ -731,6 +921,7 @@ clear	gui.cpp	/^    m_refCellDetailsList->clear();$/;"	p	file:	signature:()
 clear	gui.cpp	/^    m_refDetailsList->clear();$/;"	p	file:	signature:()
 clip	easyplotmm/easyplotmm.cpp	/^        cr->clip();$/;"	p	file:	signature:()
 color	easyplotmm/easyplotmm.h	/^            RGBA color;$/;"	m	struct:EasyPlotmm::Pen	access:public
+copySubStr	spikeDoc.cpp	/^static void copySubStr(char *dstStr, char *srcStr, int index)$/;"	f	file:	signature:(char *dstStr, char *srcStr, int index)
 count	gui.cpp	/^	int count = 0;$/;"	l
 cr	easyplotmm/easyplotmm.cpp	/^						cr->line_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);$/;"	p	file:	signature:(cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale
 cr	easyplotmm/easyplotmm.cpp	/^					cr->move_to((cull_x[0]-xmin)*xscale,(cull_y[0]-ymin)*yscale);$/;"	p	file:	signature:(cull_x[0]-xmin)*xscale,(cull_y[0]-ymin)*yscale
@@ -744,6 +935,9 @@ cull_x	easyplotmm/easyplotmm.cpp	/^            std::vector<double> cull_x, cull_
 cull_y	easyplotmm/easyplotmm.cpp	/^            std::vector<double> cull_x, cull_y, cull_err;$/;"	l
 curPen	easyplotmm/easyplotmm.h	/^        unsigned int curPen;$/;"	m	class:EasyPlotmm	access:protected
 curXVariable	gui.h	/^        std::string curXVariable;$/;"	m	class:GUI	access:private
+dataFile	spikeDoc.cpp	/^		dataFile.Write((void*)&head_copy, sizeof(head_copy));$/;"	p	file:	signature:(void*)&head_copy, sizeof(head_copy)
+dataFile	spikeDoc.cpp	/^	CStdioFile dataFile, analogFile;$/;"	l
+dataFile	spikeDoc.cpp	/^	CStdioFile dataFile;$/;"	l
 dataSource	gui.cpp	/^	static int dataSource = -1;$/;"	l	file:
 db	gui.h	/^        sqlite3 *db;$/;"	m	class:GUI	access:protected
 db	settings.h	/^        sqlite3 *db;$/;"	m	class:Settings	access:private
@@ -753,16 +947,23 @@ deltaCh1	spikedata.h	/^	DELTA	deltaCh1;		\/\/  (36) delta step of stimulus varia
 deltaCh1	spikedata.h	/^        DELTA	deltaCh1;	\/\/  (36) delta step of stimulus variables for channel1$/;"	m	struct:__anon15	access:public
 deltaCh2	spikedata.h	/^	DELTA	deltaCh2;		\/\/  (36) delta step of stimulus variables for channel2$/;"	m	struct:__anon14	access:public
 deltaCh2	spikedata.h	/^        DELTA	deltaCh2;       \/\/  (36) delta step of stimulus variables for channel2$/;"	m	struct:__anon15	access:public
+dirName	spikeDoc.cpp	/^	CString exportFileName, strStep, origFileName, dirName;$/;"	l
+dirName	spikeDoc.cpp	/^	CString exportFileName, strStep, tableOfContentsFN, unitNumStr, origFileName, dirName;$/;"	l
+dirName	spikeDoc.cpp	/^	CString exportFileName, unitNumStr, origFileName, dirName;$/;"	l
 dirp	gui.cpp	/^            DIR *dirp;$/;"	l
+dlg	spikeDoc.cpp	/^	CExportDlg dlg;$/;"	l
 dptr	gui.cpp	/^            struct dirent *dptr;$/;"	l
 drawerr	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::drawerr(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col)$/;"	f	class:EasyPlotmm	signature:(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col)
 drawerr	easyplotmm/easyplotmm.h	/^        void drawerr(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col);$/;"	p	class:EasyPlotmm	access:protected	signature:(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col)
 drawshape	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape shape, bool filled, RGBA col)$/;"	f	class:EasyPlotmm	signature:(Cairo::RefPtr<Cairo::Context> cr, double s, Shape shape, bool filled, RGBA col)
 drawshape	easyplotmm/easyplotmm.h	/^        void drawshape(Cairo::RefPtr<Cairo::Context> cr, double size, Shape shape, bool filled, RGBA col);$/;"	p	class:EasyPlotmm	access:protected	signature:(Cairo::RefPtr<Cairo::Context> cr, double size, Shape shape, bool filled, RGBA col)
+dstStr_save	spikeDoc.cpp	/^	char *dstStr_save=dstStr;$/;"	l
 duration	spikedata.cpp	/^double SpikeData::duration(int channel, int sweep)$/;"	f	class:SpikeData	signature:(int channel, int sweep)
 duration	spikedata.h	/^        double duration(int channel, int sweep);$/;"	p	class:SpikeData	access:public	signature:(int channel, int sweep)
 dw	spikedata.cpp	/^            DWORD dw;$/;"	l
+dwBuf	spikeDoc.cpp	/^	DWORD	dwBuf;$/;"	l
 dy	gui.cpp	/^        double dy = sd.delta()\/(sd.m_head.nPasses*1.25);$/;"	l
+e	spikeDoc.cpp	/^	CFileException e;$/;"	l
 end	easyplotmm/easyplotmm.cpp	/^            double start, end;$/;"	l
 end	gui.cpp	/^                double end = sd.m_head.stimFirstCh1.fBegin+sd.m_head.stimFirstCh1.fDur+sd.m_head.deltaCh1.fBegin*i+sd.m_head.deltaCh1.fDur*i;$/;"	l
 end	gui.cpp	/^                double end = sd.m_head.stimFirstCh2.fBegin+sd.m_head.stimFirstCh2.fDur+sd.m_head.deltaCh2.fBegin*i+sd.m_head.deltaCh2.fDur*i;$/;"	l
@@ -780,11 +981,18 @@ endl	settings.cpp	/^        std::cerr << "CRITICAL ERROR: Unable to open setting
 endl	spikedata.cpp	/^                        std::cerr << "ERROR: Bad sweep number found. Corrupt data file." << std::endl;$/;"	m	class:std	file:
 endl	spikedata.cpp	/^                        std::cerr << "ERROR: Unexpected pass number (" << nPass << "). Corrupt data file." << std::endl;$/;"	m	class:std	file:
 endl	spikedata.cpp	/^                    std::cerr << "ERROR: NONINTERLEAVED is not supported." << std::endl;$/;"	m	class:std	file:
+endl	spikedata.cpp	/^            std::cerr << "ERROR: Spike data file is too old." << std::endl;$/;"	m	class:std	file:
 endl	spikedata.cpp	/^    std::cout << "HEADER INFORMATION" << std::endl;$/;"	m	class:std	file:
-endl	spikedata.cpp	/^    std::cout << "Header ID: " << ID << std::endl;$/;"	m	class:std	file:
 err	easyplotmm/easyplotmm.cpp	/^	std::vector<double> err(x.size(),0);$/;"	p	file:	signature:(x.size(),0)
 err	gui.cpp	/^        std::vector<double> err(sd.m_head.nSweeps,0);$/;"	p	file:	signature:(sd.m_head.nSweeps,0)
+errStr	spikeDoc.cpp	/^			char errStr[132];$/;"	l
+errStr	spikeDoc.cpp	/^		char errStr[132];$/;"	l
 errcolor	easyplotmm/easyplotmm.h	/^            RGBA errcolor;$/;"	m	struct:EasyPlotmm::Pen	access:public
+exportFileName	spikeDoc.cpp	/^	CString exportFileName, strStep, origFileName, dirName;$/;"	l
+exportFileName	spikeDoc.cpp	/^	CString exportFileName, strStep, tableOfContentsFN, unitNumStr, origFileName, dirName;$/;"	l
+exportFileName	spikeDoc.cpp	/^	CString exportFileName, unitNumStr, origFileName, dirName;$/;"	l
+export_data	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::export_data()$/;"	f	class:EasyPlotmm	signature:()
+export_data	easyplotmm/easyplotmm.h	/^        void export_data();$/;"	p	class:EasyPlotmm	access:protected	signature:()
 fAmDepth	spikedata.h	/^        float fAmDepth; \/\/ >0 = AM$/;"	m	struct:__anon5	access:public
 fAmDepth	spikedata.h	/^        float fAmDepth;$/;"	m	struct:__anon13	access:public
 fAmDepth	spikedata.h	/^        float fAmDepth;$/;"	m	struct:__anon3	access:public
@@ -799,6 +1007,7 @@ fCarFreq	spikedata.h	/^        float fCarFreq;$/;"	m	struct:__anon13	access:publ
 fCarFreq	spikedata.h	/^        float fCarFreq;$/;"	m	struct:__anon3	access:public
 fCarFreq	spikedata.h	/^        float fCarFreq;$/;"	m	struct:__anon4	access:public
 fCarFreq	spikedata.h	/^        float fCarFreq;$/;"	m	struct:__anon6	access:public
+fDelayBefore1stStim	spikeDoc.cpp	/^	float fDelayBefore1stStim=0.0f;$/;"	l
 fDeltaFreq	spikedata.h	/^        float fDeltaFreq;$/;"	m	struct:__anon6	access:public
 fDur	spikedata.h	/^	float fDur;$/;"	m	struct:__anon11	access:public
 fDur	spikedata.h	/^        float fDur;$/;"	m	struct:__anon13	access:public
@@ -818,10 +1027,12 @@ fPhase	spikedata.h	/^        float fPhase;$/;"	m	struct:__anon2	access:public
 fPhase	spikedata.h	/^        float fPhase;$/;"	m	struct:__anon3	access:public
 fRfTime	spikedata.h	/^	float fRfTime;$/;"	m	struct:__anon11	access:public
 fRfTime	spikedata.h	/^        float fRfTime;$/;"	m	struct:__anon9	access:public
+fStat	spikeDoc.cpp	/^	CFileStatus fStat;$/;"	l
 fStimInt	spikedata.h	/^	float fStimInt;$/;"	m	struct:__anon11	access:public
 fStimInt	spikedata.h	/^        float fStimInt;$/;"	m	struct:__anon13	access:public
 fStimInt	spikedata.h	/^        float fStimInt;$/;"	m	struct:__anon9	access:public
 fTime	spikedata.h	/^        float fTime;$/;"	m	struct:__anon8	access:public
+ffd	spikeDoc.cpp	/^	WIN32_FIND_DATA ffd;$/;"	l
 fileTokens	gui.cpp	/^		std::vector<std::string> fileTokens;$/;"	l
 filename	gui.cpp	/^            std::string filename = dialog.get_filename();$/;"	l
 filename	gui.cpp	/^            std::string filename;$/;"	l
@@ -833,11 +1044,24 @@ fill_preserve	easyplotmm/easyplotmm.cpp	/^        cr->fill_preserve();$/;"	p	fil
 filled	easyplotmm/easyplotmm.h	/^            bool filled;$/;"	m	struct:EasyPlotmm::Pen	access:public
 fmsin	spikedata.h	/^		FMSIN	 fmsin;$/;"	m	union:__anon11::__anon12	access:public
 fmsin	spikedata.h	/^                FMSIN	 fmsin; \/\/ (12)$/;"	m	union:__anon9::__anon10	access:public
+fn_field	spikeDoc.cpp	/^	int fn_field=0, unitIndx=0;$/;"	l
+fn_field	spikeDoc.cpp	/^	int fn_field=0;$/;"	l
+fn_len	spikeDoc.cpp	/^	int fn_len = origFileName.GetLength();	\/\/ fn_len will be adjusted below$/;"	l
+fp	spikeDoc.cpp	/^		CFile*	fp = ar.GetFile();$/;"	l
+freq	spikeDoc.cpp	/^					int freq = 0;$/;"	l
 frequency	spikedata.cpp	/^double SpikeData::frequency(int channel, int sweep)$/;"	f	class:SpikeData	signature:(int channel, int sweep)
 frequency	spikedata.h	/^        double frequency(int channel, int sweep);$/;"	p	class:SpikeData	access:public	signature:(int channel, int sweep)
 fsize	spikedata.cpp	/^        int fsize = static_cast<int>(in.tellg()-begin_pos);$/;"	l
 fullfile	gui.cpp	/^	std::string fullfile(filename);$/;"	p	file:	signature:(filename)
 g	easyplotmm/easyplotmm.h	/^            double g;$/;"	m	struct:EasyPlotmm::RGBA	access:public
+g_bHeaderOmit	spikeDoc.cpp	/^BOOL	g_bPlaceHolder=FALSE, g_bHeaderOmit=FALSE, g_bTossPreStim=FALSE;$/;"	v
+g_bPlaceHolder	spikeDoc.cpp	/^BOOL	g_bPlaceHolder=FALSE, g_bHeaderOmit=FALSE, g_bTossPreStim=FALSE;$/;"	v
+g_bTossPreStim	spikeDoc.cpp	/^BOOL	g_bPlaceHolder=FALSE, g_bHeaderOmit=FALSE, g_bTossPreStim=FALSE;$/;"	v
+g_export_file_fmt	spikeDoc.cpp	/^int		g_export_time_mode=TMODE_ABS, g_export_line_end_fmt=MAC_NL, g_export_file_fmt=IGOR_FMT;$/;"	v
+g_export_line_end_fmt	spikeDoc.cpp	/^int		g_export_time_mode=TMODE_ABS, g_export_line_end_fmt=MAC_NL, g_export_file_fmt=IGOR_FMT;$/;"	v
+g_export_strRunMode	spikeDoc.cpp	/^CString	g_export_strRunMode, g_strPlaceHolder="-1.0";$/;"	v
+g_export_time_mode	spikeDoc.cpp	/^int		g_export_time_mode=TMODE_ABS, g_export_line_end_fmt=MAC_NL, g_export_file_fmt=IGOR_FMT;$/;"	v
+g_strPlaceHolder	spikeDoc.cpp	/^CString	g_export_strRunMode, g_strPlaceHolder="-1.0";$/;"	v
 getCellsStatement	gui.cpp	/^void GUI::getCellsStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID)$/;"	f	class:GUI	signature:(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID)
 getCellsStatement	gui.h	/^		void getCellsStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID);$/;"	p	class:GUI	access:protected	signature:(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID)
 getFilesStatement	gui.cpp	/^void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID)$/;"	f	class:GUI	signature:(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID)
@@ -873,18 +1097,25 @@ get_value	settings.cpp	/^bool Settings::get_value(std::string key, std::string &
 get_value	settings.h	/^		bool get_value(std::string key, std::string &value);$/;"	p	class:Settings	access:private	signature:(std::string key, std::string &value)
 h	easyplotmm/easyplotmm.cpp	/^                int w,h;$/;"	l
 h	easyplotmm/easyplotmm.cpp	/^    double h;$/;"	l
-h	gui.cpp	/^            const HEADER *h = new HEADER(*static_cast<HEADER*>(header));$/;"	l
-h	gui.cpp	/^        const HEADER *h = new HEADER(*static_cast<HEADER*>(header));$/;"	l
+h	spikedata.cpp	/^        const HEADER *h = new HEADER(*static_cast<HEADER*>(header));$/;"	l
+h	spikedata.cpp	/^        const HEADER50 *h = new HEADER50(*static_cast<HEADER50*>(header));$/;"	l
 hasX	gui.cpp	/^			bool hasX = false;$/;"	l
 has_plot	easyplotmm/easyplotmm.h	/^        bool has_plot;$/;"	m	class:EasyPlotmm	access:protected
+head_copy	spikeDoc.cpp	/^	HEADER60 head_copy = m_head;	\/\/ for _HDR file$/;"	l
 header	gui.cpp	/^            void *header = (void*)sqlite3_column_blob(stmt,3);$/;"	l
 header	gui.cpp	/^        void *header = (void*)sqlite3_column_blob(stmt,0);$/;"	l
+headerversion	spikedata.cpp	/^int SpikeData::headerversion(char *ID)$/;"	f	class:SpikeData	signature:(char *ID)
 headerversion	spikedata.cpp	/^int SpikeData::headerversion(void *header)$/;"	f	class:SpikeData	signature:(void *header)
-headerversion	spikedata.h	/^        int headerversion(void *header);$/;"	p	class:SpikeData	access:public	signature:(void *header)
+headerversion	spikedata.h	/^        int headerversion(char *ID);$/;"	p	class:SpikeData	access:private	signature:(char *ID)
+headerversion	spikedata.h	/^        int headerversion(void *header);$/;"	p	class:SpikeData	access:private	signature:(void *header)
 height	easyplotmm/easyplotmm.cpp	/^        const int height = allocation.get_height();$/;"	l
 height	gui.cpp	/^	int width, height,x,y;$/;"	l
-hsize	spikedata.cpp	/^        int hsize = sizeof(m_head);$/;"	l
+hsize	spikeDoc.cpp	/^			int hsize = 1024;$/;"	l
+hsize	spikedata.cpp	/^        int hsize;$/;"	l
+i	spikeDoc.cpp	/^	int		i;$/;"	l
 i	spikedata.cpp	/^        int i = 0;$/;"	l
+iName	spikeDoc.cpp	/^	int iName = origFileName.ReverseFind('\\\\');$/;"	l
+iTrace	spikeDoc.cpp	/^	int iTrace = 0;$/;"	l
 importSpikeFile	gui.cpp	/^void GUI::importSpikeFile(std::string filename, char* d_name)$/;"	f	class:GUI	signature:(std::string filename, char* d_name)
 importSpikeFile	gui.h	/^	    void importSpikeFile(std::string filename, char* d_name);$/;"	p	class:GUI	access:protected	signature:(std::string filename, char* d_name)
 in	spikedata.cpp	/^    std::ifstream in(filename, std::ios::binary);$/;"	p	file:	signature:(filename, std::ios::binary)
@@ -907,6 +1138,8 @@ kit	spikedb.cpp	/^    Gtk::Main kit(argc, argv);$/;"	p	file:	signature:(argc, ar
 lab_height	easyplotmm/easyplotmm.h	/^        int ylab_width,lab_height,xname_width,xname_height,yname_width,yname_height;$/;"	m	class:EasyPlotmm	access:protected
 label_pad	easyplotmm/easyplotmm.h	/^        double label_pad;$/;"	m	class:EasyPlotmm	access:public
 lastPos	gui.cpp	/^    std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);$/;"	l
+len	spikeDoc.cpp	/^			int len = fp->GetLength();$/;"	l
+lineTerm	spikeDoc.cpp	/^	CString lineTerm;$/;"	l
 line_to	easyplotmm/easyplotmm.cpp	/^            cr->line_to(end,-ylength);$/;"	p	file:	signature:(end,-ylength)
 line_to	easyplotmm/easyplotmm.cpp	/^            cr->line_to(end,0);$/;"	p	file:	signature:(end,0)
 line_to	easyplotmm/easyplotmm.cpp	/^            cr->line_to(start,-ylength);$/;"	p	file:	signature:(start,-ylength)
@@ -919,9 +1152,12 @@ m_CellDetailsColumns	gui.h	/^        CellDetailsColumns m_CellDetailsColumns;$/;
 m_DataSourceColumns	gui.h	/^		AnalyzeColumns m_DataSourceColumns;$/;"	m	class:GUI	access:protected
 m_DetailsColumns	gui.h	/^        DetailsColumns m_DetailsColumns;$/;"	m	class:GUI	access:protected
 m_FileDetailsColumns	gui.h	/^        FileDetailsColumns m_FileDetailsColumns;$/;"	m	class:GUI	access:protected
+m_Menu_Popup	easyplotmm/easyplotmm.h	/^        Gtk::Menu m_Menu_Popup;$/;"	m	class:EasyPlotmm	access:protected
 m_XVarColumns	gui.h	/^		AnalyzeColumns m_XVarColumns;$/;"	m	class:GUI	access:protected
 m_YVarColumns	gui.h	/^		AnalyzeColumns m_YVarColumns;$/;"	m	class:GUI	access:protected
 m_adjMinFiles	gui.h	/^		Gtk::Adjustment m_adjMinFiles;$/;"	m	class:GUI	access:protected
+m_bSpikeFile	spikeDoc.h	/^	BOOL	m_bSpikeFile;$/;"	m	class:CSpikeDoc	access:public
+m_cHeadId	spikeDoc.h	/^	char		m_cHeadId[12];$/;"	m	class:CSpikeDoc	access:public
 m_col_animalID	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_animalID;$/;"	m	class:GUI::AnimalDetailsColumns	access:public
 m_col_animalID	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_animalID;$/;"	m	class:GUI::CellDetailsColumns	access:public
 m_col_animalID	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_animalID;$/;"	m	class:GUI::DetailsColumns	access:public
@@ -948,14 +1184,20 @@ m_col_value	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_va
 m_col_value	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_value;$/;"	m	class:GUI::FileDetailsColumns	access:public
 m_col_xaxis	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_xaxis;$/;"	m	class:GUI::DetailsColumns	access:public
 m_defPens	easyplotmm/easyplotmm.h	/^        std::vector< Pen > m_defPens;$/;"	m	class:EasyPlotmm	access:protected
+m_dwDataArray	spikeDoc.cpp	/^			m_dwDataArray.SetSize((fp->GetLength() - sizeof(m_head_v30)) \/ sizeof(WORD)); $/;"	p	file:	signature:(fp->GetLength() - sizeof(m_head_v30)) / sizeof(WORD)
+m_dwDataArray	spikeDoc.h	/^	CDWordArray	m_dwDataArray;		\/\/ for storing data from spike file$/;"	m	class:CSpikeDoc	access:public
 m_dwDataArray	spikedata.h	/^        std::vector<DWORD> m_dwDataArray;$/;"	m	class:SpikeData	access:private
 m_err	easyplotmm/easyplotmm.h	/^        std::vector< std::vector<double> > m_err;$/;"	m	class:EasyPlotmm	access:protected
+m_head	spikeDoc.h	/^	HEADER60	m_head;				\/\/ for storing header from spike file$/;"	m	class:CSpikeDoc	access:public
 m_head	spikedata.h	/^        HEADER m_head;$/;"	m	class:SpikeData	access:public
-m_head50	spikedata.h	/^        HEADER50 m_head50;$/;"	m	class:SpikeData	access:public
+m_head_v30	spikeDoc.h	/^	HEADER30	m_head_v30;			\/\/ for storing header from spike file$/;"	m	class:CSpikeDoc	access:public
+m_head_v40	spikeDoc.h	/^	HEADER40	m_head_v40;			\/\/ for storing header from spike file$/;"	m	class:CSpikeDoc	access:public
+m_head_v50	spikeDoc.h	/^	HEADER50	m_head_v50;			\/\/ for storing header from spike file$/;"	m	class:CSpikeDoc	access:public
 m_ixmax	easyplotmm/easyplotmm.h	/^        double m_ixmin,m_ixmax,m_iymin,m_iymax; \/\/ Axes$/;"	m	class:EasyPlotmm	access:protected
 m_ixmin	easyplotmm/easyplotmm.h	/^        double m_ixmin,m_ixmax,m_iymin,m_iymax; \/\/ Axes$/;"	m	class:EasyPlotmm	access:protected
 m_iymax	easyplotmm/easyplotmm.h	/^        double m_ixmin,m_ixmax,m_iymin,m_iymax; \/\/ Axes$/;"	m	class:EasyPlotmm	access:protected
 m_iymin	easyplotmm/easyplotmm.h	/^        double m_ixmin,m_ixmax,m_iymin,m_iymax; \/\/ Axes$/;"	m	class:EasyPlotmm	access:protected
+m_nActualPasses	spikeDoc.h	/^	int			m_nActualPasses[MAX_SWEEPS];	\/\/ how many passes for a given sweep$/;"	m	class:CSpikeDoc	access:public
 m_nActualPasses	spikedata.h	/^        int m_nActualPasses[MAX_SWEEPS];$/;"	m	class:SpikeData	access:private
 m_pAnimalDetailsList	gui.h	/^        Gtk::TreeView* m_pAnimalDetailsList;$/;"	m	class:GUI	access:protected
 m_pAnimalTree	gui.h	/^        Gtk::TreeView* m_pAnimalTree;$/;"	m	class:GUI	access:protected
@@ -989,10 +1231,16 @@ m_refYVar	gui.h	/^        Glib::RefPtr<Gtk::ListStore> m_refYVar;$/;"	m	class:GU
 m_rend_animalvalue	gui.h	/^        Gtk::CellRendererText m_rend_animalvalue;$/;"	m	class:GUI	access:protected
 m_rend_cellvalue	gui.h	/^        Gtk::CellRendererText m_rend_cellvalue;$/;"	m	class:GUI	access:protected
 m_rend_filetags	gui.h	/^        Gtk::CellRendererText m_rend_filetags;$/;"	m	class:GUI	access:protected
+m_spikeArray	spikeDoc.h	/^	CArray<SPIKESTRUCT, SPIKESTRUCT> m_spikeArray;	\/\/ for storing spikes$/;"	m	class:CSpikeDoc	access:public
 m_spikeArray	spikedata.h	/^        std::vector<SPIKESTRUCT> m_spikeArray;$/;"	m	class:SpikeData	access:public
+m_stimArrayCh1	spikeDoc.h	/^	CArray<STIM, STIM> m_stimArrayCh1;	\/\/ for storing stimuli$/;"	m	class:CSpikeDoc	access:public
+m_stimArrayCh2	spikeDoc.h	/^	CArray<STIM, STIM> m_stimArrayCh2;	\/\/ for storing stimuli$/;"	m	class:CSpikeDoc	access:public
+m_strFileName	spikeDoc.h	/^	CString	m_strFileName;$/;"	m	class:CSpikeDoc	access:public
 m_tvcol_animalvalue	gui.h	/^        Gtk::TreeViewColumn m_tvcol_animalvalue;$/;"	m	class:GUI	access:protected
 m_tvcol_cellvalue	gui.h	/^        Gtk::TreeViewColumn m_tvcol_cellvalue;$/;"	m	class:GUI	access:protected
 m_tvcol_filetags	gui.h	/^        Gtk::TreeViewColumn m_tvcol_filetags;$/;"	m	class:GUI	access:protected
+m_wDataArray	spikeDoc.h	/^	CWordArray	m_wDataArray;		\/\/ for storing data from spike file$/;"	m	class:CSpikeDoc	access:public
+m_wHistoArray	spikeDoc.h	/^	CWordArray	m_wHistoArray;		\/\/ for storing histogram$/;"	m	class:CSpikeDoc	access:public
 m_x	easyplotmm/easyplotmm.h	/^        std::vector< std::vector<double> > m_x;$/;"	m	class:EasyPlotmm	access:protected
 m_xmax	easyplotmm/easyplotmm.h	/^        double m_xmin,m_xmax,m_ymin,m_ymax; \/\/ Axes$/;"	m	class:EasyPlotmm	access:public
 m_xmin	easyplotmm/easyplotmm.h	/^        double m_xmin,m_xmax,m_ymin,m_ymax; \/\/ Axes$/;"	m	class:EasyPlotmm	access:public
@@ -1005,9 +1253,12 @@ main	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	/^int main(int argc, char* argv[]
 main	CMakeFiles/CompilerIdC/CMakeCCompilerId.c	/^void main() {}$/;"	f
 main	CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^int main(int argc, char* argv[])$/;"	f	signature:(int argc, char* argv[])
 main	spikedb.cpp	/^int main(int argc, char** argv)$/;"	f	signature:(int argc, char** argv)
+mainFileName	spikeDoc.cpp	/^	CString mainFileName, analogFileName;$/;"	l
+mainFileName	spikeDoc.cpp	/^	CString mainFileName;$/;"	l
 makeDefaultPens	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::makeDefaultPens()$/;"	f	class:EasyPlotmm	signature:()
 makeDefaultPens	easyplotmm/easyplotmm.h	/^        void makeDefaultPens();$/;"	p	class:EasyPlotmm	access:protected	signature:()
 max_y	gui.cpp	/^		double max_y = sd.xvalue(sd.m_head.nSweeps-1)+sd.m_head.nPasses*dy;$/;"	l
+menulist	easyplotmm/easyplotmm.cpp	/^    Gtk::Menu::MenuList& menulist = m_Menu_Popup.items();$/;"	l
 minFiles	gui.cpp	/^	int minFiles = (int)m_adjMinFiles.get_value();$/;"	l
 minY	easyplotmm/easyplotmm.cpp	/^        double minY = fabs(ymin)>fabs(ymax)?fabs(ymax):fabs(ymin);$/;"	l
 min_y	gui.cpp	/^		double min_y = sd.xvalue(0)-2*dy;$/;"	l
@@ -1016,36 +1267,76 @@ move_to	easyplotmm/easyplotmm.cpp	/^            cr->move_to(end, 0);$/;"	p	file:
 move_to	easyplotmm/easyplotmm.cpp	/^            cr->move_to(start,0);$/;"	p	file:	signature:(start,0)
 move_to	easyplotmm/easyplotmm.cpp	/^            cr->move_to(x,y);$/;"	p	file:	signature:(x,y)
 move_to	easyplotmm/easyplotmm.cpp	/^    cr->move_to(x,y);$/;"	p	file:	signature:(x,y)
-nMagic	spikedata.h	/^	long	nMagic;			\/\/   (4) for internal use of the spike programs $/;"	m	struct:__anon14	access:public
+nAnaSRate	spikeDoc.cpp	/^	int nAnaSRate = 20000;$/;"	l
+nAnalogSampsPerTrace	spikeDoc.cpp	/^	int nAnalogSampsPerTrace = 5000;$/;"	l
+nBeginMics	spikeDoc.cpp	/^		int nBeginMics	= nBegin * 1000.0;$/;"	l
+nDelayBefore1stStim	spikeDoc.cpp	/^			int nDelayBefore1stStim = fDelayBefore1stStim * nAnaSRate \/ 1000;	\/\/ ms -> nsamps$/;"	l
+nDelta	spikeDoc.cpp	/^	int nDelta = m_head_v30.x[1] - m_head_v30.x[0];$/;"	l
+nDiff	spikeDoc.cpp	/^	int nDiff = m_head_v30.x[m_head_v40.nSweeps-1] - m_head_v30.x[0];$/;"	l
+nEndMics	spikeDoc.cpp	/^		int nEndMics = nEnd * 1000.0;$/;"	l
+nHdrSz	spikeDoc.cpp	/^			int nHdrSz = 13; \/\/ We must keep track of the header size. (must match above line)$/;"	l
+nLine	spikeDoc.cpp	/^		int nLine = 1;$/;"	l
+nMagic	spikedata.h	/^	int	    nMagic;			\/\/   (4) for internal use of the spike programs $/;"	m	struct:__anon14	access:public
 nMagic	spikedata.h	/^        int	nMagic;			\/\/   (4) for internal use of the spike programs $/;"	m	struct:__anon15	access:public
+nMaxNTraces	spikeDoc.cpp	/^	int nMaxNTraces = m_head.nSweeps * m_head.nPasses;$/;"	l
+nNr	spikeDoc.cpp	/^	int nNr = pPgGen->m_nNumber;$/;"	l
 nOnCh1	spikedata.h	/^	short	nOnCh1;			\/\/   (2) stimulus channel1 on\/off $/;"	m	struct:__anon14	access:public
 nOnCh1	spikedata.h	/^        short	nOnCh1;			\/\/   (2) stimulus channel1 on\/off $/;"	m	struct:__anon15	access:public
 nOnCh2	spikedata.h	/^	short	nOnCh2;			\/\/   (2) stimulus channel2 on\/off $/;"	m	struct:__anon14	access:public
 nOnCh2	spikedata.h	/^        short	nOnCh2;			\/\/   (2) stimulus channel2 on\/off $/;"	m	struct:__anon15	access:public
+nPass	spikeDoc.cpp	/^		int			nPass;		\/\/ Numerierung beginnt bei 1 !$/;"	l
+nPass	spikeDoc.cpp	/^	int			nPass;$/;"	l
+nPass	spikeDoc.cpp	/^	int			nSweep, nPass;		\/\/ Numerierung beginnt bei 1 !$/;"	l
 nPass	spikedata.cpp	/^    int nPass = 0;$/;"	l
 nPass	spikedata.h	/^        short nPass;$/;"	m	struct:__anon8	access:public
+nPassCount	spikeDoc.cpp	/^		int			nPassCount = 0;$/;"	l
+nPassCount	spikeDoc.cpp	/^	int			nPassCount = 0;$/;"	l
 nPasses	spikedata.h	/^	short	nPasses;		\/\/   (2) number of repetitions of each stimulus $/;"	m	struct:__anon14	access:public
 nPasses	spikedata.h	/^        short	nPasses;		\/\/   (2) number of repetitions of each stimulus $/;"	m	struct:__anon15	access:public
 nPresentation	spikedata.h	/^	short	nPresentation;	\/\/   (2) presentation -> sequential\/randomized $/;"	m	struct:__anon14	access:public
 nPresentation	spikedata.h	/^        short	nPresentation;	\/\/   (2) presentation -> sequential\/randomized\/seq-noninterleaved$/;"	m	struct:__anon15	access:public
-nRepInt	spikedata.h	/^	long	nRepInt;		\/\/   (4) repetition interval$/;"	m	struct:__anon14	access:public
+nRepInt	spikedata.h	/^	int	    nRepInt;		\/\/   (4) repetition interval$/;"	m	struct:__anon14	access:public
 nRepInt	spikedata.h	/^        int	nRepInt;		\/\/   (4) repetition interval$/;"	m	struct:__anon15	access:public
 nScaling	spikedata.h	/^	short	nScaling;		\/\/   (2) scaling steps -> linear\/logarithmic $/;"	m	struct:__anon14	access:public
 nScaling	spikedata.h	/^        short	nScaling;		\/\/   (2) scaling steps -> linear\/logarithmic $/;"	m	struct:__anon15	access:public
+nSize	spikeDoc.cpp	/^		int	nSize = m_dwDataArray.GetSize();$/;"	l
+nSize	spikeDoc.cpp	/^	int		nSize = m_spikeArray.GetSize();$/;"	l
+nSize	spikeDoc.cpp	/^	int	nSize = m_dwDataArray.GetSize();$/;"	l
+nSpikeCount	spikeDoc.cpp	/^		int			nSpikeCount = 0;$/;"	l
+nSpikeCount	spikeDoc.cpp	/^	UINT	nSpikeCount = 0;$/;"	l
+nSpikeCount	spikeDoc.cpp	/^	int			nSpikeCount = 0;$/;"	l
 nSpikeCount	spikedata.cpp	/^    int nSpikeCount = 0;$/;"	l
+nSpikeMics	spikeDoc.cpp	/^		int nSpikeMics = m_spikeArray[i].fTime * 1000.0;		$/;"	l
+nSpikes	spikeDoc.cpp	/^	int	nSpikes = m_spikeArray.GetSize();$/;"	l
+nSpikesAllFiles	spikeDoc.cpp	/^	int nSpikesThisFile, nSpikesAllFiles=0;$/;"	l
+nSpikesExported	spikeDoc.cpp	/^	int	nSpikesExported = 0;$/;"	l
+nSpikesThisFile	spikeDoc.cpp	/^			int nSpikesThisFile=0;$/;"	l
+nSpikesThisFile	spikeDoc.cpp	/^	int nSpikesThisFile, nSpikesAllFiles=0;$/;"	l
+nSpikesThisPass	spikeDoc.cpp	/^				int nSpikesThisPass = 0;$/;"	l
 nStepMode	spikedata.h	/^	short	nStepMode;		\/\/   (2) frequency, attenuation or both$/;"	m	struct:__anon14	access:public
 nStepMode	spikedata.h	/^        short	nStepMode;		\/\/   (2) frequency, attenuation or both$/;"	m	struct:__anon15	access:public
+nSteps	spikeDoc.cpp	/^	int nSteps = m_head.nSweeps;$/;"	l
 nStimPerSweep	spikedata.h	/^	short nStimPerSweep;$/;"	m	struct:__anon11	access:public
 nStimPerSweep	spikedata.h	/^        short nStimPerSweep;$/;"	m	struct:__anon9	access:public
+nStimPeriodInMs	spikeDoc.cpp	/^			int nStimPeriodInMs = 1000 * nAnalogSampsPerTrace \/ nAnaSRate;$/;"	l
+nSweep	spikeDoc.cpp	/^	int			nSweep, nPass;		\/\/ Numerierung beginnt bei 1 !$/;"	l
+nSweep	spikeDoc.cpp	/^	int		nSweep;$/;"	l
 nSweep	spikedata.cpp	/^    int nSweep = 0;$/;"	l
 nSweep	spikedata.h	/^        short nSweep;$/;"	m	struct:__anon8	access:public
+nSweepCount	spikeDoc.cpp	/^		int			nSweepCount = 0;$/;"	l
+nSweepCount	spikeDoc.cpp	/^	int			nSweepCount = 0;$/;"	l
 nSweepCount	spikedata.cpp	/^    int nSweepCount = 0;$/;"	l
 nSweeps	spikedata.h	/^	short	nSweeps;		\/\/   (2) number of values (=stimuli) used $/;"	m	struct:__anon14	access:public
 nSweeps	spikedata.h	/^        short	nSweeps;		\/\/   (2) number of values (=stimuli) used $/;"	m	struct:__anon15	access:public
 nType	spikedata.h	/^	short nType;		\/\/ stimulus type$/;"	m	struct:__anon11	access:public
 nType	spikedata.h	/^        short nType;		\/\/ stimulus type$/;"	m	struct:__anon9	access:public
 nType	spikedata.h	/^        short nType;$/;"	m	struct:__anon6	access:public
+nZerosToWrite	spikeDoc.cpp	/^			int nZerosToWrite = 256 - nHdrSz;$/;"	l
+nbytes	spikeDoc.cpp	/^			int nbytes = fp->Read(&val, 4);	\/\/ if 5.0 - SWEEP_MARK, if 5a - part of header filler$/;"	l
+nbytes	spikeDoc.cpp	/^			int nbytes = len - hsize;$/;"	l
 nbytes	spikedata.cpp	/^        int nbytes = fsize-hsize;$/;"	l
+new	spikeDoc.cpp	17;"	d	file:
+newPos	spikeDoc.cpp	/^			long newPos = fp->Seek(sizeof(m_head_v50), CFile::begin);	\/\/ end of 5.0 header$/;"	l
 noise_ex	spikedata.h	/^                NOISE_EX noise_ex; \/\/ (16)$/;"	m	union:__anon9::__anon10	access:public
 numSpikes	gui.cpp	/^				int numSpikes = 0;$/;"	l
 numSpikes	gui.cpp	/^        int numSpikes = spikes_length\/sizeof(SPIKESTRUCT);$/;"	l
@@ -1077,8 +1368,21 @@ on_menuQuit_activate	gui.cpp	/^void GUI::on_menuQuit_activate()$/;"	f	class:GUI	
 on_menuQuit_activate	gui.h	/^        void on_menuQuit_activate();$/;"	p	class:GUI	access:protected	signature:()
 openDatabase	gui.cpp	/^bool GUI::openDatabase(std::string filename)$/;"	f	class:GUI	signature:(std::string filename)
 openDatabase	gui.h	/^		bool openDatabase(std::string filename);$/;"	p	class:GUI	access:protected	signature:(std::string filename)
+origFileName	spikeDoc.cpp	/^	CString exportFileName, strStep, origFileName, dirName;$/;"	l
+origFileName	spikeDoc.cpp	/^	CString exportFileName, strStep, tableOfContentsFN, unitNumStr, origFileName, dirName;$/;"	l
+origFileName	spikeDoc.cpp	/^	CString exportFileName, unitNumStr, origFileName, dirName;$/;"	l
+outStr	spikeDoc.cpp	/^	CString outStr;$/;"	l
 p	easyplotmm/easyplotmm.cpp	/^    Pen p = m_defPens[curPen];$/;"	l
 p	easyplotmm/easyplotmm.cpp	/^    Pen p;$/;"	l
+pApp	spikeDoc.cpp	/^	CSpikeApp*	pApp = (CSpikeApp *)AfxGetApp();$/;"	l
+pApp	spikeDoc.cpp	/^	CSpikeApp* pApp = (CSpikeApp*)AfxGetApp();$/;"	l
+pDoc	spikeDoc.cpp	/^		CSpikeDoc* pDoc = (CSpikeDoc *)pTemplate->GetNextDoc(pos);$/;"	l
+pPgGen	spikeDoc.cpp	/^	CGeneralPage*	pPgGen = (CGeneralPage *)(&pApp->m_pParams->pgGen);$/;"	l
+pPgStim	spikeDoc.cpp	/^	CStimulusPage* pPgStim = (CStimulusPage*)(&pApp->m_pParams->pgStim);$/;"	l
+pStim	spikeDoc.cpp	/^			STIM *pStim[] = {0,0};	\/\/ index is chan - 1$/;"	l
+pStim	spikeDoc.cpp	/^	STIM *pStim[] = {0,0};	\/\/ index is chan - 1$/;"	l
+pTemplate	spikeDoc.cpp	/^	CDocTemplate* pTemplate = ((CSpikeApp*)AfxGetApp())->m_pDocTemplate; $/;"	l
+pView	spikeDoc.cpp	/^	CView*	pView;$/;"	l
 pWindow	spikedb.cpp	/^    GUI* pWindow = 0;$/;"	l
 pack_start	gui.cpp	/^	m_pDataSource->pack_start(m_DataSourceColumns.m_col_name);$/;"	p	file:	signature:(m_DataSourceColumns.m_col_name)
 pack_start	gui.cpp	/^	m_pXVar->pack_start(m_XVarColumns.m_col_name);$/;"	p	file:	signature:(m_XVarColumns.m_col_name)
@@ -1099,6 +1403,7 @@ parse	spikedata.cpp	/^bool SpikeData::parse(const char* filename)$/;"	f	class:Sp
 parse	spikedata.h	/^        bool parse(const char* filename);$/;"	p	class:SpikeData	access:public	signature:(const char* filename)
 parsedata	spikedata.cpp	/^bool SpikeData::parsedata()$/;"	f	class:SpikeData	signature:()
 parsedata	spikedata.h	/^        bool parsedata();$/;"	p	class:SpikeData	access:private	signature:()
+pass_order	spikeDoc.cpp	/^	int *pass_order = new int[nMaxNTraces];$/;"	l
 path	gui.cpp	/^    Gtk::TreePath path(path_string);$/;"	p	file:	signature:(path_string)
 pen	gui.cpp	/^	EasyPlotmm::Pen pen;$/;"	l
 plot	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y)$/;"	f	class:EasyPlotmm	signature:(std::vector<double> x, std::vector<double> y)
@@ -1127,6 +1432,12 @@ populateCellDetailsList	gui.h	/^        void populateCellDetailsList(const Glib:
 populateDetailsList	gui.cpp	/^void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)$/;"	f	class:GUI	signature:(const Glib::ustring animalID, const int cellID)
 populateDetailsList	gui.h	/^        void populateDetailsList(const Glib::ustring animalID, const int cellID);$/;"	p	class:GUI	access:protected	signature:(const Glib::ustring animalID, const int cellID)
 pos	gui.cpp	/^    std::string::size_type pos     = str.find_first_of(delimiters, lastPos);$/;"	l
+pos	spikeDoc.cpp	/^	POSITION pos = GetFirstViewPosition();$/;"	l
+pos	spikeDoc.cpp	/^	POSITION pos = pTemplate->GetFirstDocPosition();$/;"	l
+preWindow	spikeDoc.cpp	/^			float preWindow = CalcPreWindow(pStim[0], pStim[1]);$/;"	l
+preWindow	spikeDoc.cpp	/^	delete [] preWindow;$/;"	l
+preWindow	spikeDoc.cpp	/^	float *preWindow;$/;"	l
+preWindow	spikeDoc.cpp	/^	float preWindow = 0.0f;$/;"	l
 printfile	spikedata.cpp	/^void SpikeData::printfile()$/;"	f	class:SpikeData	signature:()
 printfile	spikedata.h	/^        void printfile();$/;"	p	class:SpikeData	access:public	signature:()
 property_cell_background	gui.cpp	/^            m_rend_animalvalue.property_cell_background() = "#DDEEFF";$/;"	p	file:	signature:()
@@ -1191,6 +1502,7 @@ reserve	spikedata.cpp	/^        m_dwDataArray.reserve(size);$/;"	p	file:	signatu
 restore	easyplotmm/easyplotmm.cpp	/^			cr->restore();$/;"	p	file:	signature:()
 restore	easyplotmm/easyplotmm.cpp	/^        cr->restore();$/;"	p	file:	signature:()
 result	gui.cpp	/^    int result = dialog.run();$/;"	l
+retval	spikeDoc.cpp	/^		int		retval;$/;"	l
 row	gui.cpp	/^	Gtk::TreeModel::Row row = *(m_refDataSource->append());$/;"	l
 row	gui.cpp	/^	Gtk::TreeModel::Row row = *iter;$/;"	l
 row	gui.cpp	/^	Gtk::TreeModel::Row row;$/;"	l
@@ -1215,6 +1527,9 @@ set	settings.h	/^		void set(std::string key, double value);$/;"	p	class:Settings
 set	settings.h	/^		void set(std::string key, float value);$/;"	p	class:Settings	access:public	signature:(std::string key, float value)
 set	settings.h	/^		void set(std::string key, int value);$/;"	p	class:Settings	access:public	signature:(std::string key, int value)
 set	settings.h	/^		void set(std::string key, std::string value);$/;"	p	class:Settings	access:public	signature:(std::string key, std::string value)
+setHeader	gui.cpp	/^            sd.setHeader(header);$/;"	p	file:	signature:(header)
+setHeader	gui.cpp	/^        sd.setHeader(header);$/;"	p	file:	signature:(header)
+setHeader	spikedata.h	/^        bool setHeader(void *header);$/;"	p	class:SpikeData	access:public	signature:(void *header)
 set_adjustment	gui.cpp	/^	m_pMinFiles->set_adjustment(m_adjMinFiles);$/;"	p	file:	signature:(m_adjMinFiles)
 set_alignment	easyplotmm/easyplotmm.cpp	/^                pangoLayout->set_alignment(Pango::ALIGN_RIGHT);$/;"	p	file:	signature:(Pango::ALIGN_RIGHT)
 set_bg_rgba	easyplotmm/easyplotmm.cpp	/^void EasyPlotmm::set_bg_rgba(double r, double g, double b, double a)$/;"	f	class:EasyPlotmm	signature:(double r, double g, double b, double a)
@@ -1250,14 +1565,19 @@ set_text	easyplotmm/easyplotmm.cpp	/^                pangoLayout->set_text(buffe
 set_text	easyplotmm/easyplotmm.cpp	/^        pangoLayout->set_text(buffer);$/;"	p	file:	signature:(buffer)
 set_value	gui.cpp	/^		m_adjMinFiles.set_value(settings.get_double("filterMinFiles"));$/;"	p	file:	signature:(settings.get_double(Ó))
 set_width	easyplotmm/easyplotmm.cpp	/^                pangoLayout->set_width(Pango::SCALE*(ylab_width));$/;"	p	file:	signature:(Pango::SCALE*(ylab_width))
+setheader	spikedata.cpp	/^bool SpikeData::setheader(void *header)$/;"	f	class:SpikeData	signature:(void *header)
 settings	gui.h	/^		Settings settings;$/;"	m	class:GUI	access:protected
 shape	easyplotmm/easyplotmm.h	/^            Shape shape;$/;"	m	struct:EasyPlotmm::Pen	access:public
 shortfilename	gui.cpp	/^		std::string shortfilename(d_name);$/;"	p	file:	signature:(d_name)
 sin	spikedata.h	/^		SIN		 sin;$/;"	m	union:__anon11::__anon12	access:public
 sin	spikedata.h	/^                SIN	 sin; \/\/ (8)$/;"	m	union:__anon9::__anon10	access:public
+siz	spikeDoc.cpp	/^			int siz = nbytes \/ sizeof(DWORD);$/;"	l
 size	spikedata.cpp	/^        int size = nbytes \/ sizeof(DWORD);$/;"	l
 sizeof	spikedata.cpp	/^            in.read(reinterpret_cast<char*>(&dw), sizeof(dw));$/;"	p	file:	signature:(dw)
-sizeof	spikedata.cpp	/^        in.read(reinterpret_cast<char*>(&m_head), sizeof(m_head));$/;"	p	file:	signature:(m_head)
+sizeof	spikedata.cpp	/^            in.read(reinterpret_cast<char*>(&m_head), sizeof(m_head));$/;"	p	file:	signature:(m_head)
+sizeof	spikedata.cpp	/^            in.read(reinterpret_cast<char*>(&m_head50), sizeof(m_head50));$/;"	p	file:	signature:(m_head50)
+sizeof	spikedata.cpp	/^        in.read(reinterpret_cast<char*>(&cID), sizeof(cID));$/;"	p	file:	signature:(cID)
+spikeAct	spikeDoc.cpp	/^	SPIKESTRUCT spikeAct;$/;"	l
 spikeAct	spikedata.cpp	/^    SPIKESTRUCT spikeAct;$/;"	l
 spikes	gui.cpp	/^        SPIKESTRUCT *spikes = (SPIKESTRUCT*)sqlite3_column_blob(stmt,1);$/;"	l
 spikesPen	gui.cpp	/^        EasyPlotmm::Pen spikesPen;$/;"	l
@@ -1285,14 +1605,15 @@ std::endl	settings.cpp	/^        std::cerr << "CRITICAL ERROR: Unable to open se
 std::endl	spikedata.cpp	/^                        std::cerr << "ERROR: Bad sweep number found. Corrupt data file." << std::endl;$/;"	m	class:std	file:
 std::endl	spikedata.cpp	/^                        std::cerr << "ERROR: Unexpected pass number (" << nPass << "). Corrupt data file." << std::endl;$/;"	m	class:std	file:
 std::endl	spikedata.cpp	/^                    std::cerr << "ERROR: NONINTERLEAVED is not supported." << std::endl;$/;"	m	class:std	file:
+std::endl	spikedata.cpp	/^            std::cerr << "ERROR: Spike data file is too old." << std::endl;$/;"	m	class:std	file:
 std::endl	spikedata.cpp	/^    std::cout << "HEADER INFORMATION" << std::endl;$/;"	m	class:std	file:
-std::endl	spikedata.cpp	/^    std::cout << "Header ID: " << ID << std::endl;$/;"	m	class:std	file:
 stepFlags	spikedata.h	/^	STEP_FLAGS stepFlags[2][2];\/\/(40) [0=chan1,1=chan2][0=X,1=Y]$/;"	m	struct:__anon14	access:public
 stepFlags	spikedata.h	/^        STEP_FLAGS stepFlags[2][2];\/\/(40) [0=chan1,1=chan2][0=X,1=Y]$/;"	m	struct:__anon15	access:public
 stimFirstCh1	spikedata.h	/^	STIM_50	stimFirstCh1;	\/\/  (44) first stimulus parameters for channel1$/;"	m	struct:__anon14	access:public
 stimFirstCh1	spikedata.h	/^        STIM	stimFirstCh1;	\/\/ (108) first stimulus parameters for channel1$/;"	m	struct:__anon15	access:public
 stimFirstCh2	spikedata.h	/^	STIM_50	stimFirstCh2;	\/\/  (44) first stimulus parameters for channel2$/;"	m	struct:__anon14	access:public
 stimFirstCh2	spikedata.h	/^        STIM	stimFirstCh2;	\/\/ (108) first stimulus parameters for channel2$/;"	m	struct:__anon15	access:public
+stimTypes	spikeDoc.cpp	/^CString stimTypes[] = {"NOISE", "SINUS", "AMSINUS", "FMSINUS", "SWEPTSINUS", "WAVEFILE", "FILT_NOISE"};$/;"	v
 stimX	gui.cpp	/^                    std::vector<double> stimX;$/;"	l
 stimY	gui.cpp	/^                    std::vector<double> stimY;$/;"	l
 stmt	gui.cpp	/^	sqlite3_stmt *stmt;$/;"	l
@@ -1305,7 +1626,12 @@ stmt_animals	gui.cpp	/^    sqlite3_stmt *stmt_animals, *stmt_cells;$/;"	l
 stmt_cell	gui.cpp	/^		sqlite3_stmt *stmt_cell=0;$/;"	l
 stmt_cells	gui.cpp	/^    sqlite3_stmt *stmt_animals, *stmt_cells;$/;"	l
 stmt_file	gui.cpp	/^		sqlite3_stmt *stmt_file=0;$/;"	l
+strDate	spikeDoc.cpp	/^	CString strDate = theTime.Format("%d.%m.%y");$/;"	l
+strExtension	spikeDoc.cpp	/^	CString strExtension;$/;"	l
 strFileName	spikedata.h	/^        char strFileName[80];$/;"	m	struct:__anon7	access:public
+strStep	spikeDoc.cpp	/^	CString exportFileName, strStep, origFileName, dirName;$/;"	l
+strStep	spikeDoc.cpp	/^	CString exportFileName, strStep, tableOfContentsFN, unitNumStr, origFileName, dirName;$/;"	l
+strTime	spikeDoc.cpp	/^	CString strTime = theTime.Format("%H:%M:%S");$/;"	l
 stroke	easyplotmm/easyplotmm.cpp	/^					cr->stroke();$/;"	p	file:	signature:()
 stroke	easyplotmm/easyplotmm.cpp	/^				cr->stroke();$/;"	p	file:	signature:()
 stroke	easyplotmm/easyplotmm.cpp	/^			cr->stroke();$/;"	p	file:	signature:()
@@ -1313,13 +1639,20 @@ stroke	easyplotmm/easyplotmm.cpp	/^		cr->stroke();$/;"	p	file:	signature:()
 stroke	easyplotmm/easyplotmm.cpp	/^                cr->stroke();$/;"	p	file:	signature:()
 stroke	easyplotmm/easyplotmm.cpp	/^            cr->stroke();$/;"	p	file:	signature:()
 stroke	easyplotmm/easyplotmm.cpp	/^        cr->stroke();$/;"	p	file:	signature:()
+sweep_order	spikeDoc.cpp	/^	int *sweep_order = new int[nMaxNTraces];$/;"	l
 sweptsin	spikedata.h	/^		SWEPTSIN sweptsin;$/;"	m	union:__anon11::__anon12	access:public
 sweptsin	spikedata.h	/^                SWEPTSIN sweptsin; \/\/ (10)$/;"	m	union:__anon9::__anon10	access:public
+szMsg	spikeDoc.cpp	/^			CString szMsg = fp->GetFileName() +  " is not a spike file !";$/;"	l
 t	gui.cpp	/^			double t = min_y;$/;"	l
+tableOfContentsFN	spikeDoc.cpp	/^	CString exportFileName, strStep, tableOfContentsFN, unitNumStr, origFileName, dirName;$/;"	l
+theTime	spikeDoc.cpp	/^	CTime theTime;$/;"	l
 trials	spikedata.cpp	/^int SpikeData::trials()$/;"	f	class:SpikeData	signature:()
 trials	spikedata.h	/^        int trials();$/;"	p	class:SpikeData	access:public	signature:()
 type	spikedata.cpp	/^std::string SpikeData::type(int channel)$/;"	f	class:SpikeData	signature:(int channel)
 type	spikedata.h	/^        std::string type(int channel);$/;"	p	class:SpikeData	access:public	signature:(int channel)
+unitIndx	spikeDoc.cpp	/^	int fn_field=0, unitIndx=0;$/;"	l
+unitNumStr	spikeDoc.cpp	/^	CString exportFileName, strStep, tableOfContentsFN, unitNumStr, origFileName, dirName;$/;"	l
+unitNumStr	spikeDoc.cpp	/^	CString exportFileName, unitNumStr, origFileName, dirName;$/;"	l
 updateAnalyzePlot	gui.cpp	/^void GUI::updateAnalyzePlot()$/;"	f	class:GUI	signature:()
 updateAnalyzePlot	gui.h	/^		void updateAnalyzePlot();$/;"	p	class:GUI	access:protected	signature:()
 updateFilter	gui.cpp	/^void GUI::updateFilter()$/;"	f	class:GUI	signature:()
@@ -1329,10 +1662,15 @@ updateSideLists	gui.h	/^		void updateSideLists(const Gtk::TreeModel::iterator& i
 update_from_cairo_context	easyplotmm/easyplotmm.cpp	/^			pangoLayout->update_from_cairo_context(cr);$/;"	p	file:	signature:(cr)
 update_from_cairo_context	easyplotmm/easyplotmm.cpp	/^                pangoLayout->update_from_cairo_context(cr);$/;"	p	file:	signature:(cr)
 update_from_cairo_context	easyplotmm/easyplotmm.cpp	/^        pangoLayout->update_from_cairo_context(cr);$/;"	p	file:	signature:(cr)
+val	spikeDoc.cpp	/^			long val;$/;"	l
+val	spikeDoc.cpp	/^		DWORD		val;$/;"	l
+val	spikeDoc.cpp	/^	DWORD		val;$/;"	l
 val	spikedata.cpp	/^        DWORD val = m_dwDataArray[i];$/;"	l
 value	settings.cpp	/^	std::string value;$/;"	l
 version	gui.cpp	/^	float version = 0;$/;"	l
+version	spikeDoc.cpp	/^	int version = 0;$/;"	l
 w	easyplotmm/easyplotmm.cpp	/^                int w,h;$/;"	l
+wBuf	spikeDoc.cpp	/^	WORD	wBuf;$/;"	l
 wav	spikedata.h	/^                WAV	 wav;	\/\/(80)	\/\/ added for V 6.0$/;"	m	union:__anon9::__anon10	access:public
 width	easyplotmm/easyplotmm.cpp	/^        const int width = allocation.get_width();$/;"	l
 width	gui.cpp	/^	int width, height,x,y;$/;"	l
@@ -1396,10 +1734,13 @@ yname_height	easyplotmm/easyplotmm.h	/^        int ylab_width,lab_height,xname_w
 yname_width	easyplotmm/easyplotmm.h	/^        int ylab_width,lab_height,xname_width,xname_height,yname_width,yname_height;$/;"	m	class:EasyPlotmm	access:protected
 yorder	easyplotmm/easyplotmm.cpp	/^        double yorder = 1;$/;"	l
 yscale	easyplotmm/easyplotmm.cpp	/^        double yscale = -ylength\/(ymax-ymin);$/;"	l
+zeros	spikeDoc.cpp	/^	char zeros[256];$/;"	l
 zoom_end	easyplotmm/easyplotmm.h	/^        int zoom_start, zoom_end;$/;"	m	class:EasyPlotmm	access:protected
 zoom_end_scale	easyplotmm/easyplotmm.h	/^        double zoom_start_scale, zoom_end_scale;$/;"	m	class:EasyPlotmm	access:protected
 zoom_start	easyplotmm/easyplotmm.h	/^        int zoom_start, zoom_end;$/;"	m	class:EasyPlotmm	access:protected
 zoom_start_scale	easyplotmm/easyplotmm.h	/^        double zoom_start_scale, zoom_end_scale;$/;"	m	class:EasyPlotmm	access:protected
+~CSpikeDoc	spikeDoc.cpp	/^CSpikeDoc::~CSpikeDoc()$/;"	f	class:CSpikeDoc	signature:()
+~CSpikeDoc	spikeDoc.h	/^	virtual ~CSpikeDoc();$/;"	p	class:CSpikeDoc	access:public	signature:()
 ~EasyPlotmm	easyplotmm/easyplotmm.cpp	/^EasyPlotmm::~EasyPlotmm()$/;"	f	class:EasyPlotmm	signature:()
 ~EasyPlotmm	easyplotmm/easyplotmm.h	/^        virtual ~EasyPlotmm();$/;"	p	class:EasyPlotmm	access:public	signature:()
 ~GUI	gui.cpp	/^GUI::~GUI()$/;"	f	class:GUI	signature:()

@@ -276,6 +276,7 @@ class SpikeData
         bool setHeader(void *header);
 
         HEADER m_head;
+        HEADER50 m_head50;
         std::vector<SPIKESTRUCT> m_spikeArray;
 
     private:

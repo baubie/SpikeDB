@@ -21,7 +21,6 @@ bool SpikeData::parse(const char* filename)
             std::cerr << "ERROR: Spike data file is too old." << std::endl;
             return false;
         }
-        version = VERSION;
 
         // Read in the header
         in.seekg(0, std::ios_base::beg);
@@ -88,19 +87,22 @@ int SpikeData::headerversion(void *header)
     return headerversion(ID);
 }
 
-bool SpikeData::setheader(void *header)
+bool SpikeData::setHeader(void *header)
 {
-    int VERSION = sd.headerversion(header);
+    int VERSION = headerversion(header);
     if (VERSION == HEADER_62)
     {
         const HEADER *h = new HEADER(*static_cast<HEADER*>(header));
-        sd.m_head = *h;
+        m_head = *h;
+        return true;
     }
     if (VERSION == HEADER_50)
     {
         const HEADER50 *h = new HEADER50(*static_cast<HEADER50*>(header));
-        sd.m_head50 = *h;
+        m_head50 = *h;
+        return true;
     }
+    return false;
 }
 
 bool SpikeData::parsedata()

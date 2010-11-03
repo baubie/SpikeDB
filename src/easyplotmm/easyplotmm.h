@@ -1,9 +1,12 @@
 #ifndef EASYPLOTMM_H
 #define EASYPLOTMM_H
 
-#include <gtkmm/drawingarea.h>
+#include <gtkmm.h>
 #include <vector>
 #include <float.h>
+#include <giomm.h>
+#include <sstream>
+#include <iostream>
 
 class EasyPlotmm : public Gtk::DrawingArea
 {
@@ -53,9 +56,13 @@ class EasyPlotmm : public Gtk::DrawingArea
 		void yname(std::string name);
         void clear();
         void plot(std::vector<double> x, std::vector<double> y);
-        void plot(std::vector<double> x, std::vector<double> y, std::vector<double> err);
-        void plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p);
+        void plot(std::vector<double> x, std::vector<double> y, bool exportable);
         void plot(std::vector<double> x, std::vector<double> y, Pen p);
+        void plot(std::vector<double> x, std::vector<double> y, Pen p, bool exportable);
+        void plot(std::vector<double> x, std::vector<double> y, std::vector<double> err);
+        void plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, bool exportable);
+        void plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p);
+        void plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p, bool exportable);
         void redraw();
         Pen getPen();
 
@@ -82,10 +89,15 @@ class EasyPlotmm : public Gtk::DrawingArea
         void drawerr(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col);
         void makeDefaultPens();
 
+        // Context menu
+        Gtk::Menu m_Menu_Popup;
+        void export_data();
+
         // Store plots
         std::vector< std::vector<double> > m_x;
         std::vector< std::vector<double> > m_y;
         std::vector< std::vector<double> > m_err;
+        std::vector< bool > m_exportable;
         std::vector< Pen > m_pens;
 
         RGBA bg; // Plot background color

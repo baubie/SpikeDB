@@ -40,6 +40,17 @@ EasyPlotmm::EasyPlotmm() :
     this->signal_motion_notify_event().connect(sigc::mem_fun(*this, &EasyPlotmm::on_event_motion) );
     this->signal_button_release_event().connect(sigc::mem_fun(*this, &EasyPlotmm::on_event_button_release) );
 
+    // Fill the context menu
+    {
+    Gtk::Menu::MenuList& menulist = m_Menu_Popup.items();
+
+    menulist.push_back( Gtk::Menu_Helpers::MenuElem("_Export Data",
+        sigc::mem_fun(*this, &EasyPlotmm::export_data ) ) );
+    }
+    m_Menu_Popup.accelerate(*this);
+
+
+
 }
 
 EasyPlotmm::~EasyPlotmm()
@@ -49,6 +60,71 @@ EasyPlotmm::~EasyPlotmm()
 double EasyPlotmm::automatic()
 {
 	return AUTOMATIC;
+}
+
+void EasyPlotmm::export_data()
+{
+    Gtk::FileChooserDialog dialog("Choose a file to export the data to",
+        Gtk::FILE_CHOOSER_ACTION_SAVE);
+//    dialog.set_transient_for(this->get_parent_window());
+
+    // Add response buttons to the dialog:
+    dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+    dialog.add_button(Gtk::Stock::SAVE, Gtk::RESPONSE_OK);
+
+    // Show the dialog
+    int result = dialog.run();
+
+    switch(result)
+    {
+        case(Gtk::RESPONSE_OK):
+            Gio::init();
+            Glib::ustring filename = dialog.get_filename();
+            int fileIndex = 0;
+            for (unsigned int i = 0; i < m_x.size(); ++i)
+            {
+                if (m_exportable.at(i))
+                {
+                    ++fileIndex;
+                    std::ostringstream ssIn;
+                    ssIn << filename << "_" << fileIndex;
+                    Glib::ustring datafilename = ssIn.str();
+                    try
+                    {
+                        Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(datafilename);
+                        if (!file)
+                            std::cerr << "Gio::File::create_for_path() returned an empty RefPtr." << std::endl;
+
+                        Glib::RefPtr<Gio::FileOutputStream> stream;
+
+                        if(file->query_exists())
+                            stream = file->replace();
+                        else
+                            stream = file->create_file();
+
+                        if (!stream)
+                            std::cerr << "Gio::File::create_file() returned an empty RefPtr." << std::endl;
+                        
+                        std::ostringstream contents;
+                        for (unsigned int point = 0; point < m_x.at(i).size(); ++point)
+                        {
+                            contents << m_x.at(i).at(point) << " ";
+                            contents << m_y.at(i).at(point) << " ";
+                            contents << m_err.at(i).at(point) << std::endl;
+                        }
+                        const gsize bytes_read = stream->write(contents.str());
+
+                        stream->close();
+                        stream.reset();
+                    }
+                    catch(const Glib::Exception& ex)
+                    {
+                        std::cerr << "Exception caught: " << ex.what() << std::endl;
+                    }
+                }
+            }
+    		break;
+	}
 }
 
 void EasyPlotmm::redraw()
@@ -64,22 +140,30 @@ void EasyPlotmm::redraw()
 
 bool EasyPlotmm::on_event_button_press(GdkEventButton* event)
 {
+    // Only respond to button clicks when we have a graph
+	if (m_x.empty() || m_y.empty() || m_err.empty()) return false;
+
     switch(event->type)
     {
         case GDK_BUTTON_PRESS:
-            if (event->button == 1)
+            if ((event->state & GDK_MOD1_MASK) && event->button == 1)
+            {
+               in_crosshairs = has_plot;
+               ch_x = event->x;
+               ch_y = event->y;
+               redraw();
+            }
+            else if (event->button == 1)
             {
                in_zoom = has_plot;
                zoom_start = event->x;
                zoom_end = event->x;
                redraw();
             }
-            if (event->button == 3)
+            else if (event->button == 3)
             {
-               in_crosshairs = has_plot;
-               ch_x = event->x;
-               ch_y = event->y;
-               redraw();
+                // Show the context menu
+                m_Menu_Popup.popup(event->button, event->time);
             }
             break;
 
@@ -186,23 +270,43 @@ EasyPlotmm::Pen EasyPlotmm::getPen()
 void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y)
 {
 	std::vector<double> err(x.size(),0);
-    plot(x,y,err,getPen());    
+    plot(x,y,err,getPen(),true);
+}
+
+void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, bool exportable)
+{
+	std::vector<double> err(x.size(),0);
+    plot(x,y,err,getPen(),exportable);    
 }
 
 void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, Pen p)
 {
     // Add plot to vectors
 	std::vector<double> err(x.size(),0);
-    plot(x,y,err,p);    
+    plot(x,y,err,p,true);    
+}
+void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, Pen p, bool exportable)
+{
+    // Add plot to vectors
+	std::vector<double> err(x.size(),0);
+    plot(x,y,err,p, exportable);    
 }
 
 void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<double> err)
 {
     // Add plot to vectors
-    plot(x,y,err,getPen());    
+    plot(x,y,err,getPen(),true);    
 }
-
+void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, bool exportable)
+{
+    // Add plot to vectors
+    plot(x,y,err,getPen(),exportable);    
+}
 void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p)
+{
+    plot(x,y,err,p,true);
+}
+void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p, bool exportable)
 {
 	if (x.empty() || y.empty() || err.empty()) return;
     // Add plot to vectors
@@ -210,6 +314,7 @@ void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<
     m_y.push_back(y);
 	m_err.push_back(err);
     m_pens.push_back(p);
+    m_exportable.push_back(exportable);
 
     // Force Redraw
     redraw();

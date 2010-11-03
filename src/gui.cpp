@@ -193,7 +193,7 @@ void GUI::on_menuNewDatabase_activate()
 void GUI::on_menuOpenDatabase_activate()
 {
 
-    Gtk::FileChooserDialog dialog("Select a Folder Containing Spike Data Files",
+    Gtk::FileChooserDialog dialog("Select the SpikeDB Database File",
         Gtk::FILE_CHOOSER_ACTION_OPEN);
     dialog.set_transient_for(*this);
 
@@ -809,7 +809,7 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
                     stimY.push_back(sd.xvalue(i));
                     stimX.push_back(end);
                     stimY.push_back(sd.xvalue(i));
-                    m_pPlotSpikes->plot(stimX,stimY,ch1Pen);
+                    m_pPlotSpikes->plot(stimX,stimY,ch1Pen,false);
                     start = end + sd.m_head.stimFirstCh1.fStimInt+sd.m_head.deltaCh1.fStimInt*i;
                     end = start + sd.m_head.stimFirstCh1.fDur+sd.m_head.deltaCh1.fDur*i;
                 }
@@ -826,7 +826,7 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
                     stimY.push_back(sd.xvalue(i));
                     stimX.push_back(end);
                     stimY.push_back(sd.xvalue(i));
-                    m_pPlotSpikes->plot(stimX,stimY,ch2Pen);
+                    m_pPlotSpikes->plot(stimX,stimY,ch2Pen,false);
                     start = end + sd.m_head.stimFirstCh2.fStimInt+sd.m_head.deltaCh2.fStimInt*i;
                     end = start + sd.m_head.stimFirstCh2.fDur+sd.m_head.deltaCh2.fDur*i;
                 }
