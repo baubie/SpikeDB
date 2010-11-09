@@ -33,6 +33,7 @@ class GUI : public Gtk::Window
         void on_menuImportFolder_activate();
         void on_menuQuit_activate();
 		void on_analyze_changed();
+		void on_meantype_changed();
 
         // Child Widgets (from glade file)
         Glib::RefPtr<Gtk::Builder> m_refGlade;
@@ -48,6 +49,7 @@ class GUI : public Gtk::Window
 		Gtk::Statusbar* m_pStatusbar;
 		Gtk::SpinButton* m_pMinFiles;
         Gtk::VBox* m_pVBoxAnalyze;
+		Gtk::ComboBox* m_pMeanType;
 		Gtk::ComboBox* m_pDataSource;
 		Gtk::ComboBox* m_pXVar;
 		Gtk::ComboBox* m_pYVar;
@@ -63,6 +65,7 @@ class GUI : public Gtk::Window
         Glib::RefPtr<Gtk::ListStore> m_refDataSource;
         Glib::RefPtr<Gtk::ListStore> m_refXVar;
         Glib::RefPtr<Gtk::ListStore> m_refYVar;
+        Glib::RefPtr<Gtk::ListStore> m_refMeanType;
 
 		// Plots
         EasyPlotmm* m_pPlotSpikes;
@@ -164,6 +167,7 @@ class GUI : public Gtk::Window
 		AnalyzeColumns m_DataSourceColumns;
 		AnalyzeColumns m_XVarColumns;
 		AnalyzeColumns m_YVarColumns;
+		AnalyzeColumns m_MeanTypeColumns;
 
 		bool openDatabase(std::string filename);
 	    void importSpikeFile(std::string filename, char* d_name);

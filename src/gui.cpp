@@ -159,7 +159,20 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 
 
     m_refGlade->get_widget("hboxPlots", m_pHBoxPlots);
+	m_refGlade->get_widget("cbMeanType", m_pMeanType);
+	m_refMeanType = Gtk::ListStore::create(m_MeanTypeColumns);
+    m_pMeanType->set_model(m_refMeanType);
+    m_pMeanType->pack_start(m_MeanTypeColumns.m_col_name);
+	m_pMeanType->signal_changed().connect( sigc::mem_fun(*this, &GUI::on_meantype_changed));
+    row = *(m_refMeanType->append());
+    row[m_MeanTypeColumns.m_col_name] = "Mean Spikes per Trial";
+    row = *(m_refMeanType->append());
+    row[m_MeanTypeColumns.m_col_name] = "Percentage of trials with at least 1 spike";
+    row = *(m_refMeanType->append());
+    row[m_MeanTypeColumns.m_col_name] = "Mean First-Spike Latency";
+    m_pMeanType->set_active(0);
 
+	m_refMeanType = Gtk::ListStore::create(m_MeanTypeColumns);
     m_pHBoxPlots->pack_start(*m_pPlotSpikes);
     m_pHBoxPlots->pack_start(*m_pPlotMeans);
 	m_pVBoxAnalyze->pack_start(*m_pPlotAnalyze);
@@ -290,6 +303,16 @@ void GUI::updateFilter()
 
 	// Pretend we clicked on an animal to repopulate details list
 	changeAnimalSelection();
+}
+
+void GUI::on_meantype_changed()
+{
+    m_pPlotMeans->clear();
+    m_pPlotSpikes->clear();
+    curXVariable = "";
+    m_refDetailsSelection->selected_foreach_iter(
+        sigc::mem_fun(*this, &GUI::addFileToPlot)
+        );
 }
 
 void GUI::on_analyze_changed()
@@ -701,7 +724,9 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
         sd.m_spikeArray.assign(spikes,spikes+numSpikes);
 
         std::vector<double> x(sd.m_head.nSweeps,0);
-        std::vector<double> y(sd.m_head.nSweeps,0);
+        std::vector<double> y_mean(sd.m_head.nSweeps,0);
+        std::vector<double> y_one(sd.m_head.nSweeps,0);
+        std::vector<double> y_fsl(sd.m_head.nSweeps,0);
         std::vector<double> err(sd.m_head.nSweeps,0);
         std::vector<double> N(sd.m_head.nSweeps,0);
 
@@ -722,14 +747,20 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
             x.at(i) = sd.xvalue(i);
             for (int p = 0; p < sd.m_head.nPasses; ++p)
             {
+                bool foundSpike = false;
                 for (unsigned int s = 0; s < sd.m_spikeArray.size(); ++s)
                 {
 					// Spike sweeps are 1 based but here we are 0 based
                     if (sd.m_spikeArray[s].nSweep == i+1 && sd.m_spikeArray[s].nPass == p)
                     {
+                        if (!foundSpike) 
+                        {
+                            y_one.at(i) += 1.0f / sd.m_head.nPasses;
+                            foundSpike = true;
+                        }
                         if (sd.m_head.nPasses > 0)
                         {
-                            y.at(i) += 1.0f / sd.m_head.nPasses;
+                            y_mean.at(i) += 1.0f / sd.m_head.nPasses;
                         }
                         x_spikes.push_back(sd.m_spikeArray[s].fTime);
                         y_spikes.push_back(sd.xvalue(i)+dy*p);
@@ -745,8 +776,8 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 			max_y = t;
 		}
         m_pPlotSpikes->axes(0,sd.m_head.nRepInt, min_y, max_y);
-		m_pPlotSpikes->xname("Time (ms)");
-		m_pPlotSpikes->yname(sd.xVariable());
+        m_pPlotSpikes->xname("Time (ms)");
+        m_pPlotSpikes->yname(sd.xVariable());
         m_pPlotSpikes->plot(x_spikes,y_spikes,spikesPen);
 
 		// Calculate the SD of the means
@@ -764,7 +795,7 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
                     }
                 }
 				if (numSpikes > 0) ++(N.at(i));
-				err.at(i) += (numSpikes-y.at(i))*(numSpikes-y.at(i));
+				err.at(i) += (numSpikes-y_mean.at(i))*(numSpikes-y_mean.at(i));
             }
         }
 		for (int i = 0; i < sd.m_head.nSweeps; ++i)
@@ -777,8 +808,17 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 		}
 		m_pPlotMeans->axes(m_pPlotMeans->automatic(),m_pPlotMeans->automatic(),0,m_pPlotMeans->automatic());
 		m_pPlotMeans->xname(sd.xVariable());
-		m_pPlotMeans->yname("Mean Spikes per Trial");
-        m_pPlotMeans->plot(x,y,err);
+
+		if (m_pMeanType->get_active_row_number() == 0)
+        {
+            m_pPlotMeans->yname("Mean Spikes per Trial");
+            m_pPlotMeans->plot(x,y_mean,err);
+        }
+		if (m_pMeanType->get_active_row_number() == 1)
+        {
+            m_pPlotMeans->yname("Percentage of Trials With Spikes");
+            m_pPlotMeans->plot(x,y_one);
+        }
 
         // Add stimuli to spikes plot
         EasyPlotmm::Pen ch1Pen;
@@ -1326,6 +1366,7 @@ void GUI::on_menuQuit_activate()
     delete m_pHBoxPlots;
     delete m_pCellDetailsList;
     delete m_pAnimalDetailsList;
+	delete m_pMeanType;
 	delete m_pDataSource;
 	delete m_pXVar;
 	delete m_pYVar;
