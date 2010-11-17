@@ -5,6 +5,7 @@
 #define CURRENT_VERSION 1.2
 
 #include <gtkmm.h>
+#include <giomm.h>
 #include <string>
 #include <vector>
 #include <dirent.h>
@@ -66,8 +67,7 @@ class GUI : public Gtk::Window
         Glib::RefPtr<Gtk::ListStore> m_refXVar;
         Glib::RefPtr<Gtk::ListStore> m_refYVar;
         Glib::RefPtr<Gtk::ListStore> m_refMeanType;
-
-		// Plots
+        // Plots
         EasyPlotmm* m_pPlotSpikes;
         EasyPlotmm* m_pPlotMeans;
         EasyPlotmm* m_pPlotAnalyze;

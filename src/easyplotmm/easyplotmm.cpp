@@ -112,7 +112,12 @@ void EasyPlotmm::export_data()
                             contents << m_y.at(i).at(point) << " ";
                             contents << m_err.at(i).at(point) << std::endl;
                         }
-                        const gsize bytes_read = stream->write(contents.str());
+                        const int bytes_written = stream->write(contents.str());
+
+                        if (bytes_written == -1) 
+                        {
+                            std::cerr << "Error: Unable to write to file " << datafilename << std::endl;
+                        }
 
                         stream->close();
                         stream.reset();

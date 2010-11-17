@@ -201,6 +201,55 @@ GUI::~GUI()
 
 void GUI::on_menuNewDatabase_activate()
 {
+    Gtk::FileChooserDialog dialog("Select the SpikeDB Database File",
+        Gtk::FILE_CHOOSER_ACTION_SAVE);
+    dialog.set_transient_for(*this);
+
+    // Add response buttons to the dialog:
+    dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+    dialog.add_button(Gtk::Stock::SAVE, Gtk::RESPONSE_OK);
+
+    // Show the dialog
+    int result = dialog.run();
+
+    switch(result)
+    {
+        case(Gtk::RESPONSE_OK):
+
+            // First create an empty file
+            Gio::init();
+            std::string filename = dialog.get_filename();
+            // TODO: Add error checking that the file doesn't exist and is valid
+            Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(filename);
+            Glib::RefPtr<Gio::FileOutputStream> stream = file->create_file();
+            stream->close();
+            stream.reset();
+
+            // Load it as an sqlite3 database and save the tables
+            if (sqlite3_open(filename.c_str(), &db) != SQLITE_OK) {
+                std::cerr << "CRITICAL ERROR: Unable to open database file." << std::endl;
+                return;
+            }
+            set_title("Spike Database - " + filename);
+
+            // Do we have to update the database?
+            sqlite3_stmt *stmt=0;
+            std::vector<std::string> query;
+            query.push_back("CREATE TABLE animals (ID TEXT, species TEXT, sex TEXT, weight TEXT, age TEXT, tags TEXT, notes TEXT, PRIMARY KEY(ID))");
+            query.push_back("CREATE TABLE cells (animalID TEXT, cellID INTEGER, tags TEXT, notes TEXT, threshold TEXT, depth TEXT, freq TEXT, recordedby TEXT, isdtn INT, PRIMARY KEY(animalID, cellID))");
+            query.push_back("CREATE TABLE files (animalID TEXT, cellID INTEGER, fileID INTEGER, notes TEXT, header BLOB, spikes BLOB, tags TEXT, bestduration FLOAT, duration50 FLOAT, PRIMARY KEY(animalID, cellID, fileID))");
+            query.push_back( "CREATE TABLE properties (variable TEXT, value TEXT)");
+            query.push_back("INSERT INTO properties (variable, value) VALUES('version', '1.2')");
+            
+            for(unsigned int i = 0; i < query.size(); ++i)
+            {
+                sqlite3_prepare_v2(db,query[i].c_str(),query[i].length(), &stmt, NULL);
+                sqlite3_bind_text(stmt, 1, "version", -1, SQLITE_TRANSIENT);
+                sqlite3_step(stmt);
+            }
+            openDatabase(filename);
+            break;
+    }
 }
 
 void GUI::on_menuOpenDatabase_activate()
@@ -221,9 +270,9 @@ void GUI::on_menuOpenDatabase_activate()
     {
         case(Gtk::RESPONSE_OK):
             std::string filename = dialog.get_filename();
-			openDatabase(filename);
-    		break;
-	}
+            openDatabase(filename);
+            break;
+    }
 }
 
 bool GUI::openDatabase(std::string filename)
@@ -255,34 +304,6 @@ bool GUI::openDatabase(std::string filename)
 			dialog.run();
 			return false;
 		}
-
-		if (version == 1.1)
-		{
-			/*
-			sqlite3_stmt *stmt_fix=0;
-			std::vector<std::string> q;
-			q.push_back("ALTER TABLE cells ADD COLUMN isdtn INT");
-			q.push_back("ALTER TABLE files ADD COLUMN bestduration FLOAT");
-			q.push_back("ALTER TABLE files ADD COLUMN duration50 FLOAT");
-
-			int r_fix;
-			for (unsigned int i = 0; i < q.size(); ++i)
-			{
-				sqlite3_prepare_v2(db,q[i].c_str(),strlen(q[i].c_str()), &stmt_fix, NULL);
-				r_fix = sqlite3_step(stmt_fix);
-			}
-			if (r_fix == SQLITE_DONE)
-			{
-				version = 1.1;
-				const char query[] = "UPDATE properties SET value=1.2 WHERE variable=?";
-				sqlite3_prepare_v2(db,query,strlen(query), &stmt_fix, NULL);
-				sqlite3_bind_text(stmt_fix, 1, "version", -1, SQLITE_TRANSIENT);
-				r_fix = sqlite3_step(stmt_fix);
-			Gtk::MessageDialog dialog(*this, "Database successfully upgraded from version 1.1 to version 1.2.", false, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK);
-			dialog.run();
-			}
-			*/
-		}
 	}
 
 	// Remember this database for next time
@@ -292,7 +313,7 @@ bool GUI::openDatabase(std::string filename)
 	m_pMenuImportFolder->set_sensitive(true);
 
 	// Show the animals and cells from the database
-    populateAnimalTree();
+        populateAnimalTree();
 	return true;
 }
 
