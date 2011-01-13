@@ -237,12 +237,11 @@ void GUI::on_menuNewDatabase_activate()
 		}
 		set_title("Spike Database - " + filename);
 
-		// Do we have to update the database?
 		sqlite3_stmt *stmt = 0;
 		std::vector<std::string> query;
-		query.push_back("CREATE TABLE animals (ID TEXT, species TEXT, sex TEXT, weight TEXT, age TEXT, tags TEXT, notes TEXT, PRIMARY KEY(ID))");
-		query.push_back("CREATE TABLE cells (animalID TEXT, cellID INTEGER, tags TEXT, notes TEXT, threshold TEXT, depth TEXT, freq TEXT, recordedby TEXT, isdtn INT, PRIMARY KEY(animalID, cellID))");
-		query.push_back("CREATE TABLE files (animalID TEXT, cellID INTEGER, fileID INTEGER, notes TEXT, header BLOB, spikes BLOB, tags TEXT, bestduration FLOAT, duration50 FLOAT, PRIMARY KEY(animalID, cellID, fileID))");
+		query.push_back("CREATE TABLE animals (ID TEXT, species TEXT, sex TEXT, weight TEXT, age TEXT, notes TEXT, PRIMARY KEY(ID))");
+		query.push_back("CREATE TABLE cells (animalID TEXT, cellID INTEGER, notes TEXT, threshold TEXT, depth TEXT, freq TEXT, recordedby TEXT, PRIMARY KEY(animalID, cellID))");
+		query.push_back("CREATE TABLE files (animalID TEXT, cellID INTEGER, fileID INTEGER, notes TEXT, header BLOB, spikes BLOB,PRIMARY KEY(animalID, cellID, fileID))");
 		query.push_back( "CREATE TABLE properties (variable TEXT, value TEXT)");
 		query.push_back("INSERT INTO properties (variable, value) VALUES('version', '1.2')");
 
@@ -505,6 +504,7 @@ int GUI::on_animal_sort(const Gtk::TreeModel::iterator& a_, const Gtk::TreeModel
 
 void GUI::on_filetags_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)
 {
+	//TODO: Update to new tags table
 	Gtk::TreePath path(path_string);
 
 	Gtk::TreeModel::iterator iter = m_refDetailsList->get_iter(path);
@@ -515,6 +515,7 @@ void GUI::on_filetags_edited(const Glib::ustring& path_string, const Glib::ustri
 		row[m_DetailsColumns.m_col_tags] = new_text;
 
 		// Update sqlite database
+		/*
 		const char q[] = "UPDATE files SET tags=? WHERE animalID=? AND cellID=? AND fileID=?";
 		sqlite3_stmt *stmt = 0;
 		sqlite3_prepare_v2(db, q, strlen(q), &stmt, NULL);
@@ -524,6 +525,7 @@ void GUI::on_filetags_edited(const Glib::ustring& path_string, const Glib::ustri
 		sqlite3_bind_int(stmt, 4, row[m_DetailsColumns.m_col_filenum]);
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
+		*/
 	}
 }
 
@@ -618,6 +620,7 @@ void GUI::on_cellvalue_edited(const Glib::ustring& path_string, const Glib::ustr
 			query = "UPDATE cells SET threshold=? WHERE animalID=? AND cellID=?";
 		}
 		if (row.get_value(m_CellDetailsColumns.m_col_name) == "Tags") {
+			//TODO: Update to new tags table
 			query = "UPDATE cells SET tags=? WHERE animalID=? AND cellID=?";
 		}
 		if (row.get_value(m_CellDetailsColumns.m_col_name) == "Notes") {
@@ -886,7 +889,7 @@ void GUI::changeAnimalSelection()
 void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 {
 	m_refAnimalDetailsList->clear();
-	char query[] = "SELECT species, sex, weight, age, tags, notes FROM animals WHERE ID=?";
+	char query[] = "SELECT species, sex, weight, age, notes FROM animals WHERE ID=?";
 	sqlite3_stmt *stmt;
 	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
 	sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
@@ -949,7 +952,7 @@ void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID)
 {
 	m_refCellDetailsList->clear();
-	char query[] = "SELECT depth, freq, tags, notes, threshold FROM cells WHERE animalID=? AND cellID=?";
+	char query[] = "SELECT depth, freq, notes, threshold FROM cells WHERE animalID=? AND cellID=?";
 	sqlite3_stmt *stmt;
 	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
 	sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
@@ -1008,7 +1011,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 			row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt, 3);
 		}
 
-	}
+	} 
 	sqlite3_finalize(stmt);
 }
 
@@ -1052,7 +1055,7 @@ void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, c
 	int minFiles = (int)m_adjMinFiles.get_value();
 
 	if (animalID != "" && cellID != -1) {
-		const char query[] = "SELECT animalID, cellID, fileID, header,tags FROM files "
+		const char query[] = "SELECT animalID, cellID, fileID, header FROM files "
 				     "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
 				     "USING(animalID, cellID) "
 				     "WHERE animalID=? AND cellID=? AND file_count >= ? "
@@ -1062,7 +1065,7 @@ void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, c
 		sqlite3_bind_int(*stmt, 2, cellID);
 		sqlite3_bind_int(*stmt, 3, minFiles);
 	} else if (animalID != "" && cellID == -1) {
-		const char query[] = "SELECT animalID, cellID, fileID, header,tags FROM files "
+		const char query[] = "SELECT animalID, cellID, fileID, header FROM files "
 				     "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
 				     "USING(animalID, cellID) "
 				     "WHERE animalID=? AND file_count >= ? "
@@ -1071,7 +1074,7 @@ void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, c
 		sqlite3_bind_text(*stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_int(*stmt, 2, minFiles);
 	} else if (animalID == "" && cellID == -1) {
-		const char query[] = "SELECT animalID, cellID, fileID, header,tags FROM files "
+		const char query[] = "SELECT animalID, cellID, fileID, header FROM files "
 				     "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
 				     "USING(animalID, cellID) "
 				     "WHERE file_count >= ? "
@@ -1242,7 +1245,15 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 			bufferCh2[0] = '\0';
 			buffer[0] = '\0';
 
-		} else{ break; }
+		} else{ 
+			
+			if (r == SQLITE_ERROR) {
+				Gtk::MessageDialog dialog(*this, "Error loading file from database.", false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
+				dialog.set_secondary_text(sqlite3_errmsg(db));
+				dialog.run();
+			}
+			
+			break; }
 	}
 	sqlite3_finalize(stmt);
 }
