@@ -50,6 +50,7 @@ class GUI : public Gtk::Window
 		Gtk::Statusbar* m_pStatusbar;
 		Gtk::SpinButton* m_pMinFiles;
         Gtk::VBox* m_pVBoxAnalyze;
+		Gtk::ComboBox* m_pTypeFilter;
 		Gtk::ComboBox* m_pMeanType;
 		Gtk::ComboBox* m_pDataSource;
 		Gtk::ComboBox* m_pXVar;
@@ -67,6 +68,7 @@ class GUI : public Gtk::Window
         Glib::RefPtr<Gtk::ListStore> m_refXVar;
         Glib::RefPtr<Gtk::ListStore> m_refYVar;
         Glib::RefPtr<Gtk::ListStore> m_refMeanType;
+        Glib::RefPtr<Gtk::ListStore> m_refTypeFilter;
         // Plots
         EasyPlotmm* m_pPlotSpikes;
         EasyPlotmm* m_pPlotMeans;

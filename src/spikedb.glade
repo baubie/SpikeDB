@@ -110,7 +110,24 @@
                               </packing>
                             </child>
                             <child>
-                              <placeholder/>
+                              <object class="GtkLabel" id="label10">
+                                <property name="visible">True</property>
+                                <property name="yalign">0.47999998927116394</property>
+                                <property name="label" translatable="yes">X-Variable</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkComboBox" id="cbTypeFilter">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="position">3</property>
+                              </packing>
                             </child>
                           </object>
                         </child>

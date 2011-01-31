@@ -158,6 +158,23 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	m_pDataSource->set_active(0);
 	on_analyze_changed();
 
+        // Filter
+	m_refGlade->get_widget("cbTypeFilter", m_pTypeFilter);
+        m_refTypeFilter = Gtk::ListStore::create(m_MeanTypeColumns);
+        m_pTypeFilter->set_model(m_refTypeFilter);
+        m_pTypeFilter->pack_start(m_MeanTypeColumns.m_col_name);
+        m_pTypeFilter->signal_changed().connect( sigc::mem_fun(*this, &GUI::updateFilter) );
+        row = *(m_refTypeFilter->append());
+        row[m_MeanTypeColumns.m_col_name] = "All";
+        row = *(m_refTypeFilter->append());
+        row[m_MeanTypeColumns.m_col_name] = "Freq";
+        row = *(m_refTypeFilter->append());
+        row[m_MeanTypeColumns.m_col_name] = "Dur";
+        row = *(m_refTypeFilter->append());
+        row[m_MeanTypeColumns.m_col_name] = "Onset";
+        row = *(m_refTypeFilter->append());
+        row[m_MeanTypeColumns.m_col_name] = "Atten";
+        m_pTypeFilter->set_active(0);
 
 	m_refGlade->get_widget("hboxPlots", m_pHBoxPlots);
 	m_refGlade->get_widget("cbMeanType", m_pMeanType);
@@ -173,7 +190,6 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	row[m_MeanTypeColumns.m_col_name] = "Mean First-Spike Latency";
 	m_pMeanType->set_active(0);
 
-	m_refMeanType = Gtk::ListStore::create(m_MeanTypeColumns);
 	m_pHBoxPlots->pack_start(*m_pPlotSpikes);
 	m_pHBoxPlots->pack_start(*m_pPlotMeans);
 	m_pVBoxAnalyze->pack_start(*m_pPlotAnalyze);
@@ -1129,121 +1145,140 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 	while (true) {
 		int r = sqlite3_step(stmt);
 		if (r == SQLITE_ROW) {
-			SpikeData sd;
-			row = *(m_refDetailsList->append());
-			row[m_DetailsColumns.m_col_animalID] = (char*)sqlite3_column_text(stmt, 0);
-			row[m_DetailsColumns.m_col_cellID] = sqlite3_column_int(stmt, 1);
-			row[m_DetailsColumns.m_col_filenum] = sqlite3_column_int(stmt, 2);
-			if (sqlite3_column_text(stmt, 4) != NULL) {
-				row[m_DetailsColumns.m_col_tags] = (char*)sqlite3_column_text(stmt, 4);
-			}
 
-			void *header = (void*)sqlite3_column_blob(stmt, 3);
-			sd.setHeader(header);
-			row[m_DetailsColumns.m_col_xaxis] = sd.xVariable();
-			row[m_DetailsColumns.m_col_trials] = sd.trials();
+                        bool filtered = true;
 
-			char bufferCh1[20];
-			char bufferCh2[20];
-			char buffer[50];
+                        SpikeData sd;
+                        void *header = (void*)sqlite3_column_blob(stmt, 3);
+                        sd.setHeader(header);
 
-			if (sd.m_head.nOnCh1 == 0) {
-				strcpy(bufferCh1, "-");
-			} else{
-				sprintf(bufferCh1, "%s", sd.type(1).c_str());
-			}
-			if (sd.m_head.nOnCh2 == 0) {
-				strcpy(bufferCh2, "-");
-			} else{
-				sprintf(bufferCh2, "%s", sd.type(2).c_str());
-			}
-			sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
-			row[m_DetailsColumns.m_col_type] = buffer;
-			bufferCh1[0] = '\0';
-			bufferCh2[0] = '\0';
-			buffer[0] = '\0';
+                        if (m_pTypeFilter->get_active_row_number() == 1) {
+                            if (sd.xVariable() != "Ch 1 Freq" && sd.xVariable() != "Ch 2 Freq") filtered = false;
+                        }
+                        if (m_pTypeFilter->get_active_row_number() == 2) {
+                            if (sd.xVariable() != "Ch 1 Dur" && sd.xVariable() != "Ch 2 Dur") filtered = false;
+                        }
+                        if (m_pTypeFilter->get_active_row_number() == 3) {
+                            if (sd.xVariable() != "Ch 1 Onset" && sd.xVariable() != "Ch 2 Onset") filtered = false;
+                        }
+                        if (m_pTypeFilter->get_active_row_number() == 4) {
+                            if (sd.xVariable() != "Ch 1 Atten" && sd.xVariable() != "Ch 2 Atten") filtered = false;
+                        }
 
+                        if (filtered) {
+                            row = *(m_refDetailsList->append());
+                            row[m_DetailsColumns.m_col_animalID] = (char*)sqlite3_column_text(stmt, 0);
+                            row[m_DetailsColumns.m_col_cellID] = sqlite3_column_int(stmt, 1);
+                            row[m_DetailsColumns.m_col_filenum] = sqlite3_column_int(stmt, 2);
+                            if (sqlite3_column_text(stmt, 4) != NULL) {
+                                    row[m_DetailsColumns.m_col_tags] = (char*)sqlite3_column_text(stmt, 4);
+                            }
 
-			if (sd.m_head.nOnCh1 == 0) {
-				strcpy(bufferCh1, "-");
-			} else{
-				if (sd.frequency(1, 0) == sd.frequency(1, 1)) {
-					sprintf(bufferCh1, "%d", (int)sd.frequency(1, 0));
-				} else{                              strcpy(bufferCh1, "Var"); }
-			}
-			if (sd.m_head.nOnCh2 == 0) {
-				strcpy(bufferCh2, "-");
-			} else{
-				if (sd.frequency(2, 0) == sd.frequency(2, 1)) {
-					sprintf(bufferCh2, "%d", (int)sd.frequency(2, 0));
-				} else{                              strcpy(bufferCh2, "Var"); }
-			}
-			sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
-			row[m_DetailsColumns.m_col_freq] = buffer;
-			bufferCh1[0] = '\0';
-			bufferCh2[0] = '\0';
-			buffer[0] = '\0';
+                            row[m_DetailsColumns.m_col_xaxis] = sd.xVariable();
+                            row[m_DetailsColumns.m_col_trials] = sd.trials();
+
+                            char bufferCh1[20];
+                            char bufferCh2[20];
+                            char buffer[50];
+
+                            if (sd.m_head.nOnCh1 == 0) {
+                                    strcpy(bufferCh1, "-");
+                            } else{
+                                    sprintf(bufferCh1, "%s", sd.type(1).c_str());
+                            }
+                            if (sd.m_head.nOnCh2 == 0) {
+                                    strcpy(bufferCh2, "-");
+                            } else{
+                                    sprintf(bufferCh2, "%s", sd.type(2).c_str());
+                            }
+                            sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
+                            row[m_DetailsColumns.m_col_type] = buffer;
+                            bufferCh1[0] = '\0';
+                            bufferCh2[0] = '\0';
+                            buffer[0] = '\0';
 
 
-			if (sd.m_head.nOnCh1 == 0) {
-				strcpy(bufferCh1, "-");
-			} else{
-				if (sd.attenuation(1, 0) == sd.attenuation(1, 1)) {
-					sprintf(bufferCh1, "%d", (int)sd.attenuation(1, 0));
-				} else{                              strcpy(bufferCh1, "Var"); }
-			}
-			if (sd.m_head.nOnCh2 == 0) {
-				strcpy(bufferCh2, "-");
-			} else{
-				if (sd.attenuation(2, 0) == sd.attenuation(2, 1)) {
-					sprintf(bufferCh2, "%d", (int)sd.attenuation(2, 0));
-				} else{                              strcpy(bufferCh2, "Var"); }
-			}
-			sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
-			row[m_DetailsColumns.m_col_atten] = buffer;
-			bufferCh1[0] = '\0';
-			bufferCh2[0] = '\0';
-			buffer[0] = '\0';
+                            if (sd.m_head.nOnCh1 == 0) {
+                                    strcpy(bufferCh1, "-");
+                            } else{
+                                    if (sd.frequency(1, 0) == sd.frequency(1, 1)) {
+                                            sprintf(bufferCh1, "%d", (int)sd.frequency(1, 0));
+                                    } else{                              strcpy(bufferCh1, "Var"); }
+                            }
+                            if (sd.m_head.nOnCh2 == 0) {
+                                    strcpy(bufferCh2, "-");
+                            } else{
+                                    if (sd.frequency(2, 0) == sd.frequency(2, 1)) {
+                                            sprintf(bufferCh2, "%d", (int)sd.frequency(2, 0));
+                                    } else{                              strcpy(bufferCh2, "Var"); }
+                            }
+                            sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
+                            row[m_DetailsColumns.m_col_freq] = buffer;
+                            bufferCh1[0] = '\0';
+                            bufferCh2[0] = '\0';
+                            buffer[0] = '\0';
 
-			if (sd.m_head.nOnCh1 == 0) {
-				strcpy(bufferCh1, "-");
-			} else{
-				if (sd.duration(1, 0) == sd.duration(1, 1)) {
-					sprintf(bufferCh1, "%d", (int)sd.duration(1, 0));
-				} else{                              strcpy(bufferCh1, "Var"); }
-			}
-			if (sd.m_head.nOnCh2 == 0) {
-				strcpy(bufferCh2, "-");
-			} else{
-				if (sd.duration(2, 0) == sd.duration(2, 1)) {
-					sprintf(bufferCh2, "%d", (int)sd.duration(2, 0));
-				} else{                              strcpy(bufferCh2, "Var"); }
-			}
-			sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
-			row[m_DetailsColumns.m_col_dur] = buffer;
-			bufferCh1[0] = '\0';
-			bufferCh2[0] = '\0';
-			buffer[0] = '\0';
 
-			if (sd.m_head.nOnCh1 == 0) {
-				strcpy(bufferCh1, "-");
-			} else{
-				if (sd.begin(1, 0) == sd.begin(1, 1)) {
-					sprintf(bufferCh1, "%d", (int)sd.begin(1, 0));
-				} else{                              strcpy(bufferCh1, "Var"); }
-			}
-			if (sd.m_head.nOnCh2 == 0) {
-				strcpy(bufferCh2, "-");
-			} else{
-				if (sd.begin(2, 0) == sd.begin(2, 1)) {
-					sprintf(bufferCh2, "%d", (int)sd.begin(2, 0));
-				} else{                              strcpy(bufferCh2, "Var"); }
-			}
-			sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
-			row[m_DetailsColumns.m_col_onset] = buffer;
-			bufferCh1[0] = '\0';
-			bufferCh2[0] = '\0';
-			buffer[0] = '\0';
+                            if (sd.m_head.nOnCh1 == 0) {
+                                    strcpy(bufferCh1, "-");
+                            } else{
+                                    if (sd.attenuation(1, 0) == sd.attenuation(1, 1)) {
+                                            sprintf(bufferCh1, "%d", (int)sd.attenuation(1, 0));
+                                    } else{                              strcpy(bufferCh1, "Var"); }
+                            }
+                            if (sd.m_head.nOnCh2 == 0) {
+                                    strcpy(bufferCh2, "-");
+                            } else{
+                                    if (sd.attenuation(2, 0) == sd.attenuation(2, 1)) {
+                                            sprintf(bufferCh2, "%d", (int)sd.attenuation(2, 0));
+                                    } else{                              strcpy(bufferCh2, "Var"); }
+                            }
+                            sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
+                            row[m_DetailsColumns.m_col_atten] = buffer;
+                            bufferCh1[0] = '\0';
+                            bufferCh2[0] = '\0';
+                            buffer[0] = '\0';
+
+                            if (sd.m_head.nOnCh1 == 0) {
+                                    strcpy(bufferCh1, "-");
+                            } else{
+                                    if (sd.duration(1, 0) == sd.duration(1, 1)) {
+                                            sprintf(bufferCh1, "%d", (int)sd.duration(1, 0));
+                                    } else{                              strcpy(bufferCh1, "Var"); }
+                            }
+                            if (sd.m_head.nOnCh2 == 0) {
+                                    strcpy(bufferCh2, "-");
+                            } else{
+                                    if (sd.duration(2, 0) == sd.duration(2, 1)) {
+                                            sprintf(bufferCh2, "%d", (int)sd.duration(2, 0));
+                                    } else{                              strcpy(bufferCh2, "Var"); }
+                            }
+                            sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
+                            row[m_DetailsColumns.m_col_dur] = buffer;
+                            bufferCh1[0] = '\0';
+                            bufferCh2[0] = '\0';
+                            buffer[0] = '\0';
+
+                            if (sd.m_head.nOnCh1 == 0) {
+                                    strcpy(bufferCh1, "-");
+                            } else{
+                                    if (sd.begin(1, 0) == sd.begin(1, 1)) {
+                                            sprintf(bufferCh1, "%d", (int)sd.begin(1, 0));
+                                    } else{                              strcpy(bufferCh1, "Var"); }
+                            }
+                            if (sd.m_head.nOnCh2 == 0) {
+                                    strcpy(bufferCh2, "-");
+                            } else{
+                                    if (sd.begin(2, 0) == sd.begin(2, 1)) {
+                                            sprintf(bufferCh2, "%d", (int)sd.begin(2, 0));
+                                    } else{                              strcpy(bufferCh2, "Var"); }
+                            }
+                            sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
+                            row[m_DetailsColumns.m_col_onset] = buffer;
+                            bufferCh1[0] = '\0';
+                            bufferCh2[0] = '\0';
+                            buffer[0] = '\0';
+                        }
 
 		} else{ 
 			
@@ -1366,6 +1401,7 @@ void GUI::on_menuQuit_activate()
 	delete m_pCellDetailsList;
 	delete m_pAnimalDetailsList;
 	delete m_pMeanType;
+	delete m_pTypeFilter;
 	delete m_pDataSource;
 	delete m_pXVar;
 	delete m_pYVar;
