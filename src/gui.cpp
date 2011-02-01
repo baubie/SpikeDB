@@ -20,7 +20,7 @@ void Tokenize(const std::string& str,
 	}
 }
 
-
+// TODO: Split into multiple functions
 GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	: Gtk::Window(cobject),
 	m_refGlade(refGlade),
