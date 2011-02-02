@@ -6,6 +6,12 @@ Settings::Settings()
     if (sqlite3_open("spikedb.settings", &db) != SQLITE_OK) {
         std::cerr << "CRITICAL ERROR: Unable to open settings file." << std::endl;
     }
+
+    sqlite3_stmt *stmt=0;
+    const char query[] = "CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT)";
+    sqlite3_prepare_v2(db,query,strlen(query), &stmt, NULL);
+    sqlite3_step(stmt);
+	sqlite3_finalize(stmt);
 }
 
 Settings::~Settings()

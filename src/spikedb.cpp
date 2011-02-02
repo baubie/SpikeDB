@@ -10,7 +10,7 @@ int main(int argc, char** argv)
     Glib::RefPtr<Gtk::Builder> refBuilder = Gtk::Builder::create();
     try
     {
-        refBuilder->add_from_file("spikedb.glade");
+        refBuilder->add_from_file("ui/spikedb.glade");
     }
     catch(const Glib::FileError& ex)
     {
