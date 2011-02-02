@@ -13,6 +13,9 @@
 #include "easyplotmm/easyplotmm.h"
 #include "spikedata.h"
 #include "settings.h"
+#include "tokenize.h"
+
+#include "uiFilterFrame.h"
 
 class GUI : public Gtk::Window
 {
@@ -48,9 +51,7 @@ class GUI : public Gtk::Window
         Gtk::TreeView* m_pCellDetailsList;
         Gtk::HBox* m_pHBoxPlots;
 		Gtk::Statusbar* m_pStatusbar;
-		Gtk::SpinButton* m_pMinFiles;
         Gtk::VBox* m_pVBoxAnalyze;
-		Gtk::ComboBox* m_pTypeFilter;
 		Gtk::ComboBox* m_pMeanType;
 		Gtk::ComboBox* m_pDataSource;
 		Gtk::ComboBox* m_pXVar;

@@ -1,24 +1,6 @@
 #include "gui.h"
 
 
-void Tokenize(const std::string& str,
-	      std::vector<std::string>& tokens,
-	      const std::string& delimiters = " ")
-{
-	// Skip delimiters at beginning.
-	std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);
-	// Find first "non-delimiter".
-	std::string::size_type pos     = str.find_first_of(delimiters, lastPos);
-
-	while (std::string::npos != pos || std::string::npos != lastPos) {
-		// Found a token, add it to the vector.
-		tokens.push_back(str.substr(lastPos, pos - lastPos));
-		// Skip delimiters.  Note the "not_of"
-		lastPos = str.find_first_not_of(delimiters, pos);
-		// Find next "non-delimiter"
-		pos = str.find_first_of(delimiters, lastPos);
-	}
-}
 
 
 GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
@@ -59,10 +41,6 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	// Setup the statusbar
 	m_refGlade->get_widget("statusbar", m_pStatusbar);
 
-	// Setup the filter widgets
-	m_refGlade->get_widget("sbMinFiles", m_pMinFiles);
-	m_pMinFiles->set_adjustment(m_adjMinFiles);
-	m_adjMinFiles.signal_value_changed().connect(sigc::mem_fun(*this, &GUI::updateFilter));
 
 
 	// Create Animals TreeView
@@ -158,23 +136,6 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	m_pDataSource->set_active(0);
 	on_analyze_changed();
 
-        // Filter
-	m_refGlade->get_widget("cbTypeFilter", m_pTypeFilter);
-        m_refTypeFilter = Gtk::ListStore::create(m_MeanTypeColumns);
-        m_pTypeFilter->set_model(m_refTypeFilter);
-        m_pTypeFilter->pack_start(m_MeanTypeColumns.m_col_name);
-        m_pTypeFilter->signal_changed().connect( sigc::mem_fun(*this, &GUI::updateFilter) );
-        row = *(m_refTypeFilter->append());
-        row[m_MeanTypeColumns.m_col_name] = "All";
-        row = *(m_refTypeFilter->append());
-        row[m_MeanTypeColumns.m_col_name] = "Freq";
-        row = *(m_refTypeFilter->append());
-        row[m_MeanTypeColumns.m_col_name] = "Dur";
-        row = *(m_refTypeFilter->append());
-        row[m_MeanTypeColumns.m_col_name] = "Onset";
-        row = *(m_refTypeFilter->append());
-        row[m_MeanTypeColumns.m_col_name] = "Atten";
-        m_pTypeFilter->set_active(0);
 
 	m_refGlade->get_widget("hboxPlots", m_pHBoxPlots);
 	m_refGlade->get_widget("cbMeanType", m_pMeanType);
