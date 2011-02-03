@@ -24,62 +24,53 @@ class GUI : public Gtk::Window
         GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade);
         virtual ~GUI();
 
-        // SQLite Database
-        sqlite3 *db;
+        sqlite3 *db; /**< Pointer to out SQLite3 database. */
 
 
     protected:
 
 
-        /**
-		 * Signal handlers
-		 */
-        void on_menuNewDatabase_activate();
-        void on_menuOpenDatabase_activate();
-        void on_menuImportFolder_activate();
-        void on_menuQuit_activate();
-		void on_analyze_changed();
-		void on_meantype_changed();
+		void init_toolbar(); /**< Initialize the toolbar. */
 
-
-		/**
-		 * Reference to Glade file
-		 */
-        Glib::RefPtr<Gtk::Builder> m_refGlade;
-
+        void on_menuNewDatabase_activate(); /**< Handle the New Database menu item. */
+        void on_menuOpenDatabase_activate(); /**< Handle the Open Database menu item. */
+        void on_menuImportFolder_activate(); /**< Handle the Import Folder menu item. */
+        void on_menuQuit_activate(); /**< Handle the Quit menu item. */
+		void on_analyze_changed(); /**< Handle when the analyze parameters change. */
+		void on_meantype_changed(); /**< Handle when the type of mean plot changes. */ 
+		void on_filter_changed(); /**< Handle when the filter changes in any way. */
 
 		/** 
-		 * Settings object
-		 */
-		Settings settings;
+		 * Handle when a row in the animal details property table is edited. 
+		 * */
+		void on_animaldetails_edited(
+				Glib::ustring ID,
+				Glib::ustring name,
+				Glib::ustring oldvalue,
+				Glib::ustring newvalue,
+				uiPropTable::RowType type);
 
 
-		/**
-		 * uiReady will not update the UI until the 
-		 * construtor is done.
-		 */
-		bool uiReady;
+        Glib::RefPtr<Gtk::Builder> m_refGlade; /**< Reference to Glade file. */ 
+		Settings settings; /**< Settings object. */
 
 
-		/**
-		 * uiFilterFrame
-		 * Top left corner frame with filter widgets
-		 */
-		uiFilterFrame m_uiFilterFrame; 
+		bool uiReady; /**< When FALSE, block UI updates. */
 
 
-		/**
-		 * uiPropTable
-		 */
-		uiPropTable m_uiAnimalDetails;
-		Gtk::Alignment* mp_AlignAnimalDetails;
+		uiFilterFrame m_uiFilterFrame; /**< Filter widgets in top left corner. */
+
+
+		uiPropTable m_uiAnimalDetails; /**< Animal details property table. */
+		Gtk::Alignment* mp_AlignAnimalDetails; /**< Container for the animal details property table. */
 
 		 
 
+        Gtk::ImageMenuItem* mp_MenuNewDatabase;
+        Gtk::ImageMenuItem* mp_MenuOpenDatabase;
         Gtk::ImageMenuItem* mp_MenuImportFolder;
         Gtk::ImageMenuItem* mp_MenuQuit;
-        Gtk::ImageMenuItem* mp_MenuOpenDatabase;
-        Gtk::ImageMenuItem* mp_MenuNewDatabase;
+
         Gtk::TreeView* mp_AnimalTree;
         Gtk::TreeView* mp_DetailsList;
         Gtk::HBox* mp_HBoxPlots;
@@ -172,7 +163,6 @@ class GUI : public Gtk::Window
         void changeDetailsSelection();
         void addFileToPlot(const Gtk::TreeModel::iterator& iter);
 		void updateSideLists(const Gtk::TreeModel::iterator& iter);
-		void updateFilter();
 		void updateAnalyzePlot();
 
 		void getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID);
@@ -181,7 +171,6 @@ class GUI : public Gtk::Window
         // Helper to sort by string for parent and number by child
         int on_animal_sort(const Gtk::TreeModel::iterator& a, const Gtk::TreeModel::iterator& b);
 
-    private:
         std::string curXVariable;
 };
 

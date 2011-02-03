@@ -6,7 +6,6 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	: Gtk::Window(cobject),
 	m_refGlade(refGlade),
 	m_uiFilterFrame(refGlade),
-	mp_MenuQuit(0),
 	mp_AnimalTree(0),
 	mp_DetailsList(0)
 {
@@ -20,50 +19,29 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	mp_PlotSpikes = new EasyPlotmm();
 	mp_PlotMeans = new EasyPlotmm();
 
-	// Setup the toolbar
-	m_refGlade->get_widget("menuNewDatabase", mp_MenuNewDatabase);
-	if (mp_MenuNewDatabase) {
-		mp_MenuNewDatabase->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuNewDatabase_activate));
-	}
-	m_refGlade->get_widget("menuOpenDatabase", mp_MenuOpenDatabase);
-	if (mp_MenuOpenDatabase) {
-		mp_MenuOpenDatabase->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuOpenDatabase_activate));
-	}
-	m_refGlade->get_widget("menuImportFolder", mp_MenuImportFolder);
-	if (mp_MenuImportFolder) {
-		mp_MenuImportFolder->set_sensitive(false);
-		mp_MenuImportFolder->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuImportFolder_activate));
-	}
-	m_refGlade->get_widget("menuQuit", mp_MenuQuit);
-	if (mp_MenuQuit) {
-		mp_MenuQuit->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuQuit_activate));
-	}
+	// Initialize the toolbar
+	this->init_toolbar();
 
-	// Setup the statusbar
+	// Initalize the statusbar
 	m_refGlade->get_widget("statusbar", mp_Statusbar);
 
 
-	/*
-	 * Setup the filter frame
-	 */
-	m_uiFilterFrame.signal_changed().connect(sigc::mem_fun(*this, &GUI::updateFilter));
+	// Setup the filter frame
+	m_uiFilterFrame.signal_changed().connect(sigc::mem_fun(*this, &GUI::on_filter_changed));
 	if (settings.get_int("filterMinFiles") != 0) {
 		m_uiFilterFrame.minFiles(settings.get_double("filterMinFiles"));
 	} else { 
 		settings.set("filterMinFiles", m_uiFilterFrame.minFiles());
 	}
 
-	/*
-	 * Setup the animal details table
-	 */
+	// Setup the animal details table
 	m_refGlade->get_widget("alignAnimalDetails", mp_AlignAnimalDetails);
 	mp_AlignAnimalDetails->add(m_uiAnimalDetails);
+	m_uiAnimalDetails.signal_rowedited().connect(sigc::mem_fun(*this, &GUI::on_animaldetails_edited));
 	
 
-	/*
-	 * Animals treeview 
-	 * Shown on left side under filter frame
-	 */
+	// Animals treeview 
+	// Shown on left side under filter frame
 	m_refGlade->get_widget("tvAnimals", mp_AnimalTree);
 	m_refAnimalTree = Gtk::TreeStore::create(m_AnimalColumns);
 	mp_AnimalTree->set_model(m_refAnimalTree);
@@ -71,9 +49,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	m_refAnimalTree->set_sort_column(m_AnimalColumns.m_col_name, Gtk::SORT_ASCENDING);
 	m_refAnimalTree->set_sort_func(0, sigc::mem_fun(*this, &GUI::on_animal_sort));
 	m_refAnimalSelection = mp_AnimalTree->get_selection();
-	m_refAnimalSelection->signal_changed().connect(
-		sigc::mem_fun(*this, &GUI::changeAnimalSelection)
-		);
+	m_refAnimalSelection->signal_changed().connect(sigc::mem_fun(*this, &GUI::changeAnimalSelection));
 
 	// Create Details TreeView
 	m_refGlade->get_widget("tvDetails", mp_DetailsList);
@@ -158,12 +134,37 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	}
 
 	uiReady = true;
-	this->updateFilter();
+	this->on_filter_changed();
 }
 
 GUI::~GUI()
 {
 }
+
+void GUI::init_toolbar()
+{
+	m_refGlade->get_widget("menuNewDatabase", mp_MenuNewDatabase);
+	if (mp_MenuNewDatabase) {
+		mp_MenuNewDatabase->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuNewDatabase_activate));
+	}
+	m_refGlade->get_widget("menuOpenDatabase", mp_MenuOpenDatabase);
+	if (mp_MenuOpenDatabase) {
+		mp_MenuOpenDatabase->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuOpenDatabase_activate));
+	}
+	m_refGlade->get_widget("menuImportFolder", mp_MenuImportFolder);
+	if (mp_MenuImportFolder) {
+		mp_MenuImportFolder->set_sensitive(false);
+		mp_MenuImportFolder->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuImportFolder_activate));
+	}
+	m_refGlade->get_widget("menuQuit", mp_MenuQuit);
+	if (mp_MenuQuit) {
+		mp_MenuQuit->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuQuit_activate));
+	}
+}
+
+
+
+
 
 void GUI::on_menuNewDatabase_activate()
 {
@@ -279,7 +280,7 @@ bool GUI::openDatabase(std::string filename)
 	return true;
 }
 
-void GUI::updateFilter()
+void GUI::on_filter_changed()
 {
 	if (!uiReady) return;
 
@@ -573,6 +574,31 @@ void GUI::cellvalue_cell_data(Gtk::CellRenderer* *renderer*, const Gtk::TreeMode
 	}
 }
 */
+
+void GUI::on_animaldetails_edited(
+	Glib::ustring ID, Glib::ustring name, Glib::ustring /*oldvalue*/, Glib::ustring newvalue, uiPropTable::RowType /*type*/)
+{
+	// Construct the SQL query for the relevant row.
+	Glib::ustring query;
+	if (name == "Tags")  query = "UPDATE animals SET tags=? WHERE ID=?";
+	if (name == "Species") query = "UPDATE animals SET species=? WHERE ID=?";
+	if (name == "Sex") query = "UPDATE animals SET sex=? WHERE ID=?";
+	if (name == "Weight (g)") query = "UPDATE animals SET weight=? WHERE ID=?";
+	if (name == "Age") query = "UPDATE animals SET age=? WHERE ID=?";
+	if (name == "Notes") query = "UPDATE animals SET notes=? WHERE ID=?";
+
+	// Update the database.
+	const char* q = query.c_str();
+	sqlite3_stmt *stmt = 0;
+	sqlite3_prepare_v2(db, q, strlen(q), &stmt, NULL);
+	sqlite3_bind_text(stmt, 1, newvalue.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_text(stmt, 2, ID.c_str(), -1, SQLITE_TRANSIENT);
+	if (sqlite3_step(stmt) != SQLITE_DONE) std::cerr << "ERROR: Could not update animal. " << sqlite3_errmsg(db) << std::endl;
+	sqlite3_finalize(stmt);
+
+	// Repopulate the table with the database value to show, forsure, what is in the database now.
+	populateAnimalDetailsList(ID);
+}
 
 void GUI::changeDetailsSelection()
 {
@@ -1297,8 +1323,11 @@ void GUI::on_menuQuit_activate()
 	settings.set("winY", y);
 
 
-	delete mp_MenuQuit;
+	delete mp_MenuNewDatabase;
+	delete mp_MenuOpenDatabase;
 	delete mp_MenuImportFolder;
+	delete mp_MenuQuit;
+
 	delete mp_AnimalTree;
 	delete mp_DetailsList;
 	delete mp_HBoxPlots;
