@@ -85,7 +85,7 @@
                         <property name="visible">True</property>
                         <property name="left_padding">12</property>
                         <child>
-                          <object class="GtkVBox" id="VBox6">
+                          <object class="GtkVBox" id="VBoxFilter">
                             <property name="visible">True</property>
                             <property name="orientation">vertical</property>
                             <child>
@@ -118,15 +118,6 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="position">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkComboBox" id="cbTypeFilter">
-                                <property name="visible">True</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="position">3</property>
                               </packing>
                             </child>
                           </object>

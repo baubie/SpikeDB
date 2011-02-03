@@ -16,6 +16,7 @@
 #include "tokenize.h"
 
 #include "uiFilterFrame.h"
+#include "uiPropTable.h"
 
 class GUI : public Gtk::Window
 {
@@ -23,13 +24,14 @@ class GUI : public Gtk::Window
         GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade);
         virtual ~GUI();
 
-    protected:
-
         // SQLite Database
         sqlite3 *db;
 
 		// Settings
 		Settings settings;
+
+    protected:
+
 
         // Signal handlers
         void on_menuNewDatabase_activate();
@@ -41,6 +43,23 @@ class GUI : public Gtk::Window
 
         // Child Widgets (from glade file)
         Glib::RefPtr<Gtk::Builder> m_refGlade;
+
+		/*
+		 * uiReady will not update the UI until the 
+		 * construtor is done.
+		 */
+		bool uiReady;
+
+
+		/*
+		 * uiFilterFrame
+		 * Top left corner frame with filter widgets
+		 */
+		uiFilterFrame m_uiFilterFrame; 
+
+
+		 
+
         Gtk::ImageMenuItem* m_pMenuImportFolder;
         Gtk::ImageMenuItem* m_pMenuQuit;
         Gtk::ImageMenuItem* m_pMenuOpenDatabase;
@@ -57,8 +76,8 @@ class GUI : public Gtk::Window
 		Gtk::ComboBox* m_pXVar;
 		Gtk::ComboBox* m_pYVar;
 
+
         // Child Widgets (created in c++)
-		Gtk::Adjustment m_adjMinFiles;
         Glib::RefPtr<Gtk::TreeStore> m_refAnimalTree;
         Glib::RefPtr<Gtk::ListStore> m_refDetailsList;
         Glib::RefPtr<Gtk::TreeSelection> m_refAnimalSelection;
@@ -184,6 +203,7 @@ class GUI : public Gtk::Window
 		void updateSideLists(const Gtk::TreeModel::iterator& iter);
 		void updateFilter();
 		void updateAnalyzePlot();
+
 		void getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID);
 		void getCellsStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID);
         

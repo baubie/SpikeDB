@@ -2,15 +2,15 @@
 
 
 
-// TODO: Split into multiple functions
 GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	: Gtk::Window(cobject),
 	m_refGlade(refGlade),
+	m_uiFilterFrame(refGlade),
 	m_pMenuQuit(0),
 	m_pAnimalTree(0),
-	m_pDetailsList(0),
-	m_adjMinFiles(5, 1, 20, 1, 3, 0)
+	m_pDetailsList(0)
 {
+	uiReady = false;
 
 	set_title("Spike Database - No database open");
 
@@ -42,6 +42,16 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	m_refGlade->get_widget("statusbar", m_pStatusbar);
 
 
+	/*
+	 * Setup the filter frame
+	 */
+	m_uiFilterFrame.signal_changed().connect(sigc::mem_fun(*this, &GUI::updateFilter));
+	if (settings.get_int("filterMinFiles") != 0) {
+		m_uiFilterFrame.minFiles(settings.get_double("filterMinFiles"));
+	} else { 
+		settings.set("filterMinFiles", m_uiFilterFrame.minFiles());
+	}
+
 
 	// Create Animals TreeView
 	m_refGlade->get_widget("tvAnimals", m_pAnimalTree);
@@ -69,16 +79,6 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	m_pDetailsList->append_column("Dur (ms)", m_DetailsColumns.m_col_dur);
 	m_pDetailsList->append_column("Onset (ms)", m_DetailsColumns.m_col_onset);
 	m_pDetailsList->append_column("Atten (db)", m_DetailsColumns.m_col_atten);
-
-	/*
-	   // For the time being, we won't tag individual files
-	   m_tvcol_filetags.set_title("Tags");
-	   m_rend_filetags.property_editable() = true;
-	   m_tvcol_filetags.pack_start(m_rend_filetags);
-	   m_pDetailsList->append_column(m_tvcol_filetags);
-	   m_rend_filetags.signal_edited().connect(sigc::mem_fun(*this, &GUI::on_filetags_edited));
-	   m_tvcol_filetags.set_cell_data_func(m_rend_filetags,sigc::mem_fun(*this, &GUI::filetags_cell_data));
-	 */
 
 	m_refDetailsSelection = m_pDetailsList->get_selection();
 	m_refDetailsSelection->set_mode(Gtk::SELECTION_MULTIPLE);
@@ -162,11 +162,6 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 		openDatabase(settings.get_string("lastDatabase"));
 	}
 
-	if (settings.get_int("filterMinFiles") != 0) {
-		m_adjMinFiles.set_value(settings.get_double("filterMinFiles"));
-	} else{
-		settings.set("filterMinFiles", m_adjMinFiles.get_value());
-	}
 
 	if (settings.get_int("winWidth") != 0 && settings.get_int("winHeight") != 0) {
 		resize(settings.get_int("winWidth"), settings.get_int("winHeight"));
@@ -175,6 +170,9 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	if (settings.get_int("winX") != 0 && settings.get_int("winY") != 0) {
 		move(settings.get_int("winX"), settings.get_int("winY"));
 	}
+
+	uiReady = true;
+	this->updateFilter();
 }
 
 GUI::~GUI()
@@ -297,10 +295,16 @@ bool GUI::openDatabase(std::string filename)
 
 void GUI::updateFilter()
 {
-	// Updating the settings for next time
-	settings.set("filterMinFiles", m_adjMinFiles.get_value());
+	if (!uiReady) return;
 
-	// Pretend we clicked on an animal to repopulate details list
+	/*
+	 * Save Settings
+	 */
+	settings.set("filterMinFiles", m_uiFilterFrame.minFiles());
+
+	/*
+	 * Update Animal Selection with Filter
+	 */
 	changeAnimalSelection();
 }
 
@@ -838,6 +842,7 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 
 void GUI::changeAnimalSelection()
 {
+
 	Gtk::TreeModel::iterator iter = m_refAnimalSelection->get_selected();
 
 	if (iter) {
@@ -1029,7 +1034,7 @@ void GUI::populateAnimalTree()
 
 void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID)
 {
-	int minFiles = (int)m_adjMinFiles.get_value();
+	int minFiles = m_uiFilterFrame.minFiles();
 
 	if (animalID != "" && cellID != -1) {
 		const char query[] = "SELECT animalID, cellID, fileID, header FROM files "
@@ -1063,7 +1068,7 @@ void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, c
 
 void GUI::getCellsStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID)
 {
-	int minFiles = (int)m_adjMinFiles.get_value();
+	int minFiles = m_uiFilterFrame.minFiles();
 
 	if (animalID != "" && cellID != -1) {
 		const char query[] = "SELECT animalID, cellID, threshold, depth, freq FROM cells "
@@ -1113,16 +1118,17 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
                         void *header = (void*)sqlite3_column_blob(stmt, 3);
                         sd.setHeader(header);
 
-                        if (m_pTypeFilter->get_active_row_number() == 1) {
+						int XVarFilter = m_uiFilterFrame.XVar();
+                        if (XVarFilter == 1) {
                             if (sd.xVariable() != "Ch 1 Freq" && sd.xVariable() != "Ch 2 Freq") filtered = false;
                         }
-                        if (m_pTypeFilter->get_active_row_number() == 2) {
+                        if (XVarFilter == 2) {
                             if (sd.xVariable() != "Ch 1 Dur" && sd.xVariable() != "Ch 2 Dur") filtered = false;
                         }
-                        if (m_pTypeFilter->get_active_row_number() == 3) {
+                        if (XVarFilter == 3) {
                             if (sd.xVariable() != "Ch 1 Onset" && sd.xVariable() != "Ch 2 Onset") filtered = false;
                         }
-                        if (m_pTypeFilter->get_active_row_number() == 4) {
+                        if (XVarFilter == 4) {
                             if (sd.xVariable() != "Ch 1 Atten" && sd.xVariable() != "Ch 2 Atten") filtered = false;
                         }
 
@@ -1354,6 +1360,7 @@ void GUI::on_menuQuit_activate()
 	settings.set("winX", x);
 	settings.set("winY", y);
 
+
 	delete m_pMenuQuit;
 	delete m_pMenuImportFolder;
 	delete m_pAnimalTree;
@@ -1362,7 +1369,6 @@ void GUI::on_menuQuit_activate()
 	delete m_pCellDetailsList;
 	delete m_pAnimalDetailsList;
 	delete m_pMeanType;
-	delete m_pTypeFilter;
 	delete m_pDataSource;
 	delete m_pXVar;
 	delete m_pYVar;
