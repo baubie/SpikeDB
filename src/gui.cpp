@@ -6,8 +6,8 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	: Gtk::Window(cobject),
 	m_refGlade(refGlade),
 	m_uiFilterFrame(refGlade),
-	mp_AnimalTree(0),
-	mp_DetailsList(0)
+	mp_AnimalsTree(0),
+	mp_FilesDetailsTree(0)
 {
 	uiReady = false;
 	db = NULL;
@@ -34,6 +34,8 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 		settings.set("filterMinFiles", m_uiFilterFrame.minFiles());
 	}
 
+
+
 	// Setup the animal details table
 	m_refGlade->get_widget("alignAnimalDetails", mp_AlignAnimalDetails);
 	mp_AlignAnimalDetails->add(m_uiAnimalDetails);
@@ -42,35 +44,32 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 
 	// Animals treeview 
 	// Shown on left side under filter frame
-	m_refGlade->get_widget("tvAnimals", mp_AnimalTree);
+	m_refGlade->get_widget("tvAnimals", mp_AnimalsTree);
 	m_refAnimalTree = Gtk::TreeStore::create(m_AnimalColumns);
-	mp_AnimalTree->set_model(m_refAnimalTree);
-	mp_AnimalTree->append_column("Animal/Cell ID", m_AnimalColumns.m_col_name);
+	mp_AnimalsTree->set_model(m_refAnimalTree);
+	mp_AnimalsTree->append_column("Animal/Cell ID", m_AnimalColumns.m_col_name);
 	m_refAnimalTree->set_sort_column(m_AnimalColumns.m_col_name, Gtk::SORT_ASCENDING);
 	m_refAnimalTree->set_sort_func(0, sigc::mem_fun(*this, &GUI::on_animal_sort));
-	m_refAnimalSelection = mp_AnimalTree->get_selection();
+	m_refAnimalSelection = mp_AnimalsTree->get_selection();
 	m_refAnimalSelection->signal_changed().connect(sigc::mem_fun(*this, &GUI::changeAnimalSelection));
 
-	// Create Details TreeView
-	m_refGlade->get_widget("tvDetails", mp_DetailsList);
-	m_refDetailsList = Gtk::ListStore::create(m_DetailsColumns);
-	mp_DetailsList->set_model(m_refDetailsList);
-	mp_DetailsList->append_column("AnimalID", m_DetailsColumns.m_col_animalID);
-	mp_DetailsList->append_column("CellID", m_DetailsColumns.m_col_cellID);
-	mp_DetailsList->append_column("#", m_DetailsColumns.m_col_filenum);
-	mp_DetailsList->append_column("X-Var", m_DetailsColumns.m_col_xaxis);
-	mp_DetailsList->append_column("Type", m_DetailsColumns.m_col_type);
-	mp_DetailsList->append_column("Trials", m_DetailsColumns.m_col_trials);
-	mp_DetailsList->append_column("CarFreq (Hz)", m_DetailsColumns.m_col_freq);
-	mp_DetailsList->append_column("Dur (ms)", m_DetailsColumns.m_col_dur);
-	mp_DetailsList->append_column("Onset (ms)", m_DetailsColumns.m_col_onset);
-	mp_DetailsList->append_column("Atten (db)", m_DetailsColumns.m_col_atten);
-
-	m_refDetailsSelection = mp_DetailsList->get_selection();
+	// Create Files Details TreeView
+	m_refGlade->get_widget("tvDetails", mp_FilesDetailsTree);
+	m_refDetailsList = Gtk::ListStore::create(m_FilesDetailsColumns);
+	mp_FilesDetailsTree->set_model(m_refDetailsList);
+	mp_FilesDetailsTree->append_column("AnimalID", m_FilesDetailsColumns.m_col_animalID);
+	mp_FilesDetailsTree->append_column("CellID", m_FilesDetailsColumns.m_col_cellID);
+	mp_FilesDetailsTree->append_column("#", m_FilesDetailsColumns.m_col_filenum);
+	mp_FilesDetailsTree->append_column("X-Var", m_FilesDetailsColumns.m_col_xaxis);
+	mp_FilesDetailsTree->append_column("Type", m_FilesDetailsColumns.m_col_type);
+	mp_FilesDetailsTree->append_column("Trials", m_FilesDetailsColumns.m_col_trials);
+	mp_FilesDetailsTree->append_column("CarFreq (Hz)", m_FilesDetailsColumns.m_col_freq);
+	mp_FilesDetailsTree->append_column("Dur (ms)", m_FilesDetailsColumns.m_col_dur);
+	mp_FilesDetailsTree->append_column("Onset (ms)", m_FilesDetailsColumns.m_col_onset);
+	mp_FilesDetailsTree->append_column("Atten (db)", m_FilesDetailsColumns.m_col_atten);
+	m_refDetailsSelection = mp_FilesDetailsTree->get_selection();
 	m_refDetailsSelection->set_mode(Gtk::SELECTION_MULTIPLE);
-	m_refDetailsSelection->signal_changed().connect(
-		sigc::mem_fun(*this, &GUI::changeDetailsSelection)
-		);
+	m_refDetailsSelection->signal_changed().connect(sigc::mem_fun(*this, &GUI::changeDetailsSelection));
 
  
 
@@ -119,19 +118,14 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	show_all_children();
 
 
-	// Load default settings
-	if (settings.get_string("lastDatabase") != "") {
-		openDatabase(settings.get_string("lastDatabase"));
-	}
+	// Attempt to use the previously opened database.
+	if (settings.get_string("lastDatabase") != "") openDatabase(settings.get_string("lastDatabase"));
 
-
-	if (settings.get_int("winWidth") != 0 && settings.get_int("winHeight") != 0) {
+	// Attempt to restore the window size and position
+	if (settings.get_int("winWidth") != 0 && settings.get_int("winHeight") != 0) 
 		resize(settings.get_int("winWidth"), settings.get_int("winHeight"));
-	}
-
-	if (settings.get_int("winX") != 0 && settings.get_int("winY") != 0) {
+	if (settings.get_int("winX") != 0 && settings.get_int("winY") != 0) 
 		move(settings.get_int("winX"), settings.get_int("winY"));
-	}
 
 	uiReady = true;
 	this->on_filter_changed();
@@ -476,41 +470,6 @@ int GUI::on_animal_sort(const Gtk::TreeModel::iterator& a_, const Gtk::TreeModel
 	return a.compare(b);
 }
 
-void GUI::on_filetags_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)
-{
-	//TODO: Update to new tags table
-	Gtk::TreePath path(path_string);
-
-	Gtk::TreeModel::iterator iter = m_refDetailsList->get_iter(path);
-
-	if (iter) {
-		// Update tree model
-		Gtk::TreeModel::Row row = *iter;
-		row[m_DetailsColumns.m_col_tags] = new_text;
-
-		// Update sqlite database
-		/*
-		const char q[] = "UPDATE files SET tags=? WHERE animalID=? AND cellID=? AND fileID=?";
-		sqlite3_stmt *stmt = 0;
-		sqlite3_prepare_v2(db, q, strlen(q), &stmt, NULL);
-		sqlite3_bind_text(stmt, 1, new_text.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_text(stmt, 2, row.get_value(m_DetailsColumns.m_col_animalID).c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int(stmt, 3, row[m_DetailsColumns.m_col_cellID]);
-		sqlite3_bind_int(stmt, 4, row[m_DetailsColumns.m_col_filenum]);
-		sqlite3_step(stmt);
-		sqlite3_finalize(stmt);
-		*/
-	}
-}
-
-void GUI::filetags_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::TreeModel::iterator& iter)
-{
-	if (iter) {
-		Gtk::TreeModel::Row row = *iter;
-		m_rend_filetags.property_text() = row[m_DetailsColumns.m_col_tags];
-	}
-}
-
 /*
 void GUI::on_cellvalue_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)
 {
@@ -619,9 +578,9 @@ void GUI::updateSideLists(const Gtk::TreeModel::iterator& iter)
 
 	Gtk::TreeModel::Row row = *iter;
 
-	populateAnimalDetailsList(row.get_value(m_DetailsColumns.m_col_animalID));
-	populateCellDetailsList(row.get_value(m_DetailsColumns.m_col_animalID),
-				row.get_value(m_DetailsColumns.m_col_cellID));
+	populateAnimalDetailsList(row.get_value(m_FilesDetailsColumns.m_col_animalID));
+	populateCellDetailsList(row.get_value(m_FilesDetailsColumns.m_col_animalID),
+				row.get_value(m_FilesDetailsColumns.m_col_cellID));
 }
 
 void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
@@ -637,9 +596,9 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 	const char query[] = "SELECT header,spikes FROM files WHERE animalID=? AND cellID=? AND fileID=?";
 
 	sqlite3_prepare_v2(db, query, strlen(query), &stmt, NULL);
-	sqlite3_bind_text(stmt, 1, row.get_value(m_DetailsColumns.m_col_animalID).c_str(), -1, SQLITE_TRANSIENT);
-	sqlite3_bind_int(stmt, 2, row.get_value(m_DetailsColumns.m_col_cellID));
-	sqlite3_bind_int(stmt, 3, row.get_value(m_DetailsColumns.m_col_filenum));
+	sqlite3_bind_text(stmt, 1, row.get_value(m_FilesDetailsColumns.m_col_animalID).c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_int(stmt, 2, row.get_value(m_FilesDetailsColumns.m_col_cellID));
+	sqlite3_bind_int(stmt, 3, row.get_value(m_FilesDetailsColumns.m_col_filenum));
 	int r;
 	r = sqlite3_step(stmt);
 	SpikeData sd;
@@ -1096,15 +1055,15 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 
                         if (filtered) {
                             row = *(m_refDetailsList->append());
-                            row[m_DetailsColumns.m_col_animalID] = (char*)sqlite3_column_text(stmt, 0);
-                            row[m_DetailsColumns.m_col_cellID] = sqlite3_column_int(stmt, 1);
-                            row[m_DetailsColumns.m_col_filenum] = sqlite3_column_int(stmt, 2);
+                            row[m_FilesDetailsColumns.m_col_animalID] = (char*)sqlite3_column_text(stmt, 0);
+                            row[m_FilesDetailsColumns.m_col_cellID] = sqlite3_column_int(stmt, 1);
+                            row[m_FilesDetailsColumns.m_col_filenum] = sqlite3_column_int(stmt, 2);
                             if (sqlite3_column_text(stmt, 4) != NULL) {
-                                    row[m_DetailsColumns.m_col_tags] = (char*)sqlite3_column_text(stmt, 4);
+                                    row[m_FilesDetailsColumns.m_col_tags] = (char*)sqlite3_column_text(stmt, 4);
                             }
 
-                            row[m_DetailsColumns.m_col_xaxis] = sd.xVariable();
-                            row[m_DetailsColumns.m_col_trials] = sd.trials();
+                            row[m_FilesDetailsColumns.m_col_xaxis] = sd.xVariable();
+                            row[m_FilesDetailsColumns.m_col_trials] = sd.trials();
 
                             char bufferCh1[20];
                             char bufferCh2[20];
@@ -1121,7 +1080,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
                                     sprintf(bufferCh2, "%s", sd.type(2).c_str());
                             }
                             sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
-                            row[m_DetailsColumns.m_col_type] = buffer;
+                            row[m_FilesDetailsColumns.m_col_type] = buffer;
                             bufferCh1[0] = '\0';
                             bufferCh2[0] = '\0';
                             buffer[0] = '\0';
@@ -1142,7 +1101,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
                                     } else{                              strcpy(bufferCh2, "Var"); }
                             }
                             sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
-                            row[m_DetailsColumns.m_col_freq] = buffer;
+                            row[m_FilesDetailsColumns.m_col_freq] = buffer;
                             bufferCh1[0] = '\0';
                             bufferCh2[0] = '\0';
                             buffer[0] = '\0';
@@ -1163,7 +1122,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
                                     } else{                              strcpy(bufferCh2, "Var"); }
                             }
                             sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
-                            row[m_DetailsColumns.m_col_atten] = buffer;
+                            row[m_FilesDetailsColumns.m_col_atten] = buffer;
                             bufferCh1[0] = '\0';
                             bufferCh2[0] = '\0';
                             buffer[0] = '\0';
@@ -1183,7 +1142,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
                                     } else{                              strcpy(bufferCh2, "Var"); }
                             }
                             sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
-                            row[m_DetailsColumns.m_col_dur] = buffer;
+                            row[m_FilesDetailsColumns.m_col_dur] = buffer;
                             bufferCh1[0] = '\0';
                             bufferCh2[0] = '\0';
                             buffer[0] = '\0';
@@ -1203,7 +1162,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
                                     } else{                              strcpy(bufferCh2, "Var"); }
                             }
                             sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
-                            row[m_DetailsColumns.m_col_onset] = buffer;
+                            row[m_FilesDetailsColumns.m_col_onset] = buffer;
                             bufferCh1[0] = '\0';
                             bufferCh2[0] = '\0';
                             buffer[0] = '\0';
@@ -1328,8 +1287,8 @@ void GUI::on_menuQuit_activate()
 	delete mp_MenuImportFolder;
 	delete mp_MenuQuit;
 
-	delete mp_AnimalTree;
-	delete mp_DetailsList;
+	delete mp_AnimalsTree;
+	delete mp_FilesDetailsTree;
 	delete mp_HBoxPlots;
 	delete mp_MeanType;
 	delete mp_DataSource;

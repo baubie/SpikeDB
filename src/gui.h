@@ -71,8 +71,8 @@ class GUI : public Gtk::Window
         Gtk::ImageMenuItem* mp_MenuImportFolder;
         Gtk::ImageMenuItem* mp_MenuQuit;
 
-        Gtk::TreeView* mp_AnimalTree;
-        Gtk::TreeView* mp_DetailsList;
+        Gtk::TreeView* mp_AnimalsTree;
+        Gtk::TreeView* mp_FilesDetailsTree;
         Gtk::HBox* mp_HBoxPlots;
 		Gtk::Statusbar* mp_Statusbar;
         Gtk::VBox* mp_VBoxAnalyze;
@@ -118,11 +118,11 @@ class GUI : public Gtk::Window
                 Gtk::TreeModelColumn<Glib::ustring> m_col_name;
         };
 
-        // Details Tree Model Columns
-        class DetailsColumns : public Gtk::TreeModel::ColumnRecord
+        // Files Details Tree Model Columns
+        class FilesDetailsColumns : public Gtk::TreeModel::ColumnRecord
         {
             public:
-                DetailsColumns()
+                FilesDetailsColumns()
                 { add(m_col_animalID); add(m_col_cellID); add(m_col_filenum); add(m_col_xaxis); 
                   add(m_col_type); add(m_col_freq); add(m_col_trials); add(m_col_onset); add(m_col_dur); add(m_col_atten); 
                   add(m_col_tags); 
@@ -139,15 +139,11 @@ class GUI : public Gtk::Window
                 Gtk::TreeModelColumn<Glib::ustring> m_col_atten;
                 Gtk::TreeModelColumn<Glib::ustring> m_col_tags;
         };
-        Gtk::CellRendererText m_rend_filetags;
-        Gtk::TreeViewColumn m_tvcol_filetags;
-        void on_filetags_edited(const Glib::ustring& path_string, const Glib::ustring& new_text);
-        void filetags_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter);
+        FilesDetailsColumns m_FilesDetailsColumns;
+
 
 
         AnimalColumns m_AnimalColumns;
-        DetailsColumns m_DetailsColumns;
-
 		AnalyzeColumns m_DataSourceColumns;
 		AnalyzeColumns m_XVarColumns;
 		AnalyzeColumns m_YVarColumns;
