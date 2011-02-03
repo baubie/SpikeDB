@@ -11,6 +11,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	m_pDetailsList(0)
 {
 	uiReady = false;
+	db = NULL;
 
 	set_title("Spike Database - No database open");
 
@@ -319,7 +320,7 @@ void GUI::on_meantype_changed()
 }
 
 void GUI::on_analyze_changed()
-{
+{          
 	// Update the analyze plot
 	Gtk::TreeModel::Row row;
 	static int dataSource = -1;
@@ -360,6 +361,12 @@ void GUI::on_analyze_changed()
 
 void GUI::updateAnalyzePlot()
 {
+	/*
+	 * This function requires a valid database.
+	 */
+	if (db == NULL) return;
+
+
 	m_pPlotAnalyze->clear();
 	EasyPlotmm::Pen pen;
 
@@ -520,6 +527,7 @@ void GUI::filetags_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::TreeMod
 
 void GUI::on_animalvalue_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)
 {
+
 	Gtk::TreePath path(path_string);
 
 	Gtk::TreeModel::iterator iter = m_refAnimalDetailsList->get_iter(path);
@@ -581,6 +589,7 @@ void GUI::animalvalue_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::Tree
 
 void GUI::on_cellvalue_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)
 {
+
 	Gtk::TreePath path(path_string);
 
 	Gtk::TreeModel::iterator iter = m_refCellDetailsList->get_iter(path);
@@ -640,6 +649,7 @@ void GUI::cellvalue_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::TreeMo
 
 void GUI::changeDetailsSelection()
 {
+
 	m_pPlotMeans->clear();
 	m_pPlotSpikes->clear();
 	curXVariable = "";
@@ -653,6 +663,7 @@ void GUI::changeDetailsSelection()
 
 void GUI::updateSideLists(const Gtk::TreeModel::iterator& iter)
 {
+
 	Gtk::TreeModel::Row row = *iter;
 
 	populateAnimalDetailsList(row.get_value(m_DetailsColumns.m_col_animalID));
@@ -662,6 +673,12 @@ void GUI::updateSideLists(const Gtk::TreeModel::iterator& iter)
 
 void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 {
+	/*
+	 * This function requires a valid database.
+	 */
+	if (db == NULL) return;
+
+
 	Gtk::TreeModel::Row row = *iter;
 	sqlite3_stmt *stmt = 0;
 	const char query[] = "SELECT header,spikes FROM files WHERE animalID=? AND cellID=? AND fileID=?";
@@ -870,6 +887,13 @@ void GUI::changeAnimalSelection()
 
 void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 {
+	/*
+	 * This function requires a valid database.
+	 */
+	if (db == NULL) return;
+
+
+
 	m_refAnimalDetailsList->clear();
 	char query[] = "SELECT species, sex, weight, age, notes FROM animals WHERE ID=?";
 	sqlite3_stmt *stmt;

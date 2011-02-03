@@ -3,6 +3,7 @@
 
 Settings::Settings()
 {
+
     if (sqlite3_open("spikedb.settings", &db) != SQLITE_OK) {
         std::cerr << "CRITICAL ERROR: Unable to open settings file." << std::endl;
     }

@@ -4,7 +4,7 @@
 #include <gtkmm.h>
 #include <iostream>
 
-class uiFilterFrame : public Gtk::Frame {
+class uiFilterFrame {
 
 	public:
 		uiFilterFrame(const Glib::RefPtr<Gtk::Builder>& refGlade);
