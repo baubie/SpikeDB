@@ -6,9 +6,9 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	: Gtk::Window(cobject),
 	m_refGlade(refGlade),
 	m_uiFilterFrame(refGlade),
-	m_pMenuQuit(0),
-	m_pAnimalTree(0),
-	m_pDetailsList(0)
+	mp_MenuQuit(0),
+	mp_AnimalTree(0),
+	mp_DetailsList(0)
 {
 	uiReady = false;
 	db = NULL;
@@ -16,31 +16,31 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	set_title("Spike Database - No database open");
 
 	// Create plots
-	m_pPlotAnalyze = new EasyPlotmm();
-	m_pPlotSpikes = new EasyPlotmm();
-	m_pPlotMeans = new EasyPlotmm();
+	mp_PlotAnalyze = new EasyPlotmm();
+	mp_PlotSpikes = new EasyPlotmm();
+	mp_PlotMeans = new EasyPlotmm();
 
 	// Setup the toolbar
-	m_refGlade->get_widget("menuNewDatabase", m_pMenuNewDatabase);
-	if (m_pMenuNewDatabase) {
-		m_pMenuNewDatabase->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuNewDatabase_activate));
+	m_refGlade->get_widget("menuNewDatabase", mp_MenuNewDatabase);
+	if (mp_MenuNewDatabase) {
+		mp_MenuNewDatabase->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuNewDatabase_activate));
 	}
-	m_refGlade->get_widget("menuOpenDatabase", m_pMenuOpenDatabase);
-	if (m_pMenuOpenDatabase) {
-		m_pMenuOpenDatabase->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuOpenDatabase_activate));
+	m_refGlade->get_widget("menuOpenDatabase", mp_MenuOpenDatabase);
+	if (mp_MenuOpenDatabase) {
+		mp_MenuOpenDatabase->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuOpenDatabase_activate));
 	}
-	m_refGlade->get_widget("menuImportFolder", m_pMenuImportFolder);
-	if (m_pMenuImportFolder) {
-		m_pMenuImportFolder->set_sensitive(false);
-		m_pMenuImportFolder->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuImportFolder_activate));
+	m_refGlade->get_widget("menuImportFolder", mp_MenuImportFolder);
+	if (mp_MenuImportFolder) {
+		mp_MenuImportFolder->set_sensitive(false);
+		mp_MenuImportFolder->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuImportFolder_activate));
 	}
-	m_refGlade->get_widget("menuQuit", m_pMenuQuit);
-	if (m_pMenuQuit) {
-		m_pMenuQuit->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuQuit_activate));
+	m_refGlade->get_widget("menuQuit", mp_MenuQuit);
+	if (mp_MenuQuit) {
+		mp_MenuQuit->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuQuit_activate));
 	}
 
 	// Setup the statusbar
-	m_refGlade->get_widget("statusbar", m_pStatusbar);
+	m_refGlade->get_widget("statusbar", mp_Statusbar);
 
 
 	/*
@@ -53,108 +53,93 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 		settings.set("filterMinFiles", m_uiFilterFrame.minFiles());
 	}
 
+	/*
+	 * Setup the animal details table
+	 */
+	m_refGlade->get_widget("alignAnimalDetails", mp_AlignAnimalDetails);
+	mp_AlignAnimalDetails->add(m_uiAnimalDetails);
+	
 
-	// Create Animals TreeView
-	m_refGlade->get_widget("tvAnimals", m_pAnimalTree);
+	/*
+	 * Animals treeview 
+	 * Shown on left side under filter frame
+	 */
+	m_refGlade->get_widget("tvAnimals", mp_AnimalTree);
 	m_refAnimalTree = Gtk::TreeStore::create(m_AnimalColumns);
-	m_pAnimalTree->set_model(m_refAnimalTree);
-	m_pAnimalTree->append_column("Animal/Cell ID", m_AnimalColumns.m_col_name);
+	mp_AnimalTree->set_model(m_refAnimalTree);
+	mp_AnimalTree->append_column("Animal/Cell ID", m_AnimalColumns.m_col_name);
 	m_refAnimalTree->set_sort_column(m_AnimalColumns.m_col_name, Gtk::SORT_ASCENDING);
 	m_refAnimalTree->set_sort_func(0, sigc::mem_fun(*this, &GUI::on_animal_sort));
-	m_refAnimalSelection = m_pAnimalTree->get_selection();
+	m_refAnimalSelection = mp_AnimalTree->get_selection();
 	m_refAnimalSelection->signal_changed().connect(
 		sigc::mem_fun(*this, &GUI::changeAnimalSelection)
 		);
 
 	// Create Details TreeView
-	m_refGlade->get_widget("tvDetails", m_pDetailsList);
+	m_refGlade->get_widget("tvDetails", mp_DetailsList);
 	m_refDetailsList = Gtk::ListStore::create(m_DetailsColumns);
-	m_pDetailsList->set_model(m_refDetailsList);
-	m_pDetailsList->append_column("AnimalID", m_DetailsColumns.m_col_animalID);
-	m_pDetailsList->append_column("CellID", m_DetailsColumns.m_col_cellID);
-	m_pDetailsList->append_column("#", m_DetailsColumns.m_col_filenum);
-	m_pDetailsList->append_column("X-Var", m_DetailsColumns.m_col_xaxis);
-	m_pDetailsList->append_column("Type", m_DetailsColumns.m_col_type);
-	m_pDetailsList->append_column("Trials", m_DetailsColumns.m_col_trials);
-	m_pDetailsList->append_column("CarFreq (Hz)", m_DetailsColumns.m_col_freq);
-	m_pDetailsList->append_column("Dur (ms)", m_DetailsColumns.m_col_dur);
-	m_pDetailsList->append_column("Onset (ms)", m_DetailsColumns.m_col_onset);
-	m_pDetailsList->append_column("Atten (db)", m_DetailsColumns.m_col_atten);
+	mp_DetailsList->set_model(m_refDetailsList);
+	mp_DetailsList->append_column("AnimalID", m_DetailsColumns.m_col_animalID);
+	mp_DetailsList->append_column("CellID", m_DetailsColumns.m_col_cellID);
+	mp_DetailsList->append_column("#", m_DetailsColumns.m_col_filenum);
+	mp_DetailsList->append_column("X-Var", m_DetailsColumns.m_col_xaxis);
+	mp_DetailsList->append_column("Type", m_DetailsColumns.m_col_type);
+	mp_DetailsList->append_column("Trials", m_DetailsColumns.m_col_trials);
+	mp_DetailsList->append_column("CarFreq (Hz)", m_DetailsColumns.m_col_freq);
+	mp_DetailsList->append_column("Dur (ms)", m_DetailsColumns.m_col_dur);
+	mp_DetailsList->append_column("Onset (ms)", m_DetailsColumns.m_col_onset);
+	mp_DetailsList->append_column("Atten (db)", m_DetailsColumns.m_col_atten);
 
-	m_refDetailsSelection = m_pDetailsList->get_selection();
+	m_refDetailsSelection = mp_DetailsList->get_selection();
 	m_refDetailsSelection->set_mode(Gtk::SELECTION_MULTIPLE);
 	m_refDetailsSelection->signal_changed().connect(
 		sigc::mem_fun(*this, &GUI::changeDetailsSelection)
 		);
 
-	// Create Animal Details TreeView
-	m_refGlade->get_widget("tvAnimalDetails", m_pAnimalDetailsList);
-	m_refAnimalDetailsList = Gtk::ListStore::create(m_AnimalDetailsColumns);
-	m_pAnimalDetailsList->set_model(m_refAnimalDetailsList);
-	m_pAnimalDetailsList->append_column("Name", m_AnimalDetailsColumns.m_col_name);
-
-	m_tvcol_animalvalue.set_title("Value");
-	m_rend_animalvalue.property_editable() = true;
-	m_tvcol_animalvalue.pack_start(m_rend_animalvalue);
-	m_pAnimalDetailsList->append_column(m_tvcol_animalvalue);
-	m_rend_animalvalue.signal_edited().connect(sigc::mem_fun(*this, &GUI::on_animalvalue_edited));
-	m_tvcol_animalvalue.set_cell_data_func(m_rend_animalvalue, sigc::mem_fun(*this, &GUI::animalvalue_cell_data));
-
-	// Create Cell Details TreeView
-	m_refGlade->get_widget("tvCellDetails", m_pCellDetailsList);
-	m_refCellDetailsList = Gtk::ListStore::create(m_CellDetailsColumns);
-	m_pCellDetailsList->set_model(m_refCellDetailsList);
-	m_pCellDetailsList->append_column("Name", m_CellDetailsColumns.m_col_name);
-
-	m_tvcol_cellvalue.set_title("Value");
-	m_rend_cellvalue.property_editable() = true;
-	m_tvcol_cellvalue.pack_start(m_rend_cellvalue);
-	m_pCellDetailsList->append_column(m_tvcol_cellvalue);
-	m_rend_cellvalue.signal_edited().connect(sigc::mem_fun(*this, &GUI::on_cellvalue_edited));
-	m_tvcol_cellvalue.set_cell_data_func(m_rend_cellvalue, sigc::mem_fun(*this, &GUI::cellvalue_cell_data));
+ 
 
 	// Setup the analyze widgets
-	m_refGlade->get_widget("vboxAnalyze", m_pVBoxAnalyze);
-	m_refGlade->get_widget("cbDataSource", m_pDataSource);
-	m_refGlade->get_widget("cbXVar", m_pXVar);
-	m_refGlade->get_widget("cbYVar", m_pYVar);
+	m_refGlade->get_widget("vboxAnalyze", mp_VBoxAnalyze);
+	m_refGlade->get_widget("cbDataSource", mp_DataSource);
+	m_refGlade->get_widget("cbXVar", mp_XVar);
+	m_refGlade->get_widget("cbYVar", mp_YVar);
 	m_refDataSource = Gtk::ListStore::create(m_DataSourceColumns);
 	m_refXVar = Gtk::ListStore::create(m_XVarColumns);
 	m_refYVar = Gtk::ListStore::create(m_YVarColumns);
-	m_pDataSource->set_model(m_refDataSource);
-	m_pXVar->set_model(m_refXVar);
-	m_pYVar->set_model(m_refYVar);
-	m_pDataSource->pack_start(m_DataSourceColumns.m_col_name);
-	m_pXVar->pack_start(m_XVarColumns.m_col_name);
-	m_pYVar->pack_start(m_YVarColumns.m_col_name);
-	m_pDataSource->signal_changed().connect( sigc::mem_fun(*this, &GUI::on_analyze_changed));
-	m_pXVar->signal_changed().connect( sigc::mem_fun(*this, &GUI::on_analyze_changed));
-	m_pYVar->signal_changed().connect( sigc::mem_fun(*this, &GUI::on_analyze_changed));
+	mp_DataSource->set_model(m_refDataSource);
+	mp_XVar->set_model(m_refXVar);
+	mp_YVar->set_model(m_refYVar);
+	mp_DataSource->pack_start(m_DataSourceColumns.m_col_name);
+	mp_XVar->pack_start(m_XVarColumns.m_col_name);
+	mp_YVar->pack_start(m_YVarColumns.m_col_name);
+	mp_DataSource->signal_changed().connect( sigc::mem_fun(*this, &GUI::on_analyze_changed));
+	mp_XVar->signal_changed().connect( sigc::mem_fun(*this, &GUI::on_analyze_changed));
+	mp_YVar->signal_changed().connect( sigc::mem_fun(*this, &GUI::on_analyze_changed));
 	Gtk::TreeModel::Row row = *(m_refDataSource->append());
 	row[m_DataSourceColumns.m_col_name] = "Animals";
 	row = *(m_refDataSource->append());
 	row[m_DataSourceColumns.m_col_name] = "Cells";
-	m_pDataSource->set_active(0);
+	mp_DataSource->set_active(0);
 	on_analyze_changed();
 
 
-	m_refGlade->get_widget("hboxPlots", m_pHBoxPlots);
-	m_refGlade->get_widget("cbMeanType", m_pMeanType);
+	m_refGlade->get_widget("hboxPlots", mp_HBoxPlots);
+	m_refGlade->get_widget("cbMeanType", mp_MeanType);
 	m_refMeanType = Gtk::ListStore::create(m_MeanTypeColumns);
-	m_pMeanType->set_model(m_refMeanType);
-	m_pMeanType->pack_start(m_MeanTypeColumns.m_col_name);
-	m_pMeanType->signal_changed().connect( sigc::mem_fun(*this, &GUI::on_meantype_changed));
+	mp_MeanType->set_model(m_refMeanType);
+	mp_MeanType->pack_start(m_MeanTypeColumns.m_col_name);
+	mp_MeanType->signal_changed().connect( sigc::mem_fun(*this, &GUI::on_meantype_changed));
 	row = *(m_refMeanType->append());
 	row[m_MeanTypeColumns.m_col_name] = "Mean Spikes per Trial";
 	row = *(m_refMeanType->append());
 	row[m_MeanTypeColumns.m_col_name] = "Percentage of trials with at least 1 spike";
 	row = *(m_refMeanType->append());
 	row[m_MeanTypeColumns.m_col_name] = "Mean First-Spike Latency";
-	m_pMeanType->set_active(0);
+	mp_MeanType->set_active(0);
 
-	m_pHBoxPlots->pack_start(*m_pPlotSpikes);
-	m_pHBoxPlots->pack_start(*m_pPlotMeans);
-	m_pVBoxAnalyze->pack_start(*m_pPlotAnalyze);
+	mp_HBoxPlots->pack_start(*mp_PlotSpikes);
+	mp_HBoxPlots->pack_start(*mp_PlotMeans);
+	mp_VBoxAnalyze->pack_start(*mp_PlotAnalyze);
 	show_all_children();
 
 
@@ -287,7 +272,7 @@ bool GUI::openDatabase(std::string filename)
 	settings.set("lastDatabase", filename);
 
 	// Allow importing files
-	m_pMenuImportFolder->set_sensitive(true);
+	mp_MenuImportFolder->set_sensitive(true);
 
 	// Show the animals and cells from the database
 	populateAnimalTree();
@@ -311,8 +296,8 @@ void GUI::updateFilter()
 
 void GUI::on_meantype_changed()
 {
-	m_pPlotMeans->clear();
-	m_pPlotSpikes->clear();
+	mp_PlotMeans->clear();
+	mp_PlotSpikes->clear();
 	curXVariable = "";
 	m_refDetailsSelection->selected_foreach_iter(
 		sigc::mem_fun(*this, &GUI::addFileToPlot)
@@ -325,9 +310,9 @@ void GUI::on_analyze_changed()
 	Gtk::TreeModel::Row row;
 	static int dataSource = -1;
 
-	if (m_pDataSource->get_active_row_number() != dataSource) {
-		dataSource = m_pDataSource->get_active_row_number();
-		if (m_pDataSource->get_active_row_number() == 0) {
+	if (mp_DataSource->get_active_row_number() != dataSource) {
+		dataSource = mp_DataSource->get_active_row_number();
+		if (mp_DataSource->get_active_row_number() == 0) {
 			m_refXVar->clear();
 			m_refYVar->clear();
 			row = *(m_refXVar->append());
@@ -336,7 +321,7 @@ void GUI::on_analyze_changed()
 			row = *(m_refYVar->append());
 			row[m_YVarColumns.m_col_name] = "Weight";
 		}
-		if (m_pDataSource->get_active_row_number() == 1) {
+		if (mp_DataSource->get_active_row_number() == 1) {
 			m_refXVar->clear();
 			m_refYVar->clear();
 			row = *(m_refXVar->append());
@@ -353,8 +338,8 @@ void GUI::on_analyze_changed()
 			row = *(m_refYVar->append());
 			row[m_YVarColumns.m_col_name] = "Depth (um)";
 		}
-		m_pXVar->set_active(0);
-		m_pYVar->set_active(0);
+		mp_XVar->set_active(0);
+		mp_YVar->set_active(0);
 	}
 	updateAnalyzePlot();
 }
@@ -367,7 +352,7 @@ void GUI::updateAnalyzePlot()
 	if (db == NULL) return;
 
 
-	m_pPlotAnalyze->clear();
+	mp_PlotAnalyze->clear();
 	EasyPlotmm::Pen pen;
 
 	pen.linewidth = 0.0;
@@ -397,52 +382,52 @@ void GUI::updateAnalyzePlot()
 	}
 	getCellsStatement(&stmt, animalID, cellID);
 
-	if (m_pDataSource->get_active_row_number() == 1) { // Cell Plots
+	if (mp_DataSource->get_active_row_number() == 1) { // Cell Plots
 		while (sqlite3_step(stmt) == SQLITE_ROW) {
 			bool hasX = false;
 			// SELECT animalID, cellID, threshold, depth, freq FROM files
-			if (m_pXVar->get_active_row_number() == 0) { // CarFreq
+			if (mp_XVar->get_active_row_number() == 0) { // CarFreq
 				if (sqlite3_column_type(stmt, 4) != SQLITE_NULL && sqlite3_column_double(stmt, 4) > 0) {
 					X.push_back(sqlite3_column_double(stmt, 4));
 					hasX = true;
-					m_pPlotAnalyze->xname("Frequency (Hz)");
+					mp_PlotAnalyze->xname("Frequency (Hz)");
 				}
 			}
-			if (m_pXVar->get_active_row_number() == 1) { // Threshold
+			if (mp_XVar->get_active_row_number() == 1) { // Threshold
 				if (sqlite3_column_type(stmt, 2) != SQLITE_NULL) {
 					X.push_back(sqlite3_column_double(stmt, 2));
 					hasX = true;
-					m_pPlotAnalyze->xname("Threshold (dB SPL)");
+					mp_PlotAnalyze->xname("Threshold (dB SPL)");
 				}
 			}
-			if (m_pXVar->get_active_row_number() == 2) { // Depth
+			if (mp_XVar->get_active_row_number() == 2) { // Depth
 				if (sqlite3_column_type(stmt, 3) != SQLITE_NULL && sqlite3_column_double(stmt, 3) > 0) {
 					X.push_back(sqlite3_column_double(stmt, 3));
 					hasX = true;
-					m_pPlotAnalyze->xname("Depth (um)");
+					mp_PlotAnalyze->xname("Depth (um)");
 				}
 			}
-			if (m_pYVar->get_active_row_number() == 0) { // CarFreq
+			if (mp_YVar->get_active_row_number() == 0) { // CarFreq
 				if (hasX) {
 					if (sqlite3_column_type(stmt, 4) != SQLITE_NULL && sqlite3_column_double(stmt, 4) > 0) {
 						Y.push_back(sqlite3_column_double(stmt, 4));
-						m_pPlotAnalyze->yname("Frequency (Hz)");
+						mp_PlotAnalyze->yname("Frequency (Hz)");
 					} else{ X.pop_back(); }
 				}
 			}
-			if (m_pYVar->get_active_row_number() == 1) { // Threshold
+			if (mp_YVar->get_active_row_number() == 1) { // Threshold
 				if (hasX) {
 					if (sqlite3_column_type(stmt, 2) != SQLITE_NULL) {
 						Y.push_back(sqlite3_column_double(stmt, 2));
-						m_pPlotAnalyze->yname("Threshold (dB SPL)");
+						mp_PlotAnalyze->yname("Threshold (dB SPL)");
 					}
 				} else{ X.pop_back(); }
 			}
-			if (m_pYVar->get_active_row_number() == 2) { // Depth
+			if (mp_YVar->get_active_row_number() == 2) { // Depth
 				if (hasX) {
 					if (sqlite3_column_type(stmt, 3) != SQLITE_NULL && sqlite3_column_double(stmt, 3) > 0) {
 						Y.push_back(sqlite3_column_double(stmt, 3));
-						m_pPlotAnalyze->yname("Depth (um)");
+						mp_PlotAnalyze->yname("Depth (um)");
 					}  else{ X.pop_back(); }
 				}
 			}
@@ -450,29 +435,29 @@ void GUI::updateAnalyzePlot()
 	}
 	sqlite3_finalize(stmt);
 
-	double xmin = m_pPlotAnalyze->automatic();
-	double xmax = m_pPlotAnalyze->automatic();
-	double ymin = m_pPlotAnalyze->automatic();
-	double ymax = m_pPlotAnalyze->automatic();
+	double xmin = mp_PlotAnalyze->automatic();
+	double xmax = mp_PlotAnalyze->automatic();
+	double ymin = mp_PlotAnalyze->automatic();
+	double ymax = mp_PlotAnalyze->automatic();
 
-	if (m_pDataSource->get_active_row_number() == 1 && m_pXVar->get_active_row_number() == 2) {
+	if (mp_DataSource->get_active_row_number() == 1 && mp_XVar->get_active_row_number() == 2) {
 		xmin = 0;
 		xmax = 2000;
 	}
-	if (m_pDataSource->get_active_row_number() == 1 && m_pYVar->get_active_row_number() == 0) {
+	if (mp_DataSource->get_active_row_number() == 1 && mp_YVar->get_active_row_number() == 0) {
 		ymin = 0;
 		ymax = 80000;
 	}
-	if (m_pDataSource->get_active_row_number() == 1 && m_pYVar->get_active_row_number() == 2) {
+	if (mp_DataSource->get_active_row_number() == 1 && mp_YVar->get_active_row_number() == 2) {
 		ymin = 0;
 		ymax = 2000;
 	}
-	if (m_pDataSource->get_active_row_number() == 1 && m_pXVar->get_active_row_number() == 0) {
+	if (mp_DataSource->get_active_row_number() == 1 && mp_XVar->get_active_row_number() == 0) {
 		xmin = 0;
 		xmax = 80000;
 	}
-	m_pPlotAnalyze->axes(xmin, xmax, ymin, ymax);
-	m_pPlotAnalyze->plot(X, Y, pen);
+	mp_PlotAnalyze->axes(xmin, xmax, ymin, ymax);
+	mp_PlotAnalyze->plot(X, Y, pen);
 }
 
 int GUI::on_animal_sort(const Gtk::TreeModel::iterator& a_, const Gtk::TreeModel::iterator& b_)
@@ -525,68 +510,7 @@ void GUI::filetags_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::TreeMod
 	}
 }
 
-void GUI::on_animalvalue_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)
-{
-
-	Gtk::TreePath path(path_string);
-
-	Gtk::TreeModel::iterator iter = m_refAnimalDetailsList->get_iter(path);
-
-	if (iter) {
-		// Update tree model
-		Gtk::TreeModel::Row row = *iter;
-
-		// Update sqlite database
-		Glib::ustring query;
-		if (row.get_value(m_AnimalDetailsColumns.m_col_name) == "Tags") {
-			query = "UPDATE animals SET tags=? WHERE ID=?";
-		}
-		if (row.get_value(m_AnimalDetailsColumns.m_col_name) == "Species") {
-			query = "UPDATE animals SET species=? WHERE ID=?";
-		}
-		if (row.get_value(m_AnimalDetailsColumns.m_col_name) == "Sex") {
-			query = "UPDATE animals SET sex=? WHERE ID=?";
-		}
-		if (row.get_value(m_AnimalDetailsColumns.m_col_name) == "Weight (g)") {
-			query = "UPDATE animals SET weight=? WHERE ID=?";
-		}
-		if (row.get_value(m_AnimalDetailsColumns.m_col_name) == "Age") {
-			query = "UPDATE animals SET age=? WHERE ID=?";
-		}
-		if (row.get_value(m_AnimalDetailsColumns.m_col_name) == "Notes") {
-			query = "UPDATE animals SET notes=? WHERE ID=?";
-		}
-
-		const char* q = query.c_str();
-		sqlite3_stmt *stmt = 0;
-		sqlite3_prepare_v2(db, q, strlen(q), &stmt, NULL);
-		sqlite3_bind_text(stmt, 1, new_text.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_text(stmt, 2, row.get_value(m_AnimalDetailsColumns.m_col_animalID).c_str(), -1, SQLITE_TRANSIENT);
-		int r = sqlite3_step(stmt);
-		if (r == SQLITE_DONE) {
-			row[m_AnimalDetailsColumns.m_col_value] = new_text;
-		} else{
-			std::cerr << "ERROR: Could not update animal. " << sqlite3_errmsg(db) << std::endl;
-		}
-		sqlite3_finalize(stmt);
-	}
-}
-
-void GUI::animalvalue_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::TreeModel::iterator& iter)
-{
-	if (iter) {
-		Gtk::TreeModel::Row row = *iter;
-		m_rend_animalvalue.property_text() = row[m_AnimalDetailsColumns.m_col_value];
-		if (row[m_AnimalDetailsColumns.m_col_name] != "ID") {
-			m_rend_animalvalue.property_editable() = true;
-			m_rend_animalvalue.property_cell_background() = "#DDEEFF";
-		} else {
-			m_rend_animalvalue.property_editable() = false;
-			m_rend_animalvalue.property_cell_background() = "#FFDDDD";
-		}
-	}
-}
-
+/*
 void GUI::on_cellvalue_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)
 {
 
@@ -631,8 +555,10 @@ void GUI::on_cellvalue_edited(const Glib::ustring& path_string, const Glib::ustr
 		sqlite3_finalize(stmt);
 	}
 }
+*/
 
-void GUI::cellvalue_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::TreeModel::iterator& iter)
+/*
+void GUI::cellvalue_cell_data(Gtk::CellRenderer* *renderer*, const Gtk::TreeModel::iterator& iter)
 {
 	if (iter) {
 		Gtk::TreeModel::Row row = *iter;
@@ -646,12 +572,13 @@ void GUI::cellvalue_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::TreeMo
 		}
 	}
 }
+*/
 
 void GUI::changeDetailsSelection()
 {
 
-	m_pPlotMeans->clear();
-	m_pPlotSpikes->clear();
+	mp_PlotMeans->clear();
+	mp_PlotSpikes->clear();
 	curXVariable = "";
 	m_refDetailsSelection->selected_foreach_iter(
 		sigc::mem_fun(*this, &GUI::addFileToPlot)
@@ -762,10 +689,10 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 			min_y = max_y;
 			max_y = t;
 		}
-		m_pPlotSpikes->axes(0, sd.m_head.nRepInt, min_y, max_y);
-		m_pPlotSpikes->xname("Time (ms)");
-		m_pPlotSpikes->yname(sd.xVariable());
-		m_pPlotSpikes->plot(x_spikes, y_spikes, spikesPen);
+		mp_PlotSpikes->axes(0, sd.m_head.nRepInt, min_y, max_y);
+		mp_PlotSpikes->xname("Time (ms)");
+		mp_PlotSpikes->yname(sd.xVariable());
+		mp_PlotSpikes->plot(x_spikes, y_spikes, spikesPen);
 
 		// Calculate the SD of the means
 		for (int i = 0; i < sd.m_head.nSweeps; ++i) {
@@ -791,20 +718,20 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 				err.at(i) = 0;
 			}
 		}
-		m_pPlotMeans->axes(m_pPlotMeans->automatic(), m_pPlotMeans->automatic(), 0, m_pPlotMeans->automatic());
-		m_pPlotMeans->xname(sd.xVariable());
+		mp_PlotMeans->axes(mp_PlotMeans->automatic(), mp_PlotMeans->automatic(), 0, mp_PlotMeans->automatic());
+		mp_PlotMeans->xname(sd.xVariable());
 
-		if (m_pMeanType->get_active_row_number() == 0) {
-			m_pPlotMeans->yname("Mean Spikes per Trial");
-			m_pPlotMeans->plot(x, y_mean, err);
+		if (mp_MeanType->get_active_row_number() == 0) {
+			mp_PlotMeans->yname("Mean Spikes per Trial");
+			mp_PlotMeans->plot(x, y_mean, err);
 		}
-		if (m_pMeanType->get_active_row_number() == 1) {
-			m_pPlotMeans->yname("Percentage of Trials With Spikes");
-			m_pPlotMeans->plot(x, y_one);
+		if (mp_MeanType->get_active_row_number() == 1) {
+			mp_PlotMeans->yname("Percentage of Trials With Spikes");
+			mp_PlotMeans->plot(x, y_one);
 		}
-		if (m_pMeanType->get_active_row_number() == 2) {
-			m_pPlotMeans->yname("Mean First Spike Latency");
-			m_pPlotMeans->plot(x, y_fsl);
+		if (mp_MeanType->get_active_row_number() == 2) {
+			mp_PlotMeans->yname("Mean First Spike Latency");
+			mp_PlotMeans->plot(x, y_fsl);
 		}
 
 		// Add stimuli to spikes plot
@@ -833,7 +760,7 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 					stimY.push_back(sd.xvalue(i));
 					stimX.push_back(end);
 					stimY.push_back(sd.xvalue(i));
-					m_pPlotSpikes->plot(stimX, stimY, ch1Pen, false);
+					mp_PlotSpikes->plot(stimX, stimY, ch1Pen, false);
 					start = end + sd.m_head.stimFirstCh1.fStimInt + sd.m_head.deltaCh1.fStimInt * i;
 					end = start + sd.m_head.stimFirstCh1.fDur + sd.m_head.deltaCh1.fDur * i;
 				}
@@ -848,7 +775,7 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 					stimY.push_back(sd.xvalue(i));
 					stimX.push_back(end);
 					stimY.push_back(sd.xvalue(i));
-					m_pPlotSpikes->plot(stimX, stimY, ch2Pen, false);
+					mp_PlotSpikes->plot(stimX, stimY, ch2Pen, false);
 					start = end + sd.m_head.stimFirstCh2.fStimInt + sd.m_head.deltaCh2.fStimInt * i;
 					end = start + sd.m_head.stimFirstCh2.fDur + sd.m_head.deltaCh2.fDur * i;
 				}
@@ -893,8 +820,7 @@ void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 	if (db == NULL) return;
 
 
-
-	m_refAnimalDetailsList->clear();
+	m_uiAnimalDetails.clear();
 	char query[] = "SELECT species, sex, weight, age, notes FROM animals WHERE ID=?";
 	sqlite3_stmt *stmt;
 	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
@@ -902,61 +828,46 @@ void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 	int r;
 	r = sqlite3_step(stmt);
 
-	Gtk::TreeModel::Row row;
-
+	Glib::ustring tmp;
 	if (r == SQLITE_ROW) {
-		row = *(m_refAnimalDetailsList->append());
-		row[m_AnimalDetailsColumns.m_col_name] = "ID";
-		row[m_AnimalDetailsColumns.m_col_value] = animalID;
-		row[m_AnimalDetailsColumns.m_col_animalID] = animalID;
+		m_uiAnimalDetails.addRow(animalID, "ID", animalID, uiPropTable::Static);
 
-		row = *(m_refAnimalDetailsList->append());
-		row[m_AnimalDetailsColumns.m_col_name] = "Species";
-		row[m_AnimalDetailsColumns.m_col_animalID] = animalID;
-		if ((char*)sqlite3_column_text(stmt, 0) != NULL) {
-			row[m_AnimalDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt, 0);
-		}
+		m_uiAnimalDetails.addRow(animalID, "Species", 
+			((char*)sqlite3_column_text(stmt, 0) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 0),
+			uiPropTable::Editable
+		);
 
-		row = *(m_refAnimalDetailsList->append());
-		row[m_AnimalDetailsColumns.m_col_name] = "Sex";
-		row[m_AnimalDetailsColumns.m_col_animalID] = animalID;
-		if ((char*)sqlite3_column_text(stmt, 1) != NULL) {
-			row[m_AnimalDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt, 1);
-		}
+		m_uiAnimalDetails.addRow(animalID, "Sex", 
+			((char*)sqlite3_column_text(stmt, 1) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 1),
+			uiPropTable::Editable
+		);
 
-		row = *(m_refAnimalDetailsList->append());
-		row[m_AnimalDetailsColumns.m_col_name] = "Weight (g)";
-		row[m_AnimalDetailsColumns.m_col_animalID] = animalID;
-		if ((char*)sqlite3_column_text(stmt, 2) != NULL) {
-			row[m_AnimalDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt, 2);
-		}
+		m_uiAnimalDetails.addRow(animalID, "Weight (g)", 
+			((char*)sqlite3_column_text(stmt, 2) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 2),
+			uiPropTable::Editable
+		);
 
-		row = *(m_refAnimalDetailsList->append());
-		row[m_AnimalDetailsColumns.m_col_name] = "Age";
-		row[m_AnimalDetailsColumns.m_col_animalID] = animalID;
-		if ((char*)sqlite3_column_text(stmt, 3) != NULL) {
-			row[m_AnimalDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt, 3);
-		}
+		m_uiAnimalDetails.addRow(animalID, "Age", 
+			((char*)sqlite3_column_text(stmt, 3) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 3),
+			uiPropTable::Editable
+		);
 
-		row = *(m_refAnimalDetailsList->append());
-		row[m_AnimalDetailsColumns.m_col_name] = "Tags";
-		row[m_AnimalDetailsColumns.m_col_animalID] = animalID;
-		if ((char*)sqlite3_column_text(stmt, 4) != NULL) {
-			row[m_AnimalDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt, 4);
-		}
-
-		row = *(m_refAnimalDetailsList->append());
-		row[m_AnimalDetailsColumns.m_col_name] = "Notes";
-		row[m_AnimalDetailsColumns.m_col_animalID] = animalID;
-		if ((char*)sqlite3_column_text(stmt, 5) != NULL) {
-			row[m_AnimalDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt, 5);
-		}
+		m_uiAnimalDetails.addRow(animalID, "Notes", 
+			((char*)sqlite3_column_text(stmt, 4) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 3),
+			uiPropTable::EditableLong
+		);
 	}
 	sqlite3_finalize(stmt);
 }
 
 void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID)
 {
+	/*
+	 * This function requires a valid database.
+	 */
+	if (db == NULL) return;
+
+	/*
 	m_refCellDetailsList->clear();
 	char query[] = "SELECT depth, freq, notes, threshold FROM cells WHERE animalID=? AND cellID=?";
 	sqlite3_stmt *stmt;
@@ -1019,6 +930,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 
 	} 
 	sqlite3_finalize(stmt);
+	*/
 }
 
 void GUI::populateAnimalTree()
@@ -1385,20 +1297,18 @@ void GUI::on_menuQuit_activate()
 	settings.set("winY", y);
 
 
-	delete m_pMenuQuit;
-	delete m_pMenuImportFolder;
-	delete m_pAnimalTree;
-	delete m_pDetailsList;
-	delete m_pHBoxPlots;
-	delete m_pCellDetailsList;
-	delete m_pAnimalDetailsList;
-	delete m_pMeanType;
-	delete m_pDataSource;
-	delete m_pXVar;
-	delete m_pYVar;
-	delete m_pPlotSpikes;
-	delete m_pPlotMeans;
-	delete m_pPlotAnalyze;
+	delete mp_MenuQuit;
+	delete mp_MenuImportFolder;
+	delete mp_AnimalTree;
+	delete mp_DetailsList;
+	delete mp_HBoxPlots;
+	delete mp_MeanType;
+	delete mp_DataSource;
+	delete mp_XVar;
+	delete mp_YVar;
+	delete mp_PlotSpikes;
+	delete mp_PlotMeans;
+	delete mp_PlotAnalyze;
 	sqlite3_close(db);
 	hide();
 }

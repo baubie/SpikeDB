@@ -27,13 +27,13 @@ class GUI : public Gtk::Window
         // SQLite Database
         sqlite3 *db;
 
-		// Settings
-		Settings settings;
 
     protected:
 
 
-        // Signal handlers
+        /**
+		 * Signal handlers
+		 */
         void on_menuNewDatabase_activate();
         void on_menuOpenDatabase_activate();
         void on_menuImportFolder_activate();
@@ -41,40 +41,54 @@ class GUI : public Gtk::Window
 		void on_analyze_changed();
 		void on_meantype_changed();
 
-        // Child Widgets (from glade file)
+
+		/**
+		 * Reference to Glade file
+		 */
         Glib::RefPtr<Gtk::Builder> m_refGlade;
 
-		/*
+
+		/** 
+		 * Settings object
+		 */
+		Settings settings;
+
+
+		/**
 		 * uiReady will not update the UI until the 
 		 * construtor is done.
 		 */
 		bool uiReady;
 
 
-		/*
+		/**
 		 * uiFilterFrame
 		 * Top left corner frame with filter widgets
 		 */
 		uiFilterFrame m_uiFilterFrame; 
 
 
+		/**
+		 * uiPropTable
+		 */
+		uiPropTable m_uiAnimalDetails;
+		Gtk::Alignment* mp_AlignAnimalDetails;
+
 		 
 
-        Gtk::ImageMenuItem* m_pMenuImportFolder;
-        Gtk::ImageMenuItem* m_pMenuQuit;
-        Gtk::ImageMenuItem* m_pMenuOpenDatabase;
-        Gtk::ImageMenuItem* m_pMenuNewDatabase;
-        Gtk::TreeView* m_pAnimalTree;
-        Gtk::TreeView* m_pDetailsList;
-        Gtk::TreeView* m_pAnimalDetailsList;
-        Gtk::TreeView* m_pCellDetailsList;
-        Gtk::HBox* m_pHBoxPlots;
-		Gtk::Statusbar* m_pStatusbar;
-        Gtk::VBox* m_pVBoxAnalyze;
-		Gtk::ComboBox* m_pMeanType;
-		Gtk::ComboBox* m_pDataSource;
-		Gtk::ComboBox* m_pXVar;
-		Gtk::ComboBox* m_pYVar;
+        Gtk::ImageMenuItem* mp_MenuImportFolder;
+        Gtk::ImageMenuItem* mp_MenuQuit;
+        Gtk::ImageMenuItem* mp_MenuOpenDatabase;
+        Gtk::ImageMenuItem* mp_MenuNewDatabase;
+        Gtk::TreeView* mp_AnimalTree;
+        Gtk::TreeView* mp_DetailsList;
+        Gtk::HBox* mp_HBoxPlots;
+		Gtk::Statusbar* mp_Statusbar;
+        Gtk::VBox* mp_VBoxAnalyze;
+		Gtk::ComboBox* mp_MeanType;
+		Gtk::ComboBox* mp_DataSource;
+		Gtk::ComboBox* mp_XVar;
+		Gtk::ComboBox* mp_YVar;
 
 
         // Child Widgets (created in c++)
@@ -82,17 +96,17 @@ class GUI : public Gtk::Window
         Glib::RefPtr<Gtk::ListStore> m_refDetailsList;
         Glib::RefPtr<Gtk::TreeSelection> m_refAnimalSelection;
         Glib::RefPtr<Gtk::TreeSelection> m_refDetailsSelection;
-        Glib::RefPtr<Gtk::ListStore> m_refAnimalDetailsList;
         Glib::RefPtr<Gtk::ListStore> m_refCellDetailsList;
         Glib::RefPtr<Gtk::ListStore> m_refDataSource;
         Glib::RefPtr<Gtk::ListStore> m_refXVar;
         Glib::RefPtr<Gtk::ListStore> m_refYVar;
         Glib::RefPtr<Gtk::ListStore> m_refMeanType;
         Glib::RefPtr<Gtk::ListStore> m_refTypeFilter;
+
         // Plots
-        EasyPlotmm* m_pPlotSpikes;
-        EasyPlotmm* m_pPlotMeans;
-        EasyPlotmm* m_pPlotAnalyze;
+        EasyPlotmm* mp_PlotSpikes;
+        EasyPlotmm* mp_PlotMeans;
+        EasyPlotmm* mp_PlotAnalyze;
 
 
 		// Models for the Data Source combobox
@@ -139,52 +153,9 @@ class GUI : public Gtk::Window
         void on_filetags_edited(const Glib::ustring& path_string, const Glib::ustring& new_text);
         void filetags_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter);
 
-        class AnimalDetailsColumns : public Gtk::TreeModel::ColumnRecord
-        {
-            public:
-                AnimalDetailsColumns()
-                { add(m_col_animalID); add(m_col_name); add(m_col_value); }
-                Gtk::TreeModelColumn<Glib::ustring> m_col_animalID;
-                Gtk::TreeModelColumn<Glib::ustring> m_col_name;
-                Gtk::TreeModelColumn<Glib::ustring> m_col_value;
-        };
-        Gtk::CellRendererText m_rend_animalvalue;
-        Gtk::TreeViewColumn m_tvcol_animalvalue;
-        void on_animalvalue_edited(const Glib::ustring& path_string, const Glib::ustring& new_text);
-        void animalvalue_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter);
-
-        class CellDetailsColumns : public Gtk::TreeModel::ColumnRecord
-        {
-            public:
-                CellDetailsColumns()
-                { add(m_col_animalID); add(m_col_cellID); add(m_col_name); add(m_col_value); }
-                Gtk::TreeModelColumn<Glib::ustring> m_col_animalID;
-                Gtk::TreeModelColumn<int> m_col_cellID;
-                Gtk::TreeModelColumn<Glib::ustring> m_col_name;
-                Gtk::TreeModelColumn<Glib::ustring> m_col_value;
-        };
-        Gtk::CellRendererText m_rend_cellvalue;
-        Gtk::TreeViewColumn m_tvcol_cellvalue;
-        void on_cellvalue_edited(const Glib::ustring& path_string, const Glib::ustring& new_text);
-        void cellvalue_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter);
-
-        class FileDetailsColumns : public Gtk::TreeModel::ColumnRecord
-        {
-            public:
-                FileDetailsColumns()
-                { add(m_col_animalID); add(m_col_cellID); add(m_col_fileID); add(m_col_name); add(m_col_value); }
-                Gtk::TreeModelColumn<Glib::ustring> m_col_animalID;
-                Gtk::TreeModelColumn<int> m_col_cellID;
-                Gtk::TreeModelColumn<int> m_col_fileID;
-                Gtk::TreeModelColumn<Glib::ustring> m_col_name;
-                Gtk::TreeModelColumn<Glib::ustring> m_col_value;
-        };
 
         AnimalColumns m_AnimalColumns;
         DetailsColumns m_DetailsColumns;
-        AnimalDetailsColumns m_AnimalDetailsColumns;
-        CellDetailsColumns m_CellDetailsColumns;
-        FileDetailsColumns m_FileDetailsColumns;
 
 		AnalyzeColumns m_DataSourceColumns;
 		AnalyzeColumns m_XVarColumns;

@@ -21,29 +21,29 @@ class uiFilterFrame {
 	protected:
 		type_signal_changed m_signal_changed;
 
-		/*
+		/**
 		 * Parent window
 		 */
 		Gtk::Object *parent;
 
-		/*
+		/**
 		 * Glad reference
 		 */
         Glib::RefPtr<Gtk::Builder> m_refGlade;
 
-		/*
+		/**
 		 * VBoxFilter
 		 */
 		Gtk::VBox *mp_VBoxFilter;	
 
-		/*
+		/**
 		 * Minimum number of files spin box
 		 */
 		Gtk::SpinButton* mp_sbMinFiles;
 		Gtk::Adjustment m_adjMinFiles;
 		void on_adjMinFiles_changed();
 
-		/*
+		/**
 		 * X-Variable Type Filter ComboBox
 		 */
 		Gtk::ComboBoxText m_XVar;

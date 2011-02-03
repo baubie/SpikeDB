@@ -12,3 +12,4 @@ callgrind.*
 spikedb
 spikedb.db
 spikedb.settings
+docs
