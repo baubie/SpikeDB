@@ -4,7 +4,7 @@
 
 GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	: Gtk::Window(cobject),
-	m_refGlade(refGlade),
+	mrp_Glade(refGlade),
 	m_uiFilterFrame(refGlade),
 	mp_AnimalsTree(0),
 	mp_FilesDetailsTree(0)
@@ -23,7 +23,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	this->init_toolbar();
 
 	// Initalize the statusbar
-	m_refGlade->get_widget("statusbar", mp_Statusbar);
+	mrp_Glade->get_widget("statusbar", mp_Statusbar);
 
 
 	// Setup the filter frame
@@ -35,28 +35,32 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	}
 
 
-
 	// Setup the animal details table
-	m_refGlade->get_widget("alignAnimalDetails", mp_AlignAnimalDetails);
+	mrp_Glade->get_widget("alignAnimalDetails", mp_AlignAnimalDetails);
 	mp_AlignAnimalDetails->add(m_uiAnimalDetails);
 	m_uiAnimalDetails.signal_rowedited().connect(sigc::mem_fun(*this, &GUI::on_animaldetails_edited));
+	
+	// Setup the cwll details table
+	mrp_Glade->get_widget("alignCellDetails", mp_AlignCellDetails);
+	mp_AlignCellDetails->add(m_uiCellDetails);
+	m_uiCellDetails.signal_rowedited().connect(sigc::mem_fun(*this, &GUI::on_celldetails_edited));
 	
 
 	// Animals treeview 
 	// Shown on left side under filter frame
-	m_refGlade->get_widget("tvAnimals", mp_AnimalsTree);
-	m_refAnimalTree = Gtk::TreeStore::create(m_AnimalColumns);
-	mp_AnimalsTree->set_model(m_refAnimalTree);
+	mrp_Glade->get_widget("tvAnimals", mp_AnimalsTree);
+	mrp_AnimalTree = Gtk::TreeStore::create(m_AnimalColumns);
+	mp_AnimalsTree->set_model(mrp_AnimalTree);
 	mp_AnimalsTree->append_column("Animal/Cell ID", m_AnimalColumns.m_col_name);
-	m_refAnimalTree->set_sort_column(m_AnimalColumns.m_col_name, Gtk::SORT_ASCENDING);
-	m_refAnimalTree->set_sort_func(0, sigc::mem_fun(*this, &GUI::on_animal_sort));
-	m_refAnimalSelection = mp_AnimalsTree->get_selection();
-	m_refAnimalSelection->signal_changed().connect(sigc::mem_fun(*this, &GUI::changeAnimalSelection));
+	mrp_AnimalTree->set_sort_column(m_AnimalColumns.m_col_name, Gtk::SORT_ASCENDING);
+	mrp_AnimalTree->set_sort_func(0, sigc::mem_fun(*this, &GUI::on_animal_sort));
+	mrp_AnimalSelection = mp_AnimalsTree->get_selection();
+	mrp_AnimalSelection->signal_changed().connect(sigc::mem_fun(*this, &GUI::changeAnimalSelection));
 
 	// Create Files Details TreeView
-	m_refGlade->get_widget("tvDetails", mp_FilesDetailsTree);
-	m_refDetailsList = Gtk::ListStore::create(m_FilesDetailsColumns);
-	mp_FilesDetailsTree->set_model(m_refDetailsList);
+	mrp_Glade->get_widget("tvDetails", mp_FilesDetailsTree);
+	mrp_DetailsList = Gtk::ListStore::create(m_FilesDetailsColumns);
+	mp_FilesDetailsTree->set_model(mrp_DetailsList);
 	mp_FilesDetailsTree->append_column("AnimalID", m_FilesDetailsColumns.m_col_animalID);
 	mp_FilesDetailsTree->append_column("CellID", m_FilesDetailsColumns.m_col_cellID);
 	mp_FilesDetailsTree->append_column("#", m_FilesDetailsColumns.m_col_filenum);
@@ -67,48 +71,48 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	mp_FilesDetailsTree->append_column("Dur (ms)", m_FilesDetailsColumns.m_col_dur);
 	mp_FilesDetailsTree->append_column("Onset (ms)", m_FilesDetailsColumns.m_col_onset);
 	mp_FilesDetailsTree->append_column("Atten (db)", m_FilesDetailsColumns.m_col_atten);
-	m_refDetailsSelection = mp_FilesDetailsTree->get_selection();
-	m_refDetailsSelection->set_mode(Gtk::SELECTION_MULTIPLE);
-	m_refDetailsSelection->signal_changed().connect(sigc::mem_fun(*this, &GUI::changeDetailsSelection));
+	mrp_DetailsSelection = mp_FilesDetailsTree->get_selection();
+	mrp_DetailsSelection->set_mode(Gtk::SELECTION_MULTIPLE);
+	mrp_DetailsSelection->signal_changed().connect(sigc::mem_fun(*this, &GUI::changeDetailsSelection));
 
  
 
 	// Setup the analyze widgets
-	m_refGlade->get_widget("vboxAnalyze", mp_VBoxAnalyze);
-	m_refGlade->get_widget("cbDataSource", mp_DataSource);
-	m_refGlade->get_widget("cbXVar", mp_XVar);
-	m_refGlade->get_widget("cbYVar", mp_YVar);
-	m_refDataSource = Gtk::ListStore::create(m_DataSourceColumns);
-	m_refXVar = Gtk::ListStore::create(m_XVarColumns);
-	m_refYVar = Gtk::ListStore::create(m_YVarColumns);
-	mp_DataSource->set_model(m_refDataSource);
-	mp_XVar->set_model(m_refXVar);
-	mp_YVar->set_model(m_refYVar);
+	mrp_Glade->get_widget("vboxAnalyze", mp_VBoxAnalyze);
+	mrp_Glade->get_widget("cbDataSource", mp_DataSource);
+	mrp_Glade->get_widget("cbXVar", mp_XVar);
+	mrp_Glade->get_widget("cbYVar", mp_YVar);
+	mrp_DataSource = Gtk::ListStore::create(m_DataSourceColumns);
+	mrp_XVar = Gtk::ListStore::create(m_XVarColumns);
+	mrp_YVar = Gtk::ListStore::create(m_YVarColumns);
+	mp_DataSource->set_model(mrp_DataSource);
+	mp_XVar->set_model(mrp_XVar);
+	mp_YVar->set_model(mrp_YVar);
 	mp_DataSource->pack_start(m_DataSourceColumns.m_col_name);
 	mp_XVar->pack_start(m_XVarColumns.m_col_name);
 	mp_YVar->pack_start(m_YVarColumns.m_col_name);
 	mp_DataSource->signal_changed().connect( sigc::mem_fun(*this, &GUI::on_analyze_changed));
 	mp_XVar->signal_changed().connect( sigc::mem_fun(*this, &GUI::on_analyze_changed));
 	mp_YVar->signal_changed().connect( sigc::mem_fun(*this, &GUI::on_analyze_changed));
-	Gtk::TreeModel::Row row = *(m_refDataSource->append());
+	Gtk::TreeModel::Row row = *(mrp_DataSource->append());
 	row[m_DataSourceColumns.m_col_name] = "Animals";
-	row = *(m_refDataSource->append());
+	row = *(mrp_DataSource->append());
 	row[m_DataSourceColumns.m_col_name] = "Cells";
 	mp_DataSource->set_active(0);
 	on_analyze_changed();
 
 
-	m_refGlade->get_widget("hboxPlots", mp_HBoxPlots);
-	m_refGlade->get_widget("cbMeanType", mp_MeanType);
-	m_refMeanType = Gtk::ListStore::create(m_MeanTypeColumns);
-	mp_MeanType->set_model(m_refMeanType);
+	mrp_Glade->get_widget("hboxPlots", mp_HBoxPlots);
+	mrp_Glade->get_widget("cbMeanType", mp_MeanType);
+	mrp_MeanType = Gtk::ListStore::create(m_MeanTypeColumns);
+	mp_MeanType->set_model(mrp_MeanType);
 	mp_MeanType->pack_start(m_MeanTypeColumns.m_col_name);
 	mp_MeanType->signal_changed().connect( sigc::mem_fun(*this, &GUI::on_meantype_changed));
-	row = *(m_refMeanType->append());
+	row = *(mrp_MeanType->append());
 	row[m_MeanTypeColumns.m_col_name] = "Mean Spikes per Trial";
-	row = *(m_refMeanType->append());
+	row = *(mrp_MeanType->append());
 	row[m_MeanTypeColumns.m_col_name] = "Percentage of trials with at least 1 spike";
-	row = *(m_refMeanType->append());
+	row = *(mrp_MeanType->append());
 	row[m_MeanTypeColumns.m_col_name] = "Mean First-Spike Latency";
 	mp_MeanType->set_active(0);
 
@@ -137,20 +141,20 @@ GUI::~GUI()
 
 void GUI::init_toolbar()
 {
-	m_refGlade->get_widget("menuNewDatabase", mp_MenuNewDatabase);
+	mrp_Glade->get_widget("menuNewDatabase", mp_MenuNewDatabase);
 	if (mp_MenuNewDatabase) {
 		mp_MenuNewDatabase->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuNewDatabase_activate));
 	}
-	m_refGlade->get_widget("menuOpenDatabase", mp_MenuOpenDatabase);
+	mrp_Glade->get_widget("menuOpenDatabase", mp_MenuOpenDatabase);
 	if (mp_MenuOpenDatabase) {
 		mp_MenuOpenDatabase->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuOpenDatabase_activate));
 	}
-	m_refGlade->get_widget("menuImportFolder", mp_MenuImportFolder);
+	mrp_Glade->get_widget("menuImportFolder", mp_MenuImportFolder);
 	if (mp_MenuImportFolder) {
 		mp_MenuImportFolder->set_sensitive(false);
 		mp_MenuImportFolder->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuImportFolder_activate));
 	}
-	m_refGlade->get_widget("menuQuit", mp_MenuQuit);
+	mrp_Glade->get_widget("menuQuit", mp_MenuQuit);
 	if (mp_MenuQuit) {
 		mp_MenuQuit->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuQuit_activate));
 	}
@@ -294,7 +298,7 @@ void GUI::on_meantype_changed()
 	mp_PlotMeans->clear();
 	mp_PlotSpikes->clear();
 	curXVariable = "";
-	m_refDetailsSelection->selected_foreach_iter(
+	mrp_DetailsSelection->selected_foreach_iter(
 		sigc::mem_fun(*this, &GUI::addFileToPlot)
 		);
 }
@@ -308,29 +312,29 @@ void GUI::on_analyze_changed()
 	if (mp_DataSource->get_active_row_number() != dataSource) {
 		dataSource = mp_DataSource->get_active_row_number();
 		if (mp_DataSource->get_active_row_number() == 0) {
-			m_refXVar->clear();
-			m_refYVar->clear();
-			row = *(m_refXVar->append());
+			mrp_XVar->clear();
+			mrp_YVar->clear();
+			row = *(mrp_XVar->append());
 			row[m_XVarColumns.m_col_name] = "Weight";
 
-			row = *(m_refYVar->append());
+			row = *(mrp_YVar->append());
 			row[m_YVarColumns.m_col_name] = "Weight";
 		}
 		if (mp_DataSource->get_active_row_number() == 1) {
-			m_refXVar->clear();
-			m_refYVar->clear();
-			row = *(m_refXVar->append());
+			mrp_XVar->clear();
+			mrp_YVar->clear();
+			row = *(mrp_XVar->append());
 			row[m_XVarColumns.m_col_name] = "CarFreq (Hz)";
-			row = *(m_refXVar->append());
+			row = *(mrp_XVar->append());
 			row[m_XVarColumns.m_col_name] = "Threshold (dB SPL)";
-			row = *(m_refXVar->append());
+			row = *(mrp_XVar->append());
 			row[m_XVarColumns.m_col_name] = "Depth (um)";
 
-			row = *(m_refYVar->append());
+			row = *(mrp_YVar->append());
 			row[m_YVarColumns.m_col_name] = "CarFreq (Hz)";
-			row = *(m_refYVar->append());
+			row = *(mrp_YVar->append());
 			row[m_YVarColumns.m_col_name] = "Threshold (dB SPL)";
-			row = *(m_refYVar->append());
+			row = *(mrp_YVar->append());
 			row[m_YVarColumns.m_col_name] = "Depth (um)";
 		}
 		mp_XVar->set_active(0);
@@ -359,7 +363,7 @@ void GUI::updateAnalyzePlot()
 	sqlite3_stmt* stmt = 0;
 	Glib::ustring animalID = "";
 	int cellID = -1;
-	Gtk::TreeModel::iterator iter = m_refAnimalSelection->get_selected();
+	Gtk::TreeModel::iterator iter = mrp_AnimalSelection->get_selected();
 	if (iter) {
 		Gtk::TreeModel::Row row = *iter;
 		if (row->parent() == 0) {
@@ -476,7 +480,7 @@ void GUI::on_cellvalue_edited(const Glib::ustring& path_string, const Glib::ustr
 
 	Gtk::TreePath path(path_string);
 
-	Gtk::TreeModel::iterator iter = m_refCellDetailsList->get_iter(path);
+	Gtk::TreeModel::iterator iter = mrp_CellDetailsList->get_iter(path);
 
 	if (iter) {
 		// Update tree model
@@ -517,34 +521,15 @@ void GUI::on_cellvalue_edited(const Glib::ustring& path_string, const Glib::ustr
 }
 */
 
-/*
-void GUI::cellvalue_cell_data(Gtk::CellRenderer* *renderer*, const Gtk::TreeModel::iterator& iter)
-{
-	if (iter) {
-		Gtk::TreeModel::Row row = *iter;
-		m_rend_cellvalue.property_text() = row[m_CellDetailsColumns.m_col_value];
-		if (row[m_CellDetailsColumns.m_col_name] != "Cell ID") {
-			m_rend_cellvalue.property_editable() = true;
-			m_rend_cellvalue.property_cell_background() = "#DDEEFF";
-		} else {
-			m_rend_cellvalue.property_editable() = false;
-			m_rend_cellvalue.property_cell_background() = "#FFDDDD";
-		}
-	}
-}
-*/
-
 void GUI::on_animaldetails_edited(
 	Glib::ustring ID, Glib::ustring name, Glib::ustring /*oldvalue*/, Glib::ustring newvalue, uiPropTable::RowType /*type*/)
 {
 	// Construct the SQL query for the relevant row.
 	Glib::ustring query;
-	if (name == "Tags")  query = "UPDATE animals SET tags=? WHERE ID=?";
-	if (name == "Species") query = "UPDATE animals SET species=? WHERE ID=?";
-	if (name == "Sex") query = "UPDATE animals SET sex=? WHERE ID=?";
-	if (name == "Weight (g)") query = "UPDATE animals SET weight=? WHERE ID=?";
-	if (name == "Age") query = "UPDATE animals SET age=? WHERE ID=?";
-	if (name == "Notes") query = "UPDATE animals SET notes=? WHERE ID=?";
+	if (name == "CarFreq (Hz)")  query = "UPDATE cells SET freq=? WHERE animalID=? AND cellID=?";
+	if (name == "Depth (um)")  query = "UPDATE cells SET depth=? WHERE animalID=? AND cellID=?";
+	if (name == "Threshold (dB SPL)")  query = "UPDATE cells SET threshold=? WHERE animalID=? AND cellID=?";
+	if (name == "Notes")  query = "UPDATE cells SET notes=? WHERE animalID=? AND cellID=?";
 
 	// Update the database.
 	const char* q = query.c_str();
@@ -559,16 +544,42 @@ void GUI::on_animaldetails_edited(
 	populateAnimalDetailsList(ID);
 }
 
+void GUI::on_celldetails_edited(
+	Glib::ustring ID, Glib::ustring name, Glib::ustring /*oldvalue*/, Glib::ustring newvalue, uiPropTable::RowType /*type*/)
+{
+	// Construct the SQL query for the relevant row.
+	Glib::ustring query;
+	if (name == "Species") query = "UPDATE animals SET species=? WHERE ID=?";
+	if (name == "Sex") query = "UPDATE animals SET sex=? WHERE ID=?";
+	if (name == "Weight (g)") query = "UPDATE animals SET weight=? WHERE ID=?";
+	if (name == "Age") query = "UPDATE animals SET age=? WHERE ID=?";
+	if (name == "Notes") query = "UPDATE animals SET notes=? WHERE ID=?";
+
+	/*
+	// Update the database.
+	const char* q = query.c_str();
+	sqlite3_stmt *stmt = 0;
+	sqlite3_prepare_v2(db, q, strlen(q), &stmt, NULL);
+	sqlite3_bind_text(stmt, 1, newvalue.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_text(stmt, 2, ID.c_str(), -1, SQLITE_TRANSIENT);
+	if (sqlite3_step(stmt) != SQLITE_DONE) std::cerr << "ERROR: Could not update animal. " << sqlite3_errmsg(db) << std::endl;
+	sqlite3_finalize(stmt);
+	*/
+
+	// Repopulate the table with the database value to show, forsure, what is in the database now.
+	populateCellDetailsList(ID);
+}
+
 void GUI::changeDetailsSelection()
 {
 
 	mp_PlotMeans->clear();
 	mp_PlotSpikes->clear();
 	curXVariable = "";
-	m_refDetailsSelection->selected_foreach_iter(
+	mrp_DetailsSelection->selected_foreach_iter(
 		sigc::mem_fun(*this, &GUI::addFileToPlot)
 		);
-	m_refDetailsSelection->selected_foreach_iter(
+	mrp_DetailsSelection->selected_foreach_iter(
 		sigc::mem_fun(*this, &GUI::updateSideLists)
 		);
 }
@@ -772,7 +783,7 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 void GUI::changeAnimalSelection()
 {
 
-	Gtk::TreeModel::iterator iter = m_refAnimalSelection->get_selected();
+	Gtk::TreeModel::iterator iter = mrp_AnimalSelection->get_selected();
 
 	if (iter) {
 		Gtk::TreeModel::Row row = *iter;
@@ -852,8 +863,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 	 */
 	if (db == NULL) return;
 
-	/*
-	m_refCellDetailsList->clear();
+	m_uiCellDetails.clear();
 	char query[] = "SELECT depth, freq, notes, threshold FROM cells WHERE animalID=? AND cellID=?";
 	sqlite3_stmt *stmt;
 	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
@@ -865,7 +875,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 	Gtk::TreeModel::Row row;
 
 	if (r == SQLITE_ROW) {
-		row = *(m_refCellDetailsList->append());
+		row = *(mrp_CellDetailsList->append());
 		row[m_CellDetailsColumns.m_col_name] = "Cell ID";
 		row[m_CellDetailsColumns.m_col_animalID] = animalID;
 		row[m_CellDetailsColumns.m_col_cellID] = cellID;
@@ -873,7 +883,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 		sprintf(buffer, "%d", cellID);
 		row[m_CellDetailsColumns.m_col_value] = buffer;
 
-		row = *(m_refCellDetailsList->append());
+		row = *(mrp_CellDetailsList->append());
 		row[m_CellDetailsColumns.m_col_name] = "CarFreq (Hz)";
 		row[m_CellDetailsColumns.m_col_animalID] = animalID;
 		row[m_CellDetailsColumns.m_col_cellID] = cellID;
@@ -881,7 +891,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 			row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt, 1);
 		}
 
-		row = *(m_refCellDetailsList->append());
+		row = *(mrp_CellDetailsList->append());
 		row[m_CellDetailsColumns.m_col_name] = "Threshold (dB SPL)";
 		row[m_CellDetailsColumns.m_col_animalID] = animalID;
 		row[m_CellDetailsColumns.m_col_cellID] = cellID;
@@ -889,7 +899,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 			row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt, 4);
 		}
 
-		row = *(m_refCellDetailsList->append());
+		row = *(mrp_CellDetailsList->append());
 		row[m_CellDetailsColumns.m_col_name] = "Depth (um)";
 		row[m_CellDetailsColumns.m_col_animalID] = animalID;
 		row[m_CellDetailsColumns.m_col_cellID] = cellID;
@@ -897,7 +907,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 			row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt, 0);
 		}
 
-		row = *(m_refCellDetailsList->append());
+		row = *(mrp_CellDetailsList->append());
 		row[m_CellDetailsColumns.m_col_name] = "Tags";
 		row[m_CellDetailsColumns.m_col_animalID] = animalID;
 		row[m_CellDetailsColumns.m_col_cellID] = cellID;
@@ -905,7 +915,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 			row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt, 2);
 		}
 
-		row = *(m_refCellDetailsList->append());
+		row = *(mrp_CellDetailsList->append());
 		row[m_CellDetailsColumns.m_col_name] = "Notes";
 		row[m_CellDetailsColumns.m_col_animalID] = animalID;
 		row[m_CellDetailsColumns.m_col_cellID] = cellID;
@@ -924,17 +934,17 @@ void GUI::populateAnimalTree()
 	sqlite3_stmt *stmt_animals, *stmt_cells;
 
 	sqlite3_prepare_v2(db, query_animals, -1, &stmt_animals, 0);
-	m_refAnimalTree->clear();
+	mrp_AnimalTree->clear();
 	Gtk::TreeModel::Row base;
 	Gtk::TreeModel::Row row;
 	Gtk::TreeModel::Row childrow;
-	base = *(m_refAnimalTree->append());
+	base = *(mrp_AnimalTree->append());
 	base[m_AnimalColumns.m_col_name] = "All Animals";
 	int r_animals, r_cells;
 	while (true) {
 		r_animals = sqlite3_step(stmt_animals);
 		if (r_animals == SQLITE_ROW) {
-			row = *(m_refAnimalTree->append(base.children()));
+			row = *(mrp_AnimalTree->append(base.children()));
 			char* animalID = (char*)sqlite3_column_text(stmt_animals, 0);
 			row[m_AnimalColumns.m_col_name] = animalID;
 			char query_cells[] = "SELECT cellID FROM cells WHERE animalID=?";
@@ -944,7 +954,7 @@ void GUI::populateAnimalTree()
 				r_cells = sqlite3_step(stmt_cells);
 				if (r_cells == SQLITE_ROW) {
 					char* cellID = (char*)sqlite3_column_text(stmt_cells, 0);
-					childrow = *(m_refAnimalTree->append(row.children()));
+					childrow = *(mrp_AnimalTree->append(row.children()));
 					childrow[m_AnimalColumns.m_col_name] = cellID;
 				} else{ break; }
 			}
@@ -1027,7 +1037,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 
 	getFilesStatement(&stmt, animalID, cellID);
 
-	m_refDetailsList->clear();
+	mrp_DetailsList->clear();
 	Gtk::TreeModel::Row row;
 	while (true) {
 		int r = sqlite3_step(stmt);
@@ -1054,7 +1064,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
                         }
 
                         if (filtered) {
-                            row = *(m_refDetailsList->append());
+                            row = *(mrp_DetailsList->append());
                             row[m_FilesDetailsColumns.m_col_animalID] = (char*)sqlite3_column_text(stmt, 0);
                             row[m_FilesDetailsColumns.m_col_cellID] = sqlite3_column_int(stmt, 1);
                             row[m_FilesDetailsColumns.m_col_filenum] = sqlite3_column_int(stmt, 2);

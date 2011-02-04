@@ -50,8 +50,17 @@ class GUI : public Gtk::Window
 				Glib::ustring newvalue,
 				uiPropTable::RowType type);
 
+		/** 
+		 * Handle when a row in the cell details property table is edited. 
+		 * */
+		void on_celldetails_edited(
+				Glib::ustring ID,
+				Glib::ustring name,
+				Glib::ustring oldvalue,
+				Glib::ustring newvalue,
+				uiPropTable::RowType type);
 
-        Glib::RefPtr<Gtk::Builder> m_refGlade; /**< Reference to Glade file. */ 
+        Glib::RefPtr<Gtk::Builder> mrp_Glade; /**< Reference to Glade file. */ 
 		Settings settings; /**< Settings object. */
 
 
@@ -64,6 +73,8 @@ class GUI : public Gtk::Window
 		uiPropTable m_uiAnimalDetails; /**< Animal details property table. */
 		Gtk::Alignment* mp_AlignAnimalDetails; /**< Container for the animal details property table. */
 
+		uiPropTable m_uiCellDetails; /**< Cell details property table. */
+		Gtk::Alignment* mp_AlignCellDetails; /**< Container for the cell details property table. */
 		 
 
         Gtk::ImageMenuItem* mp_MenuNewDatabase;
@@ -83,16 +94,16 @@ class GUI : public Gtk::Window
 
 
         // Child Widgets (created in c++)
-        Glib::RefPtr<Gtk::TreeStore> m_refAnimalTree;
-        Glib::RefPtr<Gtk::ListStore> m_refDetailsList;
-        Glib::RefPtr<Gtk::TreeSelection> m_refAnimalSelection;
-        Glib::RefPtr<Gtk::TreeSelection> m_refDetailsSelection;
-        Glib::RefPtr<Gtk::ListStore> m_refCellDetailsList;
-        Glib::RefPtr<Gtk::ListStore> m_refDataSource;
-        Glib::RefPtr<Gtk::ListStore> m_refXVar;
-        Glib::RefPtr<Gtk::ListStore> m_refYVar;
-        Glib::RefPtr<Gtk::ListStore> m_refMeanType;
-        Glib::RefPtr<Gtk::ListStore> m_refTypeFilter;
+        Glib::RefPtr<Gtk::TreeStore> mrp_AnimalTree;
+        Glib::RefPtr<Gtk::ListStore> mrp_DetailsList;
+        Glib::RefPtr<Gtk::TreeSelection> mrp_AnimalSelection;
+        Glib::RefPtr<Gtk::TreeSelection> mrp_DetailsSelection;
+        Glib::RefPtr<Gtk::ListStore> mrp_CellDetailsList;
+        Glib::RefPtr<Gtk::ListStore> mrp_DataSource;
+        Glib::RefPtr<Gtk::ListStore> mrp_XVar;
+        Glib::RefPtr<Gtk::ListStore> mrp_YVar;
+        Glib::RefPtr<Gtk::ListStore> mrp_MeanType;
+        Glib::RefPtr<Gtk::ListStore> mrp_TypeFilter;
 
         // Plots
         EasyPlotmm* mp_PlotSpikes;

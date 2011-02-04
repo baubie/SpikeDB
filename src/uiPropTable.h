@@ -4,6 +4,7 @@
 #include <gtkmm.h>
 
 /** Properties table widget with static, editable, and special tags row types. */
+template <class T>
 class uiPropTable : public Gtk::TreeView {
 
 	public:
@@ -45,13 +46,13 @@ class uiPropTable : public Gtk::TreeView {
 		 * @param[in] value Text for the value cell.
 		 * @param[in] type Define the behaviour and display style of the value cell.
 		 */
-		void addRow(Glib::ustring ID, 
+		void addRow(T ID, 
 					Glib::ustring name, 
 					Glib::ustring value, 
                     uiPropTable::RowType type);
 
 		typedef sigc::signal<void,
-							 Glib::ustring, 
+						     T,
 						     Glib::ustring, 
 							 Glib::ustring, 
 							 Glib::ustring, 
@@ -73,7 +74,7 @@ class uiPropTable : public Gtk::TreeView {
                 Columns()
                 { add(m_col_type); add(m_col_ID); add(m_col_name); add(m_col_value); }
                 Gtk::TreeModelColumn<RowType> m_col_type;
-                Gtk::TreeModelColumn<Glib::ustring> m_col_ID;
+                Gtk::TreeModelColumn<T> m_col_ID;
                 Gtk::TreeModelColumn<Glib::ustring> m_col_name;
                 Gtk::TreeModelColumn<Glib::ustring> m_col_value;
         } m_Columns;

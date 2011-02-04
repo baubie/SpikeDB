@@ -30,7 +30,7 @@ void uiPropTable::clear()
 	m_refList->clear();
 }
 
-void uiPropTable::addRow(Glib::ustring ID, Glib::ustring name, Glib::ustring value, uiPropTable::RowType type)
+void uiPropTable::addRow(T ID, Glib::ustring name, Glib::ustring value, uiPropTable::RowType type)
 {
 	Gtk::TreeModel::Row row = *(m_refList->append());
 	row[m_Columns.m_col_type] = type;
@@ -58,9 +58,9 @@ void uiPropTable::on_value_edited(const Glib::ustring& path_string, const Glib::
 		if (row.get_value(m_Columns.m_col_value) != new_text)
 		{
 			m_signal_rowedited.emit(
-				row.get_value(m_Columns.m_col_ID).c_str(),
-				row.get_value(m_Columns.m_col_name).c_str(),
-				row.get_value(m_Columns.m_col_value).c_str(),
+				row.get_value(m_Columns.m_col_ID),
+				row.get_value(m_Columns.m_col_name),
+				row.get_value(m_Columns.m_col_value),
 				new_text,
 				row.get_value(m_Columns.m_col_type));
 		}
