@@ -18,6 +18,13 @@
 #include "uiFilterFrame.h"
 #include "uiPropTable.h"
 
+struct CellID
+{
+	Glib::ustring animalID;
+	int cellID;
+};
+
+
 class GUI : public Gtk::Window
 {
     public:
@@ -29,6 +36,7 @@ class GUI : public Gtk::Window
 
     protected:
 
+		bool uiReady; /**< When FALSE, block UI updates. */
 
 		void init_toolbar(); /**< Initialize the toolbar. */
 
@@ -54,7 +62,7 @@ class GUI : public Gtk::Window
 		 * Handle when a row in the cell details property table is edited. 
 		 * */
 		void on_celldetails_edited(
-				Glib::ustring ID,
+				CellID ID,
 				Glib::ustring name,
 				Glib::ustring oldvalue,
 				Glib::ustring newvalue,
@@ -64,7 +72,6 @@ class GUI : public Gtk::Window
 		Settings settings; /**< Settings object. */
 
 
-		bool uiReady; /**< When FALSE, block UI updates. */
 
 
 		uiFilterFrame m_uiFilterFrame; /**< Filter widgets in top left corner. */
@@ -73,7 +80,7 @@ class GUI : public Gtk::Window
 		uiPropTable<Glib::ustring> m_uiAnimalDetails; /**< Animal details property table. */
 		Gtk::Alignment* mp_AlignAnimalDetails; /**< Container for the animal details property table. */
 
-		uiPropTable<Glib::ustring> m_uiCellDetails; /**< Cell details property table. */
+		uiPropTable<CellID> m_uiCellDetails; /**< Cell details property table. */
 		Gtk::Alignment* mp_AlignCellDetails; /**< Container for the cell details property table. */
 		 
 

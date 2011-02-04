@@ -524,14 +524,13 @@ void GUI::on_cellvalue_edited(const Glib::ustring& path_string, const Glib::ustr
 void GUI::on_animaldetails_edited(
 	Glib::ustring ID, Glib::ustring name, Glib::ustring /*oldvalue*/, Glib::ustring newvalue, uiPropTableRowType /*type*/)
 {
-	std::cout << ID << std::endl;
-
 	// Construct the SQL query for the relevant row.
 	Glib::ustring query;
-	if (name == "CarFreq (Hz)")  query = "UPDATE cells SET freq=? WHERE animalID=? AND cellID=?";
-	if (name == "Depth (um)")  query = "UPDATE cells SET depth=? WHERE animalID=? AND cellID=?";
-	if (name == "Threshold (dB SPL)")  query = "UPDATE cells SET threshold=? WHERE animalID=? AND cellID=?";
-	if (name == "Notes")  query = "UPDATE cells SET notes=? WHERE animalID=? AND cellID=?";
+	if (name == "Species") query = "UPDATE animals SET species=? WHERE ID=?";
+	if (name == "Sex") query = "UPDATE animals SET sex=? WHERE ID=?";
+	if (name == "Weight (g)") query = "UPDATE animals SET weight=? WHERE ID=?";
+	if (name == "Age") query = "UPDATE animals SET age=? WHERE ID=?";
+	if (name == "Notes") query = "UPDATE animals SET notes=? WHERE ID=?";
 
 	// Update the database.
 	const char* q = query.c_str();
@@ -547,15 +546,14 @@ void GUI::on_animaldetails_edited(
 }
 
 void GUI::on_celldetails_edited(
-	Glib::ustring ID, Glib::ustring name, Glib::ustring /*oldvalue*/, Glib::ustring newvalue, uiPropTableRowType /*type*/)
+	CellID ID, Glib::ustring name, Glib::ustring /*oldvalue*/, Glib::ustring newvalue, uiPropTableRowType /*type*/)
 {
 	// Construct the SQL query for the relevant row.
 	Glib::ustring query;
-	if (name == "Species") query = "UPDATE animals SET species=? WHERE ID=?";
-	if (name == "Sex") query = "UPDATE animals SET sex=? WHERE ID=?";
-	if (name == "Weight (g)") query = "UPDATE animals SET weight=? WHERE ID=?";
-	if (name == "Age") query = "UPDATE animals SET age=? WHERE ID=?";
-	if (name == "Notes") query = "UPDATE animals SET notes=? WHERE ID=?";
+	if (name == "CarFreq (Hz)")  query = "UPDATE cells SET freq=? WHERE animalID=? AND cellID=?";
+	if (name == "Depth (um)")  query = "UPDATE cells SET depth=? WHERE animalID=? AND cellID=?";
+	if (name == "Threshold (dB SPL)")  query = "UPDATE cells SET threshold=? WHERE animalID=? AND cellID=?";
+	if (name == "Notes")  query = "UPDATE cells SET notes=? WHERE animalID=? AND cellID=?";
 
 	/*
 	// Update the database.
@@ -569,7 +567,7 @@ void GUI::on_celldetails_edited(
 	*/
 
 	// Repopulate the table with the database value to show, forsure, what is in the database now.
-	populateCellDetailsList(ID,1);
+	populateCellDetailsList(ID.animalID,ID.cellID);
 }
 
 void GUI::changeDetailsSelection()
