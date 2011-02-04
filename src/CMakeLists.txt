@@ -9,6 +9,6 @@ include_directories(
 add_definitions (-Wall -W)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -funroll-loops")
 
-set (SRC spikedb.cpp gui.cpp uiFilterFrame.cpp uiPropTable.cpp spikedata.cpp settings.cpp easyplotmm/easyplotmm.cpp tokenize.cpp)
+set (SRC spikedb.cpp gui.cpp uiFilterFrame.cpp spikedata.cpp settings.cpp easyplotmm/easyplotmm.cpp tokenize.cpp)
 add_executable (spikedb ${SRC})
 target_link_libraries(spikedb ${GTKMM_LIBRARIES} ${SQLITE3_LIBRARIES} ${CAIRO_LIBRARIES})

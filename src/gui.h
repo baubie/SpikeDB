@@ -48,7 +48,7 @@ class GUI : public Gtk::Window
 				Glib::ustring name,
 				Glib::ustring oldvalue,
 				Glib::ustring newvalue,
-				uiPropTable::RowType type);
+				uiPropTableRowType type);
 
 		/** 
 		 * Handle when a row in the cell details property table is edited. 
@@ -58,7 +58,7 @@ class GUI : public Gtk::Window
 				Glib::ustring name,
 				Glib::ustring oldvalue,
 				Glib::ustring newvalue,
-				uiPropTable::RowType type);
+				uiPropTableRowType type);
 
         Glib::RefPtr<Gtk::Builder> mrp_Glade; /**< Reference to Glade file. */ 
 		Settings settings; /**< Settings object. */
@@ -70,10 +70,10 @@ class GUI : public Gtk::Window
 		uiFilterFrame m_uiFilterFrame; /**< Filter widgets in top left corner. */
 
 
-		uiPropTable m_uiAnimalDetails; /**< Animal details property table. */
+		uiPropTable<Glib::ustring> m_uiAnimalDetails; /**< Animal details property table. */
 		Gtk::Alignment* mp_AlignAnimalDetails; /**< Container for the animal details property table. */
 
-		uiPropTable m_uiCellDetails; /**< Cell details property table. */
+		uiPropTable<Glib::ustring> m_uiCellDetails; /**< Cell details property table. */
 		Gtk::Alignment* mp_AlignCellDetails; /**< Container for the cell details property table. */
 		 
 

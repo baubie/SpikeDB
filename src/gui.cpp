@@ -522,8 +522,10 @@ void GUI::on_cellvalue_edited(const Glib::ustring& path_string, const Glib::ustr
 */
 
 void GUI::on_animaldetails_edited(
-	Glib::ustring ID, Glib::ustring name, Glib::ustring /*oldvalue*/, Glib::ustring newvalue, uiPropTable::RowType /*type*/)
+	Glib::ustring ID, Glib::ustring name, Glib::ustring /*oldvalue*/, Glib::ustring newvalue, uiPropTableRowType /*type*/)
 {
+	std::cout << ID << std::endl;
+
 	// Construct the SQL query for the relevant row.
 	Glib::ustring query;
 	if (name == "CarFreq (Hz)")  query = "UPDATE cells SET freq=? WHERE animalID=? AND cellID=?";
@@ -545,7 +547,7 @@ void GUI::on_animaldetails_edited(
 }
 
 void GUI::on_celldetails_edited(
-	Glib::ustring ID, Glib::ustring name, Glib::ustring /*oldvalue*/, Glib::ustring newvalue, uiPropTable::RowType /*type*/)
+	Glib::ustring ID, Glib::ustring name, Glib::ustring /*oldvalue*/, Glib::ustring newvalue, uiPropTableRowType /*type*/)
 {
 	// Construct the SQL query for the relevant row.
 	Glib::ustring query;
@@ -567,7 +569,7 @@ void GUI::on_celldetails_edited(
 	*/
 
 	// Repopulate the table with the database value to show, forsure, what is in the database now.
-	populateCellDetailsList(ID);
+	populateCellDetailsList(ID,1);
 }
 
 void GUI::changeDetailsSelection()
@@ -826,31 +828,31 @@ void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 
 	Glib::ustring tmp;
 	if (r == SQLITE_ROW) {
-		m_uiAnimalDetails.addRow(animalID, "ID", animalID, uiPropTable::Static);
+		m_uiAnimalDetails.addRow(animalID, "ID", animalID, Static);
 
 		m_uiAnimalDetails.addRow(animalID, "Species", 
 			((char*)sqlite3_column_text(stmt, 0) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 0),
-			uiPropTable::Editable
+			Editable
 		);
 
 		m_uiAnimalDetails.addRow(animalID, "Sex", 
 			((char*)sqlite3_column_text(stmt, 1) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 1),
-			uiPropTable::Editable
+			Editable
 		);
 
 		m_uiAnimalDetails.addRow(animalID, "Weight (g)", 
 			((char*)sqlite3_column_text(stmt, 2) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 2),
-			uiPropTable::Editable
+			Editable
 		);
 
 		m_uiAnimalDetails.addRow(animalID, "Age", 
 			((char*)sqlite3_column_text(stmt, 3) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 3),
-			uiPropTable::Editable
+			Editable
 		);
 
 		m_uiAnimalDetails.addRow(animalID, "Notes", 
 			((char*)sqlite3_column_text(stmt, 4) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 3),
-			uiPropTable::EditableLong
+			EditableLong
 		);
 	}
 	sqlite3_finalize(stmt);
@@ -864,6 +866,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 	if (db == NULL) return;
 
 	m_uiCellDetails.clear();
+
 	char query[] = "SELECT depth, freq, notes, threshold FROM cells WHERE animalID=? AND cellID=?";
 	sqlite3_stmt *stmt;
 	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
@@ -871,7 +874,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 	sqlite3_bind_int(stmt, 2, cellID);
 	int r;
 	r = sqlite3_step(stmt);
-
+/*
 	Gtk::TreeModel::Row row;
 
 	if (r == SQLITE_ROW) {
