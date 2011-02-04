@@ -50,6 +50,18 @@ class uiPropTable : public Gtk::TreeView {
 					Glib::ustring value, 
                     uiPropTableRowType type);
 
+        /**
+		 * Adds row to the properties table.
+		 * @param[in] ID Hidden identification string.
+		 * @param[in] name Text for the name cell.
+		 * @param[in] value Integer for the value cell.
+		 * @param[in] type Define the behaviour and display style of the value cell.
+		 */
+		void addRow(T ID, 
+					Glib::ustring name, 
+					int value, 
+                    uiPropTableRowType type);
+
 		typedef sigc::signal<void,
 						     T,
 						     Glib::ustring, 
@@ -133,6 +145,18 @@ void uiPropTable<T>::addRow(T ID, Glib::ustring name, Glib::ustring value, uiPro
 	row[m_Columns.m_col_name] = name;
 	row[m_Columns.m_col_value] = value;
 }
+
+template <class T>
+void uiPropTable<T>::addRow(T ID, Glib::ustring name, int value, uiPropTableRowType type)
+{
+	char buf[G_ASCII_DTOSTR_BUF_SIZE];
+	Gtk::TreeModel::Row row = *(m_refList->append());
+	row[m_Columns.m_col_type] = type;
+	row[m_Columns.m_col_ID] = ID;
+	row[m_Columns.m_col_name] = name;
+	row[m_Columns.m_col_value] = g_ascii_dtostr(buf,sizeof(buf),value);
+}
+
 
 template <class T>
 typename uiPropTable<T>::type_signal_rowedited uiPropTable<T>::signal_rowedited()

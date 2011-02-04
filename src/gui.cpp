@@ -824,7 +824,6 @@ void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 	int r;
 	r = sqlite3_step(stmt);
 
-	Glib::ustring tmp;
 	if (r == SQLITE_ROW) {
 		m_uiAnimalDetails.addRow(animalID, "ID", animalID, Static);
 
@@ -846,6 +845,11 @@ void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 		m_uiAnimalDetails.addRow(animalID, "Age", 
 			((char*)sqlite3_column_text(stmt, 3) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 3),
 			Editable
+		);
+
+		m_uiAnimalDetails.addRow(animalID, "Tags", 
+			"",
+			Tags
 		);
 
 		m_uiAnimalDetails.addRow(animalID, "Notes", 
@@ -872,61 +876,40 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 	sqlite3_bind_int(stmt, 2, cellID);
 	int r;
 	r = sqlite3_step(stmt);
-/*
-	Gtk::TreeModel::Row row;
 
 	if (r == SQLITE_ROW) {
-		row = *(mrp_CellDetailsList->append());
-		row[m_CellDetailsColumns.m_col_name] = "Cell ID";
-		row[m_CellDetailsColumns.m_col_animalID] = animalID;
-		row[m_CellDetailsColumns.m_col_cellID] = cellID;
-		char buffer[4];
-		sprintf(buffer, "%d", cellID);
-		row[m_CellDetailsColumns.m_col_value] = buffer;
+		CellID ID;
+		ID.animalID = animalID;
+		ID.cellID = cellID;
 
-		row = *(mrp_CellDetailsList->append());
-		row[m_CellDetailsColumns.m_col_name] = "CarFreq (Hz)";
-		row[m_CellDetailsColumns.m_col_animalID] = animalID;
-		row[m_CellDetailsColumns.m_col_cellID] = cellID;
-		if ((char*)sqlite3_column_text(stmt, 1) != NULL) {
-			row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt, 1);
-		}
+		m_uiCellDetails.addRow(ID, "Cell ID", ID.cellID, Static);
 
-		row = *(mrp_CellDetailsList->append());
-		row[m_CellDetailsColumns.m_col_name] = "Threshold (dB SPL)";
-		row[m_CellDetailsColumns.m_col_animalID] = animalID;
-		row[m_CellDetailsColumns.m_col_cellID] = cellID;
-		if ((char*)sqlite3_column_text(stmt, 4) != NULL) {
-			row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt, 4);
-		}
+		m_uiCellDetails.addRow(ID, "CarFreq (Hz)", 
+			((char*)sqlite3_column_text(stmt, 1) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 1),
+			Editable
+		);
 
-		row = *(mrp_CellDetailsList->append());
-		row[m_CellDetailsColumns.m_col_name] = "Depth (um)";
-		row[m_CellDetailsColumns.m_col_animalID] = animalID;
-		row[m_CellDetailsColumns.m_col_cellID] = cellID;
-		if ((char*)sqlite3_column_text(stmt, 0) != NULL) {
-			row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt, 0);
-		}
+		m_uiCellDetails.addRow(ID, "Threshold (dB SPL)", 
+			((char*)sqlite3_column_text(stmt, 4) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 4),
+			Editable
+		);
 
-		row = *(mrp_CellDetailsList->append());
-		row[m_CellDetailsColumns.m_col_name] = "Tags";
-		row[m_CellDetailsColumns.m_col_animalID] = animalID;
-		row[m_CellDetailsColumns.m_col_cellID] = cellID;
-		if ((char*)sqlite3_column_text(stmt, 2) != NULL) {
-			row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt, 2);
-		}
+		m_uiCellDetails.addRow(ID, "Depth (um)", 
+			((char*)sqlite3_column_text(stmt, 0) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 0),
+			Editable
+		);
 
-		row = *(mrp_CellDetailsList->append());
-		row[m_CellDetailsColumns.m_col_name] = "Notes";
-		row[m_CellDetailsColumns.m_col_animalID] = animalID;
-		row[m_CellDetailsColumns.m_col_cellID] = cellID;
-		if ((char*)sqlite3_column_text(stmt, 3) != NULL) {
-			row[m_CellDetailsColumns.m_col_value] = (char*)sqlite3_column_text(stmt, 3);
-		}
+		m_uiCellDetails.addRow(ID, "Tags", 
+			"",
+			Tags
+		);
 
+		m_uiCellDetails.addRow(ID, "Notes",
+			((char*)sqlite3_column_text(stmt, 3) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 3),
+			Editable
+		);
 	} 
 	sqlite3_finalize(stmt);
-	*/
 }
 
 void GUI::populateAnimalTree()
