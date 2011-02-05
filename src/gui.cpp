@@ -474,53 +474,6 @@ int GUI::on_animal_sort(const Gtk::TreeModel::iterator& a_, const Gtk::TreeModel
 	return a.compare(b);
 }
 
-/*
-void GUI::on_cellvalue_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)
-{
-
-	Gtk::TreePath path(path_string);
-
-	Gtk::TreeModel::iterator iter = mrp_CellDetailsList->get_iter(path);
-
-	if (iter) {
-		// Update tree model
-		Gtk::TreeModel::Row row = *iter;
-
-		// Update sqlite database
-		Glib::ustring query;
-		if (row.get_value(m_CellDetailsColumns.m_col_name) == "CarFreq (Hz)") {
-			query = "UPDATE cells SET freq=? WHERE animalID=? AND cellID=?";
-		}
-		if (row.get_value(m_CellDetailsColumns.m_col_name) == "Depth (um)") {
-			query = "UPDATE cells SET depth=? WHERE animalID=? AND cellID=?";
-		}
-		if (row.get_value(m_CellDetailsColumns.m_col_name) == "Threshold (dB SPL)") {
-			query = "UPDATE cells SET threshold=? WHERE animalID=? AND cellID=?";
-		}
-		if (row.get_value(m_CellDetailsColumns.m_col_name) == "Tags") {
-			//TODO: Update to new tags table
-			query = "UPDATE cells SET tags=? WHERE animalID=? AND cellID=?";
-		}
-		if (row.get_value(m_CellDetailsColumns.m_col_name) == "Notes") {
-			query = "UPDATE cells SET notes=? WHERE animalID=? AND cellID=?";
-		}
-		const char* q = query.c_str();
-		sqlite3_stmt *stmt = 0;
-		sqlite3_prepare_v2(db, q, strlen(q), &stmt, NULL);
-		sqlite3_bind_text(stmt, 1, new_text.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_text(stmt, 2, row.get_value(m_CellDetailsColumns.m_col_animalID).c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int(stmt, 3, row.get_value(m_CellDetailsColumns.m_col_cellID));
-		int r = sqlite3_step(stmt);
-		if (r == SQLITE_DONE) {
-			row[m_CellDetailsColumns.m_col_value] = new_text;
-		} else{
-			std::cerr << "ERROR: Could not update cell. " << sqlite3_errmsg(db) << std::endl;
-		}
-		sqlite3_finalize(stmt);
-	}
-}
-*/
-
 void GUI::on_animaldetails_edited(
 	Glib::ustring ID, Glib::ustring name, Glib::ustring /*oldvalue*/, Glib::ustring newvalue, uiPropTableRowType /*type*/)
 {
@@ -555,16 +508,15 @@ void GUI::on_celldetails_edited(
 	if (name == "Threshold (dB SPL)")  query = "UPDATE cells SET threshold=? WHERE animalID=? AND cellID=?";
 	if (name == "Notes")  query = "UPDATE cells SET notes=? WHERE animalID=? AND cellID=?";
 
-	/*
 	// Update the database.
 	const char* q = query.c_str();
 	sqlite3_stmt *stmt = 0;
 	sqlite3_prepare_v2(db, q, strlen(q), &stmt, NULL);
 	sqlite3_bind_text(stmt, 1, newvalue.c_str(), -1, SQLITE_TRANSIENT);
-	sqlite3_bind_text(stmt, 2, ID.c_str(), -1, SQLITE_TRANSIENT);
-	if (sqlite3_step(stmt) != SQLITE_DONE) std::cerr << "ERROR: Could not update animal. " << sqlite3_errmsg(db) << std::endl;
+	sqlite3_bind_text(stmt, 2, ID.animalID.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_int(stmt, 3, ID.cellID);
+	if (sqlite3_step(stmt) != SQLITE_DONE) std::cerr << "ERROR: Could not update cell. " << sqlite3_errmsg(db) << std::endl;
 	sqlite3_finalize(stmt);
-	*/
 
 	// Repopulate the table with the database value to show, forsure, what is in the database now.
 	populateCellDetailsList(ID.animalID,ID.cellID);
@@ -853,7 +805,7 @@ void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 		);
 
 		m_uiAnimalDetails.addRow(animalID, "Notes", 
-			((char*)sqlite3_column_text(stmt, 4) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 3),
+			((char*)sqlite3_column_text(stmt, 4) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 4),
 			EditableLong
 		);
 	}
