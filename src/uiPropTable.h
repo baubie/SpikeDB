@@ -96,11 +96,14 @@ class uiPropTable : public Gtk::TreeView {
 		 */
         Glib::RefPtr<Gtk::ListStore> m_refList;
 
+        Gtk::TreeViewColumn m_tvcol_name;
+        Gtk::CellRendererText m_rend_name;
+        void name_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter);
+
         Gtk::TreeViewColumn m_tvcol_value;
         Gtk::CellRendererText m_rend_value;
         void on_value_edited(const Glib::ustring& path_string, const Glib::ustring& new_text);
         void value_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& iter);
-
 };
 
 template <class T>
@@ -112,18 +115,23 @@ uiPropTable<T>::uiPropTable()
 	this->set_model(m_refList);
 
 	 // Add the Name column to the tree
-	this->append_column("Name", m_Columns.m_col_name);
+	m_tvcol_name.set_title("Name");
+	m_tvcol_name.pack_start(m_rend_name);
+	this->append_column(m_tvcol_name);
+	m_tvcol_name.set_cell_data_func(m_rend_name, sigc::mem_fun(*this, &uiPropTable::name_cell_data)); 
 
 
 	// Add the Value column to the tree
-	//  Requires some custom setup to give us more control
+	// Requires some custom setup to give us more control
 	m_tvcol_value.set_title("Value");
-	m_rend_value.property_editable() = true;
 	m_tvcol_value.pack_start(m_rend_value);
 	this->append_column(m_tvcol_value);
 	m_rend_value.signal_edited().connect(sigc::mem_fun(*this, &uiPropTable::on_value_edited));
 	m_tvcol_value.set_cell_data_func(m_rend_value, sigc::mem_fun(*this, &uiPropTable::value_cell_data)); 
 
+
+	// Enable grid lines
+	this->set_grid_lines(Gtk::TREE_VIEW_GRID_LINES_BOTH);
 }
 
 template <class T>
@@ -165,6 +173,40 @@ typename uiPropTable<T>::type_signal_rowedited uiPropTable<T>::signal_rowedited(
 }
 
 template <class T>
+void uiPropTable<T>::name_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::TreeModel::iterator& iter)
+{
+	if (iter) {
+		Gtk::TreeModel::Row row = *iter;
+		m_rend_name.property_text() = row[m_Columns.m_col_name];
+		m_rend_name.property_weight() = 800;
+		m_rend_name.property_foreground() = "#000000";
+		m_rend_name.property_weight() = 800;
+	}
+}
+
+template <class T>
+void uiPropTable<T>::value_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::TreeModel::iterator& iter)
+{
+	if (iter) {
+		Gtk::TreeModel::Row row = *iter;
+		m_rend_value.property_text() = row[m_Columns.m_col_value];
+		if (row[m_Columns.m_col_type] == Editable) {
+			m_rend_value.property_editable() = true;
+			m_rend_value.property_foreground() = "#000000";
+			m_rend_value.property_weight() = 400;
+		} else if (row[m_Columns.m_col_type] == EditableLong) {
+			m_rend_value.property_editable() = true;
+			m_rend_value.property_foreground() = "#000000";
+			m_rend_value.property_weight() = 400;
+		} else if (row[m_Columns.m_col_type] == Static) {
+			m_rend_value.property_editable() = false;
+			m_rend_value.property_foreground() = "#FF0000";
+			m_rend_value.property_weight() = 800;
+		}
+	}
+}
+
+template <class T>
 void uiPropTable<T>::on_value_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)
 {
 	Gtk::TreePath path(path_string);
@@ -186,23 +228,5 @@ void uiPropTable<T>::on_value_edited(const Glib::ustring& path_string, const Gli
 	}
 }
 
-template <class T>
-void uiPropTable<T>::value_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::TreeModel::iterator& iter)
-{
-	if (iter) {
-		Gtk::TreeModel::Row row = *iter;
-		m_rend_value.property_text() = row[m_Columns.m_col_value];
-		if (row[m_Columns.m_col_type] == Editable) {
-			m_rend_value.property_editable() = true;
-			m_rend_value.property_cell_background() = "#DDEEFF";
-		} else if (row[m_Columns.m_col_type] == EditableLong) {
-			m_rend_value.property_editable() = true;
-			m_rend_value.property_cell_background() = "#DDEEFF";
-		} else if (row[m_Columns.m_col_type] == Static) {
-			m_rend_value.property_editable() = false;
-			m_rend_value.property_cell_background() = "#FFDDDD";
-		}
-	}
-}
 
 #endif

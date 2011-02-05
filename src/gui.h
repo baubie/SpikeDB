@@ -71,18 +71,13 @@ class GUI : public Gtk::Window
         Glib::RefPtr<Gtk::Builder> mrp_Glade; /**< Reference to Glade file. */ 
 		Settings settings; /**< Settings object. */
 
-
-
-
 		uiFilterFrame m_uiFilterFrame; /**< Filter widgets in top left corner. */
 
-
 		uiPropTable<Glib::ustring> m_uiAnimalDetails; /**< Animal details property table. */
-		Gtk::Alignment* mp_AlignAnimalDetails; /**< Container for the animal details property table. */
+		Gtk::ScrolledWindow* mp_ScrolledAnimalDetails; /**< Container for the animal details property table. */
 
 		uiPropTable<CellID> m_uiCellDetails; /**< Cell details property table. */
-		Gtk::Alignment* mp_AlignCellDetails; /**< Container for the cell details property table. */
-		 
+		Gtk::ScrolledWindow* mp_ScrolledCellDetails; /**< Container for the cell details property table. */
 
         Gtk::ImageMenuItem* mp_MenuNewDatabase;
         Gtk::ImageMenuItem* mp_MenuOpenDatabase;

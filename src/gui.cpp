@@ -36,13 +36,13 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 
 
 	// Setup the animal details table
-	mrp_Glade->get_widget("alignAnimalDetails", mp_AlignAnimalDetails);
-	mp_AlignAnimalDetails->add(m_uiAnimalDetails);
+	mrp_Glade->get_widget("scrolledAnimalDetails", mp_ScrolledAnimalDetails);
+	mp_ScrolledAnimalDetails->add(m_uiAnimalDetails);
 	m_uiAnimalDetails.signal_rowedited().connect(sigc::mem_fun(*this, &GUI::on_animaldetails_edited));
 	
 	// Setup the cwll details table
-	mrp_Glade->get_widget("alignCellDetails", mp_AlignCellDetails);
-	mp_AlignCellDetails->add(m_uiCellDetails);
+	mrp_Glade->get_widget("scrolledCellDetails", mp_ScrolledCellDetails);
+	mp_ScrolledCellDetails->add(m_uiCellDetails);
 	m_uiCellDetails.signal_rowedited().connect(sigc::mem_fun(*this, &GUI::on_celldetails_edited));
 	
 
