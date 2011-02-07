@@ -19,11 +19,7 @@ std::vector<Glib::ustring> uiTags::tags()
 void uiTags::tags(std::vector<Glib::ustring> tags)
 {
 	m_tags = tags;
-	refresh();
-}
 
-void uiTags::refresh()
-{
 	for(unsigned int i = 0; i < m_tag_widgets.size(); i++) 
 		delete m_tag_widgets[i];
 
@@ -32,22 +28,35 @@ void uiTags::refresh()
 	for(unsigned int i = 0; i < m_tags.size(); i++) 
 		m_tag_widgets.push_back(new Tag(m_tags[i]));
 
+	for(unsigned int i = 0; i < m_tag_widgets.size(); i++)
+	{
+		this->put(*m_tag_widgets[i],50,0);
+		m_tag_widgets[i]->show();
+	}
+	redraw();
+}
+
+void uiTags::redraw()
+{
 	int x=0;
 	int y=0;
 	int w,h;
 	int width = this->get_width();
+	m_AddNew.set_label("+ Add Tag");
+	this->put(m_AddNew, 0,0);
+	m_AddNew.show();
+	x += m_AddNew.get_width();
 	for(unsigned int i = 0; i < m_tag_widgets.size(); i++) 
 	{
 		//TODO: Figure out how to get actual dimensions of tag.
 		//      get_width() and get_allocation() returning 1.
 		Gdk::Rectangle rec = m_tag_widgets[i]->get_allocation();
-		w = 100;
-		h = 40;
-		this->put(*m_tag_widgets[i], x, y);
+		w = rec.get_width();
+		h = rec.get_height();
 		if (x > 0 && x+w > width) { x = 0; y += h; }
+		this->move(*m_tag_widgets[i],x,y);
 		x += w;
 	}
-
 	show_all_children();
 }
 
@@ -59,6 +68,7 @@ uiTags::Tag::Tag(Glib::ustring tag)
 	m_hbox.pack_start(m_Close, false, false);
 	m_hbox.pack_start(m_Value, false, false);
 	this->add(m_hbox);
-	this->set_shadow_type(Gtk::SHADOW_OUT);
+	this->set_shadow_type(Gtk::SHADOW_NONE);
 	this->set_border_width(2);
+	show_all_children();
 }

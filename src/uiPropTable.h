@@ -194,6 +194,7 @@ void uiPropTable<T>::value_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk:
 			m_rend_value.property_editable() = true;
 			m_rend_value.property_foreground() = "#000000";
 			m_rend_value.property_weight() = 400;
+			m_rend_value.property_wrap_width() = -1;
 		} else if (row[m_Columns.m_col_type] == EditableLong) {
 			m_rend_value.property_text() = row[m_Columns.m_col_value];
 			m_rend_value.property_editable() = true;
@@ -206,6 +207,7 @@ void uiPropTable<T>::value_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk:
 			m_rend_value.property_editable() = false;
 			m_rend_value.property_foreground() = "#888888";
 			m_rend_value.property_weight() = 800;
+			m_rend_value.property_wrap_width() = -1;
 		}
 	}
 }

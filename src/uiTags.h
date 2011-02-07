@@ -15,6 +15,7 @@ class uiTags : public Gtk::Fixed {
 
 		std::vector<Glib::ustring> tags();
 		void tags(std::vector<Glib::ustring> tags);
+		void redraw();
 
 	private:
 
@@ -31,8 +32,7 @@ class uiTags : public Gtk::Fixed {
 
 		std::vector<Tag*> m_tag_widgets;
 		std::vector<Glib::ustring> m_tags;
-
-		void refresh();
+		Gtk::Button m_AddNew;
 };
 
 
