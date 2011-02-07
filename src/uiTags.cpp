@@ -43,16 +43,16 @@ void uiTags::redraw()
 	int w,h;
 	int width = this->get_width();
 	m_AddNew.set_label("+ Add Tag");
+	Gtk::Requisition rec = m_AddNew.size_request();
+	x += rec.width;
 	this->put(m_AddNew, 0,0);
-	m_AddNew.show();
-	x += m_AddNew.get_width();
 	for(unsigned int i = 0; i < m_tag_widgets.size(); i++) 
 	{
 		//TODO: Figure out how to get actual dimensions of tag.
 		//      get_width() and get_allocation() returning 1.
-		Gdk::Rectangle rec = m_tag_widgets[i]->get_allocation();
-		w = rec.get_width();
-		h = rec.get_height();
+		rec = m_tag_widgets[i]->size_request();
+		w = rec.width;
+		h = rec.height;
 		if (x > 0 && x+w > width) { x = 0; y += h; }
 		this->move(*m_tag_widgets[i],x,y);
 		x += w;
