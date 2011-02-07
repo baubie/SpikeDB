@@ -6,7 +6,8 @@
 
 uiTags::uiTags() 
 {
-
+	m_AddNew.set_label("+ Add Tag");
+	this->put(m_AddNew, 0,0);
 }
 
 uiTags::~uiTags() {}
@@ -18,6 +19,8 @@ std::vector<Glib::ustring> uiTags::tags()
 
 void uiTags::tags(std::vector<Glib::ustring> tags)
 {
+    this->signal_expose_event().connect(sigc::mem_fun(*this, &uiTags::on_uiTags_expose) );
+
 	m_tags = tags;
 
 	for(unsigned int i = 0; i < m_tag_widgets.size(); i++) 
@@ -30,10 +33,15 @@ void uiTags::tags(std::vector<Glib::ustring> tags)
 
 	for(unsigned int i = 0; i < m_tag_widgets.size(); i++)
 	{
-		this->put(*m_tag_widgets[i],50,0);
+		this->put(*m_tag_widgets[i],0,0);
 		m_tag_widgets[i]->show();
 	}
+}
+
+bool uiTags::on_uiTags_expose(GdkEventExpose* e)
+{
 	redraw();
+	return true;
 }
 
 void uiTags::redraw()
@@ -42,14 +50,10 @@ void uiTags::redraw()
 	int y=0;
 	int w,h;
 	int width = this->get_width();
-	m_AddNew.set_label("+ Add Tag");
 	Gtk::Requisition rec = m_AddNew.size_request();
 	x += rec.width;
-	this->put(m_AddNew, 0,0);
 	for(unsigned int i = 0; i < m_tag_widgets.size(); i++) 
 	{
-		//TODO: Figure out how to get actual dimensions of tag.
-		//      get_width() and get_allocation() returning 1.
 		rec = m_tag_widgets[i]->size_request();
 		w = rec.width;
 		h = rec.height;
@@ -57,7 +61,6 @@ void uiTags::redraw()
 		this->move(*m_tag_widgets[i],x,y);
 		x += w;
 	}
-	show_all_children();
 }
 
 uiTags::Tag::Tag(Glib::ustring tag)

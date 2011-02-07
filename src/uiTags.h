@@ -33,6 +33,8 @@ class uiTags : public Gtk::Fixed {
 		std::vector<Tag*> m_tag_widgets;
 		std::vector<Glib::ustring> m_tags;
 		Gtk::Button m_AddNew;
+
+		bool on_uiTags_expose(GdkEventExpose* e);
 };
 
 
