@@ -58,6 +58,7 @@ class GUI : public Gtk::Window
 		void on_analyze_changed(); /**< Handle when the analyze parameters change. */
 		void on_meantype_changed(); /**< Handle when the type of mean plot changes. */ 
 		void on_filter_changed(); /**< Handle when the filter changes in any way. */
+		void on_animal_tag_deleted(Glib::ustring tag);
 
 		/** 
 		 * Handle when a row in the animal details property table is edited. 

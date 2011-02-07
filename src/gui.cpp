@@ -47,6 +47,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	mp_AnimalDetailsVBox->pack_start(m_uiAnimalDetails);
 	mp_AnimalDetailsVBox->pack_start(m_AnimalTags);
 	m_uiAnimalDetails.signal_rowedited().connect(sigc::mem_fun(*this, &GUI::on_animaldetails_edited));
+	m_AnimalTags.signal_deleted().connect(sigc::mem_fun(*this, &GUI::on_animal_tag_deleted));
 	
 	// Setup the cell details table
 	Gtk::VBox* mp_CellDetailsVBox = Gtk::manage(new Gtk::VBox());
@@ -830,6 +831,11 @@ void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 	tags.push_back("Tag B");
 	tags.push_back("Tag C");
 	m_AnimalTags.tags(tags);
+}
+
+void GUI::on_animal_tag_deleted(Glib::ustring tag)
+{
+	std::cout << "GUI: Deleted tag " << tag << std::endl;
 }
 
 void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID)
