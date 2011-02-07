@@ -1,7 +1,6 @@
 #include "gui.h"
 
 
-
 GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	: Gtk::Window(cobject),
 	mrp_Glade(refGlade),
@@ -14,10 +13,6 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 
 	set_title("Spike Database - No database open");
 
-	// Create plots
-	mp_PlotAnalyze = new EasyPlotmm();
-	mp_PlotSpikes = new EasyPlotmm();
-	mp_PlotMeans = new EasyPlotmm();
 
 	// Initialize the toolbar
 	this->init_toolbar();
@@ -35,16 +30,35 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	}
 
 
+	// Create the plots
+	mp_PlotSpikes = Gtk::manage(new EasyPlotmm());
+	mp_PlotMeans = Gtk::manage(new EasyPlotmm());
+	mp_PlotAnalyze = Gtk::manage(new EasyPlotmm());
+
 	// Setup the animal details table
-	mrp_Glade->get_widget("scrolledAnimalDetails", mp_ScrolledAnimalDetails);
-	mp_ScrolledAnimalDetails->add(m_uiAnimalDetails);
+	Gtk::VBox* mp_AnimalDetailsVBox = Gtk::manage(new Gtk::VBox());
+//	Gtk::ScrolledWindow* mp_ScrolledAnimalDetails = Gtk::manage(new Gtk::ScrolledWindow); /**< Container for the animal details property table. */
+//	mp_ScrolledAnimalDetails->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_NEVER);
+	Gtk::Alignment* mp_AlignAnimalDetails; /**< Container for the animal details property table. */
+	mrp_Glade->get_widget("alignAnimalDetails", mp_AlignAnimalDetails);
+//	mp_AlignAnimalDetails->add(*mp_ScrolledAnimalDetails);
+//	mp_ScrolledAnimalDetails->add(*mp_AnimalDetailsVBox);
+	mp_AlignAnimalDetails->add(*mp_AnimalDetailsVBox);
+	mp_AnimalDetailsVBox->pack_start(m_uiAnimalDetails);
+	mp_AnimalDetailsVBox->pack_start(m_AnimalTags);
 	m_uiAnimalDetails.signal_rowedited().connect(sigc::mem_fun(*this, &GUI::on_animaldetails_edited));
 	
-	// Setup the cwll details table
-	mrp_Glade->get_widget("scrolledCellDetails", mp_ScrolledCellDetails);
-	mp_ScrolledCellDetails->add(m_uiCellDetails);
+	// Setup the cell details table
+	Gtk::VBox* mp_CellDetailsVBox = Gtk::manage(new Gtk::VBox());
+	Gtk::ScrolledWindow* mp_ScrolledCellDetails = Gtk::manage(new Gtk::ScrolledWindow); /**< Container for the cell details property table. */
+	mp_ScrolledCellDetails->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+	Gtk::Alignment* mp_AlignCellDetails; /**< Container for the animal details property table. */
+	mrp_Glade->get_widget("alignCellDetails", mp_AlignCellDetails);
+	mp_AlignCellDetails->add(*mp_ScrolledCellDetails);
+	mp_ScrolledCellDetails->add(*mp_CellDetailsVBox);
+	mp_CellDetailsVBox->pack_start(m_uiCellDetails);
+	mp_CellDetailsVBox->pack_start(m_CellTags);
 	m_uiCellDetails.signal_rowedited().connect(sigc::mem_fun(*this, &GUI::on_celldetails_edited));
-	
 
 	// Animals treeview 
 	// Shown on left side under filter frame
@@ -74,8 +88,6 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	mrp_DetailsSelection = mp_FilesDetailsTree->get_selection();
 	mrp_DetailsSelection->set_mode(Gtk::SELECTION_MULTIPLE);
 	mrp_DetailsSelection->signal_changed().connect(sigc::mem_fun(*this, &GUI::changeDetailsSelection));
-
- 
 
 	// Setup the analyze widgets
 	mrp_Glade->get_widget("vboxAnalyze", mp_VBoxAnalyze);
@@ -141,6 +153,9 @@ GUI::~GUI()
 
 void GUI::init_toolbar()
 {
+	Gtk::ImageMenuItem* mp_MenuNewDatabase;
+	Gtk::ImageMenuItem* mp_MenuOpenDatabase;
+	Gtk::ImageMenuItem* mp_MenuQuit;
 	mrp_Glade->get_widget("menuNewDatabase", mp_MenuNewDatabase);
 	if (mp_MenuNewDatabase) {
 		mp_MenuNewDatabase->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuNewDatabase_activate));
@@ -210,6 +225,7 @@ void GUI::on_menuNewDatabase_activate()
 			sqlite3_bind_text(stmt, 1, "version", -1, SQLITE_TRANSIENT);
 			sqlite3_step(stmt);
 		}
+		sqlite3_finalize(stmt);
 		openDatabase(filename);
 		break;
 	}
@@ -275,6 +291,7 @@ bool GUI::openDatabase(std::string filename)
 
 	// Show the animals and cells from the database
 	populateAnimalTree();
+	sqlite3_finalize(stmt);
 	return true;
 }
 
@@ -729,7 +746,9 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 				}
 			}
 		}
-	}else{ std::cerr << "ERROR: Failed to read file from database. " << sqlite3_errmsg(db) << std::endl; } sqlite3_finalize(stmt);
+	}else{ std::cerr << "ERROR: Failed to read file from database. " << sqlite3_errmsg(db) << std::endl; } 
+	
+	sqlite3_finalize(stmt);
 }
 
 void GUI::changeAnimalSelection()
@@ -799,17 +818,18 @@ void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 			Editable
 		);
 
-		m_uiAnimalDetails.addRow(animalID, "Tags", 
-			"",
-			Tags
-		);
-
 		m_uiAnimalDetails.addRow(animalID, "Notes", 
 			((char*)sqlite3_column_text(stmt, 4) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 4),
 			EditableLong
 		);
 	}
 	sqlite3_finalize(stmt);
+
+	std::vector<Glib::ustring> tags;
+	tags.push_back("Tag A");
+	tags.push_back("Tag B");
+	tags.push_back("Tag C");
+	m_AnimalTags.tags(tags);
 }
 
 void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID)
@@ -842,7 +862,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 		);
 
 		m_uiCellDetails.addRow(ID, "Threshold (dB SPL)", 
-			((char*)sqlite3_column_text(stmt, 4) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 4),
+			((char*)sqlite3_column_text(stmt, 3) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 3),
 			Editable
 		);
 
@@ -851,13 +871,8 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 			Editable
 		);
 
-		m_uiCellDetails.addRow(ID, "Tags", 
-			"",
-			Tags
-		);
-
 		m_uiCellDetails.addRow(ID, "Notes",
-			((char*)sqlite3_column_text(stmt, 3) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 3),
+			((char*)sqlite3_column_text(stmt, 2) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 2),
 			Editable
 		);
 	} 
@@ -896,6 +911,8 @@ void GUI::populateAnimalTree()
 			}
 		} else{ break; }
 	}
+	sqlite3_finalize(stmt_animals);
+	sqlite3_finalize(stmt_cells);
 }
 
 
@@ -1227,22 +1244,6 @@ void GUI::on_menuQuit_activate()
 	settings.set("winX", x);
 	settings.set("winY", y);
 
-
-	delete mp_MenuNewDatabase;
-	delete mp_MenuOpenDatabase;
-	delete mp_MenuImportFolder;
-	delete mp_MenuQuit;
-
-	delete mp_AnimalsTree;
-	delete mp_FilesDetailsTree;
-	delete mp_HBoxPlots;
-	delete mp_MeanType;
-	delete mp_DataSource;
-	delete mp_XVar;
-	delete mp_YVar;
-	delete mp_PlotSpikes;
-	delete mp_PlotMeans;
-	delete mp_PlotAnalyze;
 	sqlite3_close(db);
 	hide();
 }

@@ -10,8 +10,7 @@ enum uiPropTableRowType {
 	Static, /**< Single line of static text. */
 	Editable, /**< Single line of editable text. */
 	StaticLong, /**< Three lines of static text. */
-	EditableLong, /**< Three lines of editable text. */
-	Tags /**< Special tags format with a list of tags you can add or remove. */
+	EditableLong /**< Three lines of editable text. */
 };
 
 /** Properties table widget with static, editable, and special tags row types. */
@@ -128,7 +127,7 @@ uiPropTable<T>::uiPropTable()
 	this->append_column(m_tvcol_value);
 	m_rend_value.signal_edited().connect(sigc::mem_fun(*this, &uiPropTable::on_value_edited));
 	m_tvcol_value.set_cell_data_func(m_rend_value, sigc::mem_fun(*this, &uiPropTable::value_cell_data)); 
-
+	m_tvcol_value.set_sizing(Gtk::TREE_VIEW_COLUMN_AUTOSIZE);
 
 	// Enable grid lines
 	this->set_grid_lines(Gtk::TREE_VIEW_GRID_LINES_BOTH);
@@ -180,7 +179,7 @@ void uiPropTable<T>::name_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk::
 		m_rend_name.property_text() = row[m_Columns.m_col_name];
 		m_rend_name.property_weight() = 800;
 		m_rend_name.property_foreground() = "#000000";
-		m_rend_name.property_weight() = 800;
+		m_rend_name.property_size_points() = 8;
 	}
 }
 
@@ -189,18 +188,23 @@ void uiPropTable<T>::value_cell_data(Gtk::CellRenderer* /*renderer*/, const Gtk:
 {
 	if (iter) {
 		Gtk::TreeModel::Row row = *iter;
-		m_rend_value.property_text() = row[m_Columns.m_col_value];
+		m_rend_value.property_size_points() = 8;
 		if (row[m_Columns.m_col_type] == Editable) {
+			m_rend_value.property_text() = row[m_Columns.m_col_value];
 			m_rend_value.property_editable() = true;
 			m_rend_value.property_foreground() = "#000000";
 			m_rend_value.property_weight() = 400;
 		} else if (row[m_Columns.m_col_type] == EditableLong) {
+			m_rend_value.property_text() = row[m_Columns.m_col_value];
 			m_rend_value.property_editable() = true;
 			m_rend_value.property_foreground() = "#000000";
 			m_rend_value.property_weight() = 400;
+			m_rend_value.property_wrap_mode() = Pango::WRAP_WORD;
+			m_rend_value.property_wrap_width() = m_tvcol_value.get_width();
 		} else if (row[m_Columns.m_col_type] == Static) {
+			m_rend_value.property_text() = row[m_Columns.m_col_value];
 			m_rend_value.property_editable() = false;
-			m_rend_value.property_foreground() = "#FF0000";
+			m_rend_value.property_foreground() = "#888888";
 			m_rend_value.property_weight() = 800;
 		}
 	}

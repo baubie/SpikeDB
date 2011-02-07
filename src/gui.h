@@ -17,6 +17,17 @@
 
 #include "uiFilterFrame.h"
 #include "uiPropTable.h"
+#include "uiTags.h"
+
+
+/*
+ * Notes on Memory Management
+ * If we are creating something that we don't need to access
+ * use Gtk::Manage() to make it and not bother with member variables.
+ * If you can, just use a member variable.
+ */
+
+
 
 struct CellID
 {
@@ -72,22 +83,19 @@ class GUI : public Gtk::Window
 		Settings settings; /**< Settings object. */
 
 		uiFilterFrame m_uiFilterFrame; /**< Filter widgets in top left corner. */
-
 		uiPropTable<Glib::ustring> m_uiAnimalDetails; /**< Animal details property table. */
-		Gtk::ScrolledWindow* mp_ScrolledAnimalDetails; /**< Container for the animal details property table. */
-
+		uiTags m_AnimalTags;
 		uiPropTable<CellID> m_uiCellDetails; /**< Cell details property table. */
-		Gtk::ScrolledWindow* mp_ScrolledCellDetails; /**< Container for the cell details property table. */
+		uiTags m_CellTags;
 
-        Gtk::ImageMenuItem* mp_MenuNewDatabase;
-        Gtk::ImageMenuItem* mp_MenuOpenDatabase;
-        Gtk::ImageMenuItem* mp_MenuImportFolder;
-        Gtk::ImageMenuItem* mp_MenuQuit;
+
+		Gtk::ImageMenuItem* mp_MenuImportFolder; /**< Import menu item. Require access to enable/disable it. */
+
 
         Gtk::TreeView* mp_AnimalsTree;
         Gtk::TreeView* mp_FilesDetailsTree;
-        Gtk::HBox* mp_HBoxPlots;
 		Gtk::Statusbar* mp_Statusbar;
+        Gtk::HBox* mp_HBoxPlots;
         Gtk::VBox* mp_VBoxAnalyze;
 		Gtk::ComboBox* mp_MeanType;
 		Gtk::ComboBox* mp_DataSource;
@@ -153,8 +161,6 @@ class GUI : public Gtk::Window
                 Gtk::TreeModelColumn<Glib::ustring> m_col_tags;
         };
         FilesDetailsColumns m_FilesDetailsColumns;
-
-
 
         AnimalColumns m_AnimalColumns;
 		AnalyzeColumns m_DataSourceColumns;
