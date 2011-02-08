@@ -1,5 +1,27 @@
 #include "gui.h"
 
+/*
+CREATE TABLE animals (ID TEXT, species TEXT, sex TEXT, weight TEXT, age TEXT, notes TEXT, PRIMARY KEY(ID));
+CREATE TABLE cells (
+    "animalID" TEXT,
+    "cellID" INTEGER,
+    "notes" TEXT,
+    "threshold" TEXT,
+    "depth" TEXT,
+    "freq" TEXT,
+    "recordedby" TEXT
+    );
+CREATE TABLE "files" (animalID TEXT, cellID INTEGER, fileID INTEGER, notes TEXT, header BLOB, spikes BLOB, PRIMARY KEY(animalID, cellID, fileID));
+CREATE TABLE properties (variable TEXT, value TEXT);
+CREATE TABLE "tags" (
+    "ID" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "animalID" INTEGER,
+    "cellID" INTEGER,
+    "fileID" INTEGER,
+    "tag" TEXT
+);
+*/
+
 
 GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	: Gtk::Window(cobject),
@@ -13,13 +35,11 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 
 	set_title("Spike Database - No database open");
 
-
 	// Initialize the toolbar
 	this->init_toolbar();
 
 	// Initalize the statusbar
 	mrp_Glade->get_widget("statusbar", mp_Statusbar);
-
 
 	// Setup the filter frame
 	m_uiFilterFrame.signal_changed().connect(sigc::mem_fun(*this, &GUI::on_filter_changed));
@@ -37,17 +57,14 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 
 	// Setup the animal details table
 	Gtk::VBox* mp_AnimalDetailsVBox = Gtk::manage(new Gtk::VBox());
-//	Gtk::ScrolledWindow* mp_ScrolledAnimalDetails = Gtk::manage(new Gtk::ScrolledWindow); /**< Container for the animal details property table. */
-//	mp_ScrolledAnimalDetails->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_NEVER);
 	Gtk::Alignment* mp_AlignAnimalDetails; /**< Container for the animal details property table. */
 	mrp_Glade->get_widget("alignAnimalDetails", mp_AlignAnimalDetails);
-//	mp_AlignAnimalDetails->add(*mp_ScrolledAnimalDetails);
-//	mp_ScrolledAnimalDetails->add(*mp_AnimalDetailsVBox);
 	mp_AlignAnimalDetails->add(*mp_AnimalDetailsVBox);
 	mp_AnimalDetailsVBox->pack_start(m_uiAnimalDetails);
 	mp_AnimalDetailsVBox->pack_start(m_AnimalTags);
 	m_uiAnimalDetails.signal_rowedited().connect(sigc::mem_fun(*this, &GUI::on_animaldetails_edited));
 	m_AnimalTags.signal_deleted().connect(sigc::mem_fun(*this, &GUI::on_animal_tag_deleted));
+	m_AnimalTags.signal_added().connect(sigc::mem_fun(*this, &GUI::on_animal_tag_added));
 	
 	// Setup the cell details table
 	Gtk::VBox* mp_CellDetailsVBox = Gtk::manage(new Gtk::VBox());
@@ -60,6 +77,8 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	mp_CellDetailsVBox->pack_start(m_uiCellDetails);
 	mp_CellDetailsVBox->pack_start(m_CellTags);
 	m_uiCellDetails.signal_rowedited().connect(sigc::mem_fun(*this, &GUI::on_celldetails_edited));
+	m_CellTags.signal_deleted().connect(sigc::mem_fun(*this, &GUI::on_cell_tag_deleted));
+	m_CellTags.signal_added().connect(sigc::mem_fun(*this, &GUI::on_cell_tag_added));
 
 	// Animals treeview 
 	// Shown on left side under filter frame
@@ -559,9 +578,12 @@ void GUI::updateSideLists(const Gtk::TreeModel::iterator& iter)
 
 	Gtk::TreeModel::Row row = *iter;
 
-	populateAnimalDetailsList(row.get_value(m_FilesDetailsColumns.m_col_animalID));
-	populateCellDetailsList(row.get_value(m_FilesDetailsColumns.m_col_animalID),
-				row.get_value(m_FilesDetailsColumns.m_col_cellID));
+	m_curAnimalID = row.get_value(m_FilesDetailsColumns.m_col_animalID);
+	m_curCellID = row.get_value(m_FilesDetailsColumns.m_col_cellID);
+	m_curFileNum = row.get_value(m_FilesDetailsColumns.m_col_filenum);
+
+	populateAnimalDetailsList(m_curAnimalID);
+	populateCellDetailsList(m_curAnimalID, m_curCellID);
 }
 
 void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
@@ -789,7 +811,7 @@ void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 
 
 	m_uiAnimalDetails.clear();
-	char query[] = "SELECT species, sex, weight, age, notes FROM animals WHERE ID=?";
+	const char query[] = "SELECT species, sex, weight, age, notes FROM animals WHERE ID=?";
 	sqlite3_stmt *stmt;
 	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
 	sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
@@ -826,16 +848,88 @@ void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 	}
 	sqlite3_finalize(stmt);
 
+	const char query2[] = "SELECT tag FROM tags WHERE animalID=? AND cellID IS NULL AND fileID IS NULL";
+	sqlite3_prepare_v2(db, query2, -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
 	std::vector<Glib::ustring> tags;
-	tags.push_back("Tag A");
-	tags.push_back("Tag B");
-	tags.push_back("Tag C");
+	while (sqlite3_step(stmt) == SQLITE_ROW) {
+		Glib::ustring t = (char*)sqlite3_column_text(stmt, 0);
+		tags.push_back(t);
+	}
+	sqlite3_finalize(stmt);
 	m_AnimalTags.tags(tags);
 }
 
 void GUI::on_animal_tag_deleted(Glib::ustring tag)
 {
-	std::cout << "GUI: Deleted tag " << tag << std::endl;
+	sqlite3_stmt *stmt;
+	const char query[] = "DELETE FROM tags WHERE tag=? AND animalID=? AND cellID IS NULL AND fileID IS NULL";
+	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, tag.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_text(stmt, 2, m_curAnimalID.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_step(stmt);
+	sqlite3_finalize(stmt);
+	populateAnimalDetailsList(m_curAnimalID);
+}
+
+void GUI::on_cell_tag_deleted(Glib::ustring tag)
+{
+	sqlite3_stmt *stmt;
+	const char query[] = "DELETE FROM tags WHERE tag=? AND animalID=? AND cellID=? AND fileID IS NULL";
+	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, tag.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_text(stmt, 2, m_curAnimalID.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_int(stmt, 3, m_curCellID);
+	sqlite3_step(stmt);
+	sqlite3_finalize(stmt);
+	populateCellDetailsList(m_curAnimalID, m_curCellID);
+}
+
+bool GUI::on_animal_tag_added(Glib::ustring tag)
+{
+	sqlite3_stmt *stmt;
+
+	const char query2[] = "SELECT tag FROM tags WHERE tag=? AND animalID=? AND cellID IS NULL AND fileID IS NULL";
+	sqlite3_prepare_v2(db, query2, -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, tag.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_text(stmt, 2, m_curAnimalID.c_str(), -1, SQLITE_TRANSIENT);
+	if (sqlite3_step(stmt) == SQLITE_ROW) {
+		sqlite3_finalize(stmt);
+		return false;
+	}
+	sqlite3_finalize(stmt);
+
+	const char query[] = "INSERT INTO tags (animalID, cellID, fileID, tag) VALUES(?,null,null,?)";
+	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, m_curAnimalID.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_text(stmt, 2, tag.c_str(), -1, SQLITE_TRANSIENT);
+	if (sqlite3_step(stmt) != SQLITE_DONE) std::cerr << "ERROR: Could not insert tag. " << sqlite3_errmsg(db) << std::endl;
+	sqlite3_finalize(stmt);
+	return true;
+}
+
+bool GUI::on_cell_tag_added(Glib::ustring tag)
+{
+	sqlite3_stmt *stmt;
+	const char query2[] = "SELECT tag FROM tags WHERE tag=? AND animalID=? AND cellID=? AND fileID IS NULL";
+	sqlite3_prepare_v2(db, query2, -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, tag.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_text(stmt, 2, m_curAnimalID.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_int(stmt, 3, m_curCellID);
+	if (sqlite3_step(stmt) == SQLITE_ROW) {
+		sqlite3_finalize(stmt);
+		return false;
+	}
+	sqlite3_finalize(stmt);
+
+	const char query[] = "INSERT INTO tags (animalID, cellID, fileID, tag) VALUES(?,?,null,?)";
+	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, m_curAnimalID.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_int(stmt, 2, m_curCellID);
+	sqlite3_bind_text(stmt, 3, tag.c_str(), -1, SQLITE_TRANSIENT);
+	if (sqlite3_step(stmt) != SQLITE_DONE) std::cerr << "ERROR: Could not insert tag. " << sqlite3_errmsg(db) << std::endl;
+	sqlite3_finalize(stmt);
+	return true;
 }
 
 void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID)
@@ -883,6 +977,17 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 		);
 	} 
 	sqlite3_finalize(stmt);
+
+	const char query2[] = "SELECT tag FROM tags WHERE animalID=? AND cellID=? AND fileID IS NULL";
+	sqlite3_prepare_v2(db, query2, -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_int(stmt, 2, cellID);
+	std::vector<Glib::ustring> tags;
+	while (sqlite3_step(stmt) == SQLITE_ROW) {
+		tags.push_back((char*)sqlite3_column_text(stmt, 0));
+	}
+	sqlite3_finalize(stmt);
+	m_CellTags.tags(tags);
 }
 
 void GUI::populateAnimalTree()

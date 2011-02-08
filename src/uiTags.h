@@ -13,6 +13,8 @@ class uiTags : public Gtk::Fixed {
 		uiTags();
 		virtual ~uiTags();
 
+		bool active;
+
 		std::vector<Glib::ustring> tags();
 		void tags(std::vector<Glib::ustring> tags);
 		void redraw();
@@ -61,8 +63,7 @@ class uiTags : public Gtk::Fixed {
 		bool needput;
 		bool on_uiTags_expose_event(GdkEventExpose* e);
 		void on_tag_deleted(Glib::ustring tag);
-
-
+		void on_addnew_clicked();
 };
 
 

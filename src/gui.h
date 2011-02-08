@@ -59,6 +59,9 @@ class GUI : public Gtk::Window
 		void on_meantype_changed(); /**< Handle when the type of mean plot changes. */ 
 		void on_filter_changed(); /**< Handle when the filter changes in any way. */
 		void on_animal_tag_deleted(Glib::ustring tag);
+		void on_cell_tag_deleted(Glib::ustring tag);
+		bool on_animal_tag_added(Glib::ustring tag);
+		bool on_cell_tag_added(Glib::ustring tag);
 
 		/** 
 		 * Handle when a row in the animal details property table is edited. 
@@ -188,6 +191,10 @@ class GUI : public Gtk::Window
         int on_animal_sort(const Gtk::TreeModel::iterator& a, const Gtk::TreeModel::iterator& b);
 
         std::string curXVariable;
+
+		Glib::ustring m_curAnimalID;
+		int m_curCellID;
+		int m_curFileNum;
 };
 
 
