@@ -4,7 +4,7 @@ uiTags::uiTags()
 {
     this->signal_expose_event().connect(sigc::mem_fun(*this, &uiTags::on_uiTags_expose_event) );
     m_AddNew.signal_clicked().connect(sigc::mem_fun(*this, &uiTags::on_addnew_clicked) );
-	m_AddNew.set_label("+");
+	m_AddNew.set_label("+Tag");
 	this->put(m_AddNew, 5, 10);
 	m_AddNew.set_sensitive(false);
 }
@@ -35,6 +35,16 @@ void uiTags::tags(std::vector<Glib::ustring> tags)
 	needput = true;
 	active = true;
 	redraw();
+}
+
+void uiTags::clear()
+{
+	for(unsigned int i = 0; i < m_tag_widgets.size(); i++) 
+		delete m_tag_widgets[i];
+
+	m_tag_widgets.clear();
+	m_tags.clear();
+	m_AddNew.set_sensitive(false);
 }
 
 uiTags::type_signal_added uiTags::signal_added()

@@ -784,10 +784,16 @@ void GUI::changeAnimalSelection()
 		if (row->parent() == 0) {
 			// Root
 			populateDetailsList("", -1);
+			m_uiAnimalDetails.clear();
+			m_AnimalTags.clear();
+			m_uiCellDetails.clear();
+			m_CellTags.clear();
 		} else if (row->parent()->parent() == 0) {
 			// First Level
 			populateDetailsList(row->get_value(m_AnimalColumns.m_col_name), -1);
 			populateAnimalDetailsList(row->get_value(m_AnimalColumns.m_col_name));
+			m_uiCellDetails.clear();
+			m_CellTags.clear();
 		} else if (row->parent()->parent()->parent() == 0) {
 			// Second Level
 			populateDetailsList(row->parent()->get_value(m_AnimalColumns.m_col_name),
@@ -809,17 +815,24 @@ void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 	 */
 	if (db == NULL) return;
 
+	sqlite3_stmt *stmt;
+	int r;
+	char query3[] = "SELECT COUNT(*) FROM cells WHERE animalID=?";
+	sqlite3_prepare_v2(db, query3, -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
+	r = sqlite3_step(stmt);
+	int numberOfCells = sqlite3_column_int(stmt,0);
+	sqlite3_finalize(stmt);
 
 	m_uiAnimalDetails.clear();
 	const char query[] = "SELECT species, sex, weight, age, notes FROM animals WHERE ID=?";
-	sqlite3_stmt *stmt;
 	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
 	sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
-	int r;
 	r = sqlite3_step(stmt);
 
 	if (r == SQLITE_ROW) {
 		m_uiAnimalDetails.addRow(animalID, "ID", animalID, Static);
+		m_uiAnimalDetails.addRow(animalID, "Cells", numberOfCells, Static);
 
 		m_uiAnimalDetails.addRow(animalID, "Species", 
 			((char*)sqlite3_column_text(stmt, 0) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 0),
@@ -940,13 +953,22 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 	if (db == NULL) return;
 
 	m_uiCellDetails.clear();
+	
+	int r;
+	sqlite3_stmt *stmt;
+
+	char query3[] = "SELECT COUNT(*) FROM files WHERE animalID=? AND cellID=?";
+	sqlite3_prepare_v2(db, query3, -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_int(stmt, 2, cellID);
+	r = sqlite3_step(stmt);
+	int numberOfFiles = sqlite3_column_int(stmt,0);
+	sqlite3_finalize(stmt);
 
 	char query[] = "SELECT depth, freq, notes, threshold FROM cells WHERE animalID=? AND cellID=?";
-	sqlite3_stmt *stmt;
 	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
 	sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
 	sqlite3_bind_int(stmt, 2, cellID);
-	int r;
 	r = sqlite3_step(stmt);
 
 	if (r == SQLITE_ROW) {
@@ -955,6 +977,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 		ID.cellID = cellID;
 
 		m_uiCellDetails.addRow(ID, "Cell ID", ID.cellID, Static);
+		m_uiCellDetails.addRow(ID, "Files", numberOfFiles, Static);
 
 		m_uiCellDetails.addRow(ID, "CarFreq (Hz)", 
 			((char*)sqlite3_column_text(stmt, 1) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 1),

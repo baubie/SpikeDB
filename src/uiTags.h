@@ -18,6 +18,7 @@ class uiTags : public Gtk::Fixed {
 		std::vector<Glib::ustring> tags();
 		void tags(std::vector<Glib::ustring> tags);
 		void redraw();
+		void clear();
 
 		typedef sigc::signal<void,Glib::ustring> type_signal_deleted;
 		typedef sigc::signal<bool,Glib::ustring> type_signal_added;

@@ -5,6 +5,7 @@
 #include <vector>
 #include <float.h>
 #include <giomm.h>
+#include <math.h>
 #include <sstream>
 #include <iostream>
 

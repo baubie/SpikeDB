@@ -154,8 +154,8 @@ bool EasyPlotmm::on_event_button_press(GdkEventButton* event)
             if ((event->state & GDK_MOD1_MASK) && event->button == 1)
             {
                in_crosshairs = has_plot;
-               ch_x = event->x;
-               ch_y = event->y;
+			   ch_x = event->x;
+			   ch_y = event->y;
                redraw();
             }
             else if (event->button == 1)
@@ -191,13 +191,12 @@ bool EasyPlotmm::on_event_motion(GdkEventMotion* event)
     {
         zoom_end = event->x;
         redraw();
-    }
-	if (in_crosshairs)
+    } else if (in_crosshairs)
 	{
-    	ch_x = event->x;
+		ch_x = event->x;
 		ch_y = event->y;
 		redraw();
-	}
+	} 
     return true;
 }
 
@@ -709,7 +708,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         for (unsigned int i  = 0; i < m_x.size(); ++i) 
         {
             // Cull data to be within the x,y axes
-            std::vector<double> cull_x, cull_y, cull_err;
+			std::vector<double> cull_x, cull_y, cull_err;
             for (unsigned int j = 0; j < m_x[i].size(); ++j)
             {
                 if (m_x[i][j] >= xmin && m_x[i][j] <= xmax && m_y[i][j] >= ymin && m_y[i][j] <= ymax)
