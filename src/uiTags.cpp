@@ -100,6 +100,7 @@ void uiTags::on_addnew_clicked()
 	Gtk::Label label("Enter the new tag:");
 	dialog.get_vbox()->pack_start(label,true,true);
 	Gtk::Entry entry;
+	entry.set_activates_default(true);
 	dialog.get_vbox()->pack_start(entry,true,true);
 	dialog.show_all_children();
 	int result = dialog.run();
