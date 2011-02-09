@@ -64,8 +64,9 @@ class uiTags : public Gtk::Fixed {
 
 		Gtk::Window* m_parent;
 
+		Gtk::Allocation m_a;
 		bool needput;
-		bool on_uiTags_expose_event(GdkEventExpose* e);
+		void on_uiTags_size_allocate(Gtk::Allocation& a);
 		void on_tag_deleted(Glib::ustring tag);
 		void on_addnew_clicked();
 };

@@ -1,9 +1,10 @@
 #include "uiTags.h"
+#include <iostream>
 
 uiTags::uiTags(Gtk::Window *parent) 
 {
 	m_parent = parent;
-    this->signal_expose_event().connect(sigc::mem_fun(*this, &uiTags::on_uiTags_expose_event) );
+    this->signal_size_allocate().connect(sigc::mem_fun(*this, &uiTags::on_uiTags_size_allocate) );
     m_AddNew.signal_clicked().connect(sigc::mem_fun(*this, &uiTags::on_addnew_clicked) );
 	m_AddNew.set_label("+Tag");
 	this->put(m_AddNew, 5, 10);
@@ -120,16 +121,15 @@ void uiTags::on_addnew_clicked()
 
 }
 
-bool uiTags::on_uiTags_expose_event(GdkEventExpose* /*e*/)
+void uiTags::on_uiTags_size_allocate(Gtk::Allocation& a)
 {
-	redraw();
-	return false;
+	if (a.get_width() != m_a.get_width()) redraw();
+	m_a = a;
 }
 
 void uiTags::redraw()
 {
 	if (active) m_AddNew.show();
-
 	if (m_tags.empty()) return;
 	const int spacing = 5;
 	int x=spacing;
@@ -146,7 +146,9 @@ void uiTags::redraw()
 		h = rec.height;
 		if (x > 0 && x+w > width) { x = spacing; y += h+spacing; }
 		if (needput) this->put(*m_tag_widgets[i],x,y);
-		else this->move(*m_tag_widgets[i],x,y);
+		else {
+			this->move(*m_tag_widgets[i],x,y);
+		}
 		x += w+spacing;
 	}
 	needput = false;
@@ -159,7 +161,6 @@ uiTags::Tag::Tag(Glib::ustring tag)
 	m_Close.set_label("X");
 	m_Close.set_relief(Gtk::RELIEF_NONE);
     m_Close.signal_clicked().connect(sigc::mem_fun(*this, &uiTags::Tag::on_delete_clicked) );
-
 	m_hbox.pack_start(m_Close, false, false);
 	m_hbox.pack_start(m_Value, false, false);
 	m_frame.add(m_hbox);
