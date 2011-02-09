@@ -62,6 +62,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	mp_AlignAnimalDetails->add(*mp_AnimalDetailsVBox);
 	mp_AnimalDetailsVBox->pack_start(m_uiAnimalDetails);
 	mp_AnimalDetailsVBox->pack_start(m_AnimalTags);
+	m_AnimalTags.set_parent(this);
 	m_uiAnimalDetails.signal_rowedited().connect(sigc::mem_fun(*this, &GUI::on_animaldetails_edited));
 	m_AnimalTags.signal_deleted().connect(sigc::mem_fun(*this, &GUI::on_animal_tag_deleted));
 	m_AnimalTags.signal_added().connect(sigc::mem_fun(*this, &GUI::on_animal_tag_added));
@@ -76,6 +77,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	mp_ScrolledCellDetails->add(*mp_CellDetailsVBox);
 	mp_CellDetailsVBox->pack_start(m_uiCellDetails);
 	mp_CellDetailsVBox->pack_start(m_CellTags);
+	m_CellTags.set_parent(this);
 	m_uiCellDetails.signal_rowedited().connect(sigc::mem_fun(*this, &GUI::on_celldetails_edited));
 	m_CellTags.signal_deleted().connect(sigc::mem_fun(*this, &GUI::on_cell_tag_deleted));
 	m_CellTags.signal_added().connect(sigc::mem_fun(*this, &GUI::on_cell_tag_added));

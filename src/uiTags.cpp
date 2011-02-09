@@ -1,7 +1,8 @@
 #include "uiTags.h"
 
-uiTags::uiTags() 
+uiTags::uiTags(Gtk::Window *parent) 
 {
+	m_parent = parent;
     this->signal_expose_event().connect(sigc::mem_fun(*this, &uiTags::on_uiTags_expose_event) );
     m_AddNew.signal_clicked().connect(sigc::mem_fun(*this, &uiTags::on_addnew_clicked) );
 	m_AddNew.set_label("+Tag");
@@ -10,6 +11,11 @@ uiTags::uiTags()
 }
 
 uiTags::~uiTags() {}
+
+void uiTags::set_parent(Gtk::Window* parent)
+{
+	m_parent = parent;
+}
 
 std::vector<Glib::ustring> uiTags::tags()
 {
@@ -59,17 +65,58 @@ uiTags::type_signal_deleted uiTags::signal_deleted()
 
 void uiTags::on_tag_deleted(Glib::ustring tag)
 {
-	m_signal_deleted.emit(tag);
+	Gtk::Dialog dialog("Are you sure?", true);
+	dialog.set_transient_for(*m_parent);
+	dialog.set_resizable(false);
+	dialog.add_button(Gtk::Stock::NO, Gtk::RESPONSE_CANCEL);
+	dialog.add_button(Gtk::Stock::YES, Gtk::RESPONSE_OK);
+	Gtk::Label label("Are you sure you want to delete this tag?");
+	dialog.get_vbox()->pack_start(label,true,true);
+	Gtk::Label label_tag("<b>"+tag+"</b>");
+	label_tag.set_use_markup(true);
+	dialog.get_vbox()->pack_start(label_tag,true,true);
+	dialog.show_all_children();
+	int result = dialog.run();
+
+	switch (result) {
+		case (Gtk::RESPONSE_OK):
+			m_signal_deleted.emit(tag);
+			break;
+	}
+
 }
 
 void uiTags::on_addnew_clicked() 
 {
-	Glib::ustring t = "NEWTAG";
-	if (m_signal_added.emit(t)) {
-		m_tags.push_back(t);
-		tags(m_tags);
-		redraw();
+	if (m_parent == NULL) {
+		return;
 	}
+
+	Gtk::Dialog dialog("Add Tag", true);
+	dialog.set_transient_for(*m_parent);
+	dialog.set_resizable(false);
+	dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+	dialog.add_button(Gtk::Stock::OK, Gtk::RESPONSE_OK);
+	Gtk::Label label("Enter the new tag:");
+	dialog.get_vbox()->pack_start(label,true,true);
+	Gtk::Entry entry;
+	dialog.get_vbox()->pack_start(entry,true,true);
+	dialog.show_all_children();
+	int result = dialog.run();
+
+	switch (result) {
+		case (Gtk::RESPONSE_OK):
+			Glib::ustring t = entry.get_text();
+			if (t != "") {
+				if (m_signal_added.emit(t)) {
+					m_tags.push_back(t);
+					tags(m_tags);
+					redraw();
+				}
+			}
+			break;
+	}
+
 }
 
 bool uiTags::on_uiTags_expose_event(GdkEventExpose* /*e*/)

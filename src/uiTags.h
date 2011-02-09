@@ -10,7 +10,7 @@
 class uiTags : public Gtk::Fixed {
 
 	public:
-		uiTags();
+		uiTags(Gtk::Window* parent=NULL);
 		virtual ~uiTags();
 
 		bool active;
@@ -19,6 +19,7 @@ class uiTags : public Gtk::Fixed {
 		void tags(std::vector<Glib::ustring> tags);
 		void redraw();
 		void clear();
+		void set_parent(Gtk::Window* parent);
 
 		typedef sigc::signal<void,Glib::ustring> type_signal_deleted;
 		typedef sigc::signal<bool,Glib::ustring> type_signal_added;
@@ -60,6 +61,8 @@ class uiTags : public Gtk::Fixed {
 		std::vector<Tag*> m_tag_widgets;
 		std::vector<Glib::ustring> m_tags;
 		Gtk::Button m_AddNew;
+
+		Gtk::Window* m_parent;
 
 		bool needput;
 		bool on_uiTags_expose_event(GdkEventExpose* e);
