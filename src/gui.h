@@ -51,6 +51,8 @@ class GUI : public Gtk::Window
 
 		void init_toolbar(); /**< Initialize the toolbar. */
 
+		void updateTagCompletion();
+
         void on_menuNewDatabase_activate(); /**< Handle the New Database menu item. */
         void on_menuOpenDatabase_activate(); /**< Handle the Open Database menu item. */
         void on_menuImportFolder_activate(); /**< Handle the Import Folder menu item. */
@@ -149,8 +151,8 @@ class GUI : public Gtk::Window
             public:
                 FilesDetailsColumns()
                 { add(m_col_animalID); add(m_col_cellID); add(m_col_filenum); add(m_col_xaxis); 
-                  add(m_col_type); add(m_col_freq); add(m_col_trials); add(m_col_onset); add(m_col_dur); add(m_col_atten); 
-                  add(m_col_tags); 
+                  add(m_col_type); add(m_col_freq); add(m_col_trials); add(m_col_onset); 
+				  add(m_col_dur); add(m_col_atten); add(m_col_tags); 
                 }
                 Gtk::TreeModelColumn<Glib::ustring> m_col_animalID;
                 Gtk::TreeModelColumn<int> m_col_cellID;

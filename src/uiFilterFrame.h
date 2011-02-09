@@ -2,7 +2,8 @@
 #define UIFILTERFRAME_H
 
 #include <gtkmm.h>
-#include <iostream>
+#include <vector>
+
 
 class uiFilterFrame {
 
@@ -12,6 +13,9 @@ class uiFilterFrame {
 
 		int minFiles();
 		void minFiles(int set);
+
+		Glib::ustring tag();
+		void updateTagCompletion(std::vector<Glib::ustring> tags);
 
 		int XVar();
 
@@ -32,6 +36,22 @@ class uiFilterFrame {
         Glib::RefPtr<Gtk::Builder> m_refGlade;
 
 		/**
+		 * Tree model columns for the EntryCompletion's filter model.
+		 */
+		class ModelColumns : public Gtk::TreeModel::ColumnRecord
+		{
+			public:
+				ModelColumns()
+				{ add(m_col_name); }
+				Gtk::TreeModelColumn<Glib::ustring> m_col_name;
+		} m_tagColumns;
+		Glib::RefPtr<Gtk::ListStore> mrp_CompletionModel;
+		void on_tag_changed();
+		bool queue_change_signal;
+		bool check_change_queue();
+		Glib::Timer m_timer;
+
+		/**
 		 * VBoxFilter
 		 */
 		Gtk::VBox *mp_VBoxFilter;	
@@ -49,6 +69,10 @@ class uiFilterFrame {
 		Gtk::ComboBoxText m_XVar;
 		void on_XVar_changed();
 
+		/**
+		 * Tag filter
+		 */
+		Gtk::Entry m_tag;
 };
 					  
 #endif

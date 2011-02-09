@@ -49,7 +49,6 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 		settings.set("filterMinFiles", m_uiFilterFrame.minFiles());
 	}
 
-
 	// Create the plots
 	mp_PlotSpikes = Gtk::manage(new EasyPlotmm());
 	mp_PlotMeans = Gtk::manage(new EasyPlotmm());
@@ -166,6 +165,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 		move(settings.get_int("winX"), settings.get_int("winY"));
 
 	uiReady = true;
+	updateTagCompletion();
 	this->on_filter_changed();
 }
 
@@ -198,7 +198,19 @@ void GUI::init_toolbar()
 }
 
 
-
+void GUI::updateTagCompletion()
+{
+	sqlite3_stmt *stmt = 0;
+	const char query[] = "SELECT DISTINCT tag FROM tags";
+	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
+	std::vector<Glib::ustring> tags;
+	while (sqlite3_step(stmt) == SQLITE_ROW) {
+		Glib::ustring t = (char*)sqlite3_column_text(stmt, 0);
+		tags.push_back(t);
+	}
+	sqlite3_finalize(stmt);
+	m_uiFilterFrame.updateTagCompletion(tags);
+}
 
 
 void GUI::on_menuNewDatabase_activate()
@@ -885,6 +897,7 @@ void GUI::on_animal_tag_deleted(Glib::ustring tag)
 	sqlite3_step(stmt);
 	sqlite3_finalize(stmt);
 	populateAnimalDetailsList(m_curAnimalID);
+	updateTagCompletion();
 }
 
 void GUI::on_cell_tag_deleted(Glib::ustring tag)
@@ -898,6 +911,7 @@ void GUI::on_cell_tag_deleted(Glib::ustring tag)
 	sqlite3_step(stmt);
 	sqlite3_finalize(stmt);
 	populateCellDetailsList(m_curAnimalID, m_curCellID);
+	updateTagCompletion();
 }
 
 bool GUI::on_animal_tag_added(Glib::ustring tag)
@@ -920,6 +934,7 @@ bool GUI::on_animal_tag_added(Glib::ustring tag)
 	sqlite3_bind_text(stmt, 2, tag.c_str(), -1, SQLITE_TRANSIENT);
 	if (sqlite3_step(stmt) != SQLITE_DONE) std::cerr << "ERROR: Could not insert tag. " << sqlite3_errmsg(db) << std::endl;
 	sqlite3_finalize(stmt);
+	updateTagCompletion();
 	return true;
 }
 
@@ -944,6 +959,7 @@ bool GUI::on_cell_tag_added(Glib::ustring tag)
 	sqlite3_bind_text(stmt, 3, tag.c_str(), -1, SQLITE_TRANSIENT);
 	if (sqlite3_step(stmt) != SQLITE_DONE) std::cerr << "ERROR: Could not insert tag. " << sqlite3_errmsg(db) << std::endl;
 	sqlite3_finalize(stmt);
+	updateTagCompletion();
 	return true;
 }
 
@@ -1151,6 +1167,31 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
                         if (XVarFilter == 4) {
                             if (sd.xVariable() != "Ch 1 Atten" && sd.xVariable() != "Ch 2 Atten") filtered = false;
                         }
+
+						if (m_uiFilterFrame.tag() != "")
+						{
+							int r2;
+							sqlite3_stmt *stmt2 = 0;
+							char query_animal_tag[] = "SELECT COUNT(*) FROM tags WHERE tag=? AND animalID=? AND cellID IS NULL AND fileID IS NULL";
+							sqlite3_prepare_v2(db, query_animal_tag, -1, &stmt2, 0);
+							sqlite3_bind_text(stmt2, 1, m_uiFilterFrame.tag().c_str(), -1, SQLITE_TRANSIENT);
+							sqlite3_bind_text(stmt2, 2, (char*)sqlite3_column_text(stmt, 0), -1, SQLITE_TRANSIENT);
+							r2 = sqlite3_step(stmt2);
+							bool allow_animal = sqlite3_column_int(stmt2,0) > 0;
+							sqlite3_finalize(stmt2);
+
+							char query_cell_tag[] = "SELECT COUNT(*) FROM tags WHERE tag=? AND animalID=? AND cellID=? AND fileID IS NULL";
+							sqlite3_prepare_v2(db, query_cell_tag, -1, &stmt2, 0);
+							sqlite3_bind_text(stmt2, 1, m_uiFilterFrame.tag().c_str(), -1, SQLITE_TRANSIENT);
+							sqlite3_bind_text(stmt2, 2, (char*)sqlite3_column_text(stmt, 0), -1, SQLITE_TRANSIENT);
+							sqlite3_bind_int(stmt2, 3, sqlite3_column_int(stmt, 1));
+							r2 = sqlite3_step(stmt2);
+							bool allow_cell = sqlite3_column_int(stmt2,0) > 0;
+							sqlite3_finalize(stmt2);
+
+							filtered = filtered && (allow_animal || allow_cell);
+						}
+					
 
                         if (filtered) {
                             row = *(mrp_DetailsList->append());
