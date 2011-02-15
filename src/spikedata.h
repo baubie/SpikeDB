@@ -227,8 +227,8 @@ typedef struct
         // general data
         char	cId[12];		//  (12) file identification / validiation 
         int	nMagic;			//   (4) for internal use of the spike programs 
-        char	cDate[8];       //   (8) date of data acquisition 
-        char	cTime[8];       //   (8) time of data acquisition 
+        char	cDateTime[16];       //   (8) date of data acquisition 
+//        char	cTime[8];       //   (8) time of data acquisition 
         short	nOnCh1;			//   (2) stimulus channel1 on/off 
         short	nOnCh2;			//   (2) stimulus channel2 on/off 
         int	nRepInt;		//   (4) repetition interval
@@ -278,6 +278,7 @@ class SpikeData
         HEADER m_head;
         HEADER50 m_head50;
         std::vector<SPIKESTRUCT> m_spikeArray;
+		std::string iso8601(const char* s);
 
     private:
         std::vector<DWORD> m_dwDataArray;

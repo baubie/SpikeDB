@@ -446,13 +446,48 @@ double SpikeData::frequency(int channel, int sweep)
     return 0;
 }
 
+std::string SpikeData::iso8601(const char* s)
+{
+	// Input format: DD.MM.YYHH:MM::SS
+	char r[19];
+
+	r[4] = '-';
+	r[7] = '-';
+	r[10] = ' ';
+	if  (s[6] == '9') {
+		r[0] = '1';
+		r[1] = '9';
+	} else {
+		r[0] = '2';
+		r[1] = '0';
+	}
+	// Last two year digits
+	r[2] = s[6];
+	r[3] = s[7];
+
+	// Month
+	r[5] = s[3];
+	r[6] = s[4];
+
+	// Day
+	r[8] = s[0];
+	r[9] = s[1];
+
+	// Time
+	for (int i = 0; i < 8; ++i) {
+		r[i+11] = s[i+8];
+	}
+
+	return std::string(r,10);
+	return std::string(r,19);
+}
+
 void SpikeData::printfile()
 {
     std::cout << "HEADER INFORMATION" << std::endl;
     std::cout << "cId: " << m_head.cId << std::endl;
     std::cout << "nMagic: " << m_head.nMagic << std::endl;
-    std::cout << "cDate: " << m_head.cDate << std::endl;
-    std::cout << "cTime: " << m_head.cTime << std::endl;
+    std::cout << "cDate: " << m_head.cDateTime << std::endl;
     std::cout << "nOnCh1: " << m_head.nOnCh1 << std::endl;
     std::cout << "nOnCh2: " << m_head.nOnCh2 << std::endl;
     std::cout << "nRepInt: " << m_head.nRepInt << std::endl;

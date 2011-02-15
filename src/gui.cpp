@@ -95,7 +95,9 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	// Create Files Details TreeView
 	mrp_Glade->get_widget("tvDetails", mp_FilesDetailsTree);
 	mrp_DetailsList = Gtk::ListStore::create(m_FilesDetailsColumns);
+	mrp_DetailsList->set_sort_column(m_FilesDetailsColumns.m_col_time, Gtk::SORT_ASCENDING);
 	mp_FilesDetailsTree->set_model(mrp_DetailsList);
+	mp_FilesDetailsTree->append_column("Time", m_FilesDetailsColumns.m_col_time);
 	mp_FilesDetailsTree->append_column("AnimalID", m_FilesDetailsColumns.m_col_animalID);
 	mp_FilesDetailsTree->append_column("CellID", m_FilesDetailsColumns.m_col_cellID);
 	mp_FilesDetailsTree->append_column("#", m_FilesDetailsColumns.m_col_filenum);
@@ -1195,6 +1197,13 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 
                         if (filtered) {
                             row = *(mrp_DetailsList->append());
+							GTimeVal t;
+							if (g_time_val_from_iso8601(sd.iso8601(sd.m_head.cDateTime).c_str(), &t))
+							{
+								row[m_FilesDetailsColumns.m_col_time] = t.tv_usec;
+							} else { 
+								row[m_FilesDetailsColumns.m_col_time] = -1;
+							}
                             row[m_FilesDetailsColumns.m_col_animalID] = (char*)sqlite3_column_text(stmt, 0);
                             row[m_FilesDetailsColumns.m_col_cellID] = sqlite3_column_int(stmt, 1);
                             row[m_FilesDetailsColumns.m_col_filenum] = sqlite3_column_int(stmt, 2);
