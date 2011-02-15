@@ -34,6 +34,10 @@ uiFilterFrame::uiFilterFrame(const Glib::RefPtr<Gtk::Builder>& refGlade)
 		sigc::mem_fun(*this, &uiFilterFrame::on_XVar_changed)
 	);
 	mp_VBoxFilter->pack_start(m_XVar, false, false, 0);
+
+	/*
+	 * Tag filter
+	 */
 	Gtk::Label *tagLabel = Gtk::manage(new Gtk::Label("Tag Filter"));
 	mp_VBoxFilter->pack_start(*tagLabel, false, false, 0);
 	mp_VBoxFilter->pack_start(m_tag, false, false, 0);
@@ -48,7 +52,16 @@ uiFilterFrame::uiFilterFrame(const Glib::RefPtr<Gtk::Builder>& refGlade)
 	);
 
 	m_timer.start();
-	sigc::connection conn = Glib::signal_timeout().connect(sigc::mem_fun(*this, &uiFilterFrame::check_change_queue), 5);
+	Glib::signal_timeout().connect(sigc::mem_fun(*this, &uiFilterFrame::check_change_queue), 5);
+
+	/*
+	 * Hidden file checkbox
+	 */
+	mp_cbHidden = Gtk::manage(new Gtk::CheckButton("Hide bad files"));
+	mp_VBoxFilter->pack_start(*mp_cbHidden, false, false, 0);
+	mp_cbHidden->signal_toggled().connect(
+		sigc::mem_fun(*this, &uiFilterFrame::on_hidden_toggled)
+			);
 }
 
 uiFilterFrame::~uiFilterFrame()
@@ -66,6 +79,20 @@ uiFilterFrame::type_signal_changed uiFilterFrame::signal_changed()
 	return m_signal_changed;
 }
 
+void uiFilterFrame::on_hidden_toggled()
+{
+	m_signal_changed.emit();
+}
+
+bool uiFilterFrame::showHidden()
+{
+	return mp_cbHidden->get_active();
+}
+
+void uiFilterFrame::showHidden(bool set)
+{
+	mp_cbHidden->set_active(set);
+}
 
 void uiFilterFrame::on_XVar_changed()
 {

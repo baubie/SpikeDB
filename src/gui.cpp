@@ -27,8 +27,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	: Gtk::Window(cobject),
 	mrp_Glade(refGlade),
 	m_uiFilterFrame(refGlade),
-	mp_AnimalsTree(0),
-	mp_FilesDetailsTree(0)
+	mp_AnimalsTree(0)
 {
 	uiReady = false;
 	db = NULL;
@@ -93,24 +92,41 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	mrp_AnimalSelection->signal_changed().connect(sigc::mem_fun(*this, &GUI::changeAnimalSelection));
 
 	// Create Files Details TreeView
-	mrp_Glade->get_widget("tvDetails", mp_FilesDetailsTree);
+	mp_FileDetailsTree = Gtk::manage( new uiFileDetailsTreeView() );
+	Gtk::ScrolledWindow* p_swFileDetails; 
+	mrp_Glade->get_widget("swFileDetails", p_swFileDetails);
+	p_swFileDetails->add(*mp_FileDetailsTree);
+
 	mrp_DetailsList = Gtk::ListStore::create(m_FilesDetailsColumns);
 	mrp_DetailsList->set_sort_column(m_FilesDetailsColumns.m_col_time, Gtk::SORT_ASCENDING);
-	mp_FilesDetailsTree->set_model(mrp_DetailsList);
-	mp_FilesDetailsTree->append_column("Time", m_FilesDetailsColumns.m_col_time);
-	mp_FilesDetailsTree->append_column("AnimalID", m_FilesDetailsColumns.m_col_animalID);
-	mp_FilesDetailsTree->append_column("CellID", m_FilesDetailsColumns.m_col_cellID);
-	mp_FilesDetailsTree->append_column("#", m_FilesDetailsColumns.m_col_filenum);
-	mp_FilesDetailsTree->append_column("X-Var", m_FilesDetailsColumns.m_col_xaxis);
-	mp_FilesDetailsTree->append_column("Type", m_FilesDetailsColumns.m_col_type);
-	mp_FilesDetailsTree->append_column("Trials", m_FilesDetailsColumns.m_col_trials);
-	mp_FilesDetailsTree->append_column("CarFreq (Hz)", m_FilesDetailsColumns.m_col_freq);
-	mp_FilesDetailsTree->append_column("Dur (ms)", m_FilesDetailsColumns.m_col_dur);
-	mp_FilesDetailsTree->append_column("Onset (ms)", m_FilesDetailsColumns.m_col_onset);
-	mp_FilesDetailsTree->append_column("Atten (db)", m_FilesDetailsColumns.m_col_atten);
-	mrp_DetailsSelection = mp_FilesDetailsTree->get_selection();
+	mp_FileDetailsTree->set_model(mrp_DetailsList);
+	mp_FileDetailsTree->append_column("Time", m_FilesDetailsColumns.m_col_time);
+	mp_FileDetailsTree->append_column("AnimalID", m_FilesDetailsColumns.m_col_animalID);
+	mp_FileDetailsTree->append_column("CellID", m_FilesDetailsColumns.m_col_cellID);
+	mp_FileDetailsTree->append_column("#", m_FilesDetailsColumns.m_col_filenum);
+	mp_FileDetailsTree->append_column("X-Var", m_FilesDetailsColumns.m_col_xaxis);
+	mp_FileDetailsTree->append_column("Type", m_FilesDetailsColumns.m_col_type);
+	mp_FileDetailsTree->append_column("Trials", m_FilesDetailsColumns.m_col_trials);
+	mp_FileDetailsTree->append_column("CarFreq (Hz)", m_FilesDetailsColumns.m_col_freq);
+	mp_FileDetailsTree->append_column("Dur (ms)", m_FilesDetailsColumns.m_col_dur);
+	mp_FileDetailsTree->append_column("Onset (ms)", m_FilesDetailsColumns.m_col_onset);
+	mp_FileDetailsTree->append_column("Atten (db)", m_FilesDetailsColumns.m_col_atten);
+	mrp_DetailsSelection = mp_FileDetailsTree->get_selection();
 	mrp_DetailsSelection->set_mode(Gtk::SELECTION_MULTIPLE);
 	mrp_DetailsSelection->signal_changed().connect(sigc::mem_fun(*this, &GUI::changeDetailsSelection));
+	// Setup right click handling
+	mp_FileDetailsTree->signal_button_press_event().connect_notify(
+				sigc::mem_fun(*this, &GUI::on_file_details_button_press_event)
+			);
+	mp_Menu_FileDetails = Gtk::manage( new Gtk::Menu());
+	//Fill menu
+	{
+		Gtk::Menu::MenuList& menulist = mp_Menu_FileDetails->items();
+
+		menulist.push_back( Gtk::Menu_Helpers::MenuElem("_View Details",
+					sigc::mem_fun(*this, &GUI::on_view_file_details)));
+	}
+
 
 	// Setup the analyze widgets
 	mrp_Glade->get_widget("vboxAnalyze", mp_VBoxAnalyze);
@@ -790,6 +806,35 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 	sqlite3_finalize(stmt);
 }
 
+void GUI::on_file_details_button_press_event(GdkEventButton* event)
+{
+	Gtk::Menu::MenuList& menulist = mp_Menu_FileDetails->items();
+	if (mrp_DetailsSelection->count_selected_rows() > 1)
+	{
+		menulist[0].set_sensitive(false);
+	} else {
+		menulist[0].set_sensitive(true);
+	}
+
+	if ( (event->type == GDK_BUTTON_PRESS) && (event->button == 3) )
+	{
+		mp_Menu_FileDetails->popup(event->button, event->time);
+	}
+}
+
+void GUI::show_file_details(const Gtk::TreeModel::iterator& iter)
+{
+
+}
+
+void GUI::on_view_file_details()
+{
+	std::cout << "View File Details";
+	mrp_DetailsSelection->selected_foreach_iter(
+		sigc::mem_fun(*this, &GUI::show_file_details)
+		);
+}
+
 void GUI::changeAnimalSelection()
 {
 
@@ -1191,7 +1236,19 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 							bool allow_cell = sqlite3_column_int(stmt2,0) > 0;
 							sqlite3_finalize(stmt2);
 
-							filtered = filtered && (allow_animal || allow_cell);
+
+							// Check for hidden files
+							char query_cell_file[] = "SELECT COUNT(*) FROM tags WHERE tag=? AND animalID=? AND cellID=? AND fileID=?";
+							sqlite3_prepare_v2(db, query_cell_file, -1, &stmt2, 0);
+							sqlite3_bind_text(stmt2, 1, "__HIDDEN__", -1, SQLITE_TRANSIENT);
+							sqlite3_bind_text(stmt2, 2, (char*)sqlite3_column_text(stmt, 0), -1, SQLITE_TRANSIENT);
+							sqlite3_bind_int(stmt2, 3, sqlite3_column_int(stmt, 1));
+							sqlite3_bind_int(stmt2, 4, sqlite3_column_int(stmt, 2));
+							r2 = sqlite3_step(stmt2);
+							bool allow_file = sqlite3_column_int(stmt2,0) == 0;
+							sqlite3_finalize(stmt2);
+
+							filtered = filtered && (allow_animal || allow_cell) && allow_file;
 						}
 					
 

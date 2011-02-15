@@ -15,6 +15,7 @@
 #include "settings.h"
 #include "tokenize.h"
 
+#include "uiFileDetailsTreeView.h"
 #include "uiFilterFrame.h"
 #include "uiPropTable.h"
 #include "uiTags.h"
@@ -65,6 +66,13 @@ class GUI : public Gtk::Window
 		bool on_animal_tag_added(Glib::ustring tag);
 		bool on_cell_tag_added(Glib::ustring tag);
 
+
+		Gtk::Menu* mp_Menu_FileDetails;
+		void on_file_details_button_press_event(GdkEventButton* event);
+		void on_view_file_details();
+		void show_file_details(const Gtk::TreeModel::iterator& iter);
+
+
 		/** 
 		 * Handle when a row in the animal details property table is edited. 
 		 * */
@@ -98,8 +106,9 @@ class GUI : public Gtk::Window
 		Gtk::ImageMenuItem* mp_MenuImportFolder; /**< Import menu item. Require access to enable/disable it. */
 
 
+
         Gtk::TreeView* mp_AnimalsTree;
-        Gtk::TreeView* mp_FilesDetailsTree;
+        uiFileDetailsTreeView* mp_FileDetailsTree;
 		Gtk::Statusbar* mp_Statusbar;
         Gtk::HBox* mp_HBoxPlots;
         Gtk::VBox* mp_VBoxAnalyze;
@@ -120,6 +129,7 @@ class GUI : public Gtk::Window
         Glib::RefPtr<Gtk::ListStore> mrp_YVar;
         Glib::RefPtr<Gtk::ListStore> mrp_MeanType;
         Glib::RefPtr<Gtk::ListStore> mrp_TypeFilter;
+
 
         // Plots
         EasyPlotmm* mp_PlotSpikes;

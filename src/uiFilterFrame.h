@@ -17,6 +17,9 @@ class uiFilterFrame {
 		Glib::ustring tag();
 		void updateTagCompletion(std::vector<Glib::ustring> tags);
 
+		bool showHidden();
+		void showHidden(bool set);
+
 		int XVar();
 
 		typedef sigc::signal<void> type_signal_changed;
@@ -73,6 +76,12 @@ class uiFilterFrame {
 		 * Tag filter
 		 */
 		Gtk::Entry m_tag;
+
+		/**
+		 * Hidden file checkbox
+		 */
+		Gtk::CheckButton *mp_cbHidden;
+		void on_hidden_toggled();
 };
 					  
 #endif
