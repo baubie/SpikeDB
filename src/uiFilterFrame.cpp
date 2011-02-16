@@ -58,6 +58,7 @@ uiFilterFrame::uiFilterFrame(const Glib::RefPtr<Gtk::Builder>& refGlade)
 	 * Hidden file checkbox
 	 */
 	mp_cbHidden = Gtk::manage(new Gtk::CheckButton("Show hidden files"));
+	mp_cbHidden->set_active(false);
 	mp_VBoxFilter->pack_start(*mp_cbHidden, false, false, 0);
 	mp_cbHidden->signal_toggled().connect(
 		sigc::mem_fun(*this, &uiFilterFrame::on_hidden_toggled)
