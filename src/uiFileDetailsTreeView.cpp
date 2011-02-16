@@ -1,14 +1,14 @@
-
 #include "uiFileDetailsTreeView.h"
-#include <iostream>
 
-uiFileDetailsTreeView::uiFileDetailsTreeView()
+uiFileDetailsTreeView::uiFileDetailsTreeView(Gtk::Window *parent)
 {
+
+	m_parent = parent;
 
 	mrp_ListStore = Gtk::ListStore::create(m_Columns);
 	mrp_ListStore->set_sort_column(m_Columns.m_col_time, Gtk::SORT_ASCENDING);
 	this->set_model(mrp_ListStore);
-	this->append_column("Time", m_Columns.m_col_time);
+	//this->append_column("Time", m_Columns.m_col_time);
 	this->append_column("AnimalID", m_Columns.m_col_animalID);
 	this->append_column("CellID", m_Columns.m_col_cellID);
 	this->append_column("#", m_Columns.m_col_filenum);
@@ -75,7 +75,6 @@ int uiFileDetailsTreeView::fileID(const Gtk::TreeModel::iterator& iter)
 
 void uiFileDetailsTreeView::on_file_details_button_press_event(GdkEventButton* event)
 {
-
 	if ( (event->type == GDK_BUTTON_PRESS) && (event->button == 3) )
 	{
 		Gtk::Menu::MenuList& menulist = mp_Menu_FileDetails->items();
@@ -91,14 +90,40 @@ void uiFileDetailsTreeView::on_file_details_button_press_event(GdkEventButton* e
 
 void uiFileDetailsTreeView::show_file_details(const Gtk::TreeModel::iterator& iter)
 {
+	Gtk::TreeModel::Row row = *iter;
 
+	Gtk::Dialog dialog("File Details", true);
+	dialog.set_transient_for(*m_parent);
+	dialog.set_resizable(false);
+	dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+	dialog.add_button(Gtk::Stock::SAVE, Gtk::RESPONSE_OK);
+
+
+	Gtk::CheckButton cbHidden("Hide file in file list");
+	cbHidden.set_active(row.get_value(m_Columns.m_col_hidden));
+	dialog.get_vbox()->pack_start(cbHidden);
+	dialog.show_all_children();
+	int result = dialog.run();
+
+	switch (result) {
+		case (Gtk::RESPONSE_OK):
+			m_signal_file_set_hidden.emit(cbHidden.get_active());
+			break;
+	}
 }
 
 void uiFileDetailsTreeView::on_view_file_details()
 {
-	std::cout << "View File Details";
-	mrp_Selection->selected_foreach_iter(
-		sigc::mem_fun(*this, &uiFileDetailsTreeView::show_file_details)
-		);
+
+	std::vector<Gtk::TreeModel::Path> sel = mrp_Selection->get_selected_rows();
+	if (sel.size() == 1) 
+	{
+		show_file_details(mrp_ListStore->get_iter(sel[0]));
+	}
+
 }
 
+uiFileDetailsTreeView::type_signal_file_set_hidden uiFileDetailsTreeView::signal_file_set_hidden()
+{
+	return m_signal_file_set_hidden;
+}

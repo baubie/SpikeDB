@@ -63,9 +63,11 @@ class GUI : public Gtk::Window
 		void on_filter_changed(); /**< Handle when the filter changes in any way. */
 		void on_animal_tag_deleted(Glib::ustring tag);
 		void on_cell_tag_deleted(Glib::ustring tag);
+		void on_file_tag_deleted(Glib::ustring tag);
 		bool on_animal_tag_added(Glib::ustring tag);
 		bool on_cell_tag_added(Glib::ustring tag);
-
+		bool on_file_tag_added(Glib::ustring tag);
+		void on_filedetails_set_hidden(bool hidden);
 
 
 

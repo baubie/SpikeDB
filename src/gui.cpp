@@ -92,11 +92,12 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	mrp_AnimalSelection->signal_changed().connect(sigc::mem_fun(*this, &GUI::changeAnimalSelection));
 
 	// Create Files Details TreeView
-	mp_FileDetailsTree = Gtk::manage( new uiFileDetailsTreeView() );
+	mp_FileDetailsTree = Gtk::manage( new uiFileDetailsTreeView(this) );
 	Gtk::ScrolledWindow* p_swFileDetails; 
 	mrp_Glade->get_widget("swFileDetails", p_swFileDetails);
 	p_swFileDetails->add(*mp_FileDetailsTree);
 	mp_FileDetailsTree->treeSelection()->signal_changed().connect(sigc::mem_fun(*this, &GUI::on_filedetails_selection_changed));
+	mp_FileDetailsTree->signal_file_set_hidden().connect(sigc::mem_fun(*this, &GUI::on_filedetails_set_hidden));
 
 	// Setup the analyze widgets
 	mrp_Glade->get_widget("vboxAnalyze", mp_VBoxAnalyze);
@@ -899,6 +900,21 @@ void GUI::on_cell_tag_deleted(Glib::ustring tag)
 	updateTagCompletion();
 }
 
+void GUI::on_file_tag_deleted(Glib::ustring tag)
+{
+	sqlite3_stmt *stmt;
+	const char query[] = "DELETE FROM tags WHERE tag=? AND animalID=? AND cellID=? AND fileID=?";
+	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, tag.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_text(stmt, 2, m_curAnimalID.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_int(stmt, 3, m_curCellID);
+	sqlite3_bind_int(stmt, 4, m_curFileNum);
+	sqlite3_step(stmt);
+	sqlite3_finalize(stmt);
+	populateCellDetailsList(m_curAnimalID, m_curCellID);
+	updateTagCompletion();
+}
+
 bool GUI::on_animal_tag_added(Glib::ustring tag)
 {
 	sqlite3_stmt *stmt;
@@ -946,6 +962,43 @@ bool GUI::on_cell_tag_added(Glib::ustring tag)
 	sqlite3_finalize(stmt);
 	updateTagCompletion();
 	return true;
+}
+
+bool GUI::on_file_tag_added(Glib::ustring tag)
+{
+	sqlite3_stmt *stmt;
+	const char query2[] = "SELECT tag FROM tags WHERE tag=? AND animalID=? AND cellID=? AND fileID=?";
+	sqlite3_prepare_v2(db, query2, -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, tag.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_text(stmt, 2, m_curAnimalID.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_int(stmt, 3, m_curCellID);
+	sqlite3_bind_int(stmt, 4, m_curFileNum);
+	if (sqlite3_step(stmt) == SQLITE_ROW) {
+		sqlite3_finalize(stmt);
+		return false;
+	}
+	sqlite3_finalize(stmt);
+
+	const char query[] = "INSERT INTO tags (animalID, cellID, fileID, tag) VALUES(?,?,?,?)";
+	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, m_curAnimalID.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_int(stmt, 2, m_curCellID);
+	sqlite3_bind_int(stmt, 3, m_curFileNum);
+	sqlite3_bind_text(stmt, 4, tag.c_str(), -1, SQLITE_TRANSIENT);
+	if (sqlite3_step(stmt) != SQLITE_DONE) std::cerr << "ERROR: Could not insert tag. " << sqlite3_errmsg(db) << std::endl;
+	sqlite3_finalize(stmt);
+	updateTagCompletion();
+	return true;
+}
+
+void GUI::on_filedetails_set_hidden(bool hidden)
+{
+	if (hidden) {
+		on_file_tag_added("__HIDDEN__");
+	} else {
+		on_file_tag_deleted("__HIDDEN__");
+	}
+	this->on_filter_changed();
 }
 
 void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID)
@@ -1153,10 +1206,10 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
                             if (sd.xVariable() != "Ch 1 Atten" && sd.xVariable() != "Ch 2 Atten") filtered = false;
                         }
 
+						int r2;
+						sqlite3_stmt *stmt2 = 0;
 						if (m_uiFilterFrame.tag() != "")
 						{
-							int r2;
-							sqlite3_stmt *stmt2 = 0;
 							char query_animal_tag[] = "SELECT COUNT(*) FROM tags WHERE tag=? AND animalID=? AND cellID IS NULL AND fileID IS NULL";
 							sqlite3_prepare_v2(db, query_animal_tag, -1, &stmt2, 0);
 							sqlite3_bind_text(stmt2, 1, m_uiFilterFrame.tag().c_str(), -1, SQLITE_TRANSIENT);
@@ -1175,23 +1228,26 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 							sqlite3_finalize(stmt2);
 
 
-							// Check for hidden files
-							char query_cell_file[] = "SELECT COUNT(*) FROM tags WHERE tag=? AND animalID=? AND cellID=? AND fileID=?";
-							sqlite3_prepare_v2(db, query_cell_file, -1, &stmt2, 0);
-							sqlite3_bind_text(stmt2, 1, "__HIDDEN__", -1, SQLITE_TRANSIENT);
-							sqlite3_bind_text(stmt2, 2, (char*)sqlite3_column_text(stmt, 0), -1, SQLITE_TRANSIENT);
-							sqlite3_bind_int(stmt2, 3, sqlite3_column_int(stmt, 1));
-							sqlite3_bind_int(stmt2, 4, sqlite3_column_int(stmt, 2));
-							r2 = sqlite3_step(stmt2);
-							bool allow_file = sqlite3_column_int(stmt2,0) == 0;
-							sqlite3_finalize(stmt2);
 
-							filtered = filtered && (allow_animal || allow_cell) && allow_file;
+							filtered = filtered && (allow_animal || allow_cell);
 						}
-					
+
+						// Check for hidden files
+						char query_cell_file[] = "SELECT COUNT(*) FROM tags WHERE tag=? AND animalID=? AND cellID=? AND fileID=?";
+						sqlite3_prepare_v2(db, query_cell_file, -1, &stmt2, 0);
+						sqlite3_bind_text(stmt2, 1, "__HIDDEN__", -1, SQLITE_TRANSIENT);
+						sqlite3_bind_text(stmt2, 2, (char*)sqlite3_column_text(stmt, 0), -1, SQLITE_TRANSIENT);
+						sqlite3_bind_int(stmt2, 3, sqlite3_column_int(stmt, 1));
+						sqlite3_bind_int(stmt2, 4, sqlite3_column_int(stmt, 2));
+						r2 = sqlite3_step(stmt2);
+						bool hidden_file = (sqlite3_column_int(stmt2,0) > 0);
+						sqlite3_finalize(stmt2);
+
+						filtered = filtered && (!hidden_file || m_uiFilterFrame.showHidden());
 
                         if (filtered) {
                             row = mp_FileDetailsTree->newrow();
+							row[mp_FileDetailsTree->m_Columns.m_col_hidden] = hidden_file;
 							GTimeVal t;
 							if (g_time_val_from_iso8601(sd.iso8601(sd.m_head.cDateTime).c_str(), &t))
 							{
