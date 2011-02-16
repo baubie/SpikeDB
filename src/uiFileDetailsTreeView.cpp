@@ -8,7 +8,7 @@ uiFileDetailsTreeView::uiFileDetailsTreeView(Gtk::Window *parent)
 	mrp_ListStore = Gtk::ListStore::create(m_Columns);
 	mrp_ListStore->set_sort_column(m_Columns.m_col_time, Gtk::SORT_ASCENDING);
 	this->set_model(mrp_ListStore);
-	//this->append_column("Time", m_Columns.m_col_time);
+	this->append_column("", m_Columns.m_col_props);
 	this->append_column("AnimalID", m_Columns.m_col_animalID);
 	this->append_column("CellID", m_Columns.m_col_cellID);
 	this->append_column("#", m_Columns.m_col_filenum);
@@ -21,6 +21,7 @@ uiFileDetailsTreeView::uiFileDetailsTreeView(Gtk::Window *parent)
 	this->append_column("Atten (db)", m_Columns.m_col_atten);
 	mrp_Selection = this->get_selection();
 	mrp_Selection->set_mode(Gtk::SELECTION_MULTIPLE);
+
 
 	// Setup right click handling
 	this->signal_button_press_event().connect_notify(

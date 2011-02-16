@@ -1247,7 +1247,6 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 
                         if (filtered) {
                             row = mp_FileDetailsTree->newrow();
-							row[mp_FileDetailsTree->m_Columns.m_col_hidden] = hidden_file;
 							GTimeVal t;
 							if (g_time_val_from_iso8601(sd.iso8601(sd.m_head.cDateTime).c_str(), &t))
 							{
@@ -1255,6 +1254,12 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 							} else { 
 								row[mp_FileDetailsTree->m_Columns.m_col_time] = -1;
 							}
+
+							row[mp_FileDetailsTree->m_Columns.m_col_hidden] = hidden_file;
+							if (hidden_file) {
+								row[mp_FileDetailsTree->m_Columns.m_col_props] = "H";
+							}
+
                             row[mp_FileDetailsTree->m_Columns.m_col_animalID] = (char*)sqlite3_column_text(stmt, 0);
                             row[mp_FileDetailsTree->m_Columns.m_col_cellID] = sqlite3_column_int(stmt, 1);
                             row[mp_FileDetailsTree->m_Columns.m_col_filenum] = sqlite3_column_int(stmt, 2);
