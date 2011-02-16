@@ -67,10 +67,6 @@ class GUI : public Gtk::Window
 		bool on_cell_tag_added(Glib::ustring tag);
 
 
-		Gtk::Menu* mp_Menu_FileDetails;
-		void on_file_details_button_press_event(GdkEventButton* event);
-		void on_view_file_details();
-		void show_file_details(const Gtk::TreeModel::iterator& iter);
 
 
 		/** 
@@ -120,9 +116,7 @@ class GUI : public Gtk::Window
 
         // Child Widgets (created in c++)
         Glib::RefPtr<Gtk::TreeStore> mrp_AnimalTree;
-        Glib::RefPtr<Gtk::ListStore> mrp_DetailsList;
         Glib::RefPtr<Gtk::TreeSelection> mrp_AnimalSelection;
-        Glib::RefPtr<Gtk::TreeSelection> mrp_DetailsSelection;
         Glib::RefPtr<Gtk::ListStore> mrp_CellDetailsList;
         Glib::RefPtr<Gtk::ListStore> mrp_DataSource;
         Glib::RefPtr<Gtk::ListStore> mrp_XVar;
@@ -155,30 +149,6 @@ class GUI : public Gtk::Window
                 Gtk::TreeModelColumn<Glib::ustring> m_col_name;
         };
 
-        // Files Details Tree Model Columns
-        class FilesDetailsColumns : public Gtk::TreeModel::ColumnRecord
-        {
-            public:
-                FilesDetailsColumns()
-                { add(m_col_time); 
-				  add(m_col_animalID); add(m_col_cellID); add(m_col_filenum); add(m_col_xaxis); 
-                  add(m_col_type); add(m_col_freq); add(m_col_trials); add(m_col_onset); 
-				  add(m_col_dur); add(m_col_atten); add(m_col_tags); 
-                }
-				Gtk::TreeModelColumn<glong> m_col_time;
-                Gtk::TreeModelColumn<Glib::ustring> m_col_animalID;
-                Gtk::TreeModelColumn<int> m_col_cellID;
-                Gtk::TreeModelColumn<int> m_col_filenum;
-                Gtk::TreeModelColumn<Glib::ustring> m_col_xaxis;
-                Gtk::TreeModelColumn<Glib::ustring> m_col_type;
-                Gtk::TreeModelColumn<Glib::ustring> m_col_freq;
-                Gtk::TreeModelColumn<int> m_col_trials;
-                Gtk::TreeModelColumn<Glib::ustring> m_col_dur;
-                Gtk::TreeModelColumn<Glib::ustring> m_col_onset;
-                Gtk::TreeModelColumn<Glib::ustring> m_col_atten;
-                Gtk::TreeModelColumn<Glib::ustring> m_col_tags;
-        };
-        FilesDetailsColumns m_FilesDetailsColumns;
 
         AnimalColumns m_AnimalColumns;
 		AnalyzeColumns m_DataSourceColumns;
@@ -193,7 +163,7 @@ class GUI : public Gtk::Window
         void populateAnimalDetailsList(const Glib::ustring animalID);
         void populateCellDetailsList(const Glib::ustring animalID, const int cellID);
         void changeAnimalSelection();
-        void changeDetailsSelection();
+        void on_filedetails_selection_changed();
         void addFileToPlot(const Gtk::TreeModel::iterator& iter);
 		void updateSideLists(const Gtk::TreeModel::iterator& iter);
 		void updateAnalyzePlot();
