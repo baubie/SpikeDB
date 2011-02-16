@@ -21,6 +21,7 @@ uiFileDetailsTreeView::uiFileDetailsTreeView(Gtk::Window *parent)
 	this->append_column("Atten (db)", m_Columns.m_col_atten);
 	mrp_Selection = this->get_selection();
 	mrp_Selection->set_mode(Gtk::SELECTION_MULTIPLE);
+	this->set_rules_hint(true);
 
 
 	// Setup right click handling

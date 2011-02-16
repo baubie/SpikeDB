@@ -4,6 +4,12 @@
 #define CURRENT_DB_VERSION 1.2
 #define CURRENT_VERSION 1.2
 
+#include "uiAnalysis.h"
+#include "uiFileDetailsTreeView.h"
+#include "uiFilterFrame.h"
+#include "uiPropTable.h"
+#include "uiTags.h"
+
 #include <gtkmm.h>
 #include <giomm.h>
 #include <string>
@@ -15,10 +21,6 @@
 #include "settings.h"
 #include "tokenize.h"
 
-#include "uiFileDetailsTreeView.h"
-#include "uiFilterFrame.h"
-#include "uiPropTable.h"
-#include "uiTags.h"
 
 
 /*
@@ -103,6 +105,11 @@ class GUI : public Gtk::Window
 
 		Gtk::ImageMenuItem* mp_MenuImportFolder; /**< Import menu item. Require access to enable/disable it. */
 
+
+		/**
+		 * Analysis tab
+		 */
+		uiAnalysis* mp_Analysis;
 
 
         Gtk::TreeView* mp_AnimalsTree;

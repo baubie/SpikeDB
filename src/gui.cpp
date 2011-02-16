@@ -124,6 +124,13 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	on_analyze_changed();
 
 
+	// Add on the Analysis tab
+	mp_Analysis = Gtk::manage(new uiAnalysis(this));
+	Gtk::Notebook* p_Notebook;
+	mrp_Glade->get_widget("notebookMain", p_Notebook);
+	p_Notebook->append_page(*mp_Analysis, "Analysis", false);
+
+
 	mrp_Glade->get_widget("hboxPlots", mp_HBoxPlots);
 	mrp_Glade->get_widget("cbMeanType", mp_MeanType);
 	mrp_MeanType = Gtk::ListStore::create(m_MeanTypeColumns);
