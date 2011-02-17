@@ -23,7 +23,6 @@ uiFileDetailsTreeView::uiFileDetailsTreeView(Gtk::Window *parent)
 	mrp_Selection->set_mode(Gtk::SELECTION_MULTIPLE);
 	this->set_rules_hint(true);
 
-
 	// Setup right click handling
 	this->signal_button_press_event().connect_notify(
 				sigc::mem_fun(*this, &uiFileDetailsTreeView::on_file_details_button_press_event)

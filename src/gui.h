@@ -47,7 +47,6 @@ class GUI : public Gtk::Window
 
         sqlite3 *db; /**< Pointer to out SQLite3 database. */
 
-
     protected:
 
 		bool uiReady; /**< When FALSE, block UI updates. */
@@ -70,8 +69,6 @@ class GUI : public Gtk::Window
 		bool on_cell_tag_added(Glib::ustring tag);
 		bool on_file_tag_added(Glib::ustring tag);
 		void on_filedetails_set_hidden(bool hidden);
-
-
 
 		/** 
 		 * Handle when a row in the animal details property table is edited. 

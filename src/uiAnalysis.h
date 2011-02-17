@@ -1,7 +1,13 @@
 #ifndef UIANALYSIS_H
 #define UIANALYSIS_H
 
+#ifdef __APPLE__
+#include <Python/Python.h>
+#else
 #include <Python.h>
+#endif
+
+#include <set>
 #include <gtkmm.h>
 #include "uiFileDetailsTreeView.h"
 
@@ -42,6 +48,23 @@ class uiAnalysis : public Gtk::VBox {
 		 * Python setup functions
 		 */
 		PyObject* buildCellList();
+
+		/**
+		 * Used to find unique cells.
+		 */
+		typedef struct CellID {
+			Glib::ustring animalID;
+			int cellID;
+
+			// Overload the < operator for easy comparison
+			friend bool operator<(CellID const& a, CellID const& b)
+			{
+				if (std::strcmp(a.animalID.c_str(), b.animalID.c_str()) == 0)
+					return a.cellID < b.cellID;
+				else
+					return std::strcmp(a.animalID.c_str(), b.animalID.c_str()) < 0;
+			}
+		};
 };
 
 #endif

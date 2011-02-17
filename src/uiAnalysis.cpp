@@ -46,7 +46,6 @@ void uiAnalysis::on_open_clicked()
 		m_filename = filename;
 		break;
 	}
-
 }   
 
 void uiAnalysis::on_run_clicked()
@@ -112,20 +111,30 @@ PyObject* uiAnalysis::buildCellList()
 		  Depth: number (in um)
 	*/
 	 
-	
 
-	// TODO: This is building off the files list but we should be building off of a cells list?
-	// Perhaps we could add this data to the FilesDetailsList as extra columns?
-    for (Gtk::TreeIter iter = mp_FileDetailsTree->mrp_ListStore->children().begin(); 
-					   iter != mp_FileDetailsTree->mrp_ListStore->children().end(); 
-					   iter++)
+	std::set<CellID> uniqueCells;
+
+	Gtk::TreeIter iter;
+    for (iter = mp_FileDetailsTree->mrp_ListStore->children().begin(); 
+	     iter != mp_FileDetailsTree->mrp_ListStore->children().end(); 
+		 iter++)
 	{
 		Gtk::TreeModel::Row row = *iter;
-		PyObject *cell = Py_BuildValue("{s:s,s:i}", 
-								"AnimalID", row.get_value(mp_FileDetailsTree->m_Columns.m_col_animalID).c_str(), 
-								"CellID", row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID)  
-								);
-		PyList_Append(list, cell);
+		CellID tmp;
+		tmp.animalID = row.get_value(mp_FileDetailsTree->m_Columns.m_col_animalID);
+		tmp.cellID = row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID);
+		if (uniqueCells.find(tmp) == uniqueCells.end())
+		{
+			uniqueCells.insert(tmp);
+			PyObject *cell = Py_BuildValue("{s:s,s:i,s:i,s:i,s:i}", 
+				"AnimalID", row.get_value(mp_FileDetailsTree->m_Columns.m_col_animalID).c_str(), 
+				"CellID", row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID),
+				"CarFreq", row.get_value(mp_FileDetailsTree->m_Columns.m_col_carfreq),
+				"Threshold", row.get_value(mp_FileDetailsTree->m_Columns.m_col_threshold),
+				"Depth", row.get_value(mp_FileDetailsTree->m_Columns.m_col_depth)
+				);
+			PyList_Append(list, cell);
+		}
 	}
 
 	return list;

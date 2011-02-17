@@ -1118,30 +1118,36 @@ void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, c
 	int minFiles = m_uiFilterFrame.minFiles();
 
 	if (animalID != "" && cellID != -1) {
-		const char query[] = "SELECT animalID, cellID, fileID, header FROM files "
+		const char query[] = "SELECT files.animalID, files.cellID, files.fileID, files.header, "
+					 "cells.depth, cells.threshold, cells.freq FROM files, cells "
 				     "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
 				     "USING(animalID, cellID) "
-				     "WHERE animalID=? AND cellID=? AND file_count >= ? "
-				     "ORDER BY animalID, cellID, fileID";
+				     "WHERE files.animalID=? AND files.cellID=? AND file_count >= ? "
+					 "AND files.animalID=cells.animalID AND files.cellID=cells.cellID "
+				     "ORDER BY files.animalID, files.cellID, files.fileID";
 		sqlite3_prepare_v2(db, query, strlen(query), stmt, NULL);
 		sqlite3_bind_text(*stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_int(*stmt, 2, cellID);
 		sqlite3_bind_int(*stmt, 3, minFiles);
 	} else if (animalID != "" && cellID == -1) {
-		const char query[] = "SELECT animalID, cellID, fileID, header FROM files "
+		const char query[] = "SELECT files.animalID, files.cellID, files.fileID, files.header, "
+					 "cells.depth, cells.threshold, cells.freq FROM files, cells "
 				     "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
 				     "USING(animalID, cellID) "
-				     "WHERE animalID=? AND file_count >= ? "
-				     "ORDER BY animalID, cellID, fileID";
+				     "WHERE files.animalID=? AND file_count >= ? "
+					 "AND files.animalID=cells.animalID AND files.cellID=cells.cellID "
+				     "ORDER BY files.animalID, files.cellID, files.fileID";
 		sqlite3_prepare_v2(db, query, strlen(query), stmt, NULL);
 		sqlite3_bind_text(*stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_int(*stmt, 2, minFiles);
 	} else if (animalID == "" && cellID == -1) {
-		const char query[] = "SELECT animalID, cellID, fileID, header FROM files "
+		const char query[] = "SELECT files.animalID, files.cellID, files.fileID, files.header, "
+					 "cells.depth, cells.threshold, cells.freq FROM files, cells "
 				     "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
 				     "USING(animalID, cellID) "
 				     "WHERE file_count >= ? "
-				     "ORDER BY animalID, cellID, fileID";
+					 "AND files.animalID=cells.animalID AND files.cellID=cells.cellID "
+				     "ORDER BY files.animalID, files.cellID, files.fileID";
 		sqlite3_prepare_v2(db, query, strlen(query), stmt, NULL);
 		sqlite3_bind_int(*stmt, 1, minFiles);
 	}
@@ -1193,189 +1199,193 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 		int r = sqlite3_step(stmt);
 		if (r == SQLITE_ROW) {
 
-                        bool filtered = true;
+			bool filtered = true;
 
-                        SpikeData sd;
-                        void *header = (void*)sqlite3_column_blob(stmt, 3);
-                        sd.setHeader(header);
+			SpikeData sd;
+			void *header = (void*)sqlite3_column_blob(stmt, 3);
+			sd.setHeader(header);
 
-						int XVarFilter = m_uiFilterFrame.XVar();
-                        if (XVarFilter == 1) {
-                            if (sd.xVariable() != "Ch 1 Freq" && sd.xVariable() != "Ch 2 Freq") filtered = false;
-                        }
-                        if (XVarFilter == 2) {
-                            if (sd.xVariable() != "Ch 1 Dur" && sd.xVariable() != "Ch 2 Dur") filtered = false;
-                        }
-                        if (XVarFilter == 3) {
-                            if (sd.xVariable() != "Ch 1 Onset" && sd.xVariable() != "Ch 2 Onset") filtered = false;
-                        }
-                        if (XVarFilter == 4) {
-                            if (sd.xVariable() != "Ch 1 Atten" && sd.xVariable() != "Ch 2 Atten") filtered = false;
-                        }
+			int XVarFilter = m_uiFilterFrame.XVar();
+			if (XVarFilter == 1) {
+				if (sd.xVariable() != "Ch 1 Freq" && sd.xVariable() != "Ch 2 Freq") filtered = false;
+			}
+			if (XVarFilter == 2) {
+				if (sd.xVariable() != "Ch 1 Dur" && sd.xVariable() != "Ch 2 Dur") filtered = false;
+			}
+			if (XVarFilter == 3) {
+				if (sd.xVariable() != "Ch 1 Onset" && sd.xVariable() != "Ch 2 Onset") filtered = false;
+			}
+			if (XVarFilter == 4) {
+				if (sd.xVariable() != "Ch 1 Atten" && sd.xVariable() != "Ch 2 Atten") filtered = false;
+			}
 
-						int r2;
-						sqlite3_stmt *stmt2 = 0;
-						if (m_uiFilterFrame.tag() != "")
-						{
-							char query_animal_tag[] = "SELECT COUNT(*) FROM tags WHERE tag=? AND animalID=? AND cellID IS NULL AND fileID IS NULL";
-							sqlite3_prepare_v2(db, query_animal_tag, -1, &stmt2, 0);
-							sqlite3_bind_text(stmt2, 1, m_uiFilterFrame.tag().c_str(), -1, SQLITE_TRANSIENT);
-							sqlite3_bind_text(stmt2, 2, (char*)sqlite3_column_text(stmt, 0), -1, SQLITE_TRANSIENT);
-							r2 = sqlite3_step(stmt2);
-							bool allow_animal = sqlite3_column_int(stmt2,0) > 0;
-							sqlite3_finalize(stmt2);
+			int r2;
+			sqlite3_stmt *stmt2 = 0;
+			if (m_uiFilterFrame.tag() != "")
+			{
+				char query_animal_tag[] = "SELECT COUNT(*) FROM tags WHERE tag=? AND animalID=? AND cellID IS NULL AND fileID IS NULL";
+				sqlite3_prepare_v2(db, query_animal_tag, -1, &stmt2, 0);
+				sqlite3_bind_text(stmt2, 1, m_uiFilterFrame.tag().c_str(), -1, SQLITE_TRANSIENT);
+				sqlite3_bind_text(stmt2, 2, (char*)sqlite3_column_text(stmt, 0), -1, SQLITE_TRANSIENT);
+				r2 = sqlite3_step(stmt2);
+				bool allow_animal = sqlite3_column_int(stmt2,0) > 0;
+				sqlite3_finalize(stmt2);
 
-							char query_cell_tag[] = "SELECT COUNT(*) FROM tags WHERE tag=? AND animalID=? AND cellID=? AND fileID IS NULL";
-							sqlite3_prepare_v2(db, query_cell_tag, -1, &stmt2, 0);
-							sqlite3_bind_text(stmt2, 1, m_uiFilterFrame.tag().c_str(), -1, SQLITE_TRANSIENT);
-							sqlite3_bind_text(stmt2, 2, (char*)sqlite3_column_text(stmt, 0), -1, SQLITE_TRANSIENT);
-							sqlite3_bind_int(stmt2, 3, sqlite3_column_int(stmt, 1));
-							r2 = sqlite3_step(stmt2);
-							bool allow_cell = sqlite3_column_int(stmt2,0) > 0;
-							sqlite3_finalize(stmt2);
-
-
-
-							filtered = filtered && (allow_animal || allow_cell);
-						}
-
-						// Check for hidden files
-						char query_cell_file[] = "SELECT COUNT(*) FROM tags WHERE tag=? AND animalID=? AND cellID=? AND fileID=?";
-						sqlite3_prepare_v2(db, query_cell_file, -1, &stmt2, 0);
-						sqlite3_bind_text(stmt2, 1, "__HIDDEN__", -1, SQLITE_TRANSIENT);
-						sqlite3_bind_text(stmt2, 2, (char*)sqlite3_column_text(stmt, 0), -1, SQLITE_TRANSIENT);
-						sqlite3_bind_int(stmt2, 3, sqlite3_column_int(stmt, 1));
-						sqlite3_bind_int(stmt2, 4, sqlite3_column_int(stmt, 2));
-						r2 = sqlite3_step(stmt2);
-						bool hidden_file = (sqlite3_column_int(stmt2,0) > 0);
-						sqlite3_finalize(stmt2);
-
-						filtered = filtered && (!hidden_file || m_uiFilterFrame.showHidden());
-
-                        if (filtered) {
-                            row = mp_FileDetailsTree->newrow();
-							GTimeVal t;
-							if (g_time_val_from_iso8601(sd.iso8601(sd.m_head.cDateTime).c_str(), &t))
-							{
-								row[mp_FileDetailsTree->m_Columns.m_col_time] = t.tv_usec;
-							} else { 
-								row[mp_FileDetailsTree->m_Columns.m_col_time] = -1;
-							}
-
-							row[mp_FileDetailsTree->m_Columns.m_col_hidden] = hidden_file;
-							if (hidden_file) {
-								row[mp_FileDetailsTree->m_Columns.m_col_props] = "H";
-							}
-
-                            row[mp_FileDetailsTree->m_Columns.m_col_animalID] = (char*)sqlite3_column_text(stmt, 0);
-                            row[mp_FileDetailsTree->m_Columns.m_col_cellID] = sqlite3_column_int(stmt, 1);
-                            row[mp_FileDetailsTree->m_Columns.m_col_filenum] = sqlite3_column_int(stmt, 2);
-
-                            row[mp_FileDetailsTree->m_Columns.m_col_xaxis] = sd.xVariable();
-                            row[mp_FileDetailsTree->m_Columns.m_col_trials] = sd.trials();
-
-                            char bufferCh1[20];
-                            char bufferCh2[20];
-                            char buffer[50];
-
-                            if (sd.m_head.nOnCh1 == 0) {
-                                    strcpy(bufferCh1, "-");
-                            } else{
-                                    sprintf(bufferCh1, "%s", sd.type(1).c_str());
-                            }
-                            if (sd.m_head.nOnCh2 == 0) {
-                                    strcpy(bufferCh2, "-");
-                            } else{
-                                    sprintf(bufferCh2, "%s", sd.type(2).c_str());
-                            }
-                            sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
-                            row[mp_FileDetailsTree->m_Columns.m_col_type] = buffer;
-                            bufferCh1[0] = '\0';
-                            bufferCh2[0] = '\0';
-                            buffer[0] = '\0';
+				char query_cell_tag[] = "SELECT COUNT(*) FROM tags WHERE tag=? AND animalID=? AND cellID=? AND fileID IS NULL";
+				sqlite3_prepare_v2(db, query_cell_tag, -1, &stmt2, 0);
+				sqlite3_bind_text(stmt2, 1, m_uiFilterFrame.tag().c_str(), -1, SQLITE_TRANSIENT);
+				sqlite3_bind_text(stmt2, 2, (char*)sqlite3_column_text(stmt, 0), -1, SQLITE_TRANSIENT);
+				sqlite3_bind_int(stmt2, 3, sqlite3_column_int(stmt, 1));
+				r2 = sqlite3_step(stmt2);
+				bool allow_cell = sqlite3_column_int(stmt2,0) > 0;
+				sqlite3_finalize(stmt2);
 
 
-                            if (sd.m_head.nOnCh1 == 0) {
-                                    strcpy(bufferCh1, "-");
-                            } else{
-                                    if (sd.frequency(1, 0) == sd.frequency(1, 1)) {
-                                            sprintf(bufferCh1, "%d", (int)sd.frequency(1, 0));
-                                    } else{                              strcpy(bufferCh1, "Var"); }
-                            }
-                            if (sd.m_head.nOnCh2 == 0) {
-                                    strcpy(bufferCh2, "-");
-                            } else{
-                                    if (sd.frequency(2, 0) == sd.frequency(2, 1)) {
-                                            sprintf(bufferCh2, "%d", (int)sd.frequency(2, 0));
-                                    } else{                              strcpy(bufferCh2, "Var"); }
-                            }
-                            sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
-							row[mp_FileDetailsTree->m_Columns.m_col_freq] = buffer;
-                            bufferCh1[0] = '\0';
-                            bufferCh2[0] = '\0';
-                            buffer[0] = '\0';
+
+				filtered = filtered && (allow_animal || allow_cell);
+			}
+
+			// Check for hidden files
+			char query_cell_file[] = "SELECT COUNT(*) FROM tags WHERE tag=? AND animalID=? AND cellID=? AND fileID=?";
+			sqlite3_prepare_v2(db, query_cell_file, -1, &stmt2, 0);
+			sqlite3_bind_text(stmt2, 1, "__HIDDEN__", -1, SQLITE_TRANSIENT);
+			sqlite3_bind_text(stmt2, 2, (char*)sqlite3_column_text(stmt, 0), -1, SQLITE_TRANSIENT);
+			sqlite3_bind_int(stmt2, 3, sqlite3_column_int(stmt, 1));
+			sqlite3_bind_int(stmt2, 4, sqlite3_column_int(stmt, 2));
+			r2 = sqlite3_step(stmt2);
+			bool hidden_file = (sqlite3_column_int(stmt2,0) > 0);
+			sqlite3_finalize(stmt2);
+
+			filtered = filtered && (!hidden_file || m_uiFilterFrame.showHidden());
+
+			if (filtered) {
+				row = mp_FileDetailsTree->newrow();
+				GTimeVal t;
+				if (g_time_val_from_iso8601(sd.iso8601(sd.m_head.cDateTime).c_str(), &t))
+				{
+					row[mp_FileDetailsTree->m_Columns.m_col_time] = t.tv_usec;
+				} else { 
+					row[mp_FileDetailsTree->m_Columns.m_col_time] = -1;
+				}
+
+				row[mp_FileDetailsTree->m_Columns.m_col_hidden] = hidden_file;
+				if (hidden_file) {
+					row[mp_FileDetailsTree->m_Columns.m_col_props] = "H";
+				}
+
+				row[mp_FileDetailsTree->m_Columns.m_col_animalID] = (char*)sqlite3_column_text(stmt, 0);
+				row[mp_FileDetailsTree->m_Columns.m_col_cellID] = sqlite3_column_int(stmt, 1);
+				row[mp_FileDetailsTree->m_Columns.m_col_filenum] = sqlite3_column_int(stmt, 2);
+
+				row[mp_FileDetailsTree->m_Columns.m_col_depth] = sqlite3_column_int(stmt, 4);
+				row[mp_FileDetailsTree->m_Columns.m_col_threshold] = sqlite3_column_int(stmt, 5);
+				row[mp_FileDetailsTree->m_Columns.m_col_carfreq] = sqlite3_column_int(stmt, 6);
+
+				row[mp_FileDetailsTree->m_Columns.m_col_xaxis] = sd.xVariable();
+				row[mp_FileDetailsTree->m_Columns.m_col_trials] = sd.trials();
+
+				char bufferCh1[20];
+				char bufferCh2[20];
+				char buffer[50];
+
+				if (sd.m_head.nOnCh1 == 0) {
+						strcpy(bufferCh1, "-");
+				} else{
+						sprintf(bufferCh1, "%s", sd.type(1).c_str());
+				}
+				if (sd.m_head.nOnCh2 == 0) {
+						strcpy(bufferCh2, "-");
+				} else{
+						sprintf(bufferCh2, "%s", sd.type(2).c_str());
+				}
+				sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
+				row[mp_FileDetailsTree->m_Columns.m_col_type] = buffer;
+				bufferCh1[0] = '\0';
+				bufferCh2[0] = '\0';
+				buffer[0] = '\0';
 
 
-                            if (sd.m_head.nOnCh1 == 0) {
-                                    strcpy(bufferCh1, "-");
-                            } else{
-                                    if (sd.attenuation(1, 0) == sd.attenuation(1, 1)) {
-                                            sprintf(bufferCh1, "%d", (int)sd.attenuation(1, 0));
-                                    } else{                              strcpy(bufferCh1, "Var"); }
-                            }
-                            if (sd.m_head.nOnCh2 == 0) {
-                                    strcpy(bufferCh2, "-");
-                            } else{
-                                    if (sd.attenuation(2, 0) == sd.attenuation(2, 1)) {
-                                            sprintf(bufferCh2, "%d", (int)sd.attenuation(2, 0));
-                                    } else{                              strcpy(bufferCh2, "Var"); }
-                            }
-                            sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
-                            row[mp_FileDetailsTree->m_Columns.m_col_atten] = buffer;
-                            bufferCh1[0] = '\0';
-                            bufferCh2[0] = '\0';
-                            buffer[0] = '\0';
+				if (sd.m_head.nOnCh1 == 0) {
+						strcpy(bufferCh1, "-");
+				} else{
+						if (sd.frequency(1, 0) == sd.frequency(1, 1)) {
+								sprintf(bufferCh1, "%d", (int)sd.frequency(1, 0));
+						} else{                              strcpy(bufferCh1, "Var"); }
+				}
+				if (sd.m_head.nOnCh2 == 0) {
+						strcpy(bufferCh2, "-");
+				} else{
+						if (sd.frequency(2, 0) == sd.frequency(2, 1)) {
+								sprintf(bufferCh2, "%d", (int)sd.frequency(2, 0));
+						} else{                              strcpy(bufferCh2, "Var"); }
+				}
+				sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
+				row[mp_FileDetailsTree->m_Columns.m_col_freq] = buffer;
+				bufferCh1[0] = '\0';
+				bufferCh2[0] = '\0';
+				buffer[0] = '\0';
 
-                            if (sd.m_head.nOnCh1 == 0) {
-                                    strcpy(bufferCh1, "-");
-                            } else{
-                                    if (sd.duration(1, 0) == sd.duration(1, 1)) {
-                                            sprintf(bufferCh1, "%d", (int)sd.duration(1, 0));
-                                    } else{                              strcpy(bufferCh1, "Var"); }
-                            }
-                            if (sd.m_head.nOnCh2 == 0) {
-                                    strcpy(bufferCh2, "-");
-                            } else{
-                                    if (sd.duration(2, 0) == sd.duration(2, 1)) {
-                                            sprintf(bufferCh2, "%d", (int)sd.duration(2, 0));
-                                    } else{                              strcpy(bufferCh2, "Var"); }
-                            }
-                            sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
-                            row[mp_FileDetailsTree->m_Columns.m_col_dur] = buffer;
-                            bufferCh1[0] = '\0';
-                            bufferCh2[0] = '\0';
-                            buffer[0] = '\0';
 
-                            if (sd.m_head.nOnCh1 == 0) {
-                                    strcpy(bufferCh1, "-");
-                            } else{
-                                    if (sd.begin(1, 0) == sd.begin(1, 1)) {
-                                            sprintf(bufferCh1, "%d", (int)sd.begin(1, 0));
-                                    } else{                              strcpy(bufferCh1, "Var"); }
-                            }
-                            if (sd.m_head.nOnCh2 == 0) {
-                                    strcpy(bufferCh2, "-");
-                            } else{
-                                    if (sd.begin(2, 0) == sd.begin(2, 1)) {
-                                            sprintf(bufferCh2, "%d", (int)sd.begin(2, 0));
-                                    } else{                              strcpy(bufferCh2, "Var"); }
-                            }
-                            sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
-                            row[mp_FileDetailsTree->m_Columns.m_col_onset] = buffer;
-                            bufferCh1[0] = '\0';
-                            bufferCh2[0] = '\0';
-                            buffer[0] = '\0';
-                        }
+				if (sd.m_head.nOnCh1 == 0) {
+						strcpy(bufferCh1, "-");
+				} else{
+						if (sd.attenuation(1, 0) == sd.attenuation(1, 1)) {
+								sprintf(bufferCh1, "%d", (int)sd.attenuation(1, 0));
+						} else{                              strcpy(bufferCh1, "Var"); }
+				}
+				if (sd.m_head.nOnCh2 == 0) {
+						strcpy(bufferCh2, "-");
+				} else{
+						if (sd.attenuation(2, 0) == sd.attenuation(2, 1)) {
+								sprintf(bufferCh2, "%d", (int)sd.attenuation(2, 0));
+						} else{                              strcpy(bufferCh2, "Var"); }
+				}
+				sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
+				row[mp_FileDetailsTree->m_Columns.m_col_atten] = buffer;
+				bufferCh1[0] = '\0';
+				bufferCh2[0] = '\0';
+				buffer[0] = '\0';
+
+				if (sd.m_head.nOnCh1 == 0) {
+						strcpy(bufferCh1, "-");
+				} else{
+						if (sd.duration(1, 0) == sd.duration(1, 1)) {
+								sprintf(bufferCh1, "%d", (int)sd.duration(1, 0));
+						} else{                              strcpy(bufferCh1, "Var"); }
+				}
+				if (sd.m_head.nOnCh2 == 0) {
+						strcpy(bufferCh2, "-");
+				} else{
+						if (sd.duration(2, 0) == sd.duration(2, 1)) {
+								sprintf(bufferCh2, "%d", (int)sd.duration(2, 0));
+						} else{                              strcpy(bufferCh2, "Var"); }
+				}
+				sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
+				row[mp_FileDetailsTree->m_Columns.m_col_dur] = buffer;
+				bufferCh1[0] = '\0';
+				bufferCh2[0] = '\0';
+				buffer[0] = '\0';
+
+				if (sd.m_head.nOnCh1 == 0) {
+						strcpy(bufferCh1, "-");
+				} else{
+						if (sd.begin(1, 0) == sd.begin(1, 1)) {
+								sprintf(bufferCh1, "%d", (int)sd.begin(1, 0));
+						} else{                              strcpy(bufferCh1, "Var"); }
+				}
+				if (sd.m_head.nOnCh2 == 0) {
+						strcpy(bufferCh2, "-");
+				} else{
+						if (sd.begin(2, 0) == sd.begin(2, 1)) {
+								sprintf(bufferCh2, "%d", (int)sd.begin(2, 0));
+						} else{                              strcpy(bufferCh2, "Var"); }
+				}
+				sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
+				row[mp_FileDetailsTree->m_Columns.m_col_onset] = buffer;
+				bufferCh1[0] = '\0';
+				bufferCh2[0] = '\0';
+				buffer[0] = '\0';
+			}
 
 		} else{ 
 			

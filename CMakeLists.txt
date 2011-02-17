@@ -5,6 +5,6 @@ find_package(PkgConfig)
 pkg_check_modules(GTKMM gtkmm-2.4)
 pkg_check_modules(CAIRO cairo)
 pkg_check_modules(SQLITE3 sqlite3)
-pkg_check_modules(PYTHON python-2.7)
+FIND_PACKAGE(PythonLibs)
 
 add_subdirectory(src)
