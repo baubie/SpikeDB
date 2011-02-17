@@ -1,9 +1,11 @@
 #include "uiAnalysis.h"
 
 
-uiAnalysis::uiAnalysis(Gtk::Window* parent)
+uiAnalysis::uiAnalysis(uiFileDetailsTreeView* fileDetailsTree, Gtk::Window* parent)
 {
+	mp_FileDetailsTree = fileDetailsTree;
 	m_parent = parent;
+
 	Gtk::Toolbar *toolbar = Gtk::manage( new Gtk::Toolbar() );
 	Gtk::ToolButton *tbOpen = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::OPEN) );
 	tbRun = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::EXECUTE) );
@@ -12,10 +14,12 @@ uiAnalysis::uiAnalysis(Gtk::Window* parent)
     toolbar->append(*tbRun, sigc::mem_fun(*this, &uiAnalysis::on_run_clicked) );
 	this->pack_start(*toolbar, false, false);
 
+	Gtk::ScrolledWindow *swOutput = Gtk::manage( new Gtk::ScrolledWindow() );
 	mrp_tbOutput = Gtk::TextBuffer::create();
 	Gtk::TextView *tvOutput = Gtk::manage( new Gtk::TextView(mrp_tbOutput) );
 	tvOutput->set_editable(false);
-	this->pack_start(*tvOutput);
+	swOutput->add(*tvOutput);
+	this->pack_start(*swOutput);
 
 }
 
@@ -60,8 +64,7 @@ void uiAnalysis::runScript()
 
 	// Redirect python output
 	Glib::ustring stdOut =
-"import sys\n\
-class CatchOut:\n\
+"class CatchOut:\n\
 	def __init__(self):\n\
 		self.value = ''\n\
 	def write(self, txt):\n\
@@ -70,19 +73,60 @@ catchOut = CatchOut()\n\
 sys.stdout = catchOut\n\
 sys.stderr = catchOut\n\
 ";
+	PyObject *main_module = PyImport_ImportModule("__main__");
+	PyObject *main_dict = PyModule_GetDict(main_module);
 
-	PyObject *pModule = PyImport_AddModule("__main__");
+    PyObject *sys_module = PyImport_ImportModule("sys");
+	PyDict_SetItemString(main_dict, "sys", sys_module);
+
 	PyRun_SimpleString(stdOut.c_str());
 
+    // Provide python with some useful data
+	PyDict_SetItemString(main_dict, "Cells", buildCellList());
+
+	// Open the file and run the code
 	FILE *fp;
 	fp = fopen(m_filename.c_str(), "r");
 	PyRun_SimpleFile(fp, m_filename.c_str());
 	fclose(fp);
 
-	PyObject *catcher = PyObject_GetAttrString(pModule,"catchOut");
+
+	// Get the output and update the text buffer
+	PyObject *catcher = PyObject_GetAttrString(main_module,"catchOut");
 	PyObject *output = PyObject_GetAttrString(catcher,"value");
 	Glib::ustring r(PyString_AsString(output));
 	mrp_tbOutput->set_text(r);
 
 	Py_Finalize();
 }                                                          
+
+PyObject* uiAnalysis::buildCellList()
+{
+	PyObject *list = PyList_New(0);
+
+	/*
+	Keys: AnimalID: string
+		  CellID: number
+		  CarFreq: number (in Hz)
+		  Threshold: number (in dB SPL)
+		  Depth: number (in um)
+	*/
+	 
+	
+
+	// TODO: This is building off the files list but we should be building off of a cells list?
+	// Perhaps we could add this data to the FilesDetailsList as extra columns?
+    for (Gtk::TreeIter iter = mp_FileDetailsTree->mrp_ListStore->children().begin(); 
+					   iter != mp_FileDetailsTree->mrp_ListStore->children().end(); 
+					   iter++)
+	{
+		Gtk::TreeModel::Row row = *iter;
+		PyObject *cell = Py_BuildValue("{s:s,s:i}", 
+								"AnimalID", row.get_value(mp_FileDetailsTree->m_Columns.m_col_animalID).c_str(), 
+								"CellID", row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID)  
+								);
+		PyList_Append(list, cell);
+	}
+
+	return list;
+}

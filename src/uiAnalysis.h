@@ -3,11 +3,12 @@
 
 #include <Python.h>
 #include <gtkmm.h>
+#include "uiFileDetailsTreeView.h"
 
 class uiAnalysis : public Gtk::VBox {
 
 	public:
-		uiAnalysis(Gtk::Window* parent=NULL);
+		uiAnalysis(uiFileDetailsTreeView* fileDetailsTree, Gtk::Window* parent=NULL);
 		virtual ~uiAnalysis();
 
 	protected:
@@ -15,6 +16,7 @@ class uiAnalysis : public Gtk::VBox {
 		/**
 		 * Member variables
 		 */
+		uiFileDetailsTreeView* mp_FileDetailsTree;
 		Gtk::Window* m_parent;
 		Glib::ustring m_filename;
 
@@ -34,6 +36,12 @@ class uiAnalysis : public Gtk::VBox {
 		 * Helper functions
 		 */
 		void runScript();
+
+
+		/**
+		 * Python setup functions
+		 */
+		PyObject* buildCellList();
 };
 
 #endif

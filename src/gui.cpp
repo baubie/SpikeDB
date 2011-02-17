@@ -125,7 +125,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 
 
 	// Add on the Analysis tab
-	mp_Analysis = Gtk::manage(new uiAnalysis(this));
+	mp_Analysis = Gtk::manage(new uiAnalysis(mp_FileDetailsTree, this));
 	Gtk::Notebook* p_Notebook;
 	mrp_Glade->get_widget("notebookMain", p_Notebook);
 	p_Notebook->append_page(*mp_Analysis, "Analysis", false);
@@ -1270,9 +1270,6 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
                             row[mp_FileDetailsTree->m_Columns.m_col_animalID] = (char*)sqlite3_column_text(stmt, 0);
                             row[mp_FileDetailsTree->m_Columns.m_col_cellID] = sqlite3_column_int(stmt, 1);
                             row[mp_FileDetailsTree->m_Columns.m_col_filenum] = sqlite3_column_int(stmt, 2);
-                            if (sqlite3_column_text(stmt, 4) != NULL) {
-                                    row[mp_FileDetailsTree->m_Columns.m_col_tags] = (char*)sqlite3_column_text(stmt, 4);
-                            }
 
                             row[mp_FileDetailsTree->m_Columns.m_col_xaxis] = sd.xVariable();
                             row[mp_FileDetailsTree->m_Columns.m_col_trials] = sd.trials();
