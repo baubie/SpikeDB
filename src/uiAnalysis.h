@@ -8,6 +8,7 @@
 #endif
 
 #include <set>
+#include <string.h>
 #include <gtkmm.h>
 #include "uiFileDetailsTreeView.h"
 
@@ -52,17 +53,17 @@ class uiAnalysis : public Gtk::VBox {
 		/**
 		 * Used to find unique cells.
 		 */
-		typedef struct CellID {
+		struct CellID {
 			Glib::ustring animalID;
 			int cellID;
 
 			// Overload the < operator for easy comparison
 			friend bool operator<(CellID const& a, CellID const& b)
 			{
-				if (std::strcmp(a.animalID.c_str(), b.animalID.c_str()) == 0)
+				if (strcmp(a.animalID.c_str(), b.animalID.c_str()) == 0)
 					return a.cellID < b.cellID;
 				else
-					return std::strcmp(a.animalID.c_str(), b.animalID.c_str()) < 0;
+					return strcmp(a.animalID.c_str(), b.animalID.c_str()) < 0;
 			}
 		};
 };
