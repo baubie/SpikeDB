@@ -1,8 +1,9 @@
 #include "uiAnalysis.h"
 
 
-uiAnalysis::uiAnalysis(uiFileDetailsTreeView* fileDetailsTree, Gtk::Window* parent)
+uiAnalysis::uiAnalysis(sqlite3 *db, uiFileDetailsTreeView* fileDetailsTree, Gtk::Window* parent)
 {
+	this->db = db;
 	mp_FileDetailsTree = fileDetailsTree;
 	m_parent = parent;
 
@@ -82,13 +83,13 @@ sys.stderr = catchOut\n\
 
     // Provide python with some useful data
 	PyDict_SetItemString(main_dict, "Cells", buildCellList());
+	PyDict_SetItemString(main_dict, "Files", buildFileList());
 
 	// Open the file and run the code
 	FILE *fp;
 	fp = fopen(m_filename.c_str(), "r");
 	PyRun_SimpleFile(fp, m_filename.c_str());
 	fclose(fp);
-
 
 	// Get the output and update the text buffer
 	PyObject *catcher = PyObject_GetAttrString(main_module,"catchOut");
@@ -110,7 +111,6 @@ PyObject* uiAnalysis::buildCellList()
 		  Threshold: number (in dB SPL)
 		  Depth: number (in um)
 	*/
-	 
 
 	std::set<CellID> uniqueCells;
 
@@ -134,6 +134,43 @@ PyObject* uiAnalysis::buildCellList()
 				"Depth", row.get_value(mp_FileDetailsTree->m_Columns.m_col_depth)
 				);
 			PyList_Append(list, cell);
+		}
+	}
+
+	return list;
+}
+
+PyObject* uiAnalysis::buildFileList()
+{
+	PyObject *list = PyList_New(0);
+
+	sqlite3_stmt *stmt = 0;
+	const char query[] = "SELECT header FROM files WHERE animalID=? AND cellID=? AND fileID=?";
+
+	Gtk::TreeIter iter;
+    for (iter = mp_FileDetailsTree->mrp_ListStore->children().begin(); 
+	     iter != mp_FileDetailsTree->mrp_ListStore->children().end(); 
+		 iter++)
+	{
+		Gtk::TreeModel::Row row = *iter;
+		sqlite3_prepare_v2(db, query, strlen(query), &stmt, NULL);
+		sqlite3_bind_text(stmt, 1, row.get_value(mp_FileDetailsTree->m_Columns.m_col_animalID).c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int(stmt, 2, row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID));
+		sqlite3_bind_int(stmt, 3, row.get_value(mp_FileDetailsTree->m_Columns.m_col_filenum));
+
+		int r = sqlite3_step(stmt);
+		if (r == SQLITE_ROW) 
+		{
+			SpikeData sd;
+			void *header = (void*)sqlite3_column_blob(stmt, 3);
+			sd.setHeader(header);
+
+			PyObject *file = Py_BuildValue("{s:s,s:i,s:i,s:i,s:i}", 
+				"AnimalID", row.get_value(mp_FileDetailsTree->m_Columns.m_col_animalID).c_str(), 
+				"CellID", row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID),
+				"FileID", row.get_value(mp_FileDetailsTree->m_Columns.m_col_filenum)
+				);
+			PyList_Append(list, file);
 		}
 	}
 

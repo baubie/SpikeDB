@@ -125,7 +125,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 
 
 	// Add on the Analysis tab
-	mp_Analysis = Gtk::manage(new uiAnalysis(mp_FileDetailsTree, this));
+	mp_Analysis = Gtk::manage(new uiAnalysis(db, mp_FileDetailsTree, this));
 	Gtk::Notebook* p_Notebook;
 	mrp_Glade->get_widget("notebookMain", p_Notebook);
 	p_Notebook->append_page(*mp_Analysis, "Analysis", false);
@@ -1112,7 +1112,6 @@ void GUI::populateAnimalTree()
 	sqlite3_finalize(stmt_cells);
 }
 
-
 void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID)
 {
 	int minFiles = m_uiFilterFrame.minFiles();
@@ -1240,8 +1239,6 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 				bool allow_cell = sqlite3_column_int(stmt2,0) > 0;
 				sqlite3_finalize(stmt2);
 
-
-
 				filtered = filtered && (allow_animal || allow_cell);
 			}
 
@@ -1260,6 +1257,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 
 			if (filtered) {
 				row = mp_FileDetailsTree->newrow();
+
 				GTimeVal t;
 				if (g_time_val_from_iso8601(sd.iso8601(sd.m_head.cDateTime).c_str(), &t))
 				{

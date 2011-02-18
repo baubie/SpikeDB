@@ -1,7 +1,6 @@
 #ifndef SPIKEDATA_H
 #define SPIKEDATA_H
 
-
 /*
     These defines and structs were taken from the
     original Spike2 source code.
@@ -44,7 +43,7 @@
 #define EXTERNAL	0
 #define INTERNAL	1
 
-#define AUTOMATIC	0
+//#define AUTOMATIC	0
 #define TABLE		1
 
 #define	SEQUENTIAL	0
