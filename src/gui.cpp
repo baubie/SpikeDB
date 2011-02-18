@@ -48,6 +48,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 		settings.set("filterMinFiles", m_uiFilterFrame.minFiles());
 	}
 
+
 	// Create the plots
 	mp_PlotSpikes = Gtk::manage(new EasyPlotmm());
 	mp_PlotMeans = Gtk::manage(new EasyPlotmm());
@@ -92,7 +93,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	mrp_AnimalSelection->signal_changed().connect(sigc::mem_fun(*this, &GUI::changeAnimalSelection));
 
 	// Create Files Details TreeView
-	mp_FileDetailsTree = Gtk::manage( new uiFileDetailsTreeView(db,this) );
+	mp_FileDetailsTree = Gtk::manage( new uiFileDetailsTreeView(&db,this) );
 	Gtk::ScrolledWindow* p_swFileDetails; 
 	mrp_Glade->get_widget("swFileDetails", p_swFileDetails);
 	p_swFileDetails->add(*mp_FileDetailsTree);
@@ -125,7 +126,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 
 
 	// Add on the Analysis tab
-	mp_Analysis = Gtk::manage(new uiAnalysis(db, mp_FileDetailsTree, this));
+	mp_Analysis = Gtk::manage(new uiAnalysis(&db, mp_FileDetailsTree, this));
 	Gtk::Notebook* p_Notebook;
 	mrp_Glade->get_widget("notebookMain", p_Notebook);
 	p_Notebook->append_page(*mp_Analysis, "Analysis", false);
@@ -150,9 +151,9 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	mp_VBoxAnalyze->pack_start(*mp_PlotAnalyze);
 	show_all_children();
 
-
 	// Attempt to use the previously opened database.
 	if (settings.get_string("lastDatabase") != "") openDatabase(settings.get_string("lastDatabase"));
+
 
 	// Attempt to restore the window size and position
 	if (settings.get_int("winWidth") != 0 && settings.get_int("winHeight") != 0) 

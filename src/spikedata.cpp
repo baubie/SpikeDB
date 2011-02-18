@@ -478,7 +478,6 @@ std::string SpikeData::iso8601(const char* s)
 		r[i+11] = s[i+8];
 	}
 
-	return std::string(r,10);
 	return std::string(r,19);
 }
 

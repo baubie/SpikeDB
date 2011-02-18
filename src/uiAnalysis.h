@@ -17,7 +17,7 @@
 class uiAnalysis : public Gtk::VBox {
 
 	public:
-		uiAnalysis(sqlite3 *db, uiFileDetailsTreeView* fileDetailsTree, Gtk::Window* parent=NULL);
+		uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, Gtk::Window* parent=NULL);
 		virtual ~uiAnalysis();
 
 	protected:
@@ -25,7 +25,7 @@ class uiAnalysis : public Gtk::VBox {
 		/**
 		 * Member variables
 		 */
-		sqlite3 *db;
+		sqlite3 **db;
 		uiFileDetailsTreeView* mp_FileDetailsTree;
 		Gtk::Window* m_parent;
 		Glib::ustring m_filename;

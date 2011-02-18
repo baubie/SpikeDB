@@ -1,10 +1,11 @@
 #include "uiFileDetailsTreeView.h"
 
-uiFileDetailsTreeView::uiFileDetailsTreeView(sqlite3 *db, Gtk::Window *parent)
+uiFileDetailsTreeView::uiFileDetailsTreeView(sqlite3 **db, Gtk::Window *parent)
 {
 
 	m_parent = parent;
 	this->db = db;
+
 
 	mrp_ListStore = Gtk::ListStore::create(m_Columns);
 	mrp_ListStore->set_sort_column(m_Columns.m_col_time, Gtk::SORT_ASCENDING);
@@ -95,12 +96,15 @@ void uiFileDetailsTreeView::show_file_details(const Gtk::TreeModel::iterator& it
 	Gtk::TreeModel::Row row = *iter;
 
 
+	std::cout << db << std::endl;
+
 	sqlite3_stmt *stmt = 0;
 	const char query[] = "SELECT header FROM files WHERE animalID=? AND cellID=? AND fileID=?";
-	sqlite3_prepare_v2(db, query, strlen(query), &stmt, NULL);
+	sqlite3_prepare_v2(*db, query, strlen(query), &stmt, NULL);
 	sqlite3_bind_text(stmt, 1, row.get_value(m_Columns.m_col_animalID).c_str(), -1, SQLITE_TRANSIENT);
 	sqlite3_bind_int(stmt, 2, row.get_value(m_Columns.m_col_cellID));
 	sqlite3_bind_int(stmt, 3, row.get_value(m_Columns.m_col_filenum));
+
 	int r = sqlite3_step(stmt);
 
 	if (r == SQLITE_ROW) {
@@ -137,7 +141,7 @@ void uiFileDetailsTreeView::show_file_details(const Gtk::TreeModel::iterator& it
 
 	} else {
 		Gtk::MessageDialog dialog(*m_parent, "Error loading file from database.", false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
-		dialog.set_secondary_text(sqlite3_errmsg(db));
+		dialog.set_secondary_text(sqlite3_errmsg(*db));
 		dialog.run();
 	}
 	sqlite3_finalize(stmt);

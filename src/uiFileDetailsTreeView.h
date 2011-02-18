@@ -5,11 +5,12 @@
 #include <vector>
 #include <sqlite3.h>
 #include "spikedata.h"
+#include <iostream>
 
 class uiFileDetailsTreeView : public Gtk::TreeView {
 	
 	public:
-		uiFileDetailsTreeView(sqlite3* db, Gtk::Window *parent);
+		uiFileDetailsTreeView(sqlite3** db, Gtk::Window *parent);
         virtual ~uiFileDetailsTreeView();
 		Glib::RefPtr<Gtk::TreeSelection> treeSelection();
 		Gtk::TreeModel::Row	newrow();
@@ -66,7 +67,7 @@ class uiFileDetailsTreeView : public Gtk::TreeView {
 	protected:
 
 		Gtk::Window* m_parent;
-        sqlite3 *db; /**< Pointer to out SQLite3 database. */
+        sqlite3 **db; /**< Pointer to out SQLite3 database. */
 
 		type_signal_file_set_hidden m_signal_file_set_hidden;
 

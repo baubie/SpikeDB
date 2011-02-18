@@ -1,7 +1,7 @@
 #include "uiAnalysis.h"
 
 
-uiAnalysis::uiAnalysis(sqlite3 *db, uiFileDetailsTreeView* fileDetailsTree, Gtk::Window* parent)
+uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, Gtk::Window* parent)
 {
 	this->db = db;
 	mp_FileDetailsTree = fileDetailsTree;
@@ -153,7 +153,7 @@ PyObject* uiAnalysis::buildFileList()
 		 iter++)
 	{
 		Gtk::TreeModel::Row row = *iter;
-		sqlite3_prepare_v2(db, query, strlen(query), &stmt, NULL);
+		sqlite3_prepare_v2(*db, query, strlen(query), &stmt, NULL);
 		sqlite3_bind_text(stmt, 1, row.get_value(mp_FileDetailsTree->m_Columns.m_col_animalID).c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_int(stmt, 2, row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID));
 		sqlite3_bind_int(stmt, 3, row.get_value(mp_FileDetailsTree->m_Columns.m_col_filenum));
