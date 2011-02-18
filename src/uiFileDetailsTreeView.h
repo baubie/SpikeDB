@@ -5,7 +5,6 @@
 #include <vector>
 #include <sqlite3.h>
 #include "spikedata.h"
-#include <iostream>
 
 class uiFileDetailsTreeView : public Gtk::TreeView {
 	

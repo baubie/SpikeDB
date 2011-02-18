@@ -1,28 +1,5 @@
 #include "gui.h"
 
-/*
-CREATE TABLE animals (ID TEXT, species TEXT, sex TEXT, weight TEXT, age TEXT, notes TEXT, PRIMARY KEY(ID));
-CREATE TABLE cells (
-    "animalID" TEXT,
-    "cellID" INTEGER,
-    "notes" TEXT,
-    "threshold" TEXT,
-    "depth" TEXT,
-    "freq" TEXT,
-    "recordedby" TEXT
-    );
-CREATE TABLE "files" (animalID TEXT, cellID INTEGER, fileID INTEGER, notes TEXT, header BLOB, spikes BLOB, PRIMARY KEY(animalID, cellID, fileID));
-CREATE TABLE properties (variable TEXT, value TEXT);
-CREATE TABLE "tags" (
-    "ID" INTEGER PRIMARY KEY AUTOINCREMENT,
-    "animalID" INTEGER,
-    "cellID" INTEGER,
-    "fileID" INTEGER,
-    "tag" TEXT
-);
-*/
-
-
 GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	: Gtk::Window(cobject),
 	mrp_Glade(refGlade),

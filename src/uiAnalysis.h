@@ -8,7 +8,7 @@
 #endif
 
 #include <set>
-#include <string.h>
+#include <vector>
 #include <gtkmm.h>
 #include <sqlite3.h>
 #include "spikedata.h"
@@ -32,7 +32,8 @@ class uiAnalysis : public Gtk::VBox {
 
 		/**
 		 * Child widgets
-		 */
+		 */  
+		Gtk::TextView *tvOutput;
 		Glib::RefPtr<Gtk::TextBuffer> mrp_tbOutput;
 		Gtk::ToolButton *tbRun;
 
@@ -46,6 +47,7 @@ class uiAnalysis : public Gtk::VBox {
 		 * Helper functions
 		 */
 		void runScript();
+		void addOutput(Glib::ustring t);
 
 
 		/**
@@ -64,10 +66,10 @@ class uiAnalysis : public Gtk::VBox {
 			// Overload the < operator for easy comparison
 			friend bool operator<(CellID const& a, CellID const& b)
 			{
-				if (strcmp(a.animalID.c_str(), b.animalID.c_str()) == 0)
+				if (a.animalID.compare(b.animalID) == 0)
 					return a.cellID < b.cellID;
 				else
-					return strcmp(a.animalID.c_str(), b.animalID.c_str()) < 0;
+					return a.animalID.compare(b.animalID) < 0;
 			}
 		};
 };

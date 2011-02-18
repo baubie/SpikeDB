@@ -95,9 +95,6 @@ void uiFileDetailsTreeView::show_file_details(const Gtk::TreeModel::iterator& it
 {
 	Gtk::TreeModel::Row row = *iter;
 
-
-	std::cout << db << std::endl;
-
 	sqlite3_stmt *stmt = 0;
 	const char query[] = "SELECT header FROM files WHERE animalID=? AND cellID=? AND fileID=?";
 	sqlite3_prepare_v2(*db, query, strlen(query), &stmt, NULL);

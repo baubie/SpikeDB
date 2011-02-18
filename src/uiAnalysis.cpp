@@ -17,7 +17,7 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, Gtk
 
 	Gtk::ScrolledWindow *swOutput = Gtk::manage( new Gtk::ScrolledWindow() );
 	mrp_tbOutput = Gtk::TextBuffer::create();
-	Gtk::TextView *tvOutput = Gtk::manage( new Gtk::TextView(mrp_tbOutput) );
+	tvOutput = Gtk::manage( new Gtk::TextView(mrp_tbOutput) );
 	tvOutput->set_editable(false);
 	swOutput->add(*tvOutput);
 	this->pack_start(*swOutput);
@@ -54,22 +54,35 @@ void uiAnalysis::on_run_clicked()
 	runScript();
 }
 
+void uiAnalysis::addOutput(Glib::ustring t)
+{
+	mrp_tbOutput->insert(mrp_tbOutput->end(), t);
+	while (Gtk::Main::events_pending()) {
+    	Gtk::Main::iteration();
+	}
+}
+
 void uiAnalysis::runScript()
 {
 	//TODO: Check if we have a valid filename
 	if (m_filename == "") return;
 
 
+	mrp_tbOutput->set_text("*** Initializing Analysis Plugin Library ***\n");
+	addOutput("Using Script: ");
+	addOutput(m_filename);
+	addOutput("\n");
+
 	Py_Initialize();
 
 	// Redirect python output
 	Glib::ustring stdOut =
-"class CatchOut:\n\
+"class CatchOut_:\n\
 	def __init__(self):\n\
 		self.value = ''\n\
 	def write(self, txt):\n\
 		self.value += txt\n\
-catchOut = CatchOut()\n\
+catchOut = CatchOut_()\n\
 sys.stdout = catchOut\n\
 sys.stderr = catchOut\n\
 ";
@@ -82,8 +95,13 @@ sys.stderr = catchOut\n\
 	PyRun_SimpleString(stdOut.c_str());
 
     // Provide python with some useful data
+	addOutput(" - Building Cells dictionary...");
 	PyDict_SetItemString(main_dict, "Cells", buildCellList());
-	PyDict_SetItemString(main_dict, "Files", buildFileList());
+	addOutput(" [Done]\n");
+	addOutput(" - Building Files dictionary...");
+    PyDict_SetItemString(main_dict, "Files", buildFileList());
+	addOutput(" [Done]\n");
+	mrp_tbOutput->insert(mrp_tbOutput->end(), "*** Running Analysis Plugin ***\n\n");
 
 	// Open the file and run the code
 	FILE *fp;
@@ -95,7 +113,16 @@ sys.stderr = catchOut\n\
 	PyObject *catcher = PyObject_GetAttrString(main_module,"catchOut");
 	PyObject *output = PyObject_GetAttrString(catcher,"value");
 	Glib::ustring r(PyString_AsString(output));
-	mrp_tbOutput->set_text(r);
+	addOutput(r);
+
+	addOutput("\n*** Analysis Plugin Completed ***");
+
+	// Try to reclaim some memory
+	PyRun_SimpleString("del Cells");
+	PyRun_SimpleString("del Files");
+	PyRun_SimpleString("import gc");
+	PyRun_SimpleString("gc.collect()");
+
 
 	Py_Finalize();
 }                                                          
@@ -142,12 +169,13 @@ PyObject* uiAnalysis::buildCellList()
 
 PyObject* uiAnalysis::buildFileList()
 {
-	PyObject *list = PyList_New(0);
+	PyObject *list = PyList_New(mp_FileDetailsTree->mrp_ListStore->children().size());
 
 	sqlite3_stmt *stmt = 0;
-	const char query[] = "SELECT header FROM files WHERE animalID=? AND cellID=? AND fileID=?";
+	const char query[] = "SELECT header, spikes FROM files WHERE animalID=? AND cellID=? AND fileID=?";
 
 	Gtk::TreeIter iter;
+	int listCount=0;
     for (iter = mp_FileDetailsTree->mrp_ListStore->children().begin(); 
 	     iter != mp_FileDetailsTree->mrp_ListStore->children().end(); 
 		 iter++)
@@ -162,17 +190,50 @@ PyObject* uiAnalysis::buildFileList()
 		if (r == SQLITE_ROW) 
 		{
 			SpikeData sd;
-			void *header = (void*)sqlite3_column_blob(stmt, 3);
+			void *header = (void*)sqlite3_column_blob(stmt, 0);
 			sd.setHeader(header);
 
-			PyObject *file = Py_BuildValue("{s:s,s:i,s:i,s:i,s:i}", 
+			SPIKESTRUCT *spikes = (SPIKESTRUCT*)sqlite3_column_blob(stmt, 1);
+			int spikes_length = sqlite3_column_bytes(stmt, 1);
+			int numSpikes = spikes_length / sizeof(SPIKESTRUCT);
+			sd.m_spikeArray.assign(spikes, spikes + numSpikes);
+
+			PyObject *file = Py_BuildValue("{s:s,s:i,s:i,s:s}", 
 				"AnimalID", row.get_value(mp_FileDetailsTree->m_Columns.m_col_animalID).c_str(), 
 				"CellID", row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID),
-				"FileID", row.get_value(mp_FileDetailsTree->m_Columns.m_col_filenum)
-				);
-			PyList_Append(list, file);
+				"FileID", row.get_value(mp_FileDetailsTree->m_Columns.m_col_filenum),
+				"datetime", sd.iso8601(sd.m_head.cDateTime).c_str()
+				);                
+
+			PyObject *trials = PyList_New(0);
+			for (int i = 0; i < sd.m_head.nSweeps; ++i) {
+				PyObject *trial = PyDict_New();
+				PyDict_SetItemString(trial, "xvalue", PyLong_FromDouble(sd.xvalue(i)));
+				PyObject *spikes = PyList_New(sd.m_head.nPasses);
+				for (int p = 0; p < sd.m_head.nPasses; ++p) {
+					PyObject *pass = PyList_New(0);
+					for (unsigned int s = 0; s < sd.m_spikeArray.size(); ++s) {
+						// Spike sweeps are 1 based but here we are 0 based
+						if (sd.m_spikeArray[s].nSweep == i + 1 && sd.m_spikeArray[s].nPass == p+1) {
+							PyList_Append(pass, PyFloat_FromDouble((double)sd.m_spikeArray[s].fTime));
+						}
+					}
+					PyList_SET_ITEM(spikes, p, pass);
+				}
+				PyDict_SetItemString(trial, "spikes", spikes);
+				Py_DECREF(spikes);
+				PyList_Append(trials, trial);
+				Py_DECREF(trial);
+			}
+			PyDict_SetItemString(file, "trials", trials);
+			Py_DECREF(trials);
+
+			PyList_SET_ITEM(list, listCount, file);
+			listCount++;
+
 		}
 	}
+	sqlite3_finalize(stmt);
 
 	return list;
 }
