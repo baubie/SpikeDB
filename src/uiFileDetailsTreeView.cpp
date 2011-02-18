@@ -1,9 +1,10 @@
 #include "uiFileDetailsTreeView.h"
 
-uiFileDetailsTreeView::uiFileDetailsTreeView(Gtk::Window *parent)
+uiFileDetailsTreeView::uiFileDetailsTreeView(sqlite3 *db, Gtk::Window *parent)
 {
 
 	m_parent = parent;
+	this->db = db;
 
 	mrp_ListStore = Gtk::ListStore::create(m_Columns);
 	mrp_ListStore->set_sort_column(m_Columns.m_col_time, Gtk::SORT_ASCENDING);
@@ -93,24 +94,54 @@ void uiFileDetailsTreeView::show_file_details(const Gtk::TreeModel::iterator& it
 {
 	Gtk::TreeModel::Row row = *iter;
 
-	Gtk::Dialog dialog("File Details", true);
-	dialog.set_transient_for(*m_parent);
-	dialog.set_resizable(false);
-	dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-	dialog.add_button(Gtk::Stock::SAVE, Gtk::RESPONSE_OK);
+
+	sqlite3_stmt *stmt = 0;
+	const char query[] = "SELECT header FROM files WHERE animalID=? AND cellID=? AND fileID=?";
+	sqlite3_prepare_v2(db, query, strlen(query), &stmt, NULL);
+	sqlite3_bind_text(stmt, 1, row.get_value(m_Columns.m_col_animalID).c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_int(stmt, 2, row.get_value(m_Columns.m_col_cellID));
+	sqlite3_bind_int(stmt, 3, row.get_value(m_Columns.m_col_filenum));
+	int r = sqlite3_step(stmt);
+
+	if (r == SQLITE_ROW) {
+
+		SpikeData sd;
+		void *header = (void*)sqlite3_column_blob(stmt, 0);
+		sd.setHeader(header);
+
+		Gtk::Dialog dialog("File Details", true);
+		dialog.set_transient_for(*m_parent);
+		dialog.set_resizable(false);
+		dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+		dialog.add_button(Gtk::Stock::SAVE, Gtk::RESPONSE_OK);
+
+		Gtk::HBox hbTime;
+		Gtk::Label lblTimeName("Recording Time: ");
+		Gtk::Label lblTime(sd.iso8601(sd.m_head.cDateTime));
+		hbTime.pack_start(lblTimeName);
+		hbTime.pack_start(lblTime);
+		dialog.get_vbox()->pack_start(hbTime);
+
+		Gtk::CheckButton cbHidden("Hide file in file list");
+		cbHidden.set_active(row.get_value(m_Columns.m_col_hidden));
+		dialog.get_vbox()->pack_start(cbHidden);
+		dialog.show_all_children();
+		int result = dialog.run();
 
 
-	Gtk::CheckButton cbHidden("Hide file in file list");
-	cbHidden.set_active(row.get_value(m_Columns.m_col_hidden));
-	dialog.get_vbox()->pack_start(cbHidden);
-	dialog.show_all_children();
-	int result = dialog.run();
+		switch (result) {
+			case (Gtk::RESPONSE_OK):
+				m_signal_file_set_hidden.emit(cbHidden.get_active());
+				break;
+		}
 
-	switch (result) {
-		case (Gtk::RESPONSE_OK):
-			m_signal_file_set_hidden.emit(cbHidden.get_active());
-			break;
+	} else {
+		Gtk::MessageDialog dialog(*m_parent, "Error loading file from database.", false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
+		dialog.set_secondary_text(sqlite3_errmsg(db));
+		dialog.run();
 	}
+	sqlite3_finalize(stmt);
+
 }
 
 void uiFileDetailsTreeView::on_view_file_details()

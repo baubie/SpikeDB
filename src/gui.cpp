@@ -92,7 +92,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	mrp_AnimalSelection->signal_changed().connect(sigc::mem_fun(*this, &GUI::changeAnimalSelection));
 
 	// Create Files Details TreeView
-	mp_FileDetailsTree = Gtk::manage( new uiFileDetailsTreeView(this) );
+	mp_FileDetailsTree = Gtk::manage( new uiFileDetailsTreeView(db,this) );
 	Gtk::ScrolledWindow* p_swFileDetails; 
 	mrp_Glade->get_widget("swFileDetails", p_swFileDetails);
 	p_swFileDetails->add(*mp_FileDetailsTree);

@@ -44,7 +44,7 @@
 #define EXTERNAL	0
 #define INTERNAL	1
 
-#define AUTOMATIC	0
+//#define AUTOMATIC	0
 #define TABLE		1
 
 #define	SEQUENTIAL	0
