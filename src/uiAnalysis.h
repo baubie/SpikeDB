@@ -10,12 +10,14 @@
 #include <set>
 #include <string.h>
 #include <gtkmm.h>
+#include <sqlite3.h>
+#include "spikedata.h"
 #include "uiFileDetailsTreeView.h"
 
 class uiAnalysis : public Gtk::VBox {
 
 	public:
-		uiAnalysis(uiFileDetailsTreeView* fileDetailsTree, Gtk::Window* parent=NULL);
+		uiAnalysis(sqlite3 *db, uiFileDetailsTreeView* fileDetailsTree, Gtk::Window* parent=NULL);
 		virtual ~uiAnalysis();
 
 	protected:
@@ -23,6 +25,7 @@ class uiAnalysis : public Gtk::VBox {
 		/**
 		 * Member variables
 		 */
+		sqlite3 *db;
 		uiFileDetailsTreeView* mp_FileDetailsTree;
 		Gtk::Window* m_parent;
 		Glib::ustring m_filename;
@@ -49,6 +52,7 @@ class uiAnalysis : public Gtk::VBox {
 		 * Python setup functions
 		 */
 		PyObject* buildCellList();
+		PyObject* buildFileList();
 
 		/**
 		 * Used to find unique cells.

@@ -25,13 +25,15 @@ class uiFileDetailsTreeView : public Gtk::TreeView {
         {
             public:
                 Columns()
-                { add(m_col_hidden); add(m_col_time); add(m_col_props);
+                { 
+				  add(m_col_hidden); add(m_col_time); add(m_col_props);
 				  add(m_col_animalID); add(m_col_cellID); add(m_col_filenum); add(m_col_xaxis); 
                   add(m_col_type); add(m_col_freq); add(m_col_trials); add(m_col_onset); 
 				  add(m_col_dur); add(m_col_atten); 
 
 				  add(m_col_carfreq); add(m_col_threshold); add(m_col_depth);
                 }
+
                 Gtk::TreeModelColumn<bool> m_col_hidden;
                 Gtk::TreeModelColumn<Glib::ustring> m_col_props;
 				Gtk::TreeModelColumn<glong> m_col_time;

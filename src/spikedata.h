@@ -1,7 +1,6 @@
 #ifndef SPIKEDATA_H
 #define SPIKEDATA_H
 
-
 /*
     These defines and structs were taken from the
     original Spike2 source code.
