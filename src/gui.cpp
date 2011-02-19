@@ -232,8 +232,8 @@ void GUI::on_menuNewDatabase_activate()
 			sqlite3_prepare_v2(db, query[i].c_str(), query[i].length(), &stmt, NULL);
 			sqlite3_bind_text(stmt, 1, "version", -1, SQLITE_TRANSIENT);
 			sqlite3_step(stmt);
+			sqlite3_finalize(stmt);
 		}
-		sqlite3_finalize(stmt);
 		openDatabase(filename);
 		break;
 	}
@@ -1066,28 +1066,21 @@ void GUI::populateAnimalTree()
 	Gtk::TreeModel::Row childrow;
 	base = *(mrp_AnimalTree->append());
 	base[m_AnimalColumns.m_col_name] = "All Animals";
-	int r_animals, r_cells;
-	while (true) {
-		r_animals = sqlite3_step(stmt_animals);
-		if (r_animals == SQLITE_ROW) {
-			row = *(mrp_AnimalTree->append(base.children()));
-			char* animalID = (char*)sqlite3_column_text(stmt_animals, 0);
-			row[m_AnimalColumns.m_col_name] = animalID;
-			char query_cells[] = "SELECT cellID FROM cells WHERE animalID=?";
-			sqlite3_prepare_v2(db, query_cells, -1, &stmt_cells, 0);
-			sqlite3_bind_text(stmt_cells, 1, animalID, -1, SQLITE_TRANSIENT);
-			while (true) {
-				r_cells = sqlite3_step(stmt_cells);
-				if (r_cells == SQLITE_ROW) {
-					char* cellID = (char*)sqlite3_column_text(stmt_cells, 0);
-					childrow = *(mrp_AnimalTree->append(row.children()));
-					childrow[m_AnimalColumns.m_col_name] = cellID;
-				} else{ break; }
-			}
-		} else{ break; }
+	while (sqlite3_step(stmt_animals) == SQLITE_ROW) {
+		row = *(mrp_AnimalTree->append(base.children()));
+		char* animalID = (char*)sqlite3_column_text(stmt_animals, 0);
+		row[m_AnimalColumns.m_col_name] = animalID;
+		char query_cells[] = "SELECT cellID FROM cells WHERE animalID=?";
+		sqlite3_prepare_v2(db, query_cells, -1, &stmt_cells, 0);
+		sqlite3_bind_text(stmt_cells, 1, animalID, -1, SQLITE_TRANSIENT);
+		while (sqlite3_step(stmt_cells) == SQLITE_ROW) {
+			char* cellID = (char*)sqlite3_column_text(stmt_cells, 0);
+			childrow = *(mrp_AnimalTree->append(row.children()));
+			childrow[m_AnimalColumns.m_col_name] = cellID;
+		}
+		sqlite3_finalize(stmt_cells);
 	}
 	sqlite3_finalize(stmt_animals);
-	sqlite3_finalize(stmt_cells);
 }
 
 void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID)
