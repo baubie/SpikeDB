@@ -1,9 +1,8 @@
 #include "uiFilterFrame.h"
 
 
-uiFilterFrame::uiFilterFrame(const Glib::RefPtr<Gtk::Builder>& refGlade)
-	: m_refGlade(refGlade),
-	  m_adjMinFiles(5, 1, 20, 1, 3, 0)
+uiFilterFrame::uiFilterFrame()
+	: m_adjMinFiles(5, 1, 20, 1, 3, 0)
 {
 
 	/*
@@ -12,11 +11,7 @@ uiFilterFrame::uiFilterFrame(const Glib::RefPtr<Gtk::Builder>& refGlade)
     queue_change_signal = false;
 
 
-	/*
-	 * Load the VBox
-	 */
-	m_refGlade->get_widget("VBoxFilter", mp_VBoxFilter);
-
+	this->add(m_VBoxFilter);
 
 	/*
 	 * Spin button to select minimum number of files.

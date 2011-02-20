@@ -9,6 +9,6 @@ include_directories(
 add_definitions (-Wall -W)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
-set (SRC spikedb.cpp gui.cpp uiAnalysis.cpp uiFileDetailsTreeView.cpp uiFilterFrame.cpp uiTags.cpp spikedata.cpp settings.cpp easyplotmm/easyplotmm.cpp tokenize.cpp)
+set (SRC spikedb.cpp gui.cpp uiMenuBar.cpp uiToolBar.cpp uiAnalysis.cpp uiFileDetailsTreeView.cpp uiFilterFrame.cpp uiTags.cpp spikedata.cpp settings.cpp easyplotmm/easyplotmm.cpp tokenize.cpp)
 add_executable (spikedb ${SRC})
 target_link_libraries(spikedb ${PYTHON_LIBRARIES} ${GTKMM_LIBRARIES} ${SQLITE3_LIBRARIES} ${CAIRO_LIBRARIES})

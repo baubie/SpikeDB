@@ -8,7 +8,7 @@
 class uiFilterFrame {
 
 	public:
-		uiFilterFrame(const Glib::RefPtr<Gtk::Builder>& refGlade);
+		uiFilterFrame();
         virtual ~uiFilterFrame();
 
 		int minFiles();
@@ -34,11 +34,6 @@ class uiFilterFrame {
 		Gtk::Object *parent;
 
 		/**
-		 * Glad reference
-		 */
-        Glib::RefPtr<Gtk::Builder> m_refGlade;
-
-		/**
 		 * Tree model columns for the EntryCompletion's filter model.
 		 */
 		class ModelColumns : public Gtk::TreeModel::ColumnRecord
@@ -57,7 +52,7 @@ class uiFilterFrame {
 		/**
 		 * VBoxFilter
 		 */
-		Gtk::VBox *mp_VBoxFilter;	
+		Gtk::VBox m_VBoxFilter;	
 
 		/**
 		 * Minimum number of files spin box
