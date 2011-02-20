@@ -9,6 +9,7 @@ uiTags::uiTags(Gtk::Window *parent)
 	m_AddNew.set_label("+Tag");
 	this->put(m_AddNew, 5, 10);
 	m_AddNew.set_sensitive(false);
+	active = false;
 }
 
 uiTags::~uiTags() {}

@@ -31,7 +31,9 @@ int main(int argc, char** argv)
         kit.run(*pWindow);
     }
 
-    delete pWindow;
+	// Additional Cleanup
+	Glib::Error::register_cleanup(); 
+	Glib::wrap_register_cleanup();  
 
     return 0;
 }

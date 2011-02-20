@@ -259,6 +259,8 @@ typedef struct
 class SpikeData
 {
     public:
+		SpikeData();
+		~SpikeData();
         bool parse(const char* filename);
         void printfile();
         std::string xVariable();

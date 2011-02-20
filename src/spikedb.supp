@@ -1,0 +1,15 @@
+{
+	Initial conditional jump on uninitialized value on macs
+	Memcheck:Cond
+	fun:pthread_rwlock_init
+	fun:_nl_load_domain
+	fun:_nl_find_domain
+	fun:libintl_dcigettext
+	fun:gtk_get_option_group
+	fun:gtk_parse_args
+	fun:gtk_init_check
+	fun:gtk_init
+	fun:_ZN3Gtk4Main4initEPiPPPcb
+	fun:_ZN3Gtk4MainC2ERiRPPcb
+    fun:main
+}
