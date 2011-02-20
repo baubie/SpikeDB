@@ -71,7 +71,7 @@ class uiFileDetailsTreeView : public Gtk::TreeView {
 		type_signal_file_set_hidden m_signal_file_set_hidden;
 
         Glib::RefPtr<Gtk::TreeSelection> mrp_Selection;
-		Gtk::Menu* mp_Menu_FileDetails;
+		Gtk::Menu m_Menu_FileDetails;
 
 		void on_view_file_details();
 		void show_file_details(const Gtk::TreeModel::iterator& iter);

@@ -8,7 +8,7 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, Gtk
 	m_parent = parent;
 
 	Gtk::Toolbar *toolbar = Gtk::manage( new Gtk::Toolbar() );
-	Gtk::ToolButton *tbOpen = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::OPEN) );
+	tbOpen = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::OPEN) );
 	tbRun = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::EXECUTE) );
 	tbRun->set_sensitive(false);
     toolbar->append(*tbOpen, sigc::mem_fun(*this, &uiAnalysis::on_open_clicked) );

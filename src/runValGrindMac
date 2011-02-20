@@ -1,1 +1,1 @@
-valgrind --tool=memcheck --track-origins=yes --dsymutil=yes --leak-check=yes --suppressions=spikedb.supp  ./spikedb
+G_SLICE=always-malloc G_DEBUG=gc-friendly valgrind --tool=memcheck --gen-suppressions=all --leak-resolution=high --num-callers=20 --dsymutil=yes --leak-check=full --suppressions=spikedb.supp ./spikedb

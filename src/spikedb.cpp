@@ -22,18 +22,13 @@ int main(int argc, char** argv)
         std::cerr << "BuilderError: " << ex.what() << std::endl;
         return 1;
     }
-
-
     GUI* pWindow = 0;
     refBuilder->get_widget_derived("mainWindow", pWindow);
     if (pWindow)
     {
         kit.run(*pWindow);
     }
-
-	// Additional Cleanup
-	Glib::Error::register_cleanup(); 
-	Glib::wrap_register_cleanup();  
+	delete pWindow; // Windows aren't managed so we have to delete them.
 
     return 0;
 }

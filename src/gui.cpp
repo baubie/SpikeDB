@@ -145,6 +145,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 
 GUI::~GUI()
 {
+	sqlite3_close(db);
 }
 
 void GUI::init_toolbar()
@@ -1463,6 +1464,5 @@ void GUI::on_menuQuit_activate()
 	settings.set("winX", x);
 	settings.set("winY", y);
 
-	sqlite3_close(db);
 	hide();
 }
