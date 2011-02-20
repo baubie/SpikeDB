@@ -78,6 +78,7 @@ GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)
 	mp_FileDetailsTree->signal_file_set_hidden().connect(sigc::mem_fun(*this, &GUI::on_filedetails_set_hidden));
 
 	// Setup the analyze widgets
+	// TODO: Get rid of the analyze tab completely
 	mrp_Glade->get_widget("vboxAnalyze", mp_VBoxAnalyze);
 	mrp_Glade->get_widget("cbDataSource", mp_DataSource);
 	mrp_Glade->get_widget("cbXVar", mp_XVar);
