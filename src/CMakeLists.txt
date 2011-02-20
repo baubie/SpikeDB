@@ -7,7 +7,7 @@ include_directories(
     ${PYTHON_INCLUDE_DIRS} ${GTKMM_INCLUDE_DIRS}  ${SQLITE3_INCLUDE_DIRS} ${CAIRO_INCLUDE_DIRS})
 
 add_definitions (-Wall -W)
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -funroll-loops")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
 set (SRC spikedb.cpp gui.cpp uiAnalysis.cpp uiFileDetailsTreeView.cpp uiFilterFrame.cpp uiTags.cpp spikedata.cpp settings.cpp easyplotmm/easyplotmm.cpp tokenize.cpp)
 add_executable (spikedb ${SRC})

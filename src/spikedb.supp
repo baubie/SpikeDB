@@ -1,0 +1,124 @@
+{
+	Initial conditional jump on uninitialized value on macs
+	Memcheck:Cond
+	fun:pthread_rwlock_init
+	fun:_nl_load_domain
+	fun:_nl_find_domain
+	fun:libintl_dcigettext
+	fun:gtk_get_option_group
+	fun:gtk_parse_args
+	fun:gtk_init_check
+	fun:gtk_init
+	fun:_ZN3Gtk4Main4initEPiPPPcb
+	fun:_ZN3Gtk4MainC2ERiRPPcb
+    fun:main
+}
+
+{
+   gtk_builder_malloc
+   Memcheck:Leak
+   ...
+   fun:gtk_builder_add_from_file
+}
+
+{
+   gtk_init_malloc
+   Memcheck:Leak
+   ...
+   fun:gtk_init
+}
+
+{
+   type_add_interface_Wm
+   Memcheck:Leak
+   ...
+   fun:type_add_interface_Wm
+}
+
+{
+   builder_construct 
+   Memcheck:Leak
+   ...
+   fun:builder_construct
+}
+
+{
+	g_object_new
+	Memcheck:Leak
+	...
+	fun:g_object_new
+}
+
+{
+	g_object_new
+	Memcheck:Leak
+	...
+	fun:g_object_newv
+}
+
+{
+	pango_shape
+	Memcheck:Leak
+	...
+	fun:pango_shape
+	...
+}
+
+{
+	gtk_entry_init	
+	Memcheck:Leak
+	...
+	fun:gtk_entry_init
+	...
+}
+
+{
+	gtk_entry_init	
+	Memcheck:Leak
+	...
+	fun:gtk_entry_init
+	...
+}
+
+{
+	g_type_register_static
+	Memcheck:Leak
+	...
+	fun:g_type_register_static
+	...
+}
+
+{
+	sqlite3Malloc
+	Memcheck:Leak
+	...
+	fun:sqlite3Malloc
+	...
+}
+
+{
+   PangoCellRenderer
+   Memcheck:Leak
+   fun:realloc
+   ...
+   fun:gtk_cell_renderer_text_get_size
+   ...
+}
+
+{
+   font_config_default_sub
+   Memcheck:Leak
+   fun:realloc
+   ...
+   fun:FcDefaultSubstitute
+   ...
+}
+
+{
+   font_config_Render_prepare
+   Memcheck:Leak
+   fun:realloc
+   ...
+   fun:FcFontRenderPrepare
+   ...
+}

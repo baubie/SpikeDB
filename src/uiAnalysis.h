@@ -35,6 +35,7 @@ class uiAnalysis : public Gtk::VBox {
 		 */  
 		Gtk::TextView *tvOutput;
 		Glib::RefPtr<Gtk::TextBuffer> mrp_tbOutput;
+		Gtk::ToolButton *tbOpen;
 		Gtk::ToolButton *tbRun;
 
 		/**

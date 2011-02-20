@@ -29,10 +29,9 @@ uiFileDetailsTreeView::uiFileDetailsTreeView(sqlite3 **db, Gtk::Window *parent)
 	this->signal_button_press_event().connect_notify(
 				sigc::mem_fun(*this, &uiFileDetailsTreeView::on_file_details_button_press_event)
 			);
-	mp_Menu_FileDetails = Gtk::manage( new Gtk::Menu());
 	//Fill menu
 	{
-		Gtk::Menu::MenuList& menulist = mp_Menu_FileDetails->items();
+		Gtk::Menu::MenuList& menulist = m_Menu_FileDetails.items();
 
 		menulist.push_back( Gtk::Menu_Helpers::MenuElem("_View Details",
 					sigc::mem_fun(*this, &uiFileDetailsTreeView::on_view_file_details)));
@@ -80,14 +79,14 @@ void uiFileDetailsTreeView::on_file_details_button_press_event(GdkEventButton* e
 {
 	if ( (event->type == GDK_BUTTON_PRESS) && (event->button == 3) )
 	{
-		Gtk::Menu::MenuList& menulist = mp_Menu_FileDetails->items();
+		Gtk::Menu::MenuList& menulist = m_Menu_FileDetails.items();
 		if (mrp_Selection->count_selected_rows() > 1)
 		{
 			menulist[0].set_sensitive(false);
 		} else {
 			menulist[0].set_sensitive(true);
 		}
-		mp_Menu_FileDetails->popup(event->button, event->time);
+		m_Menu_FileDetails.popup(event->button, event->time);
 	}
 }
 

@@ -1,5 +1,13 @@
 #include "spikedata.h"
 
+SpikeData::SpikeData()
+{
+}
+
+SpikeData::~SpikeData()
+{
+}
+
 bool SpikeData::parse(const char* filename)
 {
     std::ifstream in(filename, std::ios::binary);
@@ -94,12 +102,14 @@ bool SpikeData::setHeader(void *header)
     {
         const HEADER *h = new HEADER(*static_cast<HEADER*>(header));
         m_head = *h;
+		delete h;
         return true;
     }
     if (VERSION == HEADER_50)
     {
         const HEADER50 *h = new HEADER50(*static_cast<HEADER50*>(header));
         m_head50 = *h;
+		delete h;
         return true;
     }
     return false;

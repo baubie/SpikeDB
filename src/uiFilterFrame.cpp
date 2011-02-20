@@ -5,6 +5,13 @@ uiFilterFrame::uiFilterFrame(const Glib::RefPtr<Gtk::Builder>& refGlade)
 	: m_refGlade(refGlade),
 	  m_adjMinFiles(5, 1, 20, 1, 3, 0)
 {
+
+	/*
+	 * Default initialization
+	 */
+    queue_change_signal = false;
+
+
 	/*
 	 * Load the VBox
 	 */
