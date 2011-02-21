@@ -49,7 +49,7 @@ EasyPlotmm::EasyPlotmm() :
     }
     m_Menu_Popup.accelerate(*this);
 
-
+	this->set_size_request(-1, 40);
 
 }
 
