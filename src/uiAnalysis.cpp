@@ -91,17 +91,24 @@ sys.stderr = catchOut\n\
 
     PyObject *sys_module = PyImport_ImportModule("sys");
 	PyDict_SetItemString(main_dict, "sys", sys_module);
+	Py_DECREF(sys_module);
 
 	PyRun_SimpleString(stdOut.c_str());
 
     // Provide python with some useful data
 	addOutput(" - Building Cells dictionary...");
-	PyDict_SetItemString(main_dict, "Cells", buildCellList());
+	PyObject* pyCells = buildCellList();
+	PyDict_SetItemString(main_dict, "Cells", pyCells);
+	Py_DECREF(pyCells);
 	addOutput(" [Done]\n");
+
 	addOutput(" - Building Files dictionary...");
-    PyDict_SetItemString(main_dict, "Files", buildFileList());
+	PyObject* pyFiles = buildFileList();
+    PyDict_SetItemString(main_dict, "Files", pyFiles);
+	Py_DECREF(pyFiles);
 	addOutput(" [Done]\n");
-	mrp_tbOutput->insert(mrp_tbOutput->end(), "*** Running Analysis Plugin ***\n\n");
+
+	addOutput("*** Running Analysis Plugin ***\n\n");
 
 	// Open the file and run the code
 	FILE *fp;
@@ -161,6 +168,7 @@ PyObject* uiAnalysis::buildCellList()
 				"Depth", row.get_value(mp_FileDetailsTree->m_Columns.m_col_depth)
 				);
 			PyList_Append(list, cell);
+			Py_DECREF(cell);
 		}
 	}
 
@@ -173,20 +181,21 @@ PyObject* uiAnalysis::buildFileList()
 
 	sqlite3_stmt *stmt = 0;
 	const char query[] = "SELECT header, spikes FROM files WHERE animalID=? AND cellID=? AND fileID=?";
+	sqlite3_prepare_v2(*db, query, strlen(query), &stmt, NULL);
 
 	Gtk::TreeIter iter;
 	int listCount=0;
+	int r;
     for (iter = mp_FileDetailsTree->mrp_ListStore->children().begin(); 
 	     iter != mp_FileDetailsTree->mrp_ListStore->children().end(); 
 		 iter++)
 	{
 		Gtk::TreeModel::Row row = *iter;
-		sqlite3_prepare_v2(*db, query, strlen(query), &stmt, NULL);
 		sqlite3_bind_text(stmt, 1, row.get_value(mp_FileDetailsTree->m_Columns.m_col_animalID).c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_int(stmt, 2, row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID));
 		sqlite3_bind_int(stmt, 3, row.get_value(mp_FileDetailsTree->m_Columns.m_col_filenum));
 
-		int r = sqlite3_step(stmt);
+		r = sqlite3_step(stmt);
 		if (r == SQLITE_ROW) 
 		{
 			SpikeData sd;
@@ -215,7 +224,9 @@ PyObject* uiAnalysis::buildFileList()
 					for (unsigned int s = 0; s < sd.m_spikeArray.size(); ++s) {
 						// Spike sweeps are 1 based but here we are 0 based
 						if (sd.m_spikeArray[s].nSweep == i + 1 && sd.m_spikeArray[s].nPass == p+1) {
-							PyList_Append(pass, PyFloat_FromDouble((double)sd.m_spikeArray[s].fTime));
+							PyObject* pyfTime = PyFloat_FromDouble((double)sd.m_spikeArray[s].fTime);
+							PyList_Append(pass, pyfTime);
+							Py_DECREF(pyfTime);
 						}
 					}
 					PyList_SET_ITEM(spikes, p, pass);
@@ -230,7 +241,6 @@ PyObject* uiAnalysis::buildFileList()
 
 			PyList_SET_ITEM(list, listCount, file);
 			listCount++;
-
 		}
 	}
 	sqlite3_finalize(stmt);
