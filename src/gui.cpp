@@ -35,11 +35,20 @@ void GUI::init_gui()
 	Gtk::VBox *vbMain = Gtk::manage(new Gtk::VBox());
 	this->add(*vbMain);
 
-	vbMain->pack_start(*Gtk::manage(new uiMenuBar()), false, false);
-	vbMain->pack_start(*Gtk::manage(new uiToolbar()), false, false);
+	/**
+	 * Main Menu
+	 */
+	mp_MenuBar = Gtk::manage(new uiMenuBar());
+	vbMain->pack_start(*mp_MenuBar, false, false);
+	init_menu();
 
+
+	/**
+	 * Main Window Below Menu
+	 */
 	Gtk::HBox *hbMain = Gtk::manage(new Gtk::HBox());
 	vbMain->pack_start(*hbMain);
+
 
 	/**
 	 * Left Column
@@ -69,13 +78,12 @@ void GUI::init_gui()
 	 * Browse Notebook Page
 	 */
 	Gtk::HPaned *hpRight = Gtk::manage(new Gtk::HPaned());
-	notebook->append_page(*hpRight, "Browse Files", false);
 	Gtk::VPaned *vpMiddle = Gtk::manage(new Gtk::VPaned());
 	hpRight->pack1(*vpMiddle, true, false);
 	mp_FileDetailsTree = Gtk::manage( new uiFileDetailsTreeView(&db,this) );
 	Gtk::ScrolledWindow* swFileDetails = Gtk::manage( new Gtk::ScrolledWindow() );
 	swFileDetails->add(*mp_FileDetailsTree);
-	hpRight->pack1(*swFileDetails);
+	vpMiddle->pack1(*swFileDetails);
 	Gtk::HBox *hbPlots = Gtk::manage(new Gtk::HBox());
 	mp_PlotSpikes = Gtk::manage(new EasyPlotmm());
 	mp_PlotMeans = Gtk::manage(new EasyPlotmm());
@@ -98,6 +106,9 @@ void GUI::init_gui()
 	vbCellDetails->pack_start(m_CellTags);
 	m_CellTags.set_parent(this);
 	vbRight->pack_start(*fCellDetails);
+
+	hpRight->pack2(*vbRight, true, false);
+	notebook->append_page(*hpRight, "Browse Files", false);
 
 
 	/**
@@ -124,6 +135,34 @@ void GUI::init_gui()
 	m_CellTags.signal_added().connect(sigc::mem_fun(*this, &GUI::on_cell_tag_added));
 
 
+}
+
+void GUI::init_menu()
+{
+	mp_MenuBar->m_Menu_File.items().push_back( 
+				Gtk::Menu_Helpers::MenuElem(
+					"Create _New Database",
+					sigc::mem_fun(*this, &GUI::on_menuNewDatabase_activate) ));
+
+	mp_MenuBar->m_Menu_File.items().push_back( 
+				Gtk::Menu_Helpers::MenuElem(
+					"_Open Database",
+					sigc::mem_fun(*this, &GUI::on_menuOpenDatabase_activate) ));
+
+	m_Menu_Import.set_label("_Import Spike Files");
+	m_Menu_Import.set_use_underline(true);
+	m_Menu_Import.set_sensitive(false);
+	m_Menu_Import.signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuImportFolder_activate));
+
+	mp_MenuBar->m_Menu_File.items().push_back(m_Menu_Import);
+
+	mp_MenuBar->m_Menu_File.items().push_back( 
+				Gtk::Menu_Helpers::SeparatorElem());
+
+	mp_MenuBar->m_Menu_File.items().push_back( 
+				Gtk::Menu_Helpers::StockMenuElem(
+					Gtk::Stock::QUIT,
+					sigc::mem_fun(*this, &GUI::on_menuQuit_activate) ));
 }
 
 
@@ -270,16 +309,6 @@ void GUI::on_filter_changed()
 	 * Update Animal Selection with Filter
 	 */
 	changeAnimalSelection();
-}
-
-void GUI::on_meantype_changed()
-{
-	mp_PlotMeans->clear();
-	mp_PlotSpikes->clear();
-	curXVariable = "";
-	mp_FileDetailsTree->treeSelection()->selected_foreach_iter(
-		sigc::mem_fun(*this, &GUI::addFileToPlot)
-		);
 }
 
 int GUI::on_animal_sort(const Gtk::TreeModel::iterator& a_, const Gtk::TreeModel::iterator& b_)

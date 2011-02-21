@@ -5,7 +5,6 @@
 #define CURRENT_VERSION 1.2
 
 #include "uiMenuBar.h"
-#include "uiToolBar.h"
 #include "uiAnalysis.h"
 #include "uiFileDetailsTreeView.h"
 #include "uiFilterFrame.h"
@@ -66,12 +65,15 @@ class GUI : public Gtk::Window
 		 * Initialization
 		 */
 		void init_gui();
+		void init_menu();
 
 		/**
 		 * Widgets
 		 */
 		uiFilterFrame* mp_uiFilterFrame; /**< Filter widgets in top left corner. */
         Gtk::TreeView* mp_AnimalsTree;
+		uiMenuBar* mp_MenuBar;
+		Gtk::MenuItem m_Menu_Import;
 
 
 		uiPropTable<Glib::ustring> m_uiAnimalDetails; /**< Animal details property table. */
@@ -121,7 +123,6 @@ class GUI : public Gtk::Window
         void on_menuOpenDatabase_activate(); /**< Handle the Open Database menu item. */
         void on_menuImportFolder_activate(); /**< Handle the Import Folder menu item. */
         void on_menuQuit_activate(); /**< Handle the Quit menu item. */
-		void on_meantype_changed(); /**< Handle when the type of mean plot changes. */ 
 		void on_filter_changed(); /**< Handle when the filter changes in any way. */
         void on_filedetails_selection_changed();
 		void on_animal_tag_deleted(Glib::ustring tag);
