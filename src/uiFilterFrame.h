@@ -5,10 +5,10 @@
 #include <vector>
 
 
-class uiFilterFrame {
+class uiFilterFrame : public Gtk::Frame {
 
 	public:
-		uiFilterFrame(const Glib::RefPtr<Gtk::Builder>& refGlade);
+		uiFilterFrame();
         virtual ~uiFilterFrame();
 
 		int minFiles();
@@ -25,6 +25,8 @@ class uiFilterFrame {
 		typedef sigc::signal<void> type_signal_changed;
 		type_signal_changed signal_changed();
 
+
+
 	protected:
 		type_signal_changed m_signal_changed;
 
@@ -32,11 +34,6 @@ class uiFilterFrame {
 		 * Parent window
 		 */
 		Gtk::Object *parent;
-
-		/**
-		 * Glad reference
-		 */
-        Glib::RefPtr<Gtk::Builder> m_refGlade;
 
 		/**
 		 * Tree model columns for the EntryCompletion's filter model.
@@ -54,10 +51,6 @@ class uiFilterFrame {
 		bool check_change_queue();
 		Glib::Timer m_timer;
 
-		/**
-		 * VBoxFilter
-		 */
-		Gtk::VBox *mp_VBoxFilter;	
 
 		/**
 		 * Minimum number of files spin box
