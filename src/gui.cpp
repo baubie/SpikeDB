@@ -1,15 +1,12 @@
 #include "gui.h"
 
 GUI::GUI()
-	: m_uiFilterFrame(),
-	mp_AnimalsTree(0)
 {
 	uiReady = false;
 	db = NULL;
 
 	set_title("Spike Database - No database open");
 	init_gui();
-
 
 
 	// Setup the animal details table
@@ -50,14 +47,6 @@ GUI::GUI()
 	mrp_AnimalTree->set_sort_func(0, sigc::mem_fun(*this, &GUI::on_animal_sort));
 	mrp_AnimalSelection = mp_AnimalsTree->get_selection();
 	mrp_AnimalSelection->signal_changed().connect(sigc::mem_fun(*this, &GUI::changeAnimalSelection));
-
-	// Create Files Details TreeView
-	mp_FileDetailsTree = Gtk::manage( new uiFileDetailsTreeView(&db,this) );
-	Gtk::ScrolledWindow* p_swFileDetails; 
-	mrp_Glade->get_widget("swFileDetails", p_swFileDetails);
-	p_swFileDetails->add(*mp_FileDetailsTree);
-	mp_FileDetailsTree->treeSelection()->signal_changed().connect(sigc::mem_fun(*this, &GUI::on_filedetails_selection_changed));
-	mp_FileDetailsTree->signal_file_set_hidden().connect(sigc::mem_fun(*this, &GUI::on_filedetails_set_hidden));
 
 
 	// Add on the Analysis tab
@@ -108,19 +97,39 @@ GUI::~GUI()
 
 void GUI::init_gui()
 {
-	Gtk::Vbox *vbMain;
+	Gtk::Vbox *vbMain = Gtk::manage(new Gtk::VBox());
+	this->add(*vbMain);
 
-	VBox->pack_start(Gtk::manage(new uiMenuBar()), false, false);
-	VBox->pack_start(Gtk::manage(new uiToolBar()), false, false);
+	vbMain->pack_start(Gtk::manage(new uiMenuBar()), false, false);
+	vbMain->pack_start(Gtk::manage(new uiToolBar()), false, false);
 
+	Gtk::HBox *hbMain = Gtk::manage(new Gtk::HBox());
+	vbMain->pack_start(hbMain);
 
-	// Setup the filter frame
-	m_uiFilterFrame.signal_changed().connect(sigc::mem_fun(*this, &GUI::on_filter_changed));
-	if (settings.get_int("filterMinFiles") != 0) {
-		m_uiFilterFrame.minFiles(settings.get_double("filterMinFiles"));
-	} else { 
-		settings.set("filterMinFiles", m_uiFilterFrame.minFiles());
-	}
+	Gtk::VBox *vbLeft = Gtk::manage(new Gtk::VBox());
+	mp_uiFilterFrame = Gtk::manage(new uiFilterFrame());
+	mp_AnimalsTree = Gtk::manage(new Gtk::TreeView());
+	vbLeft->pack_start(*mp_uiFilterFrame, false, false);
+	vbLeft->pack_start(*mp_AnimalsTree, true, true);
+	
+	Gtk::HPaned *hpRight = Gtk::manage(new Gtk::HPaned());
+	Gtk::VPaned *vpMiddle = Gtk::manage(new Gtk::VPaned());
+
+	hpRight->pack1(*vpMiddle, true, false);
+
+	mp_FileDetailsTree = Gtk::manage( new uiFileDetailsTreeView(&db,this) );
+	Gtk::ScrolledWindow* swFileDetails = Gtk::manage( new Gtk::ScrolledWindow() );
+	swFileDetails->add(*mp_FileDetailsTree);
+
+	
+
+	/**
+	 * Connect Signals
+	 */
+	mp_uiFilterFrame->signal_changed().connect(sigc::mem_fun(*this, &GUI::on_filter_changed));
+	mp_FileDetailsTree->signal_file_set_hidden().connect(sigc::mem_fun(*this, &GUI::on_filedetails_set_hidden));
+	mp_FileDetailsTree->treeSelection()->signal_changed().connect(sigc::mem_fun(*this, &GUI::on_filedetails_selection_changed));
+
 
 	// Create the plots
 	mp_PlotSpikes = Gtk::manage(new EasyPlotmm());
@@ -164,7 +173,7 @@ void GUI::updateTagCompletion()
 		tags.push_back(t);
 	}
 	sqlite3_finalize(stmt);
-	m_uiFilterFrame.updateTagCompletion(tags);
+	mp_uiFilterFrame->updateTagCompletion(tags);
 }
 
 
@@ -291,7 +300,7 @@ void GUI::on_filter_changed()
 	/*
 	 * Save Settings
 	 */
-	settings.set("filterMinFiles", m_uiFilterFrame.minFiles());
+	settings.set("filterMinFiles", mp_uiFilterFrame->minFiles());
 
 	/*
 	 * Update Animal Selection with Filter
@@ -909,7 +918,7 @@ void GUI::populateAnimalTree()
 
 void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID)
 {
-	int minFiles = m_uiFilterFrame.minFiles();
+	int minFiles = mp_uiFilterFrame->minFiles();
 
 	if (animalID != "" && cellID != -1) {
 		const char query[] = "SELECT files.animalID, files.cellID, files.fileID, files.header, "
@@ -949,7 +958,7 @@ void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, c
 
 void GUI::getCellsStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID)
 {
-	int minFiles = m_uiFilterFrame.minFiles();
+	int minFiles = mp_uiFilterFrame->minFiles();
 
 	if (animalID != "" && cellID != -1) {
 		const char query[] = "SELECT animalID, cellID, threshold, depth, freq FROM cells "
@@ -996,7 +1005,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 		void *header = (void*)sqlite3_column_blob(stmt, 3);
 		sd.setHeader(header);
 
-		int XVarFilter = m_uiFilterFrame.XVar();
+		int XVarFilter = mp_uiFilterFrame->XVar();
 		if (XVarFilter == 1) {
 			if (sd.xVariable() != "Ch 1 Freq" && sd.xVariable() != "Ch 2 Freq") filtered = false;
 		}
@@ -1012,11 +1021,11 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 
 		int r2;
 		sqlite3_stmt *stmt2 = 0;
-		if (m_uiFilterFrame.tag() != "")
+		if (mp_uiFilterFrame->tag() != "")
 		{
 			char query_animal_tag[] = "SELECT COUNT(*) FROM tags WHERE tag=? AND animalID=? AND cellID IS NULL AND fileID IS NULL";
 			sqlite3_prepare_v2(db, query_animal_tag, -1, &stmt2, 0);
-			sqlite3_bind_text(stmt2, 1, m_uiFilterFrame.tag().c_str(), -1, SQLITE_TRANSIENT);
+			sqlite3_bind_text(stmt2, 1, mp_uiFilterFrame->tag().c_str(), -1, SQLITE_TRANSIENT);
 			sqlite3_bind_text(stmt2, 2, (char*)sqlite3_column_text(stmt, 0), -1, SQLITE_TRANSIENT);
 			r2 = sqlite3_step(stmt2);
 			bool allow_animal = sqlite3_column_int(stmt2,0) > 0;
@@ -1024,7 +1033,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 
 			char query_cell_tag[] = "SELECT COUNT(*) FROM tags WHERE tag=? AND animalID=? AND cellID=? AND fileID IS NULL";
 			sqlite3_prepare_v2(db, query_cell_tag, -1, &stmt2, 0);
-			sqlite3_bind_text(stmt2, 1, m_uiFilterFrame.tag().c_str(), -1, SQLITE_TRANSIENT);
+			sqlite3_bind_text(stmt2, 1, mp_uiFilterFrame->tag().c_str(), -1, SQLITE_TRANSIENT);
 			sqlite3_bind_text(stmt2, 2, (char*)sqlite3_column_text(stmt, 0), -1, SQLITE_TRANSIENT);
 			sqlite3_bind_int(stmt2, 3, sqlite3_column_int(stmt, 1));
 			r2 = sqlite3_step(stmt2);
@@ -1045,7 +1054,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 		bool hidden_file = (sqlite3_column_int(stmt2,0) > 0);
 		sqlite3_finalize(stmt2);
 
-		filtered = filtered && (!hidden_file || m_uiFilterFrame.showHidden());
+		filtered = filtered && (!hidden_file || mp_uiFilterFrame->showHidden());
 
 		if (filtered) {
 			row = mp_FileDetailsTree->newrow();

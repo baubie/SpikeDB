@@ -69,14 +69,16 @@ class GUI : public Gtk::Window
 		/**
 		 * Widgets
 		 */
-		uiFilterFrame m_uiFilterFrame; /**< Filter widgets in top left corner. */
+		uiFilterFrame* mp_uiFilterFrame; /**< Filter widgets in top left corner. */
+        Gtk::TreeView* mp_AnimalsTree;
+
+
 		uiPropTable<Glib::ustring> m_uiAnimalDetails; /**< Animal details property table. */
 		uiTags m_AnimalTags;
 		uiPropTable<CellID> m_uiCellDetails; /**< Cell details property table. */
 		uiTags m_CellTags;
 		Gtk::ImageMenuItem* mp_MenuImportFolder; /**< Import menu item. Require access to enable/disable it. */
 		uiAnalysis* mp_Analysis;
-        Gtk::TreeView* mp_AnimalsTree;
         uiFileDetailsTreeView* mp_FileDetailsTree;
 		Gtk::Statusbar* mp_Statusbar;
         Gtk::HBox* mp_HBoxPlots;
