@@ -16,7 +16,9 @@ uiFilterFrame::uiFilterFrame()
 	/*
 	 * Spin button to select minimum number of files.
 	 */
+	vbFilter->pack_start(*Gtk::manage(new Gtk::Label("Required # of Files")));
 	mp_sbMinFiles = Gtk::manage( new Gtk::SpinButton() );
+	vbFilter->pack_start(*mp_sbMinFiles);
 	mp_sbMinFiles->set_adjustment(m_adjMinFiles);
 	m_adjMinFiles.signal_value_changed().connect(
 			sigc::mem_fun(*this, &uiFilterFrame::on_adjMinFiles_changed)
@@ -26,6 +28,7 @@ uiFilterFrame::uiFilterFrame()
 	/*
 	 * ComboBox to select the X-Variable 
 	 */
+	vbFilter->pack_start(*Gtk::manage(new Gtk::Label("X-Variable")));
 	m_XVar.append_text("All");
 	m_XVar.append_text("Freq");
 	m_XVar.append_text("Dur");

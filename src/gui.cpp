@@ -55,12 +55,14 @@ void GUI::init_gui()
 	mrp_AnimalTree->set_sort_column(m_AnimalColumns.m_col_name, Gtk::SORT_ASCENDING);
 	mrp_AnimalTree->set_sort_func(0, sigc::mem_fun(*this, &GUI::on_animal_sort));
 	mrp_AnimalSelection = mp_AnimalsTree->get_selection();
+	hbMain->pack_start(*vbLeft, false, false);
 	
 
 	/**
 	 * Notebook
 	 */
 	Gtk::Notebook *notebook = Gtk::manage(new Gtk::Notebook());
+	hbMain->pack_start(*notebook, true, true);
 
 
 	/**
@@ -248,8 +250,6 @@ bool GUI::openDatabase(std::string filename)
 	// Remember this database for next time
 	settings.set("lastDatabase", filename);
 
-	// Allow importing files
-	mp_MenuImportFolder->set_sensitive(true);
 
 	// Show the animals and cells from the database
 	populateAnimalTree();
