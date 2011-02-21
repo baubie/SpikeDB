@@ -5,7 +5,7 @@
 #include <vector>
 
 
-class uiFilterFrame {
+class uiFilterFrame : public Gtk::Frame {
 
 	public:
 		uiFilterFrame();
@@ -24,6 +24,8 @@ class uiFilterFrame {
 
 		typedef sigc::signal<void> type_signal_changed;
 		type_signal_changed signal_changed();
+
+
 
 	protected:
 		type_signal_changed m_signal_changed;
@@ -49,10 +51,6 @@ class uiFilterFrame {
 		bool check_change_queue();
 		Glib::Timer m_timer;
 
-		/**
-		 * VBoxFilter
-		 */
-		Gtk::VBox m_VBoxFilter;	
 
 		/**
 		 * Minimum number of files spin box

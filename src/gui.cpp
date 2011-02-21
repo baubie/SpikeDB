@@ -7,71 +7,6 @@ GUI::GUI()
 
 	set_title("Spike Database - No database open");
 	init_gui();
-
-
-	// Setup the animal details table
-	Gtk::VBox* mp_AnimalDetailsVBox = Gtk::manage(new Gtk::VBox());
-	Gtk::Alignment* mp_AlignAnimalDetails; /**< Container for the animal details property table. */
-	mrp_Glade->get_widget("alignAnimalDetails", mp_AlignAnimalDetails);
-	mp_AlignAnimalDetails->add(*mp_AnimalDetailsVBox);
-	mp_AnimalDetailsVBox->pack_start(m_uiAnimalDetails);
-	mp_AnimalDetailsVBox->pack_start(m_AnimalTags);
-	m_AnimalTags.set_parent(this);
-	m_uiAnimalDetails.signal_rowedited().connect(sigc::mem_fun(*this, &GUI::on_animaldetails_edited));
-	m_AnimalTags.signal_deleted().connect(sigc::mem_fun(*this, &GUI::on_animal_tag_deleted));
-	m_AnimalTags.signal_added().connect(sigc::mem_fun(*this, &GUI::on_animal_tag_added));
-
-	
-	// Setup the cell details table
-	Gtk::VBox* mp_CellDetailsVBox = Gtk::manage(new Gtk::VBox());
-	Gtk::ScrolledWindow* mp_ScrolledCellDetails = Gtk::manage(new Gtk::ScrolledWindow); /**< Container for the cell details property table. */
-	mp_ScrolledCellDetails->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
-	Gtk::Alignment* mp_AlignCellDetails; /**< Container for the animal details property table. */
-	mrp_Glade->get_widget("alignCellDetails", mp_AlignCellDetails);
-	mp_AlignCellDetails->add(*mp_ScrolledCellDetails);
-	mp_ScrolledCellDetails->add(*mp_CellDetailsVBox);
-	mp_CellDetailsVBox->pack_start(m_uiCellDetails);
-	mp_CellDetailsVBox->pack_start(m_CellTags);
-	m_CellTags.set_parent(this);
-	m_uiCellDetails.signal_rowedited().connect(sigc::mem_fun(*this, &GUI::on_celldetails_edited));
-	m_CellTags.signal_deleted().connect(sigc::mem_fun(*this, &GUI::on_cell_tag_deleted));
-	m_CellTags.signal_added().connect(sigc::mem_fun(*this, &GUI::on_cell_tag_added));
-
-	// Animals treeview 
-	// Shown on left side under filter frame
-	mrp_Glade->get_widget("tvAnimals", mp_AnimalsTree);
-	mrp_AnimalTree = Gtk::TreeStore::create(m_AnimalColumns);
-	mp_AnimalsTree->set_model(mrp_AnimalTree);
-	mp_AnimalsTree->append_column("Animal/Cell ID", m_AnimalColumns.m_col_name);
-	mrp_AnimalTree->set_sort_column(m_AnimalColumns.m_col_name, Gtk::SORT_ASCENDING);
-	mrp_AnimalTree->set_sort_func(0, sigc::mem_fun(*this, &GUI::on_animal_sort));
-	mrp_AnimalSelection = mp_AnimalsTree->get_selection();
-	mrp_AnimalSelection->signal_changed().connect(sigc::mem_fun(*this, &GUI::changeAnimalSelection));
-
-
-	// Add on the Analysis tab
-	mp_Analysis = Gtk::manage(new uiAnalysis(&db, mp_FileDetailsTree, this));
-	Gtk::Notebook* p_Notebook;
-	mrp_Glade->get_widget("notebookMain", p_Notebook);
-	p_Notebook->append_page(*mp_Analysis, "Analysis", false);
-
-
-	mrp_Glade->get_widget("hboxPlots", mp_HBoxPlots);
-	mrp_Glade->get_widget("cbMeanType", mp_MeanType);
-	mrp_MeanType = Gtk::ListStore::create(m_MeanTypeColumns);
-	mp_MeanType->set_model(mrp_MeanType);
-	mp_MeanType->pack_start(m_MeanTypeColumns.m_col_name);
-	mp_MeanType->signal_changed().connect( sigc::mem_fun(*this, &GUI::on_meantype_changed));
-	row = *(mrp_MeanType->append());
-	row[m_MeanTypeColumns.m_col_name] = "Mean Spikes per Trial";
-	row = *(mrp_MeanType->append());
-	row[m_MeanTypeColumns.m_col_name] = "Percentage of trials with at least 1 spike";
-	row = *(mrp_MeanType->append());
-	row[m_MeanTypeColumns.m_col_name] = "Mean First-Spike Latency";
-	mp_MeanType->set_active(0);
-
-	mp_HBoxPlots->pack_start(*mp_PlotSpikes);
-	mp_HBoxPlots->pack_start(*mp_PlotMeans);
 	show_all_children();
 
 
@@ -97,31 +32,78 @@ GUI::~GUI()
 
 void GUI::init_gui()
 {
-	Gtk::Vbox *vbMain = Gtk::manage(new Gtk::VBox());
+	Gtk::VBox *vbMain = Gtk::manage(new Gtk::VBox());
 	this->add(*vbMain);
 
-	vbMain->pack_start(Gtk::manage(new uiMenuBar()), false, false);
-	vbMain->pack_start(Gtk::manage(new uiToolBar()), false, false);
+	vbMain->pack_start(*Gtk::manage(new uiMenuBar()), false, false);
+	vbMain->pack_start(*Gtk::manage(new uiToolbar()), false, false);
 
 	Gtk::HBox *hbMain = Gtk::manage(new Gtk::HBox());
-	vbMain->pack_start(hbMain);
+	vbMain->pack_start(*hbMain);
 
+	/**
+	 * Left Column
+	 */
 	Gtk::VBox *vbLeft = Gtk::manage(new Gtk::VBox());
 	mp_uiFilterFrame = Gtk::manage(new uiFilterFrame());
 	mp_AnimalsTree = Gtk::manage(new Gtk::TreeView());
 	vbLeft->pack_start(*mp_uiFilterFrame, false, false);
 	vbLeft->pack_start(*mp_AnimalsTree, true, true);
+	mrp_AnimalTree = Gtk::TreeStore::create(m_AnimalColumns);
+	mp_AnimalsTree->set_model(mrp_AnimalTree);
+	mp_AnimalsTree->append_column("Animal/Cell ID", m_AnimalColumns.m_col_name);
+	mrp_AnimalTree->set_sort_column(m_AnimalColumns.m_col_name, Gtk::SORT_ASCENDING);
+	mrp_AnimalTree->set_sort_func(0, sigc::mem_fun(*this, &GUI::on_animal_sort));
+	mrp_AnimalSelection = mp_AnimalsTree->get_selection();
 	
+
+	/**
+	 * Notebook
+	 */
+	Gtk::Notebook *notebook = Gtk::manage(new Gtk::Notebook());
+
+
+	/**
+	 * Browse Notebook Page
+	 */
 	Gtk::HPaned *hpRight = Gtk::manage(new Gtk::HPaned());
+	notebook->append_page(*hpRight, "Browse Files", false);
 	Gtk::VPaned *vpMiddle = Gtk::manage(new Gtk::VPaned());
-
 	hpRight->pack1(*vpMiddle, true, false);
-
 	mp_FileDetailsTree = Gtk::manage( new uiFileDetailsTreeView(&db,this) );
 	Gtk::ScrolledWindow* swFileDetails = Gtk::manage( new Gtk::ScrolledWindow() );
 	swFileDetails->add(*mp_FileDetailsTree);
+	hpRight->pack1(*swFileDetails);
+	Gtk::HBox *hbPlots = Gtk::manage(new Gtk::HBox());
+	mp_PlotSpikes = Gtk::manage(new EasyPlotmm());
+	mp_PlotMeans = Gtk::manage(new EasyPlotmm());
+	hbPlots->pack_start(*mp_PlotSpikes, true, true);
+	hbPlots->pack_start(*mp_PlotMeans, true, true);
+	Gtk::VBox *vbRight = Gtk::manage(new Gtk::VBox());
 
-	
+	Gtk::Frame* fAnimalDetails = Gtk::manage(new Gtk::Frame());
+	fAnimalDetails->set_label("Animal Details");
+	Gtk::VBox* vbAnimalDetails = Gtk::manage(new Gtk::VBox());
+	vbAnimalDetails->pack_start(m_uiAnimalDetails);
+	vbAnimalDetails->pack_start(m_AnimalTags);
+	m_AnimalTags.set_parent(this);
+	vbRight->pack_start(*fAnimalDetails);
+
+	Gtk::Frame* fCellDetails = Gtk::manage(new Gtk::Frame());
+	fCellDetails->set_label("Cell Details");
+	Gtk::VBox* vbCellDetails = Gtk::manage(new Gtk::VBox());
+	vbCellDetails->pack_start(m_uiCellDetails);
+	vbCellDetails->pack_start(m_CellTags);
+	m_CellTags.set_parent(this);
+	vbRight->pack_start(*fCellDetails);
+
+
+	/**
+	 * Analysis Notebook Page
+	 */
+	mp_Analysis = Gtk::manage(new uiAnalysis(&db, mp_FileDetailsTree, this));
+	notebook->append_page(*mp_Analysis, "Analysis", false);
+
 
 	/**
 	 * Connect Signals
@@ -129,37 +111,19 @@ void GUI::init_gui()
 	mp_uiFilterFrame->signal_changed().connect(sigc::mem_fun(*this, &GUI::on_filter_changed));
 	mp_FileDetailsTree->signal_file_set_hidden().connect(sigc::mem_fun(*this, &GUI::on_filedetails_set_hidden));
 	mp_FileDetailsTree->treeSelection()->signal_changed().connect(sigc::mem_fun(*this, &GUI::on_filedetails_selection_changed));
+	mrp_AnimalSelection->signal_changed().connect(sigc::mem_fun(*this, &GUI::changeAnimalSelection));
 
+	m_uiAnimalDetails.signal_rowedited().connect(sigc::mem_fun(*this, &GUI::on_animaldetails_edited));
+	m_AnimalTags.signal_deleted().connect(sigc::mem_fun(*this, &GUI::on_animal_tag_deleted));
+	m_AnimalTags.signal_added().connect(sigc::mem_fun(*this, &GUI::on_animal_tag_added));
 
-	// Create the plots
-	mp_PlotSpikes = Gtk::manage(new EasyPlotmm());
-	mp_PlotMeans = Gtk::manage(new EasyPlotmm());
+	m_uiCellDetails.signal_rowedited().connect(sigc::mem_fun(*this, &GUI::on_celldetails_edited));
+	m_CellTags.signal_deleted().connect(sigc::mem_fun(*this, &GUI::on_cell_tag_deleted));
+	m_CellTags.signal_added().connect(sigc::mem_fun(*this, &GUI::on_cell_tag_added));
+
 
 }
 
-void GUI::init_toolbar()
-{
-	Gtk::ImageMenuItem* mp_MenuNewDatabase;
-	Gtk::ImageMenuItem* mp_MenuOpenDatabase;
-	Gtk::ImageMenuItem* mp_MenuQuit;
-	mrp_Glade->get_widget("menuNewDatabase", mp_MenuNewDatabase);
-	if (mp_MenuNewDatabase) {
-		mp_MenuNewDatabase->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuNewDatabase_activate));
-	}
-	mrp_Glade->get_widget("menuOpenDatabase", mp_MenuOpenDatabase);
-	if (mp_MenuOpenDatabase) {
-		mp_MenuOpenDatabase->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuOpenDatabase_activate));
-	}
-	mrp_Glade->get_widget("menuImportFolder", mp_MenuImportFolder);
-	if (mp_MenuImportFolder) {
-		mp_MenuImportFolder->set_sensitive(false);
-		mp_MenuImportFolder->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuImportFolder_activate));
-	}
-	mrp_Glade->get_widget("menuQuit", mp_MenuQuit);
-	if (mp_MenuQuit) {
-		mp_MenuQuit->signal_activate().connect(sigc::mem_fun(*this, &GUI::on_menuQuit_activate));
-	}
-}
 
 
 void GUI::updateTagCompletion()
@@ -440,8 +404,6 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 
 		std::vector<double> x(sd.m_head.nSweeps, 0);
 		std::vector<double> y_mean(sd.m_head.nSweeps, 0);
-		std::vector<double> y_one(sd.m_head.nSweeps, 0);
-		std::vector<double> y_fsl(sd.m_head.nSweeps, 0);
 		std::vector<double> err(sd.m_head.nSweeps, 0);
 		std::vector<double> N(sd.m_head.nSweeps, 0);
 
@@ -459,34 +421,18 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 		// Calculate the means and get the spike times
 		for (int i = 0; i < sd.m_head.nSweeps; ++i) {
 			x.at(i) = sd.xvalue(i);
-                        std::vector<double> first_spikes;
 			for (int p = 0; p < sd.m_head.nPasses; ++p) {
-				bool foundSpike = false;
-                                double first_spike = 99999;
 				for (unsigned int s = 0; s < sd.m_spikeArray.size(); ++s) {
 					// Spike sweeps are 1 based but here we are 0 based
 					if (sd.m_spikeArray[s].nSweep == i + 1 && sd.m_spikeArray[s].nPass == p+1) {
-						if (!foundSpike) {
-							y_one.at(i) += 1.0f / sd.m_head.nPasses;
-							foundSpike = true;
-						}
 						if (sd.m_head.nPasses > 0) {
 							y_mean.at(i) += 1.0f / sd.m_head.nPasses;
-							if (first_spike > sd.m_spikeArray[s].fTime) {
-								first_spike = sd.m_spikeArray[s].fTime;
-							}
 						}
 						x_spikes.push_back(sd.m_spikeArray[s].fTime);
 						y_spikes.push_back(sd.xvalue(i) + dy * p);
 					}
 				}
-                                if (first_spike != 99999) {
-                                    first_spikes.push_back(first_spike);
-                                }
 			}
-                        for (unsigned int fsl_index = 0; fsl_index < first_spikes.size(); ++fsl_index) {
-                            y_fsl.at(i) += first_spikes.at(fsl_index) / first_spikes.size();
-                        }
 		}
 		double min_y = sd.xvalue(0) - 2 * dy;
 		double max_y = sd.xvalue(sd.m_head.nSweeps - 1) + sd.m_head.nPasses * dy;
@@ -527,18 +473,7 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 		mp_PlotMeans->axes(mp_PlotMeans->automatic(), mp_PlotMeans->automatic(), 0, mp_PlotMeans->automatic());
 		mp_PlotMeans->xname(sd.xVariable());
 
-		if (mp_MeanType->get_active_row_number() == 0) {
-			mp_PlotMeans->yname("Mean Spikes per Trial");
-			mp_PlotMeans->plot(x, y_mean, err);
-		}
-		if (mp_MeanType->get_active_row_number() == 1) {
-			mp_PlotMeans->yname("Percentage of Trials With Spikes");
-			mp_PlotMeans->plot(x, y_one);
-		}
-		if (mp_MeanType->get_active_row_number() == 2) {
-			mp_PlotMeans->yname("Mean First Spike Latency");
-			mp_PlotMeans->plot(x, y_fsl);
-		}
+		mp_PlotMeans->plot(x, y_mean, err);
 
 		// Add stimuli to spikes plot
 		EasyPlotmm::Pen ch1Pen;

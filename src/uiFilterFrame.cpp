@@ -11,12 +11,12 @@ uiFilterFrame::uiFilterFrame()
     queue_change_signal = false;
 
 
-	this->add(m_VBoxFilter);
+	Gtk::VBox *vbFilter = Gtk::manage( new Gtk::VBox());
 
 	/*
 	 * Spin button to select minimum number of files.
 	 */
-	m_refGlade->get_widget("sbMinFiles", mp_sbMinFiles);
+	mp_sbMinFiles = Gtk::manage( new Gtk::SpinButton() );
 	mp_sbMinFiles->set_adjustment(m_adjMinFiles);
 	m_adjMinFiles.signal_value_changed().connect(
 			sigc::mem_fun(*this, &uiFilterFrame::on_adjMinFiles_changed)
@@ -35,14 +35,14 @@ uiFilterFrame::uiFilterFrame()
 	m_XVar.signal_changed().connect(
 		sigc::mem_fun(*this, &uiFilterFrame::on_XVar_changed)
 	);
-	mp_VBoxFilter->pack_start(m_XVar, false, false, 0);
+	vbFilter->pack_start(m_XVar, false, false, 0);
 
 	/*
 	 * Tag filter
 	 */
 	Gtk::Label *tagLabel = Gtk::manage(new Gtk::Label("Tag Filter"));
-	mp_VBoxFilter->pack_start(*tagLabel, false, false, 0);
-	mp_VBoxFilter->pack_start(m_tag, false, false, 0);
+	vbFilter->pack_start(*tagLabel, false, false, 0);
+	vbFilter->pack_start(m_tag, false, false, 0);
 	Glib::RefPtr<Gtk::EntryCompletion> mrp_tagCompletion = Gtk::EntryCompletion::create();
 	m_tag.set_completion(mrp_tagCompletion);
 	mrp_CompletionModel = Gtk::ListStore::create(m_tagColumns);
@@ -61,17 +61,15 @@ uiFilterFrame::uiFilterFrame()
 	 */
 	mp_cbHidden = Gtk::manage(new Gtk::CheckButton("Show hidden files"));
 	mp_cbHidden->set_active(false);
-	mp_VBoxFilter->pack_start(*mp_cbHidden, false, false, 0);
+	vbFilter->pack_start(*mp_cbHidden, false, false, 0);
 	mp_cbHidden->signal_toggled().connect(
 		sigc::mem_fun(*this, &uiFilterFrame::on_hidden_toggled)
 			);
+
+	this->add(*vbFilter);
 }
 
-uiFilterFrame::~uiFilterFrame()
-{
-	delete mp_sbMinFiles;
-	delete mp_VBoxFilter;
-}
+uiFilterFrame::~uiFilterFrame() {}
 
 
 /*

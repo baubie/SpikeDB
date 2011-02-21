@@ -5,6 +5,7 @@
 #define CURRENT_VERSION 1.2
 
 #include "uiMenuBar.h"
+#include "uiToolBar.h"
 #include "uiAnalysis.h"
 #include "uiFileDetailsTreeView.h"
 #include "uiFilterFrame.h"
@@ -86,11 +87,11 @@ class GUI : public Gtk::Window
         EasyPlotmm* mp_PlotSpikes;
         EasyPlotmm* mp_PlotMeans;
 
+
         Glib::RefPtr<Gtk::TreeStore> mrp_AnimalTree;
         Glib::RefPtr<Gtk::TreeSelection> mrp_AnimalSelection;
         Glib::RefPtr<Gtk::ListStore> mrp_CellDetailsList;
         Glib::RefPtr<Gtk::ListStore> mrp_MeanType;
-        Glib::RefPtr<Gtk::ListStore> mrp_TypeFilter;
 
 
 

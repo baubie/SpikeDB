@@ -3,8 +3,10 @@
 
 #include <gtkmm.h>
 
-class uiToolBar : public Gtk::ToolBar
+class uiToolbar : public Gtk::Toolbar
 {
+	public:
+		uiToolbar();
 
 };
 
