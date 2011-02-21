@@ -2,7 +2,7 @@
 
 
 uiFilterFrame::uiFilterFrame()
-	: m_adjMinFiles(5, 1, 20, 1, 3, 0)
+	: m_adjMinFiles(1, 1, 20, 1, 3, 0)
 {
 
 	/*

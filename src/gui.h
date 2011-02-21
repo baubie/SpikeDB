@@ -74,6 +74,7 @@ class GUI : public Gtk::Window
         Gtk::TreeView* mp_AnimalsTree;
 		uiMenuBar* mp_MenuBar;
 		Gtk::MenuItem m_Menu_Import;
+		Gtk::Statusbar* mp_statusbar;
 
 
 		uiPropTable<Glib::ustring> m_uiAnimalDetails; /**< Animal details property table. */

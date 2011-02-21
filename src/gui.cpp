@@ -7,7 +7,7 @@ GUI::GUI()
 
 	set_title("Spike Database - No database open");
 	init_gui();
-	show_all_children();
+
 
 
 	// Attempt to use the previously opened database.
@@ -82,6 +82,7 @@ void GUI::init_gui()
 	hpRight->pack1(*vpMiddle, true, false);
 	mp_FileDetailsTree = Gtk::manage( new uiFileDetailsTreeView(&db,this) );
 	Gtk::ScrolledWindow* swFileDetails = Gtk::manage( new Gtk::ScrolledWindow() );
+	swFileDetails->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
 	swFileDetails->add(*mp_FileDetailsTree);
 	vpMiddle->pack1(*swFileDetails);
 	Gtk::HBox *hbPlots = Gtk::manage(new Gtk::HBox());
@@ -89,8 +90,9 @@ void GUI::init_gui()
 	mp_PlotMeans = Gtk::manage(new EasyPlotmm());
 	hbPlots->pack_start(*mp_PlotSpikes, true, true);
 	hbPlots->pack_start(*mp_PlotMeans, true, true);
-	Gtk::VBox *vbRight = Gtk::manage(new Gtk::VBox());
+	vpMiddle->pack2(*hbPlots);
 
+	Gtk::VBox *vbRight = Gtk::manage(new Gtk::VBox());
 	Gtk::Frame* fAnimalDetails = Gtk::manage(new Gtk::Frame());
 	fAnimalDetails->set_label("Animal Details");
 	Gtk::VBox* vbAnimalDetails = Gtk::manage(new Gtk::VBox());
@@ -98,6 +100,7 @@ void GUI::init_gui()
 	vbAnimalDetails->pack_start(m_AnimalTags);
 	m_AnimalTags.set_parent(this);
 	vbRight->pack_start(*fAnimalDetails);
+	fAnimalDetails->add(*vbAnimalDetails);
 
 	Gtk::Frame* fCellDetails = Gtk::manage(new Gtk::Frame());
 	fCellDetails->set_label("Cell Details");
@@ -106,8 +109,9 @@ void GUI::init_gui()
 	vbCellDetails->pack_start(m_CellTags);
 	m_CellTags.set_parent(this);
 	vbRight->pack_start(*fCellDetails);
+	fCellDetails->add(*vbCellDetails);
 
-	hpRight->pack2(*vbRight, true, false);
+	hpRight->pack2(*vbRight, false, false);
 	notebook->append_page(*hpRight, "Browse Files", false);
 
 
@@ -134,6 +138,15 @@ void GUI::init_gui()
 	m_CellTags.signal_deleted().connect(sigc::mem_fun(*this, &GUI::on_cell_tag_deleted));
 	m_CellTags.signal_added().connect(sigc::mem_fun(*this, &GUI::on_cell_tag_added));
 
+	
+	/**
+	 * Statusbar
+	 */
+	mp_statusbar = Gtk::manage( new Gtk::Statusbar() );
+	vbMain->pack_start(*mp_statusbar,false,false);
+	mp_statusbar->push("Database ready.");
+
+	show_all_children();
 
 }
 
@@ -293,6 +306,7 @@ bool GUI::openDatabase(std::string filename)
 	// Show the animals and cells from the database
 	populateAnimalTree();
 	sqlite3_finalize(stmt);
+	m_Menu_Import.set_sensitive(true);
 	return true;
 }
 
