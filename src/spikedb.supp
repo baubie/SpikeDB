@@ -15,13 +15,6 @@
 }
 
 {
-   gtk_builder_malloc
-   Memcheck:Leak
-   ...
-   fun:gtk_builder_add_from_file
-}
-
-{
    gtk_init_malloc
    Memcheck:Leak
    ...
@@ -33,13 +26,6 @@
    Memcheck:Leak
    ...
    fun:type_add_interface_Wm
-}
-
-{
-   builder_construct 
-   Memcheck:Leak
-   ...
-   fun:builder_construct
 }
 
 {
@@ -121,4 +107,85 @@
    ...
    fun:FcFontRenderPrepare
    ...
+}
+
+{
+	menu_real_insert
+	Memcheck:Leak
+	...
+	fun:gtk_menu_real_insert
+	...
+}
+
+{
+	menu_stock
+	Memcheck:Leak
+	fun:_Znwm
+	fun:_ZN3Gtk12Menu_Helpers13StockMenuElemC2ERKNS_7StockIDERKN4sigc4slotIvNS5_3nilES7_S7_S7_S7_S7_S7_EE
+	fun:_ZN3GUI9init_menuEv
+	fun:_ZN3GUI8init_guiEv
+	fun:_ZN3GUIC1Ev
+	fun:main
+}
+
+{
+   Menu_Accel
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZN3Gtk8MenuItem15add_accel_labelERKN4Glib7ustringEb
+   ...
+   fun:_ZN3GUI9init_menuEv
+   fun:_ZN3GUI8init_guiEv
+   fun:_ZN3GUIC1Ev
+   fun:main
+}
+
+{
+   Menu_Helpers
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZN3Gtk12Menu_Helpers8MenuElemC2ERKN4Glib7ustringERKN4sigc4slotIvNS6_3nilES8_S8_S8_S8_S8_S8_EE
+   fun:_ZN3GUI9init_menuEv
+   fun:_ZN3GUI8init_guiEv
+   fun:_ZN3GUIC1Ev
+   fun:main
+}
+
+{
+   Menu_ImageMenuItem
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZN3Gtk13ImageMenuItemC1ERKNS_7StockIDE
+   ...
+   fun:_ZN3GUI9init_menuEv
+   fun:_ZN3GUI8init_guiEv
+   fun:_ZN3GUIC1Ev
+   fun:main
+}
+
+{
+   ScreenClass
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZN3Gdk12Screen_Class8wrap_newEP8_GObject
+   ...
+}
+
+{
+	Menu_Size
+   Memcheck:Leak
+   fun:calloc
+   fun:g_malloc0
+   fun:gtk_menu_size_request
+   ...
+}
+
+
+
+{
+	g_type_class_ref
+	Memcheck:Leak
+	...
+	fun:g_type_class_ref
+	...
 }
