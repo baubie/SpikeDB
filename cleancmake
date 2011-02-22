@@ -1,0 +1,7 @@
+rm -rf CMakeFiles
+rm -rf src/CMakeFiles
+rm -f CMakeCache.txt
+rm -f src/CMakeCache.txt
+rm -rf _CPack_Packages
+rm -f Makefile
+rm -f src/Makefile
