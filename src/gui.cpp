@@ -56,8 +56,11 @@ void GUI::init_gui()
 	Gtk::VBox *vbLeft = Gtk::manage(new Gtk::VBox());
 	mp_uiFilterFrame = Gtk::manage(new uiFilterFrame());
 	mp_AnimalsTree = Gtk::manage(new Gtk::TreeView());
+	Gtk::ScrolledWindow* swAnimals = Gtk::manage(new Gtk::ScrolledWindow());
+	swAnimals->set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
+	swAnimals->add(*mp_AnimalsTree);
 	vbLeft->pack_start(*mp_uiFilterFrame, false, false);
-	vbLeft->pack_start(*mp_AnimalsTree, true, true);
+	vbLeft->pack_start(*swAnimals, true, true);
 	mrp_AnimalTree = Gtk::TreeStore::create(m_AnimalColumns);
 	mp_AnimalsTree->set_model(mrp_AnimalTree);
 	mp_AnimalsTree->append_column("Animal/Cell ID", m_AnimalColumns.m_col_name);
