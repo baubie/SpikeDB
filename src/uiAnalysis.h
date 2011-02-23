@@ -31,7 +31,7 @@ class uiAnalysis : public Gtk::VBox {
 		Glib::RefPtr<Gtk::TextBuffer> mrp_tbOutput;
 		Gtk::ToolButton *tbOpen;
 		Gtk::ToolButton *tbRun;
-        EasyPlotmm* mp_Plot;
+        EasyPlotmm* mp_plot;
 
 		/**
 		 * Signal handlers

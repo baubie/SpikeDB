@@ -19,7 +19,7 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
     toolbar->append(*tbRun, sigc::mem_fun(*this, &uiAnalysis::on_run_clicked) );
 	this->pack_start(*toolbar, false, false);
 
-	mp_Plot = Gtk::manage( new EasyPlotmm() );
+	mp_plot = Gtk::manage( new EasyPlotmm() );
 	Gtk::ScrolledWindow *swOutput = Gtk::manage( new Gtk::ScrolledWindow() );
 	mrp_tbOutput = Gtk::TextBuffer::create();
 	tvOutput = Gtk::manage( new Gtk::TextView(mrp_tbOutput) );
@@ -28,10 +28,10 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
 
 	if (compact)
 	{
-		this->pack_start(*mp_Plot);
+		this->pack_start(*mp_plot);
 	} else {
 		Gtk::VPaned *vp = Gtk::manage( new Gtk::VPaned() );
-		vp->pack1(*mp_Plot);
+		vp->pack1(*mp_plot);
 		vp->pack2(*swOutput);
 		this->pack_start(*vp);
 	}
@@ -105,7 +105,7 @@ void uiAnalysis::runScript()
 		.def("getCells", &pySpikeDB::getCells)
 		.def("getFiles", &pySpikeDB::getFiles);
 
-	pySpikeDB pySpikeDB(db, mp_FileDetailsTree);
+	pySpikeDB pySpikeDB(db, mp_FileDetailsTree, mp_plot);
 	main_namespace["SpikeDB"] = bp::ptr(&pySpikeDB);
 
 	addOutput("*** Running Analysis Plugin ***\n\n");

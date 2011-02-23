@@ -8,6 +8,7 @@
 #include <vector>
 #include "spikedata.h"
 #include "uiFileDetailsTreeView.h"
+#include "easyplotmm/easyplotmm.h"
 
 
 class pySpikeDB {
@@ -16,15 +17,19 @@ class pySpikeDB {
 	public:
 
 		pySpikeDB();
-		pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree);
+		pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, EasyPlotmm *plot);
 
-		boost::python::object getFiles();
+		boost::python::object getFiles(bool selOnly);
 		boost::python::object getCells();
+
+	private:
 
 		sqlite3 **db;
 		uiFileDetailsTreeView* mp_FileDetailsTree;
-	private:
+		EasyPlotmm *mp_plot;
 
+
+		boost::python::object getFile(const Gtk::TreeModel::iterator& iter);
 
 		/**
 		 * Used to find unique cells.
