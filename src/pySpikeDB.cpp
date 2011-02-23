@@ -3,6 +3,16 @@
 namespace bp=boost::python;
 using namespace bp;
 
+pySpikeDB::pySpikeDB() {}
+
+
+pySpikeDB::pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree) 
+{
+	this->db = db;
+	this->mp_FileDetailsTree = fileDetailsTree;
+}
+
+
 bp::object pySpikeDB::getCells()
 {
 	bp::list list;
@@ -42,17 +52,15 @@ bp::object pySpikeDB::getCells()
 	return list;
 }
 
-/*
-object pySpikeDB::getFiles()
+bp::object pySpikeDB::getFiles()
 {
-	PyObject *list = PyList_New(mp_FileDetailsTree->mrp_ListStore->children().size());
+	bp::list list;
 
 	sqlite3_stmt *stmt = 0;
 	const char query[] = "SELECT header, spikes FROM files WHERE animalID=? AND cellID=? AND fileID=?";
 	sqlite3_prepare_v2(*db, query, strlen(query), &stmt, NULL);
 
 	Gtk::TreeIter iter;
-	int listCount=0;
 	int r;
     for (iter = mp_FileDetailsTree->mrp_ListStore->children().begin(); 
 	     iter != mp_FileDetailsTree->mrp_ListStore->children().end(); 
@@ -75,44 +83,34 @@ object pySpikeDB::getFiles()
 			int numSpikes = spikes_length / sizeof(SPIKESTRUCT);
 			sd.m_spikeArray.assign(spikes, spikes + numSpikes);
 
-			PyObject *file = Py_BuildValue("{s:s,s:i,s:i,s:s}", 
-				"AnimalID", row.get_value(mp_FileDetailsTree->m_Columns.m_col_animalID).c_str(), 
-				"CellID", row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID),
-				"FileID", row.get_value(mp_FileDetailsTree->m_Columns.m_col_filenum),
-				"datetime", sd.iso8601(sd.m_head.cDateTime).c_str()
-				);                
+			bp::dict file;
+			file["AnimalID"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_animalID).c_str();
+			file["CellID"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID);
+			file["FileID"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_filenum);
+			file["datetime"] = sd.iso8601(sd.m_head.cDateTime).c_str();
 
-			PyObject *trials = PyList_New(0);
+			bp::list trials;
 			for (int i = 0; i < sd.m_head.nSweeps; ++i) {
-				PyObject *trial = PyDict_New();
-				PyDict_SetItemString(trial, "xvalue", PyLong_FromDouble(sd.xvalue(i)));
-				PyObject *spikes = PyList_New(sd.m_head.nPasses);
+				bp::dict trial;
+				trial["xvalue"] = sd.xvalue(i);
+				bp::list spikes;
 				for (int p = 0; p < sd.m_head.nPasses; ++p) {
-					PyObject *pass = PyList_New(0);
+					bp::list pass;
 					for (unsigned int s = 0; s < sd.m_spikeArray.size(); ++s) {
 						// Spike sweeps are 1 based but here we are 0 based
 						if (sd.m_spikeArray[s].nSweep == i + 1 && sd.m_spikeArray[s].nPass == p+1) {
-							PyObject* pyfTime = PyFloat_FromDouble((double)sd.m_spikeArray[s].fTime);
-							PyList_Append(pass, pyfTime);
-							Py_DECREF(pyfTime);
+							pass.append(sd.m_spikeArray[s].fTime);
 						}
 					}
-					PyList_SET_ITEM(spikes, p, pass);
+					spikes.append(pass);
 				}
-				PyDict_SetItemString(trial, "spikes", spikes);
-				Py_DECREF(spikes);
-				PyList_Append(trials, trial);
-				Py_DECREF(trial);
+				trial["spikes"] = spikes;
+				trials.append(trial);
 			}
-			PyDict_SetItemString(file, "trials", trials);
-			Py_DECREF(trials);
-
-			PyList_SET_ITEM(list, listCount, file);
-			listCount++;
+			file["trials"] = trials;
+			list.append(file);
 		}
 	}
 	sqlite3_finalize(stmt);
-
 	return list;
 }
-*/

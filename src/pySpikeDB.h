@@ -15,8 +15,10 @@ class pySpikeDB {
 
 	public:
 
+		pySpikeDB();
+		pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree);
 
-//		boost::python::object getFiles();
+		boost::python::object getFiles();
 		boost::python::object getCells();
 
 		sqlite3 **db;

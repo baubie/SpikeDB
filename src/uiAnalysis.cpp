@@ -83,12 +83,6 @@ void uiAnalysis::addOutput(Glib::ustring t)
 	}
 }
 
-BOOST_PYTHON_MODULE(SpikeDB) {
-	class_<pySpikeDB>("pySpikeDB")
-		.def("getCells", &pySpikeDB::getCells);
-
-}
-
 void uiAnalysis::runScript()
 {
 	//TODO: Check if we have a valid filename
@@ -99,8 +93,6 @@ void uiAnalysis::runScript()
 	addOutput(m_filename);
 	addOutput("\n");
 
-	pySpikeDB pySpikeDB();
-	PyImport_AppendInittab( "SpikeDB", &initSpikeDB );
 
 	Py_Initialize();
 
@@ -108,8 +100,13 @@ void uiAnalysis::runScript()
 		bp::handle<>(bp::borrowed(PyImport_AddModule("__main__")))));
 	bp::object main_namespace = main_module.attr("__dict__");
 
-	bp::object spikedb_module( (handle<>(PyImport_ImportModule("SpikeDB"))));
-	main_namespace["SpikeDB"] = spikedb_module;
+
+	main_namespace["pySpikeDB"] = class_<pySpikeDB>("pySpikeDB")
+		.def("getCells", &pySpikeDB::getCells)
+		.def("getFiles", &pySpikeDB::getFiles);
+
+	pySpikeDB pySpikeDB(db, mp_FileDetailsTree);
+	main_namespace["SpikeDB"] = bp::ptr(&pySpikeDB);
 
 	addOutput("*** Running Analysis Plugin ***\n\n");
 
