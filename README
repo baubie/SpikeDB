@@ -6,3 +6,11 @@ Dependencies:
 	SQLite3
 	Boost.Python
 
+Troubleshooting:
+
+Q: When I attempt to view a file or run a python script I get the following error:
+Fatal Python error: Interpreter not initialized (version mismatch?)
+A: On a mac add this to your .bashrc or .zshrc or .yourtermrc
+DYLD_FRAMEWORK_PATH=/opt/local/Library/Frameworks
+
+
