@@ -12,6 +12,7 @@ pkg_check_modules(SQLITE3 sqlite3)
 
 IF(APPLE)
 	SET(PYTHON_INCLUDE_PATH "/opt/local/Library/Frameworks/Python.framework/Headers")
+	SET(PYTHON_LIBRARIES "/opt/local/lib/libpython2.7.dylib")
 ENDIF(APPLE)
 
 ADD_SUBDIRECTORY(src)
