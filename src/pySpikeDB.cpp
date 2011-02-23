@@ -89,6 +89,91 @@ bp::object pySpikeDB::getFiles()
 			file["FileID"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_filenum);
 			file["datetime"] = sd.iso8601(sd.m_head.cDateTime).c_str();
 
+			bp::dict type;
+			if (sd.m_head.nOnCh1 == 0) { type[1] = "";} 
+			else { type[1] = sd.type(1); }
+			if (sd.m_head.nOnCh2 == 0) { type[2] = "";} 
+			else { type[2] = sd.type(2); }
+			file["type"] = type;
+
+			bp::dict dur;
+			if (sd.m_head.nOnCh1 == 0) { dur[1] = "";} 
+			else { 
+				if (sd.duration(1, 0) == sd.duration(1, 1)) {
+					dur[1] = sd.duration(1,0);
+				} else {
+					dur[1] = "Var";
+				}
+			}
+			if (sd.m_head.nOnCh2 == 0) { dur[2] = "";} 
+			else { 
+				if (sd.duration(2, 0) == sd.duration(2, 1)) {
+					dur[2] = sd.duration(2,0);
+				} else {
+					dur[2] = "Var";
+				}
+			}
+			file["duration"] = dur;
+
+			bp::dict attn;
+			if (sd.m_head.nOnCh1 == 0) { attn[1] = "";} 
+			else { 
+				if (sd.attenuation(1, 0) == sd.attenuation(1, 1)) {
+					attn[1] = sd.attenuation(1,0);
+				} else {
+					attn[1] = "Var";
+				}
+			}
+			if (sd.m_head.nOnCh2 == 0) { attn[2] = "";} 
+			else { 
+				if (sd.attenuation(2, 0) == sd.attenuation(2, 1)) {
+					attn[2] = sd.attenuation(2,0);
+				} else {
+					attn[2] = "Var";
+				}
+			}
+			file["attenuation"] = attn;
+
+			bp::dict freq;
+			if (sd.m_head.nOnCh1 == 0) { freq[1] = "";} 
+			else { 
+				if (sd.frequency(1, 0) == sd.frequency(1, 1)) {
+					freq[1] = sd.frequency(1,0);
+				} else {
+					freq[1] = "Var";
+				}
+			}
+			if (sd.m_head.nOnCh2 == 0) { freq[2] = "";} 
+			else { 
+				if (sd.frequency(2, 0) == sd.frequency(2, 1)) {
+					freq[2] = sd.frequency(2,0);
+				} else {
+					freq[2] = "Var";
+				}
+			}
+			file["frequency"] = freq;
+
+			bp::dict begin;
+			if (sd.m_head.nOnCh1 == 0) { begin[1] = "";} 
+			else { 
+				if (sd.begin(1, 0) == sd.begin(1, 1)) {
+					begin[1] = sd.begin(1,0);
+				} else {
+					begin[1] = "Var";
+				}
+			}
+			if (sd.m_head.nOnCh2 == 0) { begin[2] = "";} 
+			else { 
+				if (sd.begin(2, 0) == sd.begin(2, 1)) {
+					begin[2] = sd.begin(2,0);
+				} else {
+					begin[2] = "Var";
+				}
+			}
+			file["begin"] = begin;
+
+			file["xVar"] = sd.xVariable();
+
 			bp::list trials;
 			for (int i = 0; i < sd.m_head.nSweeps; ++i) {
 				bp::dict trial;

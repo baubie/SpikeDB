@@ -1,12 +1,25 @@
-Analysis can be performed from within SpikeDB by writing Python (version 2) analysis scripts and extecuting them from within the Analysis tab.
+Analysis can be performed from within SpikeDB by writing Python analysis scripts and executing them from within the Analysis tab.
+Your script has the SpikeDB object available with several useful functions.
 
-The following variables are available to you in your analysis script.
 
+files = SpikeDB.getFiles()
 
-Name: Cells
-Type: Dictionary
+SpikeDB.getCells()
+Returns: List of Dictionaries where each dictionary has information about a cell.
 Keys: AnimalID: string
 	  CellID: number
       CarFreq: number (in Hz)
 	  Threshold: number (in dB SPL)
 	  Depth: number (in um)
+
+SpikeDB.getFiles()
+Returns: List of Dictionaries where each dictionary has information about a file.
+Keys: AnimalID: string
+	  CellID: number
+	  FileID: number
+	  datetime: string
+      type: Dictionary with [1] being channel 1 and [2] being channel 2. 
+      duration: Dictionary with [1] being channel 1 and [2] being channel 2. 
+      frequency: Dictionary with [1] being channel 1 and [2] being channel 2. 
+      attenuation: Dictionary with [1] being channel 1 and [2] being channel 2. 
+      begin: Dictionary with [1] being channel 1 and [2] being channel 2. 

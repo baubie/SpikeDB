@@ -139,9 +139,5 @@ void uiAnalysis::runScript()
 	addOutput(S);
 
 	addOutput("\n*** Analysis Plugin Completed ***");
-
-	// Try to reclaim some memory
-	// Can't call this when using Boost Python
-	//Py_Finalize();
 }                                                          
 
