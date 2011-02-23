@@ -7,4 +7,5 @@ def pretty(d, indent=0):
 			print '\t' * (indent+1)+str(value)
 
 
-pretty(Files[0])
+F = Files()
+pretty(F[0])

@@ -10,6 +10,8 @@
 #include "uiFilterFrame.h"
 #include "uiPropTable.h"
 #include "uiTags.h"
+#include "easyplotmm/easyplotmm.h"
+#include "spikedata.h"
 
 #include <gtkmm.h>
 #include <giomm.h>
@@ -17,8 +19,6 @@
 #include <vector>
 #include <dirent.h>
 #include <sqlite3.h>
-#include "easyplotmm/easyplotmm.h"
-#include "spikedata.h"
 #include "settings.h"
 #include "tokenize.h"
 

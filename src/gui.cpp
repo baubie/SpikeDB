@@ -121,7 +121,7 @@ void GUI::init_gui()
 	/**
 	 * Analysis Notebook Page
 	 */
-	mp_Analysis = Gtk::manage(new uiAnalysis(&db, mp_FileDetailsTree, this));
+	mp_Analysis = Gtk::manage(new uiAnalysis(&db, mp_FileDetailsTree, false, this));
 	notebook->append_page(*mp_Analysis, "Analysis", false);
 
 

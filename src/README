@@ -1,0 +1,8 @@
+
+
+Dependencies:
+	GTKmm
+	Cairo
+	SQLite3
+	Boost.Python
+

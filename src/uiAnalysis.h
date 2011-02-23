@@ -13,11 +13,20 @@
 #include <sqlite3.h>
 #include "spikedata.h"
 #include "uiFileDetailsTreeView.h"
+#include "easyplotmm/easyplotmm.h"
+
+
+/**
+ * Python setup functions
+ */
+PyObject* buildCellList();
+PyObject* buildFileList(PyObject *self, PyObject *args);
+
 
 class uiAnalysis : public Gtk::VBox {
 
 	public:
-		uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, Gtk::Window* parent=NULL);
+		uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, bool compact, Gtk::Window* parent=NULL);
 		virtual ~uiAnalysis();
 
 	protected:
@@ -37,6 +46,7 @@ class uiAnalysis : public Gtk::VBox {
 		Glib::RefPtr<Gtk::TextBuffer> mrp_tbOutput;
 		Gtk::ToolButton *tbOpen;
 		Gtk::ToolButton *tbRun;
+        EasyPlotmm* mp_Plot;
 
 		/**
 		 * Signal handlers
@@ -51,11 +61,6 @@ class uiAnalysis : public Gtk::VBox {
 		void addOutput(Glib::ustring t);
 
 
-		/**
-		 * Python setup functions
-		 */
-		PyObject* buildCellList();
-		PyObject* buildFileList();
 
 		/**
 		 * Used to find unique cells.
@@ -73,6 +78,9 @@ class uiAnalysis : public Gtk::VBox {
 					return a.animalID.compare(b.animalID) < 0;
 			}
 		};
+
+	private:
+
 };
 
 #endif

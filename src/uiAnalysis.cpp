@@ -1,13 +1,15 @@
 #include "uiAnalysis.h"
 
 
-uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, Gtk::Window* parent)
+uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, bool compact, Gtk::Window* parent)
 {
 	this->db = db;
 	mp_FileDetailsTree = fileDetailsTree;
 	m_parent = parent;
 
 	Gtk::Toolbar *toolbar = Gtk::manage( new Gtk::Toolbar() );
+
+
 	tbOpen = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::OPEN) );
 	tbRun = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::EXECUTE) );
 	tbRun->set_sensitive(false);
@@ -15,12 +17,29 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, Gtk
     toolbar->append(*tbRun, sigc::mem_fun(*this, &uiAnalysis::on_run_clicked) );
 	this->pack_start(*toolbar, false, false);
 
+	mp_Plot = Gtk::manage( new EasyPlotmm() );
 	Gtk::ScrolledWindow *swOutput = Gtk::manage( new Gtk::ScrolledWindow() );
 	mrp_tbOutput = Gtk::TextBuffer::create();
 	tvOutput = Gtk::manage( new Gtk::TextView(mrp_tbOutput) );
 	tvOutput->set_editable(false);
 	swOutput->add(*tvOutput);
-	this->pack_start(*swOutput);
+
+	if (compact)
+	{
+		this->pack_start(*mp_Plot);
+	} else {
+		Gtk::VPaned *vp = Gtk::manage( new Gtk::VPaned() );
+		vp->pack1(*mp_Plot);
+		vp->pack2(*swOutput);
+		this->pack_start(*vp);
+	}
+
+
+	if (compact)
+	{
+		toolbar->set_toolbar_style(Gtk::TOOLBAR_ICONS);
+		toolbar->set_icon_size(Gtk::IconSize(Gtk::ICON_SIZE_SMALL_TOOLBAR));
+	}
 
 }
 
@@ -95,18 +114,13 @@ sys.stderr = catchOut\n\
 
 	PyRun_SimpleString(stdOut.c_str());
 
-    // Provide python with some useful data
-	addOutput(" - Building Cells dictionary...");
-	PyObject* pyCells = buildCellList();
-	PyDict_SetItemString(main_dict, "Cells", pyCells);
-	Py_DECREF(pyCells);
-	addOutput(" [Done]\n");
-
-	addOutput(" - Building Files dictionary...");
-	PyObject* pyFiles = buildFileList();
-    PyDict_SetItemString(main_dict, "Files", pyFiles);
-	Py_DECREF(pyFiles);
-	addOutput(" [Done]\n");
+	PyImport_AddModule("SpikeDB");
+	PyMethodDef SpikeDBMethods[] = {
+		{"Files", buildFileList,
+			METH_VARARGS, "Load the files dictionary"},
+		{NULL, NULL, 0, NULL}
+	};
+	Py_InitModule("SpikeDB", SpikeDBMethods);
 
 	addOutput("*** Running Analysis Plugin ***\n\n");
 
@@ -134,7 +148,7 @@ sys.stderr = catchOut\n\
 	Py_Finalize();
 }                                                          
 
-PyObject* uiAnalysis::buildCellList()
+PyObject* buildCellList()
 {
 	PyObject *list = PyList_New(0);
 
@@ -175,8 +189,13 @@ PyObject* uiAnalysis::buildCellList()
 	return list;
 }
 
-PyObject* uiAnalysis::buildFileList()
+PyObject* buildFileList(PyObject *self, PyObject *args)
 {
+	bool sel;
+	if (!PyArg_ParseTuple(args, "b", &sel))
+		return NULL;
+
+
 	PyObject *list = PyList_New(mp_FileDetailsTree->mrp_ListStore->children().size());
 
 	sqlite3_stmt *stmt = 0;
