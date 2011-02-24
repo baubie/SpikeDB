@@ -7,7 +7,7 @@ INCLUDE_DIRECTORIES (
 	${PYTHON_INCLUDE_PATH} ${GTKMM_INCLUDE_DIRS}  ${SQLITE3_INCLUDE_DIRS} ${CAIRO_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
 ADD_DEFINITIONS (-Wall -W)
-SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -funroll-loops")
+SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -funroll-loops")
 
 SET (SRC spikedb.cpp gui.cpp uiMenuBar.cpp uiAnalysis.cpp uiFileDetailsTreeView.cpp uiFilterFrame.cpp uiTags.cpp spikedata.cpp settings.cpp easyplotmm/easyplotmm.cpp tokenize.cpp pySpikeDB.cpp)
 

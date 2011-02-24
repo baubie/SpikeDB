@@ -472,7 +472,7 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 				}
 			}
 		}
-		double min_y = sd.xvalue(0) - 2 * dy;
+		double min_y = sd.xvalue(0) - (sd.m_head.nSweeps) * dy * 0.5;
 		double max_y = sd.xvalue(sd.m_head.nSweeps - 1) + sd.m_head.nPasses * dy;
 		if (min_y > max_y) {
 			double t = min_y;
