@@ -66,6 +66,24 @@ Returns:
 	
 
 **********************
+SpikeDB.plotSetLineWidth(width)
+**********************
+Parameters:
+	Set the width of lines.
+Returns:
+	Nothing
+
+
+**********************
+SpikeDB.plotSetPointSize(size)
+**********************
+Parameters:
+	Set the size of points.
+Returns:
+	Nothing
+
+
+**********************
 SpikeDB.plot(x,y,err)
 **********************
 Parameters:
