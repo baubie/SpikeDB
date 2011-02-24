@@ -12,6 +12,7 @@ pySpikeDB::pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, EasyPl
 	this->mp_FileDetailsTree = fileDetailsTree;
 	this->mp_plot = plot;
 	this->mrp_tbOutput = tbOutput;
+	this->plotClear();
 }
 
 void pySpikeDB::print(const std::string &s)
@@ -242,9 +243,35 @@ bp::object pySpikeDB::getFiles(bool selOnly)
 	return list;
 }
 
+void pySpikeDB::plotSetRGBA(float r, float g, float b, float a)
+{
+	m_plotPen.color.r = r;
+	m_plotPen.color.g = g;
+	m_plotPen.color.b = b;
+	m_plotPen.color.a = a;
+}
+
+void pySpikeDB::plotSetPointSize(float s)
+{
+	m_plotPen.pointsize = s;
+}
+
+
+void pySpikeDB::plotSetLineWidth(float s)
+{
+	m_plotPen.linewidth = s;
+}
+
 void pySpikeDB::plotClear()
 {
 	mp_plot->clear();
+	m_plotPen.color.r = 0;
+	m_plotPen.color.g = 0;
+	m_plotPen.color.b = 0;
+	m_plotPen.color.a = 1;
+	m_plotPen.linewidth = 2.0;
+	m_plotPen.filled = true;
+	m_plotPen.pointsize = 8.0;
 }
 
 void pySpikeDB::plotLine(bp::list &pyX, bp::list &pyY, bp::list &pyErr)
@@ -266,11 +293,11 @@ void pySpikeDB::plotLine(bp::list &pyX, bp::list &pyY, bp::list &pyErr)
 
 	if (bp::len(pyX) == bp::len(pyErr))
 	{
-		mp_plot->plot(x, y, err);
+		mp_plot->plot(x, y, err, m_plotPen);
 	}
 	else
 	{
-		mp_plot->plot(x, y);
+		mp_plot->plot(x, y, m_plotPen);
 	}
 }
 

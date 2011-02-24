@@ -2,6 +2,7 @@ Analysis can be performed from within SpikeDB by writing Python analysis scripts
 Your script has the SpikeDB object available with several useful functions.
 
 
+
 **********************
 SpikeDB.getCells()
 **********************
@@ -12,6 +13,7 @@ Returns:
 		  CarFreq: number (in Hz)
 		  Threshold: number (in dB SPL)
 		  Depth: number (in um)
+
 
 
 **********************
@@ -42,7 +44,6 @@ SpikeDB.stddev(values)
 **********************
 Parameters:
 	values: A list of numbers of which to calculate the standard devation.
-
 Returns:
 	The standard devation.
 
@@ -51,6 +52,23 @@ SpikeDB.mean(values)
 **********************
 Parameters:
 	values: A list of numbers of which to calculate the mean.
-
 Returns:
 	The mean.
+
+
+**********************
+SpikeDB.plotSetRGBA(r,g,b,a)
+**********************
+Parameters:
+	RGBA percentages with values from 0 to 1.
+Returns:
+	Nothing
+	
+
+**********************
+SpikeDB.plot(x,y,err)
+**********************
+Parameters:
+	Lists of equal size containing x and y points and error bar heights.  If no error bars are needed then err can be an empty list.
+Returns:
+	Nothing

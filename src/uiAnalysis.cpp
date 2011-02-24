@@ -149,10 +149,14 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 		.def("mean", &pySpikeDB::mean)
 		.def("stddev", &pySpikeDB::stddev)
 		.def("plotClear", &pySpikeDB::plotClear)
+		.def("plotSetRGBA", &pySpikeDB::plotSetRGBA)
+		.def("plotSetPointSize", &pySpikeDB::plotSetPointSize)
+		.def("plotSetLineWidth", &pySpikeDB::plotSetLineWidth)
 		.def("plotLine", &pySpikeDB::plotLine);
 	pySpikeDB _pySpikeDB(db, mp_FileDetailsTree, mp_plot, mrp_tbOutput);
 	main_namespace["SpikeDB"] = bp::ptr(&_pySpikeDB);
 	main_namespace["SpikeDB"].attr("__dict__")["VARYING"] = VARYING_STIMULUS;
+
 
 	// Redirect stderr and stdout
 	main_namespace["pySpikeDBWrite"] = class_<pySpikeDB>("pySpikeDBWrite")

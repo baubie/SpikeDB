@@ -30,8 +30,12 @@ class pySpikeDB {
 		double stddev(boost::python::list &v);
 		double mean(boost::python::list &v);
 
+		void plotSetRGBA(float r, float g, float b, float a);
+		void plotSetPointSize(float s);
+		void plotSetLineWidth(float s);
 		void plotLine(boost::python::list &x, boost::python::list &y, boost::python::list &err);
 		void plotClear();
+
 		void print(const std::string &s);
 
 	private:
@@ -40,6 +44,11 @@ class pySpikeDB {
 		uiFileDetailsTreeView* mp_FileDetailsTree;
 		EasyPlotmm *mp_plot;
 		Glib::RefPtr<Gtk::TextBuffer> mrp_tbOutput;
+
+		/**
+		 * Current Plotting Values
+		 */
+		EasyPlotmm::Pen m_plotPen;
 
 		/**
 		 * Helper Functions
