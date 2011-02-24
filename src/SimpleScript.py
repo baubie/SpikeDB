@@ -1,4 +1,17 @@
 
 files = SpikeDB.getFiles(True)
 SpikeDB.plotClear()
-SpikeDB.plotLine([1,2,3,4,5],[1,4,9,16,26],[])
+
+
+for f in files:
+	means = []
+	x = []
+	for t in f['trials']:
+		x.append(t['xvalue'])	
+		m = 0
+		for p in t['spikes']:
+			m += len(p)
+		m /= len(t['spikes'])
+		means.append(m)
+	SpikeDB.plotLine(x,means,[])
+

@@ -123,8 +123,8 @@ void uiAnalysis::runScript()
 			 "\n"
 			 "import sys\n"
 			 "TheStdoutCatcher = StdoutCatcher()\n"
-			 "sys.stdout = TheStdoutCatcher\n"
-			 "sys.stderr = TheStdoutCatcher\n";
+			 "sys.stdout = TheStdoutCatcher\n";
+
 	PyRun_SimpleString(CatchOutput.c_str());
 
 
