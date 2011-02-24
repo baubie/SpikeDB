@@ -2,24 +2,55 @@ Analysis can be performed from within SpikeDB by writing Python analysis scripts
 Your script has the SpikeDB object available with several useful functions.
 
 
-files = SpikeDB.getFiles()
-
+**********************
 SpikeDB.getCells()
-Returns: List of Dictionaries where each dictionary has information about a cell.
-Keys: AnimalID: string
-	  CellID: number
-      CarFreq: number (in Hz)
-	  Threshold: number (in dB SPL)
-	  Depth: number (in um)
+**********************
+Returns: 
+	List of Dictionaries where each dictionary has information about a cell.
+	Keys: AnimalID: string
+		  CellID: number
+		  CarFreq: number (in Hz)
+		  Threshold: number (in dB SPL)
+		  Depth: number (in um)
 
-SpikeDB.getFiles()
-Returns: List of Dictionaries where each dictionary has information about a file.
-Keys: AnimalID: string
-	  CellID: number
-	  FileID: number
-	  datetime: string
-      type: Dictionary with [1] being channel 1 and [2] being channel 2. 
-      duration: Dictionary with [1] being channel 1 and [2] being channel 2. 
-      frequency: Dictionary with [1] being channel 1 and [2] being channel 2. 
-      attenuation: Dictionary with [1] being channel 1 and [2] being channel 2. 
-      begin: Dictionary with [1] being channel 1 and [2] being channel 2. 
+
+**********************
+SpikeDB.getFiles(SelectedOnly)
+**********************
+Parameters:
+	SelectedOnly: True to return only the selected files.  False to return all of the files.
+
+Returns: 
+	List of Dictionaries where each dictionary has information about a file.
+
+	Keys: AnimalID: string
+		  CellID: number
+		  FileID: number
+		  datetime: string
+		  type: Dictionary with [1] being channel 1 and [2] being channel 2. 
+		  duration: Dictionary with [1] being channel 1 and [2] being channel 2. 
+		  frequency: Dictionary with [1] being channel 1 and [2] being channel 2. 
+		  attenuation: Dictionary with [1] being channel 1 and [2] being channel 2. 
+		  begin: Dictionary with [1] being channel 1 and [2] being channel 2. 
+		  trials: Dictionary
+			xvalue: X value of that trial
+			spikes: List of passes for that trial containing a list of spike times for each pass.
+
+
+**********************
+SpikeDB.stddev(values)
+**********************
+Parameters:
+	values: A list of numbers of which to calculate the standard devation.
+
+Returns:
+	The standard devation.
+
+**********************
+SpikeDB.mean(values)
+**********************
+Parameters:
+	values: A list of numbers of which to calculate the mean.
+
+Returns:
+	The mean.

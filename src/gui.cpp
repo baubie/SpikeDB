@@ -90,9 +90,9 @@ void GUI::init_gui()
 	vpMiddle->pack1(*swFileDetails);
 	Gtk::HBox *hbPlots = Gtk::manage(new Gtk::HBox());
 	mp_PlotSpikes = Gtk::manage(new EasyPlotmm());
-	mp_PlotMeans = Gtk::manage(new EasyPlotmm());
+	mp_QuickAnalysis = Gtk::manage(new uiAnalysis(&db,mp_FileDetailsTree,true,this));
 	hbPlots->pack_start(*mp_PlotSpikes, true, true);
-	hbPlots->pack_start(*mp_PlotMeans, true, true);
+	hbPlots->pack_start(*mp_QuickAnalysis, true, true);
 	vpMiddle->pack2(*hbPlots);
 
 	Gtk::VBox *vbRight = Gtk::manage(new Gtk::VBox());
@@ -393,7 +393,8 @@ void GUI::on_celldetails_edited(
 
 void GUI::on_filedetails_selection_changed()
 {
-	mp_PlotMeans->clear();
+	mp_QuickAnalysis->getPlot()->clear();
+	mp_QuickAnalysis->runPlugin();
 	mp_PlotSpikes->clear();
 	curXVariable = "";
 	mp_FileDetailsTree->treeSelection()->selected_foreach_iter(
@@ -448,11 +449,6 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 		int numSpikes = spikes_length / sizeof(SPIKESTRUCT);
 		sd.m_spikeArray.assign(spikes, spikes + numSpikes);
 
-		std::vector<double> x(sd.m_head.nSweeps, 0);
-		std::vector<double> y_mean(sd.m_head.nSweeps, 0);
-		std::vector<double> err(sd.m_head.nSweeps, 0);
-		std::vector<double> N(sd.m_head.nSweeps, 0);
-
 		std::vector<double> x_spikes;
 		std::vector<double> y_spikes;
 
@@ -466,14 +462,10 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 
 		// Calculate the means and get the spike times
 		for (int i = 0; i < sd.m_head.nSweeps; ++i) {
-			x.at(i) = sd.xvalue(i);
 			for (int p = 0; p < sd.m_head.nPasses; ++p) {
 				for (unsigned int s = 0; s < sd.m_spikeArray.size(); ++s) {
 					// Spike sweeps are 1 based but here we are 0 based
 					if (sd.m_spikeArray[s].nSweep == i + 1 && sd.m_spikeArray[s].nPass == p+1) {
-						if (sd.m_head.nPasses > 0) {
-							y_mean.at(i) += 1.0f / sd.m_head.nPasses;
-						}
 						x_spikes.push_back(sd.m_spikeArray[s].fTime);
 						y_spikes.push_back(sd.xvalue(i) + dy * p);
 					}
@@ -491,35 +483,6 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 		mp_PlotSpikes->xname("Time (ms)");
 		mp_PlotSpikes->yname(sd.xVariable());
 		mp_PlotSpikes->plot(x_spikes, y_spikes, spikesPen);
-
-		// Calculate the SD of the means
-		for (int i = 0; i < sd.m_head.nSweeps; ++i) {
-			for (int p = 0; p < sd.m_head.nPasses; ++p) {
-				int numSpikes = 0;
-				for (unsigned int s = 0; s < sd.m_spikeArray.size(); ++s) {
-					// Spike sweeps are 1 based but here we are 0 based
-					if (sd.m_spikeArray[s].nSweep == i + 1 && sd.m_spikeArray[s].nPass == p) {
-						numSpikes++;
-					}
-				}
-				if (numSpikes > 0) {
-					++(N.at(i));
-				}
-				err.at(i) += (numSpikes - y_mean.at(i)) * (numSpikes - y_mean.at(i));
-			}
-		}
-		for (int i = 0; i < sd.m_head.nSweeps; ++i) {
-			if (N.at(i) > 1) {
-				// Calculate Standard Error from the Standard Deviation
-				err.at(i) = sqrt(err.at(i) / (N.at(i) - 1)) / sqrt(N.at(i));  // N-1 as we have a sample of points
-			}else                                                                          {
-				err.at(i) = 0;
-			}
-		}
-		mp_PlotMeans->axes(mp_PlotMeans->automatic(), mp_PlotMeans->automatic(), 0, mp_PlotMeans->automatic());
-		mp_PlotMeans->xname(sd.xVariable());
-
-		mp_PlotMeans->plot(x, y_mean, err);
 
 		// Add stimuli to spikes plot
 		EasyPlotmm::Pen ch1Pen;

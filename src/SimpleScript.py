@@ -1,8 +1,7 @@
 
-files = SpikeDB.getFiles(True)
+# Ca
 SpikeDB.plotClear()
-
-
+files = SpikeDB.getFiles(True)
 for f in files:
 	means = []
 	x = []

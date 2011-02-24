@@ -57,7 +57,7 @@ uiFilterFrame::uiFilterFrame()
 	);
 
 	m_timer.start();
-	Glib::signal_timeout().connect(sigc::mem_fun(*this, &uiFilterFrame::check_change_queue), 5);
+	Glib::signal_timeout().connect(sigc::mem_fun(*this, &uiFilterFrame::check_change_queue), 250);
 
 	/*
 	 * Hidden file checkbox

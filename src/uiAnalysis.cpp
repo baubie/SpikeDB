@@ -5,9 +5,15 @@ using namespace bp;
 
 uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, bool compact, Gtk::Window* parent)
 {
+
+
+
 	this->db = db;
+	this->compact = compact;
 	mp_FileDetailsTree = fileDetailsTree;
 	m_parent = parent;
+
+	initPlugins();
 
 	Gtk::Toolbar *toolbar = Gtk::manage( new Gtk::Toolbar() );
 
@@ -17,6 +23,17 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
 	tbRun->set_sensitive(false);
     toolbar->append(*tbOpen, sigc::mem_fun(*this, &uiAnalysis::on_open_clicked) );
     toolbar->append(*tbRun, sigc::mem_fun(*this, &uiAnalysis::on_run_clicked) );
+	tbPlugins = Gtk::manage( new Gtk::ComboBoxText() );
+	Gtk::ToolItem *tbPluginItem = Gtk::manage( new Gtk::ToolItem() );
+	tbPluginItem->add(*tbPlugins);
+	for (unsigned int i = 0; i < plugins.size(); ++i) {
+		tbPlugins->append_text(plugins[i].second);
+		if (i == 0) tbPlugins->set_active_text(plugins[i].second);
+	}
+	tbPlugins->signal_changed().connect(sigc::mem_fun(*this, &uiAnalysis::on_plugin_changed));
+
+	toolbar->append(*tbPluginItem);
+	tbPlugins->set_focus_on_click(false);
 	this->pack_start(*toolbar, false, false);
 
 	mp_plot = Gtk::manage( new EasyPlotmm() );
@@ -43,9 +60,21 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
 		toolbar->set_icon_size(Gtk::IconSize(Gtk::ICON_SIZE_SMALL_TOOLBAR));
 	}
 
+
 }
 
 uiAnalysis::~uiAnalysis() {}
+
+
+void uiAnalysis::initPlugins() 
+{
+	/**
+	 * Setup built-in plugins
+	 */
+	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("meanSpikeCount.py", "Mean Spike Count"));
+	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("firstSpikeLatency.py", "First Spike Latency"));
+	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("spikeProbability.py", "Spiking Probability"));
+}
 
 void uiAnalysis::on_open_clicked()
 {
@@ -75,6 +104,11 @@ void uiAnalysis::on_run_clicked()
 	runScript();
 }
 
+void uiAnalysis::on_plugin_changed()
+{
+	if (compact) runPlugin();
+}
+
 void uiAnalysis::addOutput(Glib::ustring t)
 {
 	mrp_tbOutput->insert(mrp_tbOutput->end(), t);
@@ -83,10 +117,15 @@ void uiAnalysis::addOutput(Glib::ustring t)
 	}
 }
 
-void uiAnalysis::runScript()
+void uiAnalysis::runPlugin()
+{
+	runScript(plugins[tbPlugins->get_active_row_number()].first);
+}
+
+void uiAnalysis::runScript(const Glib::ustring &plugin)
 {
 	//TODO: Check if we have a valid filename
-	if (m_filename == "") return;
+	if (m_filename == "" && plugin == "") return;
 
 	mrp_tbOutput->set_text("*** Initializing Analysis Plugin Library ***\n");
 	addOutput("Using Script: ");
@@ -104,6 +143,8 @@ void uiAnalysis::runScript()
 	main_namespace["pySpikeDB"] = class_<pySpikeDB>("pySpikeDB")
 		.def("getCells", &pySpikeDB::getCells)
 		.def("getFiles", &pySpikeDB::getFiles)
+		.def("mean", &pySpikeDB::mean)
+		.def("stddev", &pySpikeDB::stddev)
 		.def("plotClear", &pySpikeDB::plotClear)
 		.def("plotLine", &pySpikeDB::plotLine);
 
@@ -130,7 +171,12 @@ void uiAnalysis::runScript()
 
 	// Open the file and run the code
 	FILE *fp;
-	fp = fopen(m_filename.c_str(), "r");
+	if (plugin == "") {
+		fp = fopen(m_filename.c_str(), "r");
+	} else {
+		Glib::ustring plugin_path = "plugins/"+plugin;
+		fp = fopen(plugin_path.c_str(), "r");
+	}
 	PyRun_SimpleFile(fp, m_filename.c_str());
 	fclose(fp);
 
@@ -143,3 +189,8 @@ void uiAnalysis::runScript()
 	addOutput("\n*** Analysis Plugin Completed ***");
 }                                                          
 
+
+EasyPlotmm* uiAnalysis::getPlot()
+{
+	return mp_plot;
+}

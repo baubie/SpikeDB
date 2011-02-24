@@ -86,9 +86,8 @@ class GUI : public Gtk::Window
         uiFileDetailsTreeView* mp_FileDetailsTree;
 		Gtk::Statusbar* mp_Statusbar;
         Gtk::HBox* mp_HBoxPlots;
-		Gtk::ComboBox* mp_MeanType;
         EasyPlotmm* mp_PlotSpikes;
-        EasyPlotmm* mp_PlotMeans;
+		uiAnalysis* mp_QuickAnalysis;
 
 
         Glib::RefPtr<Gtk::TreeStore> mrp_AnimalTree;

@@ -25,6 +25,8 @@ class pySpikeDB {
 
 		boost::python::object getFiles(bool selOnly);
 		boost::python::object getCells();
+		double stddev(boost::python::list &v);
+		double mean(boost::python::list &v);
 
 		void plotLine(boost::python::list &x, boost::python::list &y, boost::python::list &err);
 		void plotClear();

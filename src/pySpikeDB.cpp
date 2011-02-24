@@ -223,7 +223,6 @@ bp::object pySpikeDB::getFiles(bool selOnly)
 	return list;
 }
 
-
 void pySpikeDB::plotClear()
 {
 	mp_plot->clear();
@@ -265,3 +264,30 @@ std::vector<double> pySpikeDB::list2vec(boost::python::list &l)
 	}
 	return r;
 }
+
+double pySpikeDB::mean(boost::python::list &v)
+{
+	int N = bp::len(v);
+	double r = 0;
+	for (int i = 0; i < N; ++i)
+	{
+		r += extract<double>(v[i]);
+	}
+	if (N > 0) r /= N;
+	return r;
+}
+
+double pySpikeDB::stddev(boost::python::list &v)
+{
+	int N = bp::len(v);
+	if (N <= 1) return 0;
+	double m = mean(v);
+	double r = 0;
+	for (int i = 0; i < N; ++i)
+	{
+		double t = (extract<double>(v[i]) - m);
+		r += t*t;
+	}
+	return r/(N-1);
+}
+

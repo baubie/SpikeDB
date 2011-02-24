@@ -4,6 +4,7 @@
 #include "pySpikeDB.h"
 #include <gtkmm.h>
 #include <sqlite3.h>
+#include <vector>
 #include "spikedata.h"
 #include "uiFileDetailsTreeView.h"
 #include "easyplotmm/easyplotmm.h"
@@ -14,6 +15,11 @@ class uiAnalysis : public Gtk::VBox {
 		uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, bool compact, Gtk::Window* parent=NULL);
 		virtual ~uiAnalysis();
 
+		EasyPlotmm* getPlot();
+		void runPlugin();
+
+		std::vector<std::pair<Glib::ustring, Glib::ustring> > plugins;
+
 	protected:
 
 		/**
@@ -23,6 +29,7 @@ class uiAnalysis : public Gtk::VBox {
 		uiFileDetailsTreeView* mp_FileDetailsTree;
 		Gtk::Window* m_parent;
 		Glib::ustring m_filename;
+		bool compact;
 
 		/**
 		 * Child widgets
@@ -31,6 +38,7 @@ class uiAnalysis : public Gtk::VBox {
 		Glib::RefPtr<Gtk::TextBuffer> mrp_tbOutput;
 		Gtk::ToolButton *tbOpen;
 		Gtk::ToolButton *tbRun;
+		Gtk::ComboBoxText *tbPlugins;
         EasyPlotmm* mp_plot;
 
 		/**
@@ -38,12 +46,14 @@ class uiAnalysis : public Gtk::VBox {
 		 */
 		void on_open_clicked();
 		void on_run_clicked();
+		void on_plugin_changed();
 
 		/**
 		 * Helper functions
 		 */
-		void runScript();
 		void addOutput(Glib::ustring t);
+		void runScript(const Glib::ustring &plugin = "");
+		void initPlugins();
 
 	private:
 
