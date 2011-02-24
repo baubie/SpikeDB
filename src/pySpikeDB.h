@@ -8,6 +8,7 @@
 #include <set>
 #include <vector>
 #include <ostream>
+#include <sstream>
 #include "spikedata.h"
 #include "uiFileDetailsTreeView.h"
 #include "easyplotmm/easyplotmm.h"

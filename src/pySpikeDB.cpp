@@ -203,7 +203,6 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 bp::object pySpikeDB::getFiles(bool selOnly)
 {
 	bp::list list;
-	print("Loading files...");
 	if (selOnly) {
 		std::vector<Gtk::TreeModel::iterator> rows;
 		mp_FileDetailsTree->treeSelection()->selected_foreach_iter(
@@ -219,12 +218,25 @@ bp::object pySpikeDB::getFiles(bool selOnly)
 		}
 	} else {
 		Gtk::TreeIter iter;
+		print("Loading files...");
+		unsigned int next = 10;
+		float count = 0;
+		unsigned int total = mp_FileDetailsTree->mrp_ListStore->children().size();
 		for (iter = mp_FileDetailsTree->mrp_ListStore->children().begin(); 
 			 iter != mp_FileDetailsTree->mrp_ListStore->children().end(); 
 			 iter++)
 		{
 			list.append(getFile(iter));
+			count++;
+			if (100*(count/total) >= next) 
+			{
+				std::stringstream ss;
+				ss << "..." << next << "%";
+				print(ss.str());
+				next += 10;
+			}
 		}
+		print("\n");
 	}
 
 	return list;
