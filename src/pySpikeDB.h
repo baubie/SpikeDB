@@ -2,6 +2,7 @@
 #define PYSPIKEDB_H
 
 #include <boost/python.hpp>
+#include <boost/python/stl_iterator.hpp>
 #include <gtkmm.h>
 #include <sqlite3.h>
 #include <set>
@@ -9,6 +10,8 @@
 #include "spikedata.h"
 #include "uiFileDetailsTreeView.h"
 #include "easyplotmm/easyplotmm.h"
+
+#include <iostream>
 
 
 class pySpikeDB {
@@ -22,6 +25,8 @@ class pySpikeDB {
 		boost::python::object getFiles(bool selOnly);
 		boost::python::object getCells();
 
+		void plotLine(boost::python::list &x, boost::python::list &y, boost::python::list &err);
+
 	private:
 
 		sqlite3 **db;
@@ -29,7 +34,11 @@ class pySpikeDB {
 		EasyPlotmm *mp_plot;
 
 
+		/**
+		 * Helper Functions
+		 */
 		boost::python::object getFile(const Gtk::TreeModel::iterator& iter);
+		std::vector<double> list2vec(boost::python::list &l);
 
 		/**
 		 * Used to find unique cells.

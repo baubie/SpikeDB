@@ -103,7 +103,8 @@ void uiAnalysis::runScript()
 
 	main_namespace["pySpikeDB"] = class_<pySpikeDB>("pySpikeDB")
 		.def("getCells", &pySpikeDB::getCells)
-		.def("getFiles", &pySpikeDB::getFiles);
+		.def("getFiles", &pySpikeDB::getFiles)
+		.def("plotLine", &pySpikeDB::plotLine);
 
 	pySpikeDB pySpikeDB(db, mp_FileDetailsTree, mp_plot);
 	main_namespace["SpikeDB"] = bp::ptr(&pySpikeDB);
@@ -122,6 +123,7 @@ void uiAnalysis::runScript()
 			 "import sys\n"
 			 "TheStdoutCatcher = StdoutCatcher()\n"
 			 "sys.stdout = TheStdoutCatcher\n";
+			 "sys.stderr = TheStdoutCatcher\n";
 
 	PyRun_SimpleString(CatchOutput.c_str());
 

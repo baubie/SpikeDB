@@ -222,3 +222,29 @@ bp::object pySpikeDB::getFiles(bool selOnly)
 
 	return list;
 }
+
+
+
+void pySpikeDB::plotLine(bp::list &pyX, bp::list &pyY, bp::list &pyErr)
+{
+	std::vector<double> x, y, err;
+	if (bp::len(pyX) != bp::len(pyY)) return;
+	x = list2vec(pyX);
+	y = list2vec(pyY);
+	err = list2vec(pyErr);
+
+	if (bp::len(pyX) == bp::len(pyErr))
+	{
+		mp_plot->plot(x, y, err);
+	}
+	else
+	{
+		mp_plot->plot(x, y);
+	}
+}
+
+std::vector<double> pySpikeDB::list2vec(boost::python::list &l)
+{
+	bp::stl_input_iterator<double> begin(l), end(l);
+	return std::vector<double>(begin,end);
+}
