@@ -26,7 +26,7 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
 	tbPluginItem->add(*tbPlugins);
 	for (unsigned int i = 0; i < plugins.size(); ++i) {
 		tbPlugins->append_text(plugins[i].second);
-		if (i == 0) tbPlugins->set_active_text(plugins[i].second);
+		if (i == 1) tbPlugins->set_active_text(plugins[i].second);
 	}
 	tbPlugins->signal_changed().connect(sigc::mem_fun(*this, &uiAnalysis::on_plugin_changed));
 
@@ -69,10 +69,10 @@ void uiAnalysis::initPlugins()
 	/**
 	 * Setup built-in plugins
 	 */
+	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("", "Custom Analysis Script"));
 	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("meanSpikeCount.py", "Mean Spike Count"));
 	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("firstSpikeLatency.py", "First Spike Latency"));
 	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("spikeProbability.py", "Spiking Probability"));
-	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("", "Custom Analysis Script"));
 }
 
 void uiAnalysis::on_open_clicked()
@@ -110,7 +110,7 @@ void uiAnalysis::on_run_clicked()
 
 void uiAnalysis::on_plugin_changed()
 {
-	if (compact) runPlugin();
+	runPlugin();
 }
 
 void uiAnalysis::addOutput(Glib::ustring t)
