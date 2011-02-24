@@ -8,15 +8,22 @@
 #include "spikedata.h"
 #include "uiFileDetailsTreeView.h"
 #include "easyplotmm/easyplotmm.h"
+#include "settings.h"
 
 class uiAnalysis : public Gtk::VBox {
 
 	public:
-		uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, bool compact, Gtk::Window* parent=NULL);
+		uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, bool compact, Settings *settings, Gtk::Window* parent=NULL);
 		virtual ~uiAnalysis();
 
 		EasyPlotmm* getPlot();
 		void runPlugin();
+
+
+		/**
+		 * Python print for window
+		 */
+		void print(const std::string& s);
 
 		std::vector<std::pair<Glib::ustring, Glib::ustring> > plugins;
 
@@ -30,6 +37,7 @@ class uiAnalysis : public Gtk::VBox {
 		Gtk::Window* m_parent;
 		Glib::ustring m_filename;
 		bool compact;
+		Settings *settings;
 
 		/**
 		 * Child widgets

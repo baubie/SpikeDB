@@ -6,13 +6,21 @@ using namespace bp;
 pySpikeDB::pySpikeDB() {}
 
 
-pySpikeDB::pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, EasyPlotmm* plot)
+pySpikeDB::pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, EasyPlotmm *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput)
 {
 	this->db = db;
 	this->mp_FileDetailsTree = fileDetailsTree;
 	this->mp_plot = plot;
+	this->mrp_tbOutput = tbOutput;
 }
 
+void pySpikeDB::print(const std::string &s)
+{
+	mrp_tbOutput->insert(mrp_tbOutput->end(), s);
+	while (Gtk::Main::events_pending()) {
+    	Gtk::Main::iteration();
+	}
+}
 
 bp::object pySpikeDB::getCells()
 {
@@ -96,7 +104,7 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 			if (sd.duration(1, 0) == sd.duration(1, 1)) {
 				dur[1] = sd.duration(1,0);
 			} else {
-				dur[1] = "Var";
+				dur[1] = VARYING_STIMULUS;
 			}
 		}
 		if (sd.m_head.nOnCh2 == 0) { dur[2] = "";} 
@@ -104,7 +112,7 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 			if (sd.duration(2, 0) == sd.duration(2, 1)) {
 				dur[2] = sd.duration(2,0);
 			} else {
-				dur[2] = "Var";
+				dur[2] = VARYING_STIMULUS;
 			}
 		}
 		file["duration"] = dur;
@@ -115,7 +123,7 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 			if (sd.attenuation(1, 0) == sd.attenuation(1, 1)) {
 				attn[1] = sd.attenuation(1,0);
 			} else {
-				attn[1] = "Var";
+				attn[1] = VARYING_STIMULUS;
 			}
 		}
 		if (sd.m_head.nOnCh2 == 0) { attn[2] = "";} 
@@ -123,7 +131,7 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 			if (sd.attenuation(2, 0) == sd.attenuation(2, 1)) {
 				attn[2] = sd.attenuation(2,0);
 			} else {
-				attn[2] = "Var";
+				attn[2] = VARYING_STIMULUS;
 			}
 		}
 		file["attenuation"] = attn;
@@ -134,7 +142,7 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 			if (sd.frequency(1, 0) == sd.frequency(1, 1)) {
 				freq[1] = sd.frequency(1,0);
 			} else {
-				freq[1] = "Var";
+				freq[1] = VARYING_STIMULUS;
 			}
 		}
 		if (sd.m_head.nOnCh2 == 0) { freq[2] = "";} 
@@ -142,7 +150,7 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 			if (sd.frequency(2, 0) == sd.frequency(2, 1)) {
 				freq[2] = sd.frequency(2,0);
 			} else {
-				freq[2] = "Var";
+				freq[2] = VARYING_STIMULUS;
 			}
 		}
 		file["frequency"] = freq;
@@ -153,7 +161,7 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 			if (sd.begin(1, 0) == sd.begin(1, 1)) {
 				begin[1] = sd.begin(1,0);
 			} else {
-				begin[1] = "Var";
+				begin[1] = VARYING_STIMULUS;
 			}
 		}
 		if (sd.m_head.nOnCh2 == 0) { begin[2] = "";} 
@@ -161,7 +169,7 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 			if (sd.begin(2, 0) == sd.begin(2, 1)) {
 				begin[2] = sd.begin(2,0);
 			} else {
-				begin[2] = "Var";
+				begin[2] = VARYING_STIMULUS;
 			}
 		}
 		file["begin"] = begin;
@@ -195,8 +203,7 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 bp::object pySpikeDB::getFiles(bool selOnly)
 {
 	bp::list list;
-
-
+	print("Loading files...");
 	if (selOnly) {
 		std::vector<Gtk::TreeModel::iterator> rows;
 		mp_FileDetailsTree->treeSelection()->selected_foreach_iter(

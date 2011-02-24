@@ -3,15 +3,13 @@
 namespace bp=boost::python;
 using namespace bp;
 
-uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, bool compact, Gtk::Window* parent)
+uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, bool compact, Settings *settings, Gtk::Window* parent)
 {
-
-
-
 	this->db = db;
 	this->compact = compact;
 	mp_FileDetailsTree = fileDetailsTree;
 	m_parent = parent;
+	this->settings = settings;
 
 	initPlugins();
 
@@ -74,6 +72,7 @@ void uiAnalysis::initPlugins()
 	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("meanSpikeCount.py", "Mean Spike Count"));
 	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("firstSpikeLatency.py", "First Spike Latency"));
 	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("spikeProbability.py", "Spiking Probability"));
+	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("", "Custom Analysis Script"));
 }
 
 void uiAnalysis::on_open_clicked()
@@ -82,6 +81,9 @@ void uiAnalysis::on_open_clicked()
 				      Gtk::FILE_CHOOSER_ACTION_OPEN);
 
 	dialog.set_transient_for(*m_parent);
+
+	// Set default folder
+	dialog.set_current_folder(settings->get_string("lastScriptFolder", "."));
 
 	// Add response buttons to the dialog:
 	dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
@@ -93,8 +95,10 @@ void uiAnalysis::on_open_clicked()
 	switch (result) {
 	case (Gtk::RESPONSE_OK):
 		std::string filename = dialog.get_filename();
+		settings->set("lastScriptFolder", Glib::path_get_dirname(filename));
 		tbRun->set_sensitive(true);
 		m_filename = filename;
+		tbPlugins->set_active_text("Custom Analysis Script");
 		break;
 	}
 }   
@@ -132,42 +136,35 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 	addOutput(m_filename);
 	addOutput("\n");
 
-
 	Py_Initialize();
 
 	bp::object main_module((
 		bp::handle<>(bp::borrowed(PyImport_AddModule("__main__")))));
 	bp::object main_namespace = main_module.attr("__dict__");
 
-
 	main_namespace["pySpikeDB"] = class_<pySpikeDB>("pySpikeDB")
 		.def("getCells", &pySpikeDB::getCells)
 		.def("getFiles", &pySpikeDB::getFiles)
+		.def("write", &pySpikeDB::print)
 		.def("mean", &pySpikeDB::mean)
 		.def("stddev", &pySpikeDB::stddev)
 		.def("plotClear", &pySpikeDB::plotClear)
 		.def("plotLine", &pySpikeDB::plotLine);
+	pySpikeDB _pySpikeDB(db, mp_FileDetailsTree, mp_plot, mrp_tbOutput);
+	main_namespace["SpikeDB"] = bp::ptr(&_pySpikeDB);
+	main_namespace["SpikeDB"].attr("__dict__")["VARYING"] = VARYING_STIMULUS;
 
-	pySpikeDB pySpikeDB(db, mp_FileDetailsTree, mp_plot);
-	main_namespace["SpikeDB"] = bp::ptr(&pySpikeDB);
+	// Redirect stderr and stdout
+	main_namespace["pySpikeDBWrite"] = class_<pySpikeDB>("pySpikeDBWrite")
+		.def("write", &pySpikeDB::print);
+	pySpikeDB _pySpikeDBWrite(db, mp_FileDetailsTree, mp_plot, mrp_tbOutput);
+	main_namespace["SpikeDBWrite"] = bp::ptr(&_pySpikeDBWrite);
+	PyRun_SimpleString("import sys");
+	PyRun_SimpleString("sys.stderr = SpikeDBWrite");
+	PyRun_SimpleString("sys.stdout = SpikeDBWrite");
+
 
 	addOutput("*** Running Analysis Plugin ***\n\n");
-
-	// Handle stdout redirection
-	// Stolen from: http://mail.python.org/pipermail/cplusplus-sig/2004-August/007679.html
-	const Glib::ustring CatchOutput =
-			 "class StdoutCatcher:\n"
-			 "\tdef __init__(self):\n"
-			 "\t\tself.data = ''\n"
-			 "\tdef write(self, stuff):\n"
-			 "\t\tself.data = self.data + stuff\n"
-			 "\n"
-			 "import sys\n"
-			 "TheStdoutCatcher = StdoutCatcher()\n"
-			 "sys.stdout = TheStdoutCatcher\n";
-
-	PyRun_SimpleString(CatchOutput.c_str());
-
 
 	// Open the file and run the code
 	FILE *fp;
@@ -180,15 +177,13 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 	PyRun_SimpleFile(fp, m_filename.c_str());
 	fclose(fp);
 
-	// Get the output and update the text buffer
-	object Catcher (main_namespace ["TheStdoutCatcher"]);
-	object CatcherData (borrowed (PyObject_GetAttrString (Catcher.ptr(),"data")));
-	const std::string &S = extract<std::string>(CatcherData);
-	addOutput(S);
-
 	addOutput("\n*** Analysis Plugin Completed ***");
 }                                                          
 
+void uiAnalysis::print(const std::string &s)
+{
+	addOutput(s);
+}
 
 EasyPlotmm* uiAnalysis::getPlot()
 {

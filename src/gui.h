@@ -47,6 +47,7 @@ class GUI : public Gtk::Window
         virtual ~GUI();
 
         sqlite3 *db; /**< Pointer to out SQLite3 database. */
+		Settings settings; /**< Settings object. */
 
     protected:
 
@@ -54,7 +55,6 @@ class GUI : public Gtk::Window
 		 * Member variables
 		 */
 		bool uiReady; /**< When FALSE, block UI updates. */
-		Settings settings; /**< Settings object. */
         std::string curXVariable;
 		Glib::ustring m_curAnimalID;
 		int m_curCellID;

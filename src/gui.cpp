@@ -90,7 +90,7 @@ void GUI::init_gui()
 	vpMiddle->pack1(*swFileDetails);
 	Gtk::HBox *hbPlots = Gtk::manage(new Gtk::HBox());
 	mp_PlotSpikes = Gtk::manage(new EasyPlotmm());
-	mp_QuickAnalysis = Gtk::manage(new uiAnalysis(&db,mp_FileDetailsTree,true,this));
+	mp_QuickAnalysis = Gtk::manage(new uiAnalysis(&db,mp_FileDetailsTree,true,&settings,this));
 	hbPlots->pack_start(*mp_PlotSpikes, true, true);
 	hbPlots->pack_start(*mp_QuickAnalysis, true, true);
 	vpMiddle->pack2(*hbPlots);
@@ -121,7 +121,7 @@ void GUI::init_gui()
 	/**
 	 * Analysis Notebook Page
 	 */
-	mp_Analysis = Gtk::manage(new uiAnalysis(&db, mp_FileDetailsTree, false, this));
+	mp_Analysis = Gtk::manage(new uiAnalysis(&db, mp_FileDetailsTree, false,&settings, this));
 	notebook->append_page(*mp_Analysis, "Analysis", false);
 
 

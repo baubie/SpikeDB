@@ -14,6 +14,7 @@
 
 #include <iostream>
 
+#define VARYING_STIMULUS -99999999
 
 class pySpikeDB {
 
@@ -21,7 +22,7 @@ class pySpikeDB {
 	public:
 
 		pySpikeDB();
-		pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, EasyPlotmm *plot);
+		pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, EasyPlotmm *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput);
 
 		boost::python::object getFiles(bool selOnly);
 		boost::python::object getCells();
@@ -30,13 +31,14 @@ class pySpikeDB {
 
 		void plotLine(boost::python::list &x, boost::python::list &y, boost::python::list &err);
 		void plotClear();
+		void print(const std::string &s);
 
 	private:
 
 		sqlite3 **db;
 		uiFileDetailsTreeView* mp_FileDetailsTree;
 		EasyPlotmm *mp_plot;
-
+		Glib::RefPtr<Gtk::TextBuffer> mrp_tbOutput;
 
 		/**
 		 * Helper Functions
