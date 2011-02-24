@@ -224,11 +224,24 @@ bp::object pySpikeDB::getFiles(bool selOnly)
 }
 
 
+void pySpikeDB::plotClear()
+{
+	mp_plot->clear();
+}
 
 void pySpikeDB::plotLine(bp::list &pyX, bp::list &pyY, bp::list &pyErr)
 {
 	std::vector<double> x, y, err;
-	if (bp::len(pyX) != bp::len(pyY)) return;
+	if (bp::len(pyX) != bp::len(pyY))
+	{
+		std::cerr << "Error: Plot X and Y do not match in length." << std::endl;
+		return;
+	}
+	if (bp::len(pyX) == 0)
+	{
+		std::cerr << "Error: No plot data." << std::endl;
+		return;
+	}
 	x = list2vec(pyX);
 	y = list2vec(pyY);
 	err = list2vec(pyErr);
@@ -245,6 +258,10 @@ void pySpikeDB::plotLine(bp::list &pyX, bp::list &pyY, bp::list &pyErr)
 
 std::vector<double> pySpikeDB::list2vec(boost::python::list &l)
 {
-	bp::stl_input_iterator<double> begin(l), end(l);
-	return std::vector<double>(begin,end);
+	std::vector<double> r;
+	for (int i = 0; i < bp::len(l); ++i)
+	{
+		r.push_back(extract<double>(l[i]));
+	}
+	return r;
 }

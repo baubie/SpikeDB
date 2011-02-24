@@ -7,6 +7,7 @@
 #include <sqlite3.h>
 #include <set>
 #include <vector>
+#include <ostream>
 #include "spikedata.h"
 #include "uiFileDetailsTreeView.h"
 #include "easyplotmm/easyplotmm.h"
@@ -26,6 +27,7 @@ class pySpikeDB {
 		boost::python::object getCells();
 
 		void plotLine(boost::python::list &x, boost::python::list &y, boost::python::list &err);
+		void plotClear();
 
 	private:
 
