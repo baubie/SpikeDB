@@ -95,6 +95,7 @@ class GUI : public Gtk::Window
         Glib::RefPtr<Gtk::ListStore> mrp_CellDetailsList;
         Glib::RefPtr<Gtk::ListStore> mrp_MeanType;
 
+		Glib::RefPtr<Gdk::Pixbuf> mrp_pbIcon;
 
 
 		/**
@@ -124,6 +125,7 @@ class GUI : public Gtk::Window
         void on_menuOpenDatabase_activate(); /**< Handle the Open Database menu item. */
         void on_menuImportFolder_activate(); /**< Handle the Import Folder menu item. */
         void on_menuQuit_activate(); /**< Handle the Quit menu item. */
+		void on_menuAbout_activate();
 		void on_filter_changed(); /**< Handle when the filter changes in any way. */
         void on_filedetails_selection_changed();
 		void on_animal_tag_deleted(Glib::ustring tag);

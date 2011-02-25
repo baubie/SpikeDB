@@ -5,6 +5,9 @@ GUI::GUI()
 	uiReady = false;
 	db = NULL;
 
+	mrp_pbIcon = Gdk::Pixbuf::create_from_file("SpikeDB.png");
+	this->set_icon(mrp_pbIcon);
+
 	set_title("Spike Database - No database open");
 	init_gui();
 
@@ -182,6 +185,11 @@ void GUI::init_menu()
 				Gtk::Menu_Helpers::StockMenuElem(
 					Gtk::Stock::QUIT,
 					sigc::mem_fun(*this, &GUI::on_menuQuit_activate) ));
+
+	mp_MenuBar->m_Menu_Help.items().push_back( 
+					Gtk::Menu_Helpers::StockMenuElem(
+					Gtk::Stock::ABOUT,
+					sigc::mem_fun(*this, &GUI::on_menuAbout_activate) ));
 }
 
 
@@ -1244,4 +1252,16 @@ void GUI::on_menuQuit_activate()
 	settings.set("winY", y);
 
 	hide();
+}
+
+void GUI::on_menuAbout_activate()
+{
+	Gtk::AboutDialog dialog;
+	dialog.set_transient_for(*this);
+	dialog.set_title("About SpikeDB");
+	dialog.set_program_name("SpikeDB");
+	dialog.set_version("1.1.0");
+	dialog.set_copyright("Written By Brandon Aubie\nMcMaster University 2011");
+	dialog.set_website("http://www.aubie.ca");
+	dialog.run();
 }

@@ -300,24 +300,31 @@ std::string SpikeData::xVariable()
 
 double SpikeData::delta()
 {
-    if (m_head.deltaCh1.fBegin != 0) return m_head.deltaCh1.fBegin;	
-    if (m_head.deltaCh1.fDur != 0) return m_head.deltaCh1.fDur;	
-    if (m_head.deltaCh1.fStimInt != 0) return m_head.deltaCh1.fStimInt;
-    if (m_head.deltaCh1.fAtten != 0) return m_head.deltaCh1.fAtten;
-    if (m_head.deltaCh1.fCarFreq != 0) return m_head.deltaCh1.fCarFreq;
-    if (m_head.deltaCh1.fPhase != 0) return m_head.deltaCh1.fPhase;
-    if (m_head.deltaCh1.fFreqDev != 0) return m_head.deltaCh1.fFreqDev;
-    if (m_head.deltaCh1.fAmDepth != 0) return m_head.deltaCh1.fAmDepth;
-    if (m_head.deltaCh1.fModFreq != 0) return m_head.deltaCh1.fModFreq;
-    if (m_head.deltaCh2.fBegin != 0) return m_head.deltaCh2.fBegin;	
-    if (m_head.deltaCh2.fDur != 0) return m_head.deltaCh2.fDur;	
-    if (m_head.deltaCh2.fStimInt != 0) return m_head.deltaCh2.fStimInt;
-    if (m_head.deltaCh2.fAtten != 0) return m_head.deltaCh2.fAtten;
-    if (m_head.deltaCh2.fCarFreq != 0) return m_head.deltaCh2.fCarFreq;
-    if (m_head.deltaCh2.fPhase != 0) return m_head.deltaCh2.fPhase;
-    if (m_head.deltaCh2.fFreqDev != 0) return m_head.deltaCh2.fFreqDev;
-    if (m_head.deltaCh2.fAmDepth != 0) return m_head.deltaCh2.fAmDepth;
-    if (m_head.deltaCh2.fModFreq != 0) return m_head.deltaCh2.fModFreq;
+    if (m_head.nOnCh1 == 1)
+	{
+		if (m_head.deltaCh1.fBegin != 0) return m_head.deltaCh1.fBegin;	
+		if (m_head.deltaCh1.fDur != 0) return m_head.deltaCh1.fDur;	
+		if (m_head.deltaCh1.fStimInt != 0) return m_head.deltaCh1.fStimInt;
+		if (m_head.deltaCh1.fAtten != 0) return m_head.deltaCh1.fAtten;
+		if (m_head.deltaCh1.fCarFreq != 0) return m_head.deltaCh1.fCarFreq;
+		if (m_head.deltaCh1.fPhase != 0) return m_head.deltaCh1.fPhase;
+		if (m_head.deltaCh1.fFreqDev != 0) return m_head.deltaCh1.fFreqDev;
+		if (m_head.deltaCh1.fAmDepth != 0) return m_head.deltaCh1.fAmDepth;
+		if (m_head.deltaCh1.fModFreq != 0) return m_head.deltaCh1.fModFreq;
+	}
+
+    if (m_head.nOnCh2 == 1)
+	{
+		if (m_head.deltaCh2.fBegin != 0) return m_head.deltaCh2.fBegin;	
+		if (m_head.deltaCh2.fDur != 0) return m_head.deltaCh2.fDur;	
+		if (m_head.deltaCh2.fStimInt != 0) return m_head.deltaCh2.fStimInt;
+		if (m_head.deltaCh2.fAtten != 0) return m_head.deltaCh2.fAtten;
+		if (m_head.deltaCh2.fCarFreq != 0) return m_head.deltaCh2.fCarFreq;
+		if (m_head.deltaCh2.fPhase != 0) return m_head.deltaCh2.fPhase;
+		if (m_head.deltaCh2.fFreqDev != 0) return m_head.deltaCh2.fFreqDev;
+		if (m_head.deltaCh2.fAmDepth != 0) return m_head.deltaCh2.fAmDepth;
+		if (m_head.deltaCh2.fModFreq != 0) return m_head.deltaCh2.fModFreq;
+	}
     return 1;
 }
 
