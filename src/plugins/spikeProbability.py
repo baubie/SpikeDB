@@ -19,5 +19,9 @@ for f in files:
 				count.append(0)
 		means.append(SpikeDB.mean(count))
 		err.append(SpikeDB.stddev(count))
+	SpikeDB.plotXLabel(f['xvar'])
+	SpikeDB.plotYLabel('Spike Probability')
+	SpikeDB.plotYMin(0)
+	SpikeDB.plotYMax(1.0000001)
 	SpikeDB.plotLine(x,means,err)
 

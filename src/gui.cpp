@@ -128,6 +128,9 @@ void GUI::init_gui()
 	/**
 	 * Connect Signals
 	 */
+
+	mp_PlotSpikes->signal_zoom_changed().connect(sigc::mem_fun(*this, &GUI::on_plotspikes_zoom_changed));
+
 	mp_uiFilterFrame->signal_changed().connect(sigc::mem_fun(*this, &GUI::on_filter_changed));
 	mp_FileDetailsTree->signal_file_set_hidden().connect(sigc::mem_fun(*this, &GUI::on_filedetails_set_hidden));
 	mp_FileDetailsTree->treeSelection()->signal_changed().connect(sigc::mem_fun(*this, &GUI::on_filedetails_selection_changed));
@@ -313,6 +316,14 @@ bool GUI::openDatabase(std::string filename)
 	return true;
 }
 
+
+void GUI::on_plotspikes_zoom_changed(double begin, double end)
+{
+	mp_QuickAnalysis->forceSpikesAbs(begin,end);
+	mp_QuickAnalysis->runPlugin();
+}
+
+
 void GUI::on_filter_changed()
 {
 	if (!uiReady) return;
@@ -393,7 +404,7 @@ void GUI::on_celldetails_edited(
 
 void GUI::on_filedetails_selection_changed()
 {
-	mp_QuickAnalysis->getPlot()->clear();
+	mp_QuickAnalysis->forceSpikesAbs(-1,-1);
 	mp_QuickAnalysis->runPlugin();
 	mp_PlotSpikes->clear();
 	curXVariable = "";

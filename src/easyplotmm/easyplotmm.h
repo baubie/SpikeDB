@@ -79,8 +79,15 @@ class EasyPlotmm : public Gtk::DrawingArea
         double x_st_size,x_bt_size,y_st_size,y_bt_size;
         double label_pad;
 
+		
+		// Changed zoom
+		typedef sigc::signal<void,double,double> type_signal_zoom_changed;
+		type_signal_zoom_changed signal_zoom_changed();
+
 
     protected:
+		type_signal_zoom_changed m_signal_zoom_changed;
+
         // Override default signal handler
         virtual bool on_expose_event(GdkEventExpose* event);
         virtual bool on_event_button_press(GdkEventButton* event);

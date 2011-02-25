@@ -15,5 +15,7 @@ for f in files:
 				count.append(p[0])
 		means.append(SpikeDB.mean(count))
 		err.append(SpikeDB.stddev(count))
+	SpikeDB.plotXLabel(f['xvar'])
+	SpikeDB.plotYLabel('Mean First Spike Latency')
 	SpikeDB.plotLine(x,means,err)
 

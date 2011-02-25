@@ -1,0 +1,62 @@
+\documentclass{report}
+
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{courier}
+\usepackage{fancyvrb}
+\usepackage{fullpage}
+\DefineShortVerb{\|}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\lstset{numbers=left, language=Python, numbersep=5pt, numberstyle=\tiny, basicstyle=\ttfamily}
+\lstdefinestyle{numbers}{numberstyle=\tiny}
+
+\begin{document}
+
+\chapter{Introduction}
+SpikeDB is a database and analysis tool for electrophysiological recordings done with Spike. It runs on Linux and Mac (and probably Windows).
+
+\chapter{Basic User Interface}
+\section{Browse Files}
+\subsection{Plots}
+\subsubsection{General Usage}
+\begin{itemize}
+	\item \textbf{Zoom} - Left click and drag along the horizontal direction of a plot to zoom in on a subsection of data.  
+	\item \textbf{Export Data} - Right click anywhere on the plot to bring up the options menu and select |Export Data|. This allows you to export the plotted data in CSV files that are ready for import into Excel or for use in other graphing software such as GLE.
+\end{itemize}
+
+\subsubsection{Spike Raster}
+The spike raster is a built in plot that displays the stimuli as red (channel 1) and blue (channel 2) lines and spikes as black dots. Zooming in on this plot will limit the spike times available to the quick analysis plot on the right.
+
+\subsubsection{Quick Analysis}
+By default, this plot will display the mean number of spikes per trial. Other analysis plugins are available in the drop down box or additional plugins can be loaded by clicking the |Open| icon. Generally, it is wise to use plugins that operate on selected files only here as no text display is available. For more general analysis on many files use the Analysis tab. That said, if multiple files of the same type are selected, the plots can be overlaid for easy comparison.
+
+
+\chapter{Analysis Plug-In Module}
+
+\section{Basic Usage}
+The Analysis Plug-In Module allows you to use the Python scripting language write custom analysis routines on one or many Spike recording files. Each Python script will have the |SpikeDB| object available to it.  This object provides access to all of the data held within SpikeDB as well as a host of methods useful for analysis.
+
+\section{Examples}
+\begin{lstlisting}[label=codeMean,caption=Calculating the mean spike counts.]
+files = SpikeDB.getFiles(True)
+for f in files:
+	means = []
+	err = []
+	x = []
+	for t in f['trials']:
+		count = []
+		x.append(t['xvalue'])	
+		for p in t['spikes']:
+			count.append(len(p))
+		means.append(SpikeDB.mean(count))
+		err.append(SpikeDB.stddev(count))
+	SpikeDB.plotXLabel(f['xvar'])
+	SpikeDB.plotYLabel('Mean Spike Count')
+	SpikeDB.plotLine(x,means,err)
+\end{lstlisting}
+
+\end{document}

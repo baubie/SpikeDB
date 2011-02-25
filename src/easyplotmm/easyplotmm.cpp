@@ -57,6 +57,13 @@ EasyPlotmm::~EasyPlotmm()
 {
 }
 
+
+EasyPlotmm::type_signal_zoom_changed EasyPlotmm::signal_zoom_changed()
+{
+	return m_signal_zoom_changed;
+}
+
+
 double EasyPlotmm::automatic()
 {
 	return AUTOMATIC;
@@ -176,6 +183,7 @@ bool EasyPlotmm::on_event_button_press(GdkEventButton* event)
             in_zoom = false;
             m_xmin = m_ixmin;
             m_xmax = m_ixmax;
+			m_signal_zoom_changed.emit(m_xmin,m_xmax);
             redraw();
             break;
         default:
@@ -218,7 +226,7 @@ bool EasyPlotmm::on_event_button_release(GdkEventButton* event)
                m_xmax = zoom_start_scale;
                m_xmin = zoom_end_scale;
            }
-
+		   m_signal_zoom_changed.emit(m_xmin,m_xmax);
            redraw();
        }
     }
@@ -254,7 +262,10 @@ void EasyPlotmm::clear()
 	m_y.clear();
 	m_err.clear();
 	m_pens.clear();
+	m_xname = "";
+	m_yname = "";
     curPen = 0;
+	m_xmin=m_xmax=m_ymin=m_ymax=AUTOMATIC;
 	xname_width = 0;
 	xname_height = 0;
 	yname_width = 0;

@@ -7,6 +7,7 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
 {
 	this->db = db;
 	this->compact = compact;
+	forceAbsBegin = forceAbsEnd = -1;
 	mp_FileDetailsTree = fileDetailsTree;
 	m_parent = parent;
 	this->settings = settings;
@@ -14,7 +15,6 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
 	initPlugins();
 
 	Gtk::Toolbar *toolbar = Gtk::manage( new Gtk::Toolbar() );
-
 
 	tbOpen = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::OPEN) );
 	tbRun = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::EXECUTE) );
@@ -29,9 +29,18 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
 		if (i == 1) tbPlugins->set_active_text(plugins[i].second);
 	}
 	tbPlugins->signal_changed().connect(sigc::mem_fun(*this, &uiAnalysis::on_plugin_changed));
-
-	toolbar->append(*tbPluginItem);
 	tbPlugins->set_focus_on_click(false);
+	toolbar->append(*tbPluginItem);
+
+	tbShowErr = Gtk::manage( new Gtk::CheckButton() );
+	tbShowErr->set_label("Show Error Bars");
+	tbShowErr->set_active(false);
+	Gtk::ToolItem *tbShowErrItem = Gtk::manage( new Gtk::ToolItem() );
+	tbShowErr->signal_clicked().connect(sigc::mem_fun(*this, &uiAnalysis::on_showerr_clicked));
+	tbShowErrItem->add(*tbShowErr);
+	tbShowErr->set_focus_on_click(false);
+	toolbar->append(*tbShowErrItem);
+
 	this->pack_start(*toolbar, false, false);
 
 	mp_plot = Gtk::manage( new EasyPlotmm() );
@@ -50,7 +59,6 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
 		vp->pack2(*swOutput);
 		this->pack_start(*vp);
 	}
-
 
 	if (compact)
 	{
@@ -73,6 +81,12 @@ void uiAnalysis::initPlugins()
 	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("meanSpikeCount.py", "Mean Spike Count"));
 	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("firstSpikeLatency.py", "First Spike Latency"));
 	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("spikeProbability.py", "Spiking Probability"));
+}
+
+void uiAnalysis::on_showerr_clicked()
+{
+	mp_plot->clear();
+	runPlugin();
 }
 
 void uiAnalysis::on_open_clicked()
@@ -105,11 +119,13 @@ void uiAnalysis::on_open_clicked()
 
 void uiAnalysis::on_run_clicked()
 {
+	mp_plot->clear();
 	runScript();
 }
 
 void uiAnalysis::on_plugin_changed()
 {
+	mp_plot->clear();
 	runPlugin();
 }
 
@@ -119,6 +135,12 @@ void uiAnalysis::addOutput(Glib::ustring t)
 	while (Gtk::Main::events_pending()) {
     	Gtk::Main::iteration();
 	}
+}
+
+void uiAnalysis::forceSpikesAbs(double begin, double end)
+{
+	forceAbsBegin = begin;
+	forceAbsEnd = end;
 }
 
 void uiAnalysis::runPlugin()
@@ -148,12 +170,22 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 		.def("write", &pySpikeDB::print)
 		.def("mean", &pySpikeDB::mean)
 		.def("stddev", &pySpikeDB::stddev)
+		.def("filterSpikesAbs", &pySpikeDB::filterSpikesAbs)
+		.def("filterSpikesRel", &pySpikeDB::filterSpikesRel)
+		.def("plotXLabel", &pySpikeDB::plotXLabel)
+		.def("plotYLabel", &pySpikeDB::plotYLabel)
+		.def("plotYMin", &pySpikeDB::plotYMin)
+		.def("plotYMax", &pySpikeDB::plotYMax)
+		.def("plotXMin", &pySpikeDB::plotXMin)
+		.def("plotXMax", &pySpikeDB::plotXMax)
 		.def("plotClear", &pySpikeDB::plotClear)
 		.def("plotSetRGBA", &pySpikeDB::plotSetRGBA)
 		.def("plotSetPointSize", &pySpikeDB::plotSetPointSize)
 		.def("plotSetLineWidth", &pySpikeDB::plotSetLineWidth)
 		.def("plotLine", &pySpikeDB::plotLine);
 	pySpikeDB _pySpikeDB(db, mp_FileDetailsTree, mp_plot, mrp_tbOutput);
+	_pySpikeDB.setShowErr(tbShowErr->get_active());
+	_pySpikeDB.forceSpikesAbs(forceAbsBegin, forceAbsEnd);
 	main_namespace["SpikeDB"] = bp::ptr(&_pySpikeDB);
 	main_namespace["SpikeDB"].attr("__dict__")["VARYING"] = VARYING_STIMULUS;
 

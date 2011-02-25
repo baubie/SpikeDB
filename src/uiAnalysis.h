@@ -18,7 +18,7 @@ class uiAnalysis : public Gtk::VBox {
 
 		EasyPlotmm* getPlot();
 		void runPlugin();
-
+		void forceSpikesAbs(double begin, double end);
 
 		/**
 		 * Python print for window
@@ -38,6 +38,7 @@ class uiAnalysis : public Gtk::VBox {
 		Glib::ustring m_filename;
 		bool compact;
 		Settings *settings;
+		float forceAbsBegin, forceAbsEnd;
 
 		/**
 		 * Child widgets
@@ -47,6 +48,7 @@ class uiAnalysis : public Gtk::VBox {
 		Gtk::ToolButton *tbOpen;
 		Gtk::ToolButton *tbRun;
 		Gtk::ComboBoxText *tbPlugins;
+		Gtk::CheckButton *tbShowErr; 
         EasyPlotmm* mp_plot;
 
 		/**
@@ -55,6 +57,7 @@ class uiAnalysis : public Gtk::VBox {
 		void on_open_clicked();
 		void on_run_clicked();
 		void on_plugin_changed();
+		void on_showerr_clicked();
 
 		/**
 		 * Helper functions

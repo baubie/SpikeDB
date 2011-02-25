@@ -119,6 +119,7 @@ class GUI : public Gtk::Window
 		/**
 		 * Signal handling
 		 */
+		void on_plotspikes_zoom_changed(double begin, double end);
         void on_menuNewDatabase_activate(); /**< Handle the New Database menu item. */
         void on_menuOpenDatabase_activate(); /**< Handle the Open Database menu item. */
         void on_menuImportFolder_activate(); /**< Handle the Import Folder menu item. */

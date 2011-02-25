@@ -25,16 +25,31 @@ class pySpikeDB {
 		pySpikeDB();
 		pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, EasyPlotmm *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput);
 
+		void setShowErr(bool showErr);
+
 		boost::python::object getFiles(bool selOnly);
 		boost::python::object getCells();
-		double stddev(boost::python::list &v);
-		double mean(boost::python::list &v);
 
-		void plotSetRGBA(float r, float g, float b, float a);
-		void plotSetPointSize(float s);
-		void plotSetLineWidth(float s);
+		void reset();
+
+		void forceSpikesAbs(const float &begin, const float &end);
+		void filterSpikesAbs(const float &begin, const float &end);
+		void filterSpikesRel(const float &begin, const float &end);
+
+		void plotSetRGBA(const float &r, const float &g, const float &b, const float &a);
+		void plotSetPointSize(const float &s);
+		void plotSetLineWidth(const float &s);
+		void plotXMin(const float &v);
+		void plotXMax(const float &v);
+		void plotYMin(const float &v);
+		void plotYMax(const float &v);
 		void plotLine(boost::python::list &x, boost::python::list &y, boost::python::list &err);
 		void plotClear();
+		void plotXLabel(const std::string &s);
+		void plotYLabel(const std::string &s);
+
+		double stddev(boost::python::list &v);
+		double mean(boost::python::list &v);
 
 		void print(const std::string &s);
 
@@ -46,9 +61,18 @@ class pySpikeDB {
 		Glib::RefPtr<Gtk::TextBuffer> mrp_tbOutput;
 
 		/**
+		 * Filtering Mode
+		 */
+		float filterAbsBegin, filterAbsEnd;
+		float filterRelBegin, filterRelEnd;
+		float forceAbsBegin, forceAbsEnd;
+
+		/**
 		 * Current Plotting Values
 		 */
 		EasyPlotmm::Pen m_plotPen;
+		double xmin,xmax,ymin,ymax;
+		bool showErr;
 
 		/**
 		 * Helper Functions

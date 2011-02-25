@@ -12,7 +12,39 @@ pySpikeDB::pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, EasyPl
 	this->mp_FileDetailsTree = fileDetailsTree;
 	this->mp_plot = plot;
 	this->mrp_tbOutput = tbOutput;
-	this->plotClear();
+	this->reset();
+}
+
+void pySpikeDB::setShowErr(bool showErr)
+{
+	this->showErr = showErr;
+}
+
+
+void pySpikeDB::forceSpikesAbs(const float &begin, const float &end)
+{
+	forceAbsBegin = begin;
+	forceAbsEnd = end;
+	filterAbsBegin = -1;
+	filterAbsEnd = -1;
+	filterRelBegin = -1;
+	filterRelEnd = -1;
+}
+
+void pySpikeDB::filterSpikesAbs(const float &begin, const float &end)
+{
+	filterAbsBegin = begin;
+	filterAbsEnd = end;
+	filterRelBegin = -1;
+	filterRelEnd = -1;
+}
+
+void pySpikeDB::filterSpikesRel(const float &begin, const float &end)
+{
+	filterRelBegin = begin;
+	filterRelEnd = end;
+	filterAbsBegin = -1;
+	filterAbsEnd = -1;
 }
 
 void pySpikeDB::print(const std::string &s)
@@ -21,6 +53,15 @@ void pySpikeDB::print(const std::string &s)
 	while (Gtk::Main::events_pending()) {
     	Gtk::Main::iteration();
 	}
+}
+
+void pySpikeDB::reset()
+{
+	plotClear();
+	filterAbsBegin=filterAbsEnd=-1;
+	filterRelBegin=filterRelEnd=-1;
+	forceAbsBegin=forceAbsEnd=-1;
+	xmin=xmax=ymin=ymax=EasyPlotmm::AUTOMATIC;
 }
 
 bp::object pySpikeDB::getCells()
@@ -64,6 +105,13 @@ bp::object pySpikeDB::getCells()
 
 bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 {
+	// Ensure forced filter overrides anything set in script
+	if (forceAbsBegin != -1) {
+		filterAbsBegin = forceAbsBegin;
+		filterAbsEnd = forceAbsEnd;
+	}
+
+
 	bp::dict file;
 	sqlite3_stmt *stmt = 0;
 	const char query[] = "SELECT header, spikes FROM files WHERE animalID=? AND cellID=? AND fileID=?";
@@ -175,19 +223,57 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 		}
 		file["begin"] = begin;
 
-		file["xVar"] = sd.xVariable();
+		file["xvar"] = sd.xVariable();
 
 		bp::list trials;
 		for (int i = 0; i < sd.m_head.nSweeps; ++i) {
 			bp::dict trial;
 			trial["xvalue"] = sd.xvalue(i);
+
+			bp::dict tbegin;
+			tbegin[1] = sd.begin(1,i);
+			tbegin[2] = sd.begin(2,i);
+			trial["begin"] = tbegin;
+
+			bp::dict tduration;
+			tduration[1] = sd.duration(1,i);
+			tduration[2] = sd.duration(2,i);
+			trial["duration"] = tduration;
+
+			bp::dict tfrequency;
+			tfrequency[1] = sd.frequency(1,i);
+			tfrequency[2] = sd.frequency(2,i);
+			trial["frequency"] = tfrequency;
+
+			bp::dict tattenuation;
+			tattenuation[1] = sd.attenuation(1,i);
+			tattenuation[2] = sd.attenuation(2,i);
+			trial["attenuation"] = tattenuation;
+
 			bp::list spikes;
 			for (int p = 0; p < sd.m_head.nPasses; ++p) {
 				bp::list pass;
 				for (unsigned int s = 0; s < sd.m_spikeArray.size(); ++s) {
 					// Spike sweeps are 1 based but here we are 0 based
 					if (sd.m_spikeArray[s].nSweep == i + 1 && sd.m_spikeArray[s].nPass == p+1) {
-						pass.append(sd.m_spikeArray[s].fTime);
+
+						if ( filterAbsBegin == -1 && filterRelBegin == -1 )
+						{
+							pass.append(sd.m_spikeArray[s].fTime);
+						} else if (filterAbsBegin != -1 && filterAbsEnd > filterAbsBegin &&
+								   sd.m_spikeArray[s].fTime >= filterAbsBegin && 
+								   sd.m_spikeArray[s].fTime <= filterAbsEnd)
+						{
+							pass.append(sd.m_spikeArray[s].fTime);
+						} else if (filterRelBegin != -1 && filterRelEnd > filterRelBegin)
+						{
+							float st = sd.m_spikeArray[s].fTime;
+							if ((sd.m_head.nOnCh1 == 1 && st >= sd.begin(1,i)+filterRelBegin && st <= sd.begin(1,i)+sd.duration(1,i)+filterRelEnd) ||
+								(sd.m_head.nOnCh2 == 1 && st >= sd.begin(2,i)+filterRelBegin && st <= sd.begin(2,i)+sd.duration(2,i)+filterRelEnd))
+							{
+								pass.append(st);
+							}
+						}
 					}
 				}
 				spikes.append(pass);
@@ -243,7 +329,7 @@ bp::object pySpikeDB::getFiles(bool selOnly)
 	return list;
 }
 
-void pySpikeDB::plotSetRGBA(float r, float g, float b, float a)
+void pySpikeDB::plotSetRGBA(const float &r, const float &g, const float &b, const float &a)
 {
 	m_plotPen.color.r = r;
 	m_plotPen.color.g = g;
@@ -251,13 +337,13 @@ void pySpikeDB::plotSetRGBA(float r, float g, float b, float a)
 	m_plotPen.color.a = a;
 }
 
-void pySpikeDB::plotSetPointSize(float s)
+void pySpikeDB::plotSetPointSize(const float &s)
 {
 	m_plotPen.pointsize = s;
 }
 
 
-void pySpikeDB::plotSetLineWidth(float s)
+void pySpikeDB::plotSetLineWidth(const float &s)
 {
 	m_plotPen.linewidth = s;
 }
@@ -273,6 +359,45 @@ void pySpikeDB::plotClear()
 	m_plotPen.filled = true;
 	m_plotPen.pointsize = 8.0;
 }
+
+
+void pySpikeDB::plotXLabel(const std::string &s)
+{
+	mp_plot->xname(s);
+}
+
+
+void pySpikeDB::plotYLabel(const std::string &s)
+{
+	mp_plot->yname(s);
+}
+
+
+
+void pySpikeDB::plotYMin(const float &v)
+{
+	ymin = v;
+	mp_plot->axes(xmin,xmax,v,ymax);
+}
+
+void pySpikeDB::plotYMax(const float &v)
+{
+	ymax = v;
+	mp_plot->axes(xmin,xmax,ymin,v);
+}
+
+void pySpikeDB::plotXMin(const float &v)
+{
+	xmin = v;
+	mp_plot->axes(v,xmax,ymin,ymax);
+}
+
+void pySpikeDB::plotXMax(const float &v)
+{
+	xmax = v;
+	mp_plot->axes(xmin,v,ymin,ymax);
+}
+
 
 void pySpikeDB::plotLine(bp::list &pyX, bp::list &pyY, bp::list &pyErr)
 {
@@ -291,7 +416,7 @@ void pySpikeDB::plotLine(bp::list &pyX, bp::list &pyY, bp::list &pyErr)
 	y = list2vec(pyY);
 	err = list2vec(pyErr);
 
-	if (bp::len(pyX) == bp::len(pyErr))
+	if (bp::len(pyX) == bp::len(pyErr) && showErr)
 	{
 		mp_plot->plot(x, y, err, m_plotPen);
 	}
