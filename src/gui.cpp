@@ -5,8 +5,10 @@ GUI::GUI()
 	uiReady = false;
 	db = NULL;
 
+	/*
 	mrp_pbIcon = Gdk::Pixbuf::create_from_file("SpikeDB.png");
 	this->set_icon(mrp_pbIcon);
+	*/
 
 	set_title("Spike Database - No database open");
 	init_gui();
