@@ -207,7 +207,20 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 	if (plugin == "") {
 		fp = fopen(m_filename.c_str(), "r");
 	} else {
+
+#ifdef __APPLE__
+		CFBundleRef mainBundle = CFBundleGetMainBundle();
+		CFURLRef resourcesURL = CFBundleCopyBundleURL(mainBundle);
+		CFStringRef str = CFURLCopyFileSystemPath( resourcesURL, kCFURLPOSIXPathStyle );
+		CFRelease(resourcesURL);
+		char path[1024];
+		CFStringGetCString( str, path, FILENAME_MAX, kCFStringEncodingASCII );
+		CFRelease(str);
+		Glib::ustring app_path(path);
+		Glib::ustring plugin_path = app_path+"/Content/Resources/plugins/"+plugin;
+#else
 		Glib::ustring plugin_path = "plugins/"+plugin;
+#endif
 		fp = fopen(plugin_path.c_str(), "r");
 	}
 	PyRun_SimpleFile(fp, m_filename.c_str());

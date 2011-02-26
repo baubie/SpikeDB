@@ -4,6 +4,7 @@
 #define CURRENT_DB_VERSION 1.2
 #define CURRENT_VERSION 1.2
 
+
 #include "uiMenuBar.h"
 #include "uiAnalysis.h"
 #include "uiFileDetailsTreeView.h"
@@ -22,6 +23,9 @@
 #include "settings.h"
 #include "tokenize.h"
 
+#ifdef __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#endif
 
 
 /*

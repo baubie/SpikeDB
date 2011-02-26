@@ -10,6 +10,10 @@
 #include "easyplotmm/easyplotmm.h"
 #include "settings.h"
 
+#ifdef __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#endif
+
 class uiAnalysis : public Gtk::VBox {
 
 	public:

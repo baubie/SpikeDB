@@ -4,7 +4,14 @@
 Settings::Settings()
 {
 
-    if (sqlite3_open("spikedb.settings", &db) != SQLITE_OK) {
+
+#ifdef __APPLE__
+	Glib::ustring filename = "/Library/Application Support/SpikeDB/spikedb.settings";
+#else
+	Glib::ustring filename = "spikedb.settings";
+#endif
+
+    if (sqlite3_open(filename.c_str(), &db) != SQLITE_OK) {
         std::cerr << "CRITICAL ERROR: Unable to open settings file." << std::endl;
     }
 

@@ -6,7 +6,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <iostream>
+#include <gtkmm.h>
 
+#ifdef __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#endif
 
 class Settings {
 

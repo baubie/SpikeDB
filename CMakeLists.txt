@@ -10,13 +10,20 @@ pkg_check_modules(GTKMM gtkmm-2.4)
 pkg_check_modules(CAIRO cairo)
 pkg_check_modules(SQLITE3 sqlite3)
 
+
+
+
 IF(APPLE)
 	SET(PYTHON_INCLUDE_PATH "/opt/local/Library/Frameworks/Python.framework/Headers")
 	SET(PYTHON_LIBRARIES "/opt/local/lib/libpython2.7.dylib")
+	FIND_LIBRARY(COREFOUNDATION_LIBRARY CoreFoundation)
+ELSE(APPLE)
+	SET(COREFOUNDATION_LIBRARY "")
 ENDIF(APPLE)
 
 
-if(APPLE)
+
+IF(APPLE)
 INCLUDE(InstallRequiredSystemLibraries)
 SET(VERSION "1.1.0")
 SET(CPACK_BUNDLE_IDENTIFIER ca.aubie.spikedb)
@@ -32,24 +39,9 @@ SET(CPACK_PACKAGE_VERSION_PATCH "0")
 SET(CPACK_PACKAGE_EXECUTABLES "spikedb;spikedb")
 SET(CPACK_BUNDLE_PLIST "info.plist")
 SET(CPACK_BUNDLE_STARTUP_COMMAND "src/spikedb")
+SET(BUNDLE_LOCATION ${CMAKE_SOURCE_DIR}/src/spikeDB.app)
 INCLUDE(CPack)
-
-# image generation
-execute_process(COMMAND sw_vers -productVersion COMMAND cut -d. -f1,2
-    OUTPUT_VARIABLE OSX_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
-set(BUNDLE_DMG ${PROJECT_NAME}-mac-${OSX_VERSION}.dmg)
-set(BUNDLE_LOCATION ${CMAKE_BINARY_DIR}/src/SpikeDB.app)
-set(_dmg_temp ${BUNDLE_DMG}.temp)
-add_custom_command(OUTPUT ${BUNDLE_DMG}
-    COMMAND rm -rf ${_dmg_temp} ${BUNDLE_DMG}
-    COMMAND mkdir ${_dmg_temp}
-    COMMAND cp -r ${BUNDLE_LOCATION} ${_dmg_temp}
-	COMMAND ln -s /Applications ${_dmg_temp}/Applications
-	COMMAND hdiutil create ${BUNDLE_DMG} -srcdir ${_dmg_temp} -fs HFS+ -volname "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}"
-    COMMAND rm -rf ${_dmg_temp}
-    DEPENDS spikedb)
-add_custom_target(package DEPENDS ${BUNDLE_DMG})
-endif(APPLE)
-
-
+ENDIF(APPLE)
 ADD_SUBDIRECTORY(src)
+
+

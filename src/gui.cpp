@@ -1,7 +1,11 @@
 #include "gui.h"
+#include <unistd.h>
 
 GUI::GUI()
 {
+
+
+
 	uiReady = false;
 	db = NULL;
 
@@ -1258,12 +1262,26 @@ void GUI::on_menuQuit_activate()
 
 void GUI::on_menuAbout_activate()
 {
+
+Glib::ustring copyright = "Written By Brandon Aubie\nMcMaster University 2011";
+
+#ifdef __APPLE__
+		CFBundleRef mainBundle = CFBundleGetMainBundle();
+		CFURLRef resourcesURL = CFBundleCopyBundleURL(mainBundle);
+		CFStringRef str = CFURLCopyFileSystemPath( resourcesURL, kCFURLPOSIXPathStyle );
+		CFRelease(resourcesURL);
+		char path[1024];
+		CFStringGetCString( str, path, FILENAME_MAX, kCFStringEncodingASCII );
+		CFRelease(str);
+		copyright = Glib::ustring(path);
+#endif
+
 	Gtk::AboutDialog dialog;
 	dialog.set_transient_for(*this);
 	dialog.set_title("About SpikeDB");
 	dialog.set_program_name("SpikeDB");
 	dialog.set_version("1.1.0");
-	dialog.set_copyright("Written By Brandon Aubie\nMcMaster University 2011");
+	dialog.set_copyright(copyright);
 	dialog.set_website("http://www.aubie.ca");
 	dialog.run();
 }
