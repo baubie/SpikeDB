@@ -30,6 +30,7 @@ ADD_CUSTOM_COMMAND(TARGET spikedb POST_BUILD
     COMMAND mkdir -p ${BUNDLE_LOCATION}/Contents/Resources/
     COMMAND cp ${CPACK_BUNDLE_ICON} ${BUNDLE_LOCATION}/Contents/Resources/
 	COMMAND cp -r ${CMAKE_SOURCE_DIR}/src/plugins ${BUNDLE_LOCATION}/Contents/Resources/
-	COMMAND mv ${BUNDLE_LOCATION} ${CMAKE_SOURCE_DIR}
+	COMMAND cp ${CMAKE_SOURCE_DIR}/src/launch ${BUNDLE_LOCATION}/Contents/MacOS/
+	COMMAND chmod +x ${BUNDLE_LOCATION}/Contents/MacOS/launch
     DEPENDS spikedb)
 ENDIF(APPLE)

@@ -1,0 +1,5 @@
+#!/bin/sh
+# Author: Brandon Aubie (brandon@aubie.ca)
+
+DIR=`pwd`
+exec "$DIR/spikedb"
