@@ -1,5 +1,5 @@
 #!/bin/sh
 # Author: Brandon Aubie (brandon@aubie.ca)
-
-DIR=`pwd`
-exec "$DIR/spikedb"
+DIR=`dirname "$0"`
+cd $DIR
+osascript $DIR/launch.scpt
