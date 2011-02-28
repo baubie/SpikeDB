@@ -10,7 +10,7 @@ cmake_install.cmake
 logs
 callgrind.*
 *.log
-spikedb
+src/spikedb
 spikedb.db
 spikedb.settings
 docs

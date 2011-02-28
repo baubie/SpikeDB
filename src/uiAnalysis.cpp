@@ -217,7 +217,8 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 		CFStringGetCString( str, path, FILENAME_MAX, kCFStringEncodingASCII );
 		CFRelease(str);
 		Glib::ustring app_path(path);
-		Glib::ustring plugin_path = app_path+"/Content/Resources/plugins/"+plugin;
+		std::cout << "APP PATH: " << app_path << std::endl;
+		Glib::ustring plugin_path = app_path+"/plugins/"+plugin;
 #else
 		Glib::ustring plugin_path = "plugins/"+plugin;
 #endif
