@@ -87,7 +87,7 @@ Several Quick Analysis plugins are included with SpikeDB, however, it is easy to
 \end{table}
 Quick Analysis plugins function exactly the same way as other Analysis plugins with two minor differences. First, the name of the plugin to display in the toolbar drop-down list must be specified on the first line with three |#| symbols in the format 
 \begin{center}|### Name Goes Here|\end{center}
-Second, when retrieving files with the |getFiles()| method you will generally always want to pass |True| as the parameter to ensure that only the currently selected file(s) will be analyzed.
+Second, when retrieving files with the |getFiles()| method you will generally always want to pass |True| as the parameter to ensure that only the currently selected file(s) will be analyzed. When adding new Quick Analysis plugins to the plugins folder you must restart SpikeDB for them to be available in the drop-down box.
 
 \section{Reference}
 All functions listed in this section are accessed via the SpikeDB object.  For example, |SpikeDB.getFiles(True)| calls the |getFiles()| method.

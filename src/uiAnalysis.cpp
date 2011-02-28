@@ -123,7 +123,6 @@ void uiAnalysis::initPlugins()
 						fin->read_line(line);
 						if (line.substr(0,3) == "###")
 						{
-							std::cout << line.substr(4) << std::endl;
 							plugins.push_back(std::pair<Glib::ustring,Glib::ustring>(
 										filename+possibleFile,
 										line.substr(4))
