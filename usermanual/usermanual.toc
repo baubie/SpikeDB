@@ -1,0 +1,34 @@
+\contentsline {chapter}{\numberline {1}Introduction}{2}
+\contentsline {chapter}{\numberline {2}Basic User Interface}{3}
+\contentsline {section}{\numberline {2.1}Browse Files}{3}
+\contentsline {subsection}{\numberline {2.1.1}Plots}{3}
+\contentsline {subsubsection}{General Usage}{3}
+\contentsline {subsubsection}{Spike Raster}{3}
+\contentsline {subsubsection}{Quick Analysis}{3}
+\contentsline {chapter}{\numberline {3}Analysis Plug-In Module}{4}
+\contentsline {section}{\numberline {3.1}Basic Usage}{4}
+\contentsline {section}{\numberline {3.2}Reference}{4}
+\contentsline {subsection}{\numberline {3.2.1}\method {void}{filterSpikesAbs}{float minSpikeTime}{float maxSpikeTime}}{4}
+\contentsline {subsubsection}{Parameters}{4}
+\contentsline {subsubsection}{Description}{4}
+\contentsline {subsection}{\numberline {3.2.2}\method {void}{filterSpikesRel}{float minSpikeTime}{float maxSpikeTime}}{4}
+\contentsline {subsubsection}{Parameters}{4}
+\contentsline {subsubsection}{Description}{4}
+\contentsline {subsection}{\numberline {3.2.3}\method {list}{getCells}}{5}
+\contentsline {subsection}{\numberline {3.2.4}\method {list}{getFiles}{bool onlySelected}}{5}
+\contentsline {subsection}{\numberline {3.2.5}\method {float}{mean}{list values}}{5}
+\contentsline {subsection}{\numberline {3.2.6}\method {void}{plotClear}}{5}
+\contentsline {subsection}{\numberline {3.2.7}\method {void}{plotLine}{list xValues}{list yValues}{list errValues}}{5}
+\contentsline {subsection}{\numberline {3.2.8}\method {void}{plotSetLineWidth}{float lineWidth}}{5}
+\contentsline {subsection}{\numberline {3.2.9}\method {void}{plotSetPointSize}{float pointSize}}{5}
+\contentsline {subsection}{\numberline {3.2.10}\method {void}{plotSetRGBA}{float red}{float green}{float blue}{float alpha}}{5}
+\contentsline {subsection}{\numberline {3.2.11}\method {void}{plotXLabel}{string XLabel}}{5}
+\contentsline {subsection}{\numberline {3.2.12}\method {void}{plotXMin}{float minXValue}}{5}
+\contentsline {subsection}{\numberline {3.2.13}\method {void}{plotXMax}{float maxXValue}}{5}
+\contentsline {subsection}{\numberline {3.2.14}\method {void}{plotYLabel}{string YLabel}}{5}
+\contentsline {subsection}{\numberline {3.2.15}\method {void}{plotYMin}{float minYValue}}{5}
+\contentsline {subsection}{\numberline {3.2.16}\method {void}{plotYMax}{float maxYValue}}{5}
+\contentsline {subsection}{\numberline {3.2.17}\method {void}{plotYMax}{float maxYValue}}{5}
+\contentsline {subsection}{\numberline {3.2.18}\method {float}{stddev}{list values}}{5}
+\contentsline {section}{\numberline {3.3}Examples}{5}
+\contentsline {subsection}{\numberline {3.3.1}Mean Spike Times}{5}

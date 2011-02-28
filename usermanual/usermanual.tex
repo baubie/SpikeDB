@@ -1,20 +1,49 @@
 \documentclass{report}
 
-\usepackage{color}
+\usepackage[usenames,dvipsnames]{color}
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{caption}
 \usepackage{courier}
 \usepackage{fancyvrb}
+\usepackage{xparse}
 \usepackage{fullpage}
+\usepackage{colortbl}
 \DefineShortVerb{\|}
 \DeclareCaptionFont{white}{\color{white}}
 \DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
 \captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
 \lstset{numbers=left, language=Python, numbersep=5pt, numberstyle=\tiny, basicstyle=\ttfamily}
 \lstdefinestyle{numbers}{numberstyle=\tiny}
+\renewcommand*\arraystretch{2.0}
+\NewDocumentCommand \method{ m m g g g g g g g }{%
+	{\tt{\textcolor{red}{#1} #2(}%
+		\IfValueTF{#3}{\textcolor{blue}{#3}%
+			\IfValueTF{#4}{\textbf{,}\textcolor{blue}{#4}%
+				\IfValueTF{#5}{\textbf{,}\textcolor{blue}{#5}%
+					\IfValueTF{#6}{\textbf{,}\textcolor{blue}{#6}%
+						\IfValueTF{#7}{\textbf{,}\textcolor{blue}{#7}%
+						}{\tt{)}}%
+					}{\tt{)}}%
+				}{\tt{)}}%
+			}{\tt{)}}%
+		}{\tt{)}}%
+	}%
+}
+
+\definecolor{lightblue}{rgb}{0.8,0.8,0.8}
+\definecolor{lightyellow}{rgb}{0.9,0.9,0.9}
+
+\title{SpikeDB User Manual}
+\author{Brandon Aubie}
+\date{Last Updated: March 1 2011}
 
 \begin{document}
+\newcolumntype{b}{>{\columncolor{lightblue}}c}
+\newcolumntype{y}{>{\columncolor{lightyellow}}l}
+
+\maketitle
+\tableofcontents 
 
 \chapter{Introduction}
 SpikeDB is a database and analysis tool for electrophysiological recordings done with Spike. It runs on Linux and Mac (and probably Windows).
@@ -24,7 +53,7 @@ SpikeDB is a database and analysis tool for electrophysiological recordings done
 \subsection{Plots}
 \subsubsection{General Usage}
 \begin{itemize}
-	\item \textbf{Zoom} - Left click and drag along the horizontal direction of a plot to zoom in on a subsection of data.  
+	\item \textbf{Zoom} - Left click and drag horizontally to zoom in on a subsection of data.  
 	\item \textbf{Export Data} - Right click anywhere on the plot to bring up the options menu and select |Export Data|. This allows you to export the plotted data in CSV files that are ready for import into Excel or for use in other graphing software such as GLE.
 \end{itemize}
 
@@ -40,7 +69,57 @@ By default, this plot will display the mean number of spikes per trial. Other an
 \section{Basic Usage}
 The Analysis Plug-In Module allows you to use the Python scripting language write custom analysis routines on one or many Spike recording files. Each Python script will have the |SpikeDB| object available to it.  This object provides access to all of the data held within SpikeDB as well as a host of methods useful for analysis.
 
+\section{Reference}
+All functions listed below are accessed via the SpikeDB object.  For example, |SpikeDB.getFiles(True)| calls the |getFiles| method.
+
+\subsection{\method{void}{filterSpikesAbs}{float minSpikeTime}{float maxSpikeTime}}
+\subsubsection{Parameters}
+\begin{center}
+\begin{tabular}{|b|y|}
+	\hline
+	|minSpikeTime| & Minimum absolute spike time.\\
+	\hline
+	|maxSpikeTime| & Maximum absolute spike time.\\
+	\hline
+\end{tabular}
+\end{center}
+\subsubsection{Description}
+Filters the spikes for every file based on the absolute time of the spike in the file.
+
+\subsection{\method{void}{filterSpikesRel}{float minSpikeTime}{float maxSpikeTime}}
+\subsubsection{Parameters}
+\begin{center}
+\begin{tabular}{|b|y|}
+	\hline
+	|minSpikeTime| & Minimum relative spike time.\\
+	\hline
+	|maxSpikeTime| & Maximum relative spike time.\\
+	\hline
+\end{tabular}
+\end{center}
+\subsubsection{Description}
+Filters the spikes for every file based on the time of the spike relative to the stimuli onset and offsets. A spike is included only if it falls within a stimulus onset+|minSpikeTime| and stimulus offset+|maxSpikeTime|. When both channel 1 and channel 2 are active a spike is included if it falls within the relative timing of either stimulus. To include spikes prior to stimulus onset set |minSpikeTime| to a value less than zero.
+
+
+\subsection{\method{list}{getCells}}
+\subsection{\method{list}{getFiles}{bool onlySelected}}
+\subsection{\method{float}{mean}{list values}}
+\subsection{\method{void}{plotClear}}
+\subsection{\method{void}{plotLine}{list xValues}{list yValues}{list errValues}}
+\subsection{\method{void}{plotSetLineWidth}{float lineWidth}}
+\subsection{\method{void}{plotSetPointSize}{float pointSize}}
+\subsection{\method{void}{plotSetRGBA}{float red}{float green}{float blue}{float alpha}}
+\subsection{\method{void}{plotXLabel}{string XLabel}}
+\subsection{\method{void}{plotXMin}{float minXValue}}
+\subsection{\method{void}{plotXMax}{float maxXValue}}
+\subsection{\method{void}{plotYLabel}{string YLabel}}
+\subsection{\method{void}{plotYMin}{float minYValue}}
+\subsection{\method{void}{plotYMax}{float maxYValue}}
+\subsection{\method{void}{plotYMax}{float maxYValue}}
+\subsection{\method{float}{stddev}{list values}}
+
 \section{Examples}
+\subsection{Mean Spike Times}
 \begin{lstlisting}[label=codeMean,caption=Calculating the mean spike counts.]
 files = SpikeDB.getFiles(True)
 for f in files:
