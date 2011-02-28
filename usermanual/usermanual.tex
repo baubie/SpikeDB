@@ -117,6 +117,17 @@ Filters the spikes for every file based on the time of the spike relative to the
 \subsection{\method{void}{plotYMax}{float maxYValue}}
 \subsection{\method{void}{plotYMax}{float maxYValue}}
 \subsection{\method{float}{stddev}{list values}}
+\subsection{\method{void}{write}{string text}}
+\subsubsection{Parameters}
+\begin{center}
+\begin{tabular}{|b|y|}
+	\hline
+	|text| & Text to print to SpikeDB output window.\\
+	\hline
+\end{tabular}
+\end{center}
+\subsubsection{Description}
+This function is used internally to print text to the SpikeDB output window and is generally not needed by analysis script writers. Standard Python output functions like |print| work just fine and print to the SpikeDB output window as expected. Errors are also printed to the SpikeDB window. Note that the output window is only available in the Analysis tab and not in the quick analysis plot.
 
 \section{Examples}
 \subsection{Mean Spike Times}
