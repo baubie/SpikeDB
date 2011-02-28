@@ -10,7 +10,7 @@ for f in files:
 	for t in f['trials']:
 		count = []
 		x.append(t['xvalue'])	
-		for p in t['spikes']:
+		for p in t['passes']:
 			if len(p) > 0:
 				count.append(p[0])
 		means.append(SpikeDB.mean(count))

@@ -278,7 +278,7 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 				}
 				spikes.append(pass);
 			}
-			trial["spikes"] = spikes;
+			trial["passes"] = spikes;
 			trials.append(trial);
 		}
 		file["trials"] = trials;

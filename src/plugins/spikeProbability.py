@@ -1,6 +1,4 @@
-### Mean Spike Count
-
-# Calculate Mean Spike Count for Selected Files
+### Spike Probability
 
 SpikeDB.plotClear()
 files = SpikeDB.getFiles(True)
@@ -12,7 +10,7 @@ for f in files:
 	for t in f['trials']:
 		count = []
 		x.append(t['xvalue'])	
-		for p in t['spikes']:
+		for p in t['passes']:
 			if len(p) > 0:
 				count.append(1)
 			else:

@@ -77,10 +77,64 @@ void uiAnalysis::initPlugins()
 	/**
 	 * Setup built-in plugins
 	 */
+
 	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("", "Custom Analysis Script"));
-	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("meanSpikeCount.py", "Mean Spike Count"));
-	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("firstSpikeLatency.py", "First Spike Latency"));
-	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("spikeProbability.py", "Spiking Probability"));
+
+
+	std::vector<std::string> search_paths;
+#ifdef __APPLE__
+	CFBundleRef mainBundle = CFBundleGetMainBundle();
+	CFURLRef resourcesURL = CFBundleCopyBundleURL(mainBundle);
+	CFStringRef str = CFURLCopyFileSystemPath( resourcesURL, kCFURLPOSIXPathStyle );
+	CFRelease(resourcesURL);
+	char path[1024];
+	CFStringGetCString( str, path, FILENAME_MAX, kCFStringEncodingASCII );
+	CFRelease(str);
+	Glib::ustring app_path(path);
+	search_paths.push_back(app_path+"/plugins/");
+	search_paths.push_back("/Library/Application Support/SpikeDB/plugins/");
+#endif
+#ifdef __UNIX__
+	// Figure out where to search here
+	search_paths.push_back("/usr/share/SpikeDB/plugins/");
+	search_paths.push_back("./plugins/");
+#endif
+
+
+	struct dirent *dptr;
+	DIR *dirp;
+	std::vector<std::string>::iterator it;
+	std::string filename;
+
+	for (it = search_paths.begin(); it != search_paths.end(); it++) {
+		filename = *it;
+		if ((dirp = opendir(filename.c_str())) == NULL) {
+			std::cerr << "ERROR: Unable to open " << filename << std::endl;
+		} else{
+			while ((dptr = readdir(dirp))) {
+				if (dptr->d_type == DT_REG) {
+					std::string possibleFile = dptr->d_name;
+					if (possibleFile.length() >= 4 && possibleFile.substr(possibleFile.length()-3,3) == ".py")
+					{
+						Glib::RefPtr<Gio::File> file=Gio::File::create_for_path(filename+possibleFile);
+						Glib::RefPtr<Gio::DataInputStream> fin=Gio::DataInputStream::create(file->read());
+						std::string line;
+						std::string name;
+						fin->read_line(line);
+						if (line.substr(0,3) == "###")
+						{
+							std::cout << line.substr(4) << std::endl;
+							plugins.push_back(std::pair<Glib::ustring,Glib::ustring>(
+										filename+possibleFile,
+										line.substr(4))
+									);
+						}
+					}
+				}
+			}
+			closedir(dirp);
+		}
+	}
 }
 
 void uiAnalysis::on_showerr_clicked()
@@ -207,22 +261,7 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 	if (plugin == "") {
 		fp = fopen(m_filename.c_str(), "r");
 	} else {
-
-#ifdef __APPLE__
-		CFBundleRef mainBundle = CFBundleGetMainBundle();
-		CFURLRef resourcesURL = CFBundleCopyBundleURL(mainBundle);
-		CFStringRef str = CFURLCopyFileSystemPath( resourcesURL, kCFURLPOSIXPathStyle );
-		CFRelease(resourcesURL);
-		char path[1024];
-		CFStringGetCString( str, path, FILENAME_MAX, kCFStringEncodingASCII );
-		CFRelease(str);
-		Glib::ustring app_path(path);
-		std::cout << "APP PATH: " << app_path << std::endl;
-		Glib::ustring plugin_path = app_path+"/plugins/"+plugin;
-#else
-		Glib::ustring plugin_path = "plugins/"+plugin;
-#endif
-		fp = fopen(plugin_path.c_str(), "r");
+		fp = fopen(plugin.c_str(), "r");
 	}
 	PyRun_SimpleFile(fp, m_filename.c_str());
 	fclose(fp);

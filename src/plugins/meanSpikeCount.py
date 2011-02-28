@@ -1,3 +1,5 @@
+### Mean Spike Count
+
 files = SpikeDB.getFiles(True)
 for f in files:
 	means = []
@@ -6,7 +8,7 @@ for f in files:
 	for t in f['trials']:
 		count = []
 		x.append(t['xvalue'])	
-		for p in t['spikes']:
+		for p in t['passes']:
 			count.append(len(p))
 		means.append(SpikeDB.mean(count))
 		err.append(SpikeDB.stddev(count))

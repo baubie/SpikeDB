@@ -9,6 +9,7 @@
 #include "uiFileDetailsTreeView.h"
 #include "easyplotmm/easyplotmm.h"
 #include "settings.h"
+#include <dirent.h>
 
 #ifdef __APPLE__
 #include <CoreFoundation/CoreFoundation.h>

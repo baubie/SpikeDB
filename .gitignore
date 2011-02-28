@@ -1,5 +1,6 @@
 *.swp
 *.o
+*.out
 spikedb.app
 GLE_scripts
 CMakeFiles

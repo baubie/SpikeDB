@@ -4,8 +4,6 @@
 GUI::GUI()
 {
 
-
-
 	uiReady = false;
 	db = NULL;
 
@@ -1193,8 +1191,8 @@ void GUI::on_menuImportFolder_activate()
 						importSpikeFile(filename, dptr->d_name);
 					}
 				}
+				closedir(dirp);
 			}
-			closedir(dirp);
 		}
 		break;
 	}
