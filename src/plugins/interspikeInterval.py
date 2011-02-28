@@ -15,6 +15,6 @@ for f in files:
 		means.append(SpikeDB.mean(count))
 		err.append(SpikeDB.stddev(count))
 	SpikeDB.plotXLabel(f['xvar'])
-	SpikeDB.plotYLabel('Mean Interspike Interval')
+	SpikeDB.plotYLabel('Mean Interspike Interval (ms)')
 	SpikeDB.plotLine(x,means,err)
 
