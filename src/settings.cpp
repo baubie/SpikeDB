@@ -6,6 +6,7 @@ Settings::Settings()
 
 
 #ifdef __APPLE__
+	mkdir("/Library/Application Support/SpikeDB", 0755);
 	Glib::ustring filename = "/Library/Application Support/SpikeDB/spikedb.settings";
 #else
 	Glib::ustring filename = "spikedb.settings";

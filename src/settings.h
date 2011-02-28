@@ -9,6 +9,7 @@
 #include <gtkmm.h>
 
 #ifdef __APPLE__
+#include <sys/stat.h>
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
