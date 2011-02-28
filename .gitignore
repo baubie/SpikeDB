@@ -5,7 +5,6 @@ GLE_scripts
 CMakeFiles
 CMakeCache.txt
 Makefile
-*.pdf
 cmake_install.cmake
 logs
 callgrind.*
