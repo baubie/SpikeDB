@@ -301,6 +301,7 @@ void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, Pen p)
 	std::vector<double> err(x.size(),0);
     plot(x,y,err,p,true);    
 }
+
 void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, Pen p, bool exportable)
 {
     // Add plot to vectors
@@ -313,18 +314,22 @@ void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<
     // Add plot to vectors
     plot(x,y,err,getPen(),true);    
 }
+
 void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, bool exportable)
 {
     // Add plot to vectors
     plot(x,y,err,getPen(),exportable);    
 }
+
 void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p)
 {
     plot(x,y,err,p,true);
 }
+
 void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p, bool exportable)
 {
 	if (x.empty() || y.empty() || err.empty()) return;
+
     // Add plot to vectors
     m_x.push_back(x);
     m_y.push_back(y);
@@ -742,10 +747,19 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         {
             // Cull data to be within the x,y axes
 			std::vector<double> cull_x, cull_y, cull_err;
+			unsigned int firstPosition = UINT_MAX;
+			unsigned int lastPosition = UINT_MAX;
             for (unsigned int j = 0; j < m_x[i].size(); ++j)
             {
-                if (m_x[i][j] >= xmin && m_x[i][j] <= xmax && m_y[i][j] >= ymin && m_y[i][j] <= ymax)
+                if (
+					m_x[i][j] >= xmin && 
+					m_x[i][j] <= xmax && 
+					m_y[i][j] >= ymin && 
+					m_y[i][j] <= ymax
+				   )
                 {
+					if (firstPosition == UINT_MAX) firstPosition = j;
+					lastPosition = j;
                     cull_x.push_back(m_x[i][j]);
                     cull_y.push_back(m_y[i][j]);
                     cull_err.push_back(m_err.at(i).at(j));
