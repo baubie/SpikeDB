@@ -241,6 +241,7 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 	_pySpikeDB.forceSpikesAbs(forceAbsBegin, forceAbsEnd);
 	main_namespace["SpikeDB"] = bp::ptr(&_pySpikeDB);
 	main_namespace["SpikeDB"].attr("__dict__")["VARYING"] = VARYING_STIMULUS;
+	main_namespace["SpikeDB"].attr("__dict__")["NOPOINT"] = EasyPlotmm::NOPOINT;
 
 
 	// Redirect stderr and stdout

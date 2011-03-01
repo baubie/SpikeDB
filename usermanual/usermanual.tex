@@ -282,11 +282,11 @@ Clears the SpikeDB plot and resets the plot variables and style settings. This i
 \end{center}
 \end{table}
 \subsubsection{Description}
-Plot a series of (X,Y) points in the style determined by prior plot setup functions (i.e. |plotSetLineWidth|, |plotSetPointSize|, |plotSetRGBA|, etc.). The length of |xValues| and |yValues| must be the same and |errValues| must also be the same length or be empty (i.e. []).
+Plot a series of (X,Y) points in the style determined by prior plot setup functions (i.e. |plotSetLineWidth|, |plotSetPointSize|, |plotSetRGBA|, etc.). The length of |xValues| and |yValues| must be the same and |errValues| must also be the same length or be empty (i.e. []). In some cases it may not make sense to plot a point for a particular X value (for example, there is no defined first spike latency for a trial with zero spikes).  In such cases you can assign |SpikeDB.NOPOINT| to that Y value to produce a disconnected line missing that point.
 \begin{lstlisting}[caption=Example]
 	X = [1,2,3,4,5]
-	Y = [1,4,9,16,25]
-	err = [0.5,0.2,0.9,1.1,0.3]
+	Y = [1,4,SpikeDB.NOPOINT,16,25]
+	err = [0.5,0.2,0,1.1,0.3]
 
 	# Plot the data with error bars
 	SpikeDB.plotLine(X,Y,err)

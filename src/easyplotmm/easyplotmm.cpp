@@ -3,6 +3,7 @@
 #include <iostream>
 
 const double EasyPlotmm::AUTOMATIC = (DBL_MAX -1);
+const double EasyPlotmm::NOPOINT = (DBL_MAX -2);
 
 EasyPlotmm::EasyPlotmm() :
     m_xmin(AUTOMATIC),
@@ -438,6 +439,22 @@ void EasyPlotmm::drawerr(Cairo::RefPtr<Cairo::Context> cr, double err, double sc
 	cr->rel_move_to(-size, err*scale);
 }
 
+void EasyPlotmm::showError(std::string err)
+{
+    Glib::RefPtr<Gdk::Window> window = get_window();
+	Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();
+    cr->set_line_width(0.5);
+	Pango::FontDescription name_font_descr("sans normal 10");
+	Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
+	pangoLayout->set_font_description(name_font_descr);
+	pangoLayout->set_text(err);
+	pangoLayout->update_from_cairo_context(cr);
+	cr->move_to(10,10);
+	pangoLayout->add_to_cairo_context(cr);
+	cr->stroke();
+}
+
+
 bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 {
 
@@ -491,10 +508,15 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         }
         for (unsigned int ys = 0; ys < m_y.size(); ++ys) {
             for (unsigned int y = 0; y < m_y[ys].size(); ++y) {
-                ymin = ymin > m_y[ys][y] ? m_y[ys][y] : ymin;
-                ymax = ymax < m_y[ys][y]+m_err[ys][y] ? m_y[ys][y]+m_err[ys][y] : ymax;
+                ymin = ymin > m_y[ys][y]-m_err[ys][y] && m_y[ys][y] != NOPOINT ? m_y[ys][y]-m_err[ys][y] : ymin;
+                ymax = ymax < m_y[ys][y]+m_err[ys][y] && m_y[ys][y] != NOPOINT ? m_y[ys][y]+m_err[ys][y] : ymax;
             }
         }
+		// If we can't get reasonable limits then something is up
+		if (xmax == -DBL_MAX || ymax == -DBL_MAX || xmin == DBL_MAX || ymin == DBL_MAX) {
+			showError("No Data To Plot!");
+			return true;
+		}
 		if (ymin <= 1 && ymin > 0) ymin = 0;
 
         if (m_xmin != AUTOMATIC) xmin = m_xmin;
@@ -734,34 +756,52 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
             {
 			 	// First draw the error bars
                 cr->move_to((cull_x[0]-xmin)*xscale,(cull_y[0]-ymin)*yscale);
-				drawerr(cr, cull_err[0],yscale,m_pens[i].pointsize,m_pens[i].errcolor); 
+				if (cull_y[0] != NOPOINT) drawerr(cr, cull_err[0],yscale,m_pens[i].pointsize,m_pens[i].errcolor); 
                 for (unsigned int j = 1; j < cull_x.size(); ++j) 
                 {
 					cr->move_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
-					drawerr(cr,cull_err[j],yscale,m_pens[i].pointsize,m_pens[i].errcolor); 
+					if (cull_y[j] != NOPOINT) drawerr(cr,cull_err[j],yscale,m_pens[i].pointsize,m_pens[i].errcolor); 
                 }
 				cr->stroke();
 
 				// Next draw the lines
 				if (m_pens[i].linewidth > 0)
 				{
+					bool onLine = false;
 					cr->set_source_rgba(m_pens[i].color.r,m_pens[i].color.g,m_pens[i].color.b,m_pens[i].color.a);
 					cr->set_line_width(m_pens[i].linewidth);
-					cr->move_to((cull_x[0]-xmin)*xscale,(cull_y[0]-ymin)*yscale);
+					if (cull_y[0] != NOPOINT) { cr->move_to((cull_x[0]-xmin)*xscale,(cull_y[0]-ymin)*yscale); onLine = true; }
 					for (unsigned int j = 1; j < cull_x.size(); ++j) 
 					{
-						cr->line_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
+						if (cull_y[j] != NOPOINT) {
+							if (onLine)	cr->line_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
+							onLine = true;
+						}
+						else {
+							onLine = false;
+//							cr->move_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
+						}
 					}
 					cr->stroke();
 				}
 
 				// Next draw the shapes
                 cr->move_to((cull_x[0]-xmin)*xscale,(cull_y[0]-ymin)*yscale);
-                drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
+				if (cull_y[0] != NOPOINT)
+				{
+					drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
+				} else {
+					drawshape(cr,m_pens[i].pointsize,NONE,m_pens[i].filled,m_pens[i].color);
+				}
                 for (unsigned int j = 1; j < cull_x.size(); ++j) 
                 {
 					cr->move_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
-                    drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
+					if (cull_y[j] != NOPOINT)
+					{
+						drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
+					} else {
+						drawshape(cr,m_pens[i].pointsize,NONE,m_pens[i].filled,m_pens[i].color);
+					}
                 }
 				cr->stroke();
             }

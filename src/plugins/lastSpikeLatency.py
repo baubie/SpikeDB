@@ -13,8 +13,14 @@ for f in files:
 		for p in t['passes']:
 			if len(p) > 0:
 				count.append(p[-1])
-		means.append(SpikeDB.mean(count))
-		err.append(SpikeDB.stddev(count))
+
+		if len(count) > 0:
+			means.append(SpikeDB.mean(count))
+			err.append(SpikeDB.stddev(count))
+		else:
+			means.append(SpikeDB.NOPOINT)
+			err.append(SpikeDB.NOPOINT)
+
 	SpikeDB.plotXLabel(f['xvar'])
 	SpikeDB.plotYLabel('Mean Last Spike Latency (ms)')
 	SpikeDB.plotLine(x,means,err)

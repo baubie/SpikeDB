@@ -72,6 +72,7 @@ class EasyPlotmm : public Gtk::DrawingArea
 
         // Constants 
         static const double AUTOMATIC;
+        static const double NOPOINT;
 
         // Plot parameters
         double m_xmin,m_xmax,m_ymin,m_ymax; // Axes
@@ -96,6 +97,8 @@ class EasyPlotmm : public Gtk::DrawingArea
         void drawshape(Cairo::RefPtr<Cairo::Context> cr, double size, Shape shape, bool filled, RGBA col);
         void drawerr(Cairo::RefPtr<Cairo::Context> cr, double err, double scale, double size, RGBA col);
         void makeDefaultPens();
+
+		void showError(std::string err);
 
         // Context menu
         Gtk::Menu m_Menu_Popup;
