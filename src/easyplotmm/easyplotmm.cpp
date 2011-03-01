@@ -476,7 +476,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         if (m_x.empty()) return true;
         if (m_x.size() != m_y.size())
         {
-            std::cout << "ERROR: X and Y vectors are not the same size." << std::endl;
+			showError("X and Y list lengths do not match.");
             return true;
         }
         if (m_x.size() != m_pens.size())
@@ -486,7 +486,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         }
         if (m_x.size() != m_err.size())
         {
-            std::cout << "ERROR: X and ERR vectors are not the same size." << std::endl;
+			showError("X and ERR list lengths do not match.");
             return true;
         }
         
@@ -498,7 +498,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         for (unsigned int xs = 0; xs < m_x.size(); ++xs) {
             if (m_x[xs].size() != m_y[xs].size())
             {
-                std::cout << "ERROR: Plot #" << xs << " do not have same X and Y vector sizes." << std::endl;
+				showError("X and Y list lengths do not match.");
                 return true;
             }
             for (unsigned int x = 0; x < m_x[xs].size(); ++x) {
@@ -779,7 +779,6 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 						}
 						else {
 							onLine = false;
-//							cr->move_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
 						}
 					}
 					cr->stroke();
