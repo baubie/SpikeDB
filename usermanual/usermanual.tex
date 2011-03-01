@@ -109,7 +109,7 @@ The filter panel is used to filter the files shown in the Browse Files window. T
 Often we are only interested in cells with at least a minimum dataset and thus cells with only 1 or 2 files recorded are useless. Setting this value to a number greater than 1 will hide any cells that have less than that number of files recorded for it.
 
 \subsection{X-Variable}
-Use this dropdown to filter which types of files are shown based on the file's X variable.
+Use this drop-down to filter which types of files are shown based on the file's X variable.
 
 \subsection{Tag Filter}
 Animals and Cells and be given tags in their respective details panels on the right of the window. Only files that belong to an animal or a cell containing the tag entered in this window they will be shown in the Browse Files list. Leave blank to not filter on tags.
@@ -137,7 +137,7 @@ By default, this plot will display the mean number of spikes per trial. Other an
 The Analysis Plug-In Module allows you to use the Python scripting language write custom analysis routines on one or many Spike recording files. Each Python script will have the |SpikeDB| object available to it.  This object provides access to all of the data held within SpikeDB as well as a host of methods useful for analysis.
 
 \subsubsection{Quick Analysis Plugins}
-Several Quick Analysis plugins are included with SpikeDB, however, it is easy to add your own. Quick Analysis are shown in the drop-down box on the Quick Analysis and Analysis toolbars and are defined by scripts located in the plugins/ folder of the SpikeDB application. The location of this folder depends on your operating system. Refer to Table \ref{tblPluginLocations} for details.
+Several Quick Analysis plugins are included with SpikeDB, however, it is easy to add your own. Quick Analysis plugins are shown in the drop-down box on the Quick Analysis and Analysis toolbars and are defined by scripts located in the plugins/ folder of the SpikeDB application. The location of this folder depends on your operating system. Refer to Table \ref{tblPluginLocations} for details.
 \begin{table}[h]
 	\begin{center}
 	\caption{Default plugins folder locations on different operating systems.}
@@ -154,7 +154,7 @@ Several Quick Analysis plugins are included with SpikeDB, however, it is easy to
 \end{table}
 Quick Analysis plugins function exactly the same way as other Analysis plugins with two minor differences. First, the name of the plugin to display in the toolbar drop-down list must be specified on the first line with three |#| symbols in the format 
 \begin{center}|### Name Goes Here|\end{center}
-Second, when retrieving files with the |getFiles()| method you will generally always want to pass |True| as the parameter to ensure that only the currently selected file(s) will be analyzed. When adding new Quick Analysis plugins to the plugins folder you must restart SpikeDB for them to be available in the drop-down box.
+Second, when retrieving files with the |getFiles()| method you will generally always want to pass |True| as the parameter to ensure that only the currently selected file(s) will be analyzed. When adding new Quick Analysis plugins to the plugins folder you must restart SpikeDB for them to be available in the drop-down list.
 
 \section{Reference}
 All functions listed in this section are accessed via the SpikeDB object.  For example, |SpikeDB.getFiles(True)| calls the |getFiles()| method.
