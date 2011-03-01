@@ -9,11 +9,12 @@
 \usepackage{xparse}
 \usepackage{fullpage}
 \usepackage{colortbl}
+\usepackage{graphicx}
 \DefineShortVerb{\|}
 \DeclareCaptionFont{white}{\color{white}}
 \DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
 \captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
-\lstset{language=Python, basicstyle=\ttfamily}
+\lstset{language=Python, basicstyle=\ttfamily, showstringspaces=false,showspaces=false}
 \lstdefinestyle{numbers}{numberstyle=\tiny}
 \renewcommand*\arraystretch{1.75}
 \NewDocumentCommand \method{ m m g g g g g g g }{%
@@ -33,39 +34,105 @@
 
 \definecolor{lightblue}{rgb}{0.9,0.9,0.9}
 \definecolor{lightyellow}{rgb}{0.95,0.95,0.95}
+\graphicspath{ {./screenshots/} }
 
-\title{SpikeDB User Manual}
-\author{Brandon Aubie}
-\date{Last Updated: March 1 2011}
 
 \begin{document}
 \newcolumntype{b}{>{\columncolor{lightblue}}c}
 \newcolumntype{y}{>{\columncolor{lightyellow}}l}
 
-\maketitle
+\begin{titlepage}
+	\begin{center}
+		\includegraphics[width=0.35\textwidth]{icon.pdf}\\
+		[4.0cm]
+		\hrule\vspace{0.4cm}
+		{ \huge \bfseries SpikeDB Version 1.1 User Manual }\\[0.4cm]
+		\hrule 
+		\vspace{4cm}
+		\textsc{\LARGE McMaster University}\\
+		[0.5cm]
+		\textsc{\Large Written by Brandon Aubie}\\
+		\vspace{0.5cm}
+		{\large brandon@aubie.ca}
+
+	\end{center}
+\end{titlepage}
+
 \tableofcontents 
 
 \chapter{Introduction}
-SpikeDB is a database and analysis tool for electrophysiological recordings done with Spike. It runs on Linux and Mac (and probably Windows).
+\begin{figure}[h]
+\begin{center}
+	\includegraphics[width=0.5\textwidth]{main_window.png}
+\end{center}
+\caption{Main SpikeDB window showing a spike raster and mean spike count analysis plot.}
+\end{figure}
+SpikeDB is a database and analysis tool for electrophysiological recordings done with SPIKE (written by Brandon Warren). It runs on Linux and Mac OS X and Windows. The purpose of SpikeDB is to provide electrophysiologists with the ability to easily catalogue their electrophysiological recordings for future analysis. Animals, Cells, and Files can be assigned meta data such as tags to make finding them easier. Furthermore, all data becomes available in an embedded Python scripting interface to allow for powerful data analysis without the need to manually export and manipulate the data from SPIKE.
 
-\chapter{Basic User Interface}
-\section{Browse Files}
-\subsection{Plots}
-\subsubsection{General Usage}
+
+\clearpage
+\chapter{User Interface}
+\begin{figure}[h]
+\begin{center}
+	\includegraphics[width=0.6\textwidth]{main_window_letters.png}
+\end{center}
+\end{figure}
+\begin{itemize}
+	\item[A)] Filter Panel - Filter the files shown in the Browse Files list.
+	\item[B)] Animal List - List of animals and cells currently imported.  Select an animal or a cell by selecting the arrow head next to each item. Only the selected animals or cells appear in the Browse Files list. Select |All Animals| to display all animals, cells and files in the Browse Files list.
+	\item[C)] Browse Files list - A list of files currently selected and filtered.
+	\item[D)] Spike Raster Plot - Displays each spike as a black dot and each stimulus as a line (red = Channel 1, blue = Channel 2).
+	\item[E)] Quick Analysis Plot - Displays results of analysis script selected in the drop-down box or a custom script selected with the |Open| button in its toolbar.
+	\item[F)] Animal Details Panel - Displays animal details of the currently selected file and allows the entry of custom data.
+	\item[G)] Cell Details Panel - Displays cell details of the currently selected file and allows the entry of custom data.
+\end{itemize}
+
+		
+\clearpage
+\section{Importing Spike Data}
+SpikeDB uses a database file (SQLite) to store spike data. This means that your SPIKE files are not modified in any way. Before viewing your SPIKE data in SpikeDB you must create a new database file and then import the spike files.
+\begin{enumerate}
+	\item First select the |Create New Database| option in the file menu. This file can be named anything and saved anywhere. For example you could name it |MySpikeData.db|. If multiple people need to access this data you could store it on a shared network drive.
+	\item Click the |Save| button to create your new database file.
+	\item  Next, select the |Import Spike Files| option form the file menu and select the directory where your SPIKE files are located. The import tool will go one level deeper than the directory you select if needed.  Therefore, you could have your SPIKE files in subdirectories of the directory you choose here.
+	\item Click the |Open| button after you have chosen the directory with SPIKE files to automatically import them into SpikeDB. If you have already imported a file, SpikeDB is smart enough to recognize the duplicate and skip over that file.
+\end{enumerate}
+
+
+\section{Browse Files List}
+To view a spike raster and quick analysis plot, click on any file in the list. Multiple files can be analyzed at the same time by selecting multiple files simultaneously (holding down CTRL on most computers while selecting files or hold down SHIFT to select a range of files). If a file is considered to be useless (incomplete recording or incorrect settings for example) then the file can be hidden from view by right clicking on it, selecting |View Details| and then checking the |Hide file in file list| checkbox.  As long as the |Show hidden files| checkbox in the filter panel is not checked, this file will not be displayed. The file details window also shows the time when the file was created.
+
+\section{Filter Panel}
+The filter panel is used to filter the files shown in the Browse Files window. This can be useful when browsing your data or when running analysis scripts.
+
+\subsection{Required Number of Files}
+Often we are only interested in cells with at least a minimum dataset and thus cells with only 1 or 2 files recorded are useless. Setting this value to a number greater than 1 will hide any cells that have less than that number of files recorded for it.
+
+\subsection{X-Variable}
+Use this dropdown to filter which types of files are shown based on the file's X variable.
+
+\subsection{Tag Filter}
+Animals and Cells and be given tags in their respective details panels on the right of the window. Only files that belong to an animal or a cell containing the tag entered in this window they will be shown in the Browse Files list. Leave blank to not filter on tags.
+
+\subsection{Show hidden files}
+Turn this option on to show files in the Browse Files list even if they have been manually marked as hidden. The hidden files will be tagged with an |H| to the left of the list when shown.
+
+\section{Plots}
+\subsection{General Usage}
 \begin{itemize}
 	\item \textbf{Zoom} - Left click and drag horizontally to zoom in on a subsection of data.  
 	\item \textbf{Export Data} - Right click anywhere on the plot to bring up the options menu and select |Export Data|. This allows you to export the plotted data in CSV files that are ready for import into Excel or for use in other graphing software such as GLE.
 \end{itemize}
 
-\subsubsection{Spike Raster}
-The spike raster is a built in plot that displays the stimuli as red (channel 1) and blue (channel 2) lines and spikes as black dots. Zooming in on this plot will limit the spike times available to the Quick Analysis plot on the right.
+\subsection{Spike Raster}
+The spike raster is a built-in plot that displays the stimuli as red (channel 1) and blue (channel 2) lines and spikes as black dots. Zooming in on this plot will limit the spike times available to the Quick Analysis plot on the right.
 
-\subsubsection{Quick Analysis}
-By default, this plot will display the mean number of spikes per trial. Other analysis plugins are available in the drop down box or additional plugins can be loaded by clicking the |Open| icon. Generally, it is wise to use plugins that operate on selected files only here as no text display is available. For more general analysis on many files use the Analysis tab. That said, if multiple files of the same type are selected, the plots can be overlaid for easy comparison.
+\subsection{Quick Analysis}
+By default, this plot will display the mean number of spikes per trial. Other analysis plugins are available in the drop down box or additional plugins can be loaded by clicking the |Open| icon. Generally, it is wise to use plugins that operate on selected files only here as no text display is available. For more general analysis on many files use the Analysis tab. That said, if multiple files of the same type are selected, the plots can be overlaid for easy comparison. Turn on the |Show Error Bars| option to display the error bars in graphs (generally shown as standard deviation).
+
 
 
 \chapter{Analysis Plug-In Module}
-
 \section{Basic Usage}
 The Analysis Plug-In Module allows you to use the Python scripting language write custom analysis routines on one or many Spike recording files. Each Python script will have the |SpikeDB| object available to it.  This object provides access to all of the data held within SpikeDB as well as a host of methods useful for analysis.
 
