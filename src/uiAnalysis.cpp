@@ -26,7 +26,7 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
 	tbPluginItem->add(*tbPlugins);
 	for (unsigned int i = 0; i < plugins.size(); ++i) {
 		tbPlugins->append_text(plugins[i].second);
-		if (i == 1) tbPlugins->set_active_text(plugins[i].second);
+		if (plugins[i].second == "Mean Spike Count") tbPlugins->set_active_text("Mean Spike Count");
 	}
 	tbPlugins->signal_changed().connect(sigc::mem_fun(*this, &uiAnalysis::on_plugin_changed));
 	tbPlugins->set_focus_on_click(false);

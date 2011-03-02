@@ -102,24 +102,10 @@ void GUI::init_gui()
 	hbPlots->pack_start(*mp_QuickAnalysis, true, true);
 	vpMiddle->pack2(*hbPlots);
 
-	Gtk::VBox *vbRight = Gtk::manage(new Gtk::VBox());
-	Gtk::Frame* fAnimalDetails = Gtk::manage(new Gtk::Frame());
-	fAnimalDetails->set_label("Animal Details");
-	Gtk::VBox* vbAnimalDetails = Gtk::manage(new Gtk::VBox());
-	vbAnimalDetails->pack_start(m_uiAnimalDetails);
-	vbAnimalDetails->pack_start(m_AnimalTags);
-	m_AnimalTags.set_parent(this);
-	vbRight->pack_start(*fAnimalDetails);
-	fAnimalDetails->add(*vbAnimalDetails);
 
-	Gtk::Frame* fCellDetails = Gtk::manage(new Gtk::Frame());
-	fCellDetails->set_label("Cell Details");
-	Gtk::VBox* vbCellDetails = Gtk::manage(new Gtk::VBox());
-	vbCellDetails->pack_start(m_uiCellDetails);
-	vbCellDetails->pack_start(m_CellTags);
-	m_CellTags.set_parent(this);
-	vbRight->pack_start(*fCellDetails);
-	fCellDetails->add(*vbCellDetails);
+	
+	Gtk::ScrolledWindow* swDetailPanels = Gtk::manage( new Gtk::ScrolledWindow() );
+	Gtk::VBox *vbRight = Gtk::manage(new Gtk::VBox());
 
 	Gtk::Frame* fFileDetails = Gtk::manage(new Gtk::Frame());
 	fFileDetails->set_label("File Details");
@@ -130,8 +116,27 @@ void GUI::init_gui()
 	vbRight->pack_start(*fFileDetails);
 	fFileDetails->add(*vbFileDetails);
 
+	Gtk::Frame* fCellDetails = Gtk::manage(new Gtk::Frame());
+	fCellDetails->set_label("Cell Details");
+	Gtk::VBox* vbCellDetails = Gtk::manage(new Gtk::VBox());
+	vbCellDetails->pack_start(m_uiCellDetails);
+	vbCellDetails->pack_start(m_CellTags);
+	m_CellTags.set_parent(this);
+	vbRight->pack_start(*fCellDetails);
+	fCellDetails->add(*vbCellDetails);
 
-	hpRight->pack2(*vbRight, false, false);
+	Gtk::Frame* fAnimalDetails = Gtk::manage(new Gtk::Frame());
+	fAnimalDetails->set_label("Animal Details");
+	Gtk::VBox* vbAnimalDetails = Gtk::manage(new Gtk::VBox());
+	vbAnimalDetails->pack_start(m_uiAnimalDetails);
+	vbAnimalDetails->pack_start(m_AnimalTags);
+	m_AnimalTags.set_parent(this);
+	vbRight->pack_start(*fAnimalDetails);
+	fAnimalDetails->add(*vbAnimalDetails);
+
+	swDetailPanels->add(*vbRight);
+	swDetailPanels->set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
+	hpRight->pack2(*swDetailPanels, false, false);
 	notebook->append_page(*hpRight, "Browse Files", false);
 
 
@@ -615,12 +620,16 @@ void GUI::changeAnimalSelection()
 			m_AnimalTags.clear();
 			m_uiCellDetails.clear();
 			m_CellTags.clear();
+			m_uiFileDetails.clear();
+			m_FileTags.clear();
 		} else if (row->parent()->parent() == 0) {
 			// First Level
 			populateDetailsList(row->get_value(m_AnimalColumns.m_col_name), -1);
 			populateAnimalDetailsList(row->get_value(m_AnimalColumns.m_col_name));
 			m_uiCellDetails.clear();
 			m_CellTags.clear();
+			m_uiFileDetails.clear();
+			m_FileTags.clear();
 		} else if (row->parent()->parent()->parent() == 0) {
 			// Second Level
 			populateDetailsList(row->parent()->get_value(m_AnimalColumns.m_col_name),
@@ -628,6 +637,8 @@ void GUI::changeAnimalSelection()
 			populateAnimalDetailsList(row->parent()->get_value(m_AnimalColumns.m_col_name));
 			populateCellDetailsList(row->parent()->get_value(m_AnimalColumns.m_col_name),
 						atoi(row->get_value(m_AnimalColumns.m_col_name).c_str()));
+			m_uiFileDetails.clear();
+			m_FileTags.clear();
 		}
 	} else{
 		populateDetailsList("", -1);

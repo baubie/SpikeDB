@@ -87,7 +87,6 @@ class GUI : public Gtk::Window
 		Gtk::MenuItem m_Menu_Import;
 		Gtk::Statusbar* mp_statusbar;
 
-
 		uiPropTable<Glib::ustring> m_uiAnimalDetails; /**< Animal details property table. */
 		uiTags m_AnimalTags;
 		uiPropTable<CellID> m_uiCellDetails; /**< Cell details property table. */
