@@ -87,7 +87,7 @@ void GUI::init_gui()
 	/**
 	 * Browse Notebook Page
 	 */
-	Gtk::HPaned *hpRight = Gtk::manage(new Gtk::HPaned());
+	hpRight = Gtk::manage(new Gtk::HPaned());
 	Gtk::VPaned *vpMiddle = Gtk::manage(new Gtk::VPaned());
 	hpRight->pack1(*vpMiddle, true, false);
 	mp_FileDetailsTree = Gtk::manage( new uiFileDetailsTreeView(&db,this) );
@@ -482,6 +482,13 @@ void GUI::updateSideLists(const Gtk::TreeModel::iterator& iter)
 	populateAnimalDetailsList(m_curAnimalID);
 	populateCellDetailsList(m_curAnimalID, m_curCellID);
 	populateFileDetailsList(m_curAnimalID, m_curCellID, m_curFileNum);
+
+	Gtk::Requisition AnimalReq = m_uiAnimalDetails.size_request();
+	Gtk::Requisition CellReq = m_uiCellDetails.size_request();
+	Gtk::Requisition FileReq = m_uiFileDetails.size_request();
+//	int width = AnimalReq.width > CellReq.width ? AnimalReq.width : CellReq.width;
+//	width = width > FileReq.width ? width : FileReq.width;
+//	hpRight->set_position(hpRight->property_max_position()-width);
 }
 
 void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
