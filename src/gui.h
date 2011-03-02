@@ -43,6 +43,13 @@ struct CellID
 	int cellID;
 };
 
+struct FileID
+{
+	Glib::ustring animalID;
+	int cellID;
+	int fileID;
+};
+
 
 class GUI : public Gtk::Window
 {
@@ -85,6 +92,9 @@ class GUI : public Gtk::Window
 		uiTags m_AnimalTags;
 		uiPropTable<CellID> m_uiCellDetails; /**< Cell details property table. */
 		uiTags m_CellTags;
+		uiPropTable<FileID> m_uiFileDetails; /**< Animal details property table. */
+		uiTags m_FileTags;
+
 		Gtk::ImageMenuItem* mp_MenuImportFolder; /**< Import menu item. Require access to enable/disable it. */
 		uiAnalysis* mp_Analysis;
         uiFileDetailsTreeView* mp_FileDetailsTree;
@@ -112,6 +122,7 @@ class GUI : public Gtk::Window
         void populateDetailsList(const Glib::ustring animalID, const int cellID);
         void populateAnimalDetailsList(const Glib::ustring animalID);
         void populateCellDetailsList(const Glib::ustring animalID, const int cellID);
+        void populateFileDetailsList(const Glib::ustring animalID, const int cellID, const int fileID);
         void changeAnimalSelection();
         void addFileToPlot(const Gtk::TreeModel::iterator& iter);
 		void updateSideLists(const Gtk::TreeModel::iterator& iter);
@@ -153,6 +164,12 @@ class GUI : public Gtk::Window
 				Glib::ustring newvalue,
 				uiPropTableRowType type);
 
+		void on_filedetails_edited(
+				FileID ID,
+				Glib::ustring name,
+				Glib::ustring oldvalue,
+				Glib::ustring newvalue,
+				uiPropTableRowType type);
 
 
 

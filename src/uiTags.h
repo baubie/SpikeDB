@@ -21,6 +21,8 @@ class uiTags : public Gtk::Fixed {
 		void clear();
 		void set_parent(Gtk::Window* parent);
 
+		bool delete_assist;
+
 		typedef sigc::signal<void,Glib::ustring> type_signal_deleted;
 		typedef sigc::signal<bool,Glib::ustring> type_signal_added;
 

@@ -5,6 +5,7 @@
 #include <vector>
 #include <sqlite3.h>
 #include "spikedata.h"
+#include "uiTags.h"
 
 class uiFileDetailsTreeView : public Gtk::TreeView {
 	
@@ -63,12 +64,20 @@ class uiFileDetailsTreeView : public Gtk::TreeView {
 		typedef sigc::signal<void,bool> type_signal_file_set_hidden;
 		type_signal_file_set_hidden signal_file_set_hidden();
 
+		typedef sigc::signal<void,Glib::ustring> type_signal_tag_deleted;
+		typedef sigc::signal<bool,Glib::ustring> type_signal_tag_added;
+		type_signal_tag_deleted signal_tag_deleted();
+		type_signal_tag_added signal_tag_added();
+
+
 	protected:
 
 		Gtk::Window* m_parent;
         sqlite3 **db; /**< Pointer to out SQLite3 database. */
 
 		type_signal_file_set_hidden m_signal_file_set_hidden;
+		type_signal_tag_deleted m_signal_tag_deleted;
+		type_signal_tag_added m_signal_tag_added;
 
         Glib::RefPtr<Gtk::TreeSelection> mrp_Selection;
 		Gtk::Menu m_Menu_FileDetails;
@@ -76,6 +85,8 @@ class uiFileDetailsTreeView : public Gtk::TreeView {
 		void on_view_file_details();
 		void show_file_details(const Gtk::TreeModel::iterator& iter);
 		void on_file_details_button_press_event(GdkEventButton* event);
+		void on_tag_deleted(Glib::ustring tag);
+		bool on_tag_added(Glib::ustring tag);
 };
 
 #endif

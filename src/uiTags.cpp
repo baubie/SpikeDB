@@ -10,6 +10,7 @@ uiTags::uiTags(Gtk::Window *parent)
 	this->put(m_AddNew, 5, 10);
 	m_AddNew.set_sensitive(false);
 	active = false;
+	delete_assist = false;
 }
 
 uiTags::~uiTags() {}
@@ -83,6 +84,15 @@ void uiTags::on_tag_deleted(Glib::ustring tag)
 	switch (result) {
 		case (Gtk::RESPONSE_OK):
 			m_signal_deleted.emit(tag);
+			if (delete_assist) {
+				std::vector<Glib::ustring> new_tags;	
+				for(unsigned int i = 0; i < m_tags.size(); i++) 
+				{
+					if (m_tags[i] != tag)
+						new_tags.push_back(m_tags[i]);
+				}
+				tags(new_tags);
+			}
 			break;
 	}
 
@@ -173,6 +183,7 @@ uiTags::Tag::Tag(Glib::ustring tag)
 void uiTags::Tag::on_delete_clicked()
 {
 	m_signal_deleted.emit(m_Value.get_text());
+
 }
 
 uiTags::Tag::type_signal_deleted uiTags::Tag::signal_deleted()

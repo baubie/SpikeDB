@@ -121,6 +121,16 @@ void GUI::init_gui()
 	vbRight->pack_start(*fCellDetails);
 	fCellDetails->add(*vbCellDetails);
 
+	Gtk::Frame* fFileDetails = Gtk::manage(new Gtk::Frame());
+	fFileDetails->set_label("File Details");
+	Gtk::VBox* vbFileDetails = Gtk::manage(new Gtk::VBox());
+	vbFileDetails->pack_start(m_uiFileDetails);
+	vbFileDetails->pack_start(m_FileTags);
+	m_FileTags.set_parent(this);
+	vbRight->pack_start(*fFileDetails);
+	fFileDetails->add(*vbFileDetails);
+
+
 	hpRight->pack2(*vbRight, false, false);
 	notebook->append_page(*hpRight, "Browse Files", false);
 
@@ -151,6 +161,12 @@ void GUI::init_gui()
 	m_CellTags.signal_deleted().connect(sigc::mem_fun(*this, &GUI::on_cell_tag_deleted));
 	m_CellTags.signal_added().connect(sigc::mem_fun(*this, &GUI::on_cell_tag_added));
 
+	m_uiFileDetails.signal_rowedited().connect(sigc::mem_fun(*this, &GUI::on_filedetails_edited));
+	m_FileTags.signal_deleted().connect(sigc::mem_fun(*this, &GUI::on_file_tag_deleted));
+	m_FileTags.signal_added().connect(sigc::mem_fun(*this, &GUI::on_file_tag_added));
+
+	mp_FileDetailsTree->signal_tag_deleted().connect(sigc::mem_fun(*this, &GUI::on_file_tag_deleted));
+	mp_FileDetailsTree->signal_tag_added().connect(sigc::mem_fun(*this, &GUI::on_file_tag_added));
 	
 	/**
 	 * Statusbar
@@ -414,6 +430,30 @@ void GUI::on_celldetails_edited(
 	populateCellDetailsList(ID.animalID,ID.cellID);
 }
 
+void GUI::on_filedetails_edited(
+	FileID ID, Glib::ustring name, Glib::ustring /*oldvalue*/, Glib::ustring newvalue, uiPropTableRowType /*type*/)
+{
+	// Construct the SQL query for the relevant row.
+	Glib::ustring query;
+	if (name == "Notes")  query = "UPDATE files SET notes=? WHERE animalID=? AND cellID=? AND fileID=?";
+
+	// Update the database.
+	const char* q = query.c_str();
+	sqlite3_stmt *stmt = 0;
+	sqlite3_prepare_v2(db, q, strlen(q), &stmt, NULL);
+	sqlite3_bind_text(stmt, 1, newvalue.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_text(stmt, 2, ID.animalID.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_int(stmt, 3, ID.cellID);
+	sqlite3_bind_int(stmt, 4, ID.fileID);
+	if (sqlite3_step(stmt) != SQLITE_DONE) std::cerr << "ERROR: Could not update file. " << sqlite3_errmsg(db) << std::endl;
+	sqlite3_finalize(stmt);
+
+	// Repopulate the table with the database value to show, forsure, what is in the database now.
+	populateFileDetailsList(ID.animalID,ID.cellID,ID.fileID);
+}
+
+
+
 void GUI::on_filedetails_selection_changed()
 {
 	mp_QuickAnalysis->forceSpikesAbs(-1,-1);
@@ -436,6 +476,7 @@ void GUI::updateSideLists(const Gtk::TreeModel::iterator& iter)
 
 	populateAnimalDetailsList(m_curAnimalID);
 	populateCellDetailsList(m_curAnimalID, m_curCellID);
+	populateFileDetailsList(m_curAnimalID, m_curCellID, m_curFileNum);
 }
 
 void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
@@ -696,7 +737,7 @@ void GUI::on_file_tag_deleted(Glib::ustring tag)
 	sqlite3_bind_int(stmt, 4, m_curFileNum);
 	sqlite3_step(stmt);
 	sqlite3_finalize(stmt);
-	populateCellDetailsList(m_curAnimalID, m_curCellID);
+	populateFileDetailsList(m_curAnimalID, m_curCellID, m_curFileNum);
 	updateTagCompletion();
 }
 
@@ -773,6 +814,7 @@ bool GUI::on_file_tag_added(Glib::ustring tag)
 	if (sqlite3_step(stmt) != SQLITE_DONE) std::cerr << "ERROR: Could not insert tag. " << sqlite3_errmsg(db) << std::endl;
 	sqlite3_finalize(stmt);
 	updateTagCompletion();
+	populateFileDetailsList(m_curAnimalID, m_curCellID, m_curFileNum);
 	return true;
 }
 
@@ -853,6 +895,55 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 	sqlite3_finalize(stmt);
 	m_CellTags.tags(tags);
 }
+
+
+void GUI::populateFileDetailsList(const Glib::ustring animalID, const int cellID, const int fileID)
+{
+	/*
+	 * This function requires a valid database.
+	 */
+	if (db == NULL) return;
+
+	m_uiFileDetails.clear();
+	
+	int r;
+	sqlite3_stmt *stmt;
+
+	char query[] = "SELECT notes FROM files WHERE animalID=? AND cellID=? AND fileID=?";
+	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_int(stmt, 2, cellID);
+	sqlite3_bind_int(stmt, 3, fileID);
+	r = sqlite3_step(stmt);
+
+	if (r == SQLITE_ROW) {
+		FileID ID;
+		ID.animalID = animalID;
+		ID.cellID = cellID;
+		ID.fileID = fileID;
+
+		m_uiFileDetails.addRow(ID, "File Number", ID.fileID, Static);
+
+		m_uiFileDetails.addRow(ID, "Notes",
+			((char*)sqlite3_column_text(stmt, 2) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 2),
+			Editable
+		);
+	} 
+	sqlite3_finalize(stmt);
+
+	const char query2[] = "SELECT tag FROM tags WHERE animalID=? AND cellID=? AND fileID=?";
+	sqlite3_prepare_v2(db, query2, -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_int(stmt, 2, cellID);
+	sqlite3_bind_int(stmt, 3, fileID);
+	std::vector<Glib::ustring> tags;
+	while (sqlite3_step(stmt) == SQLITE_ROW) {
+		tags.push_back((char*)sqlite3_column_text(stmt, 0));
+	}
+	sqlite3_finalize(stmt);
+	m_FileTags.tags(tags);
+}
+
 
 void GUI::populateAnimalTree()
 {
@@ -1007,7 +1098,17 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 			bool allow_cell = sqlite3_column_int(stmt2,0) > 0;
 			sqlite3_finalize(stmt2);
 
-			filtered = filtered && (allow_animal || allow_cell);
+			char query_file_tag[] = "SELECT COUNT(*) FROM tags WHERE tag=? AND animalID=? AND cellID=? AND fileID=?";
+			sqlite3_prepare_v2(db, query_file_tag, -1, &stmt2, 0);
+			sqlite3_bind_text(stmt2, 1, mp_uiFilterFrame->tag().c_str(), -1, SQLITE_TRANSIENT);
+			sqlite3_bind_text(stmt2, 2, (char*)sqlite3_column_text(stmt, 0), -1, SQLITE_TRANSIENT);
+			sqlite3_bind_int(stmt2, 3, sqlite3_column_int(stmt, 1));
+			sqlite3_bind_int(stmt2, 4, sqlite3_column_int(stmt, 2));
+			r2 = sqlite3_step(stmt2);
+			bool allow_file = sqlite3_column_int(stmt2,0) > 0;
+			sqlite3_finalize(stmt2);
+
+			filtered = filtered && (allow_animal || allow_cell || allow_file);
 		}
 
 		// Check for hidden files

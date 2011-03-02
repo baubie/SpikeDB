@@ -125,13 +125,35 @@ void uiFileDetailsTreeView::show_file_details(const Gtk::TreeModel::iterator& it
 		Gtk::CheckButton cbHidden("Hide file in file list");
 		cbHidden.set_active(row.get_value(m_Columns.m_col_hidden));
 		dialog.get_vbox()->pack_start(cbHidden);
+
+		sqlite3_stmt *stmt2 = 0;
+		const char query2[] = "SELECT tag FROM tags WHERE animalID=? AND cellID=? AND fileID=?";
+		sqlite3_prepare_v2(*db, query2, -1, &stmt2, 0);
+		sqlite3_bind_text(stmt2, 1, row.get_value(m_Columns.m_col_animalID).c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int(stmt2, 2, row.get_value(m_Columns.m_col_cellID));
+		sqlite3_bind_int(stmt2, 3, row.get_value(m_Columns.m_col_filenum));
+		std::vector<Glib::ustring> tags;
+		while (sqlite3_step(stmt2) == SQLITE_ROW) {
+			Glib::ustring t = (char*)sqlite3_column_text(stmt2, 0);
+			tags.push_back(t);
+		}
+		sqlite3_finalize(stmt2);
+		Gtk::Frame frameTags("File Tags");
+		uiTags tagsFile(m_parent);
+		tagsFile.tags(tags);
+		tagsFile.delete_assist = true;
+		frameTags.add(tagsFile);
+		dialog.get_vbox()->pack_start(frameTags);
+		tagsFile.signal_deleted().connect(sigc::mem_fun(*this, &uiFileDetailsTreeView::on_tag_deleted));
+		tagsFile.signal_added().connect(sigc::mem_fun(*this, &uiFileDetailsTreeView::on_tag_added));
 		dialog.show_all_children();
 		int result = dialog.run();
 
 
 		switch (result) {
 			case (Gtk::RESPONSE_OK):
-				m_signal_file_set_hidden.emit(cbHidden.get_active());
+				if (row.get_value(m_Columns.m_col_hidden) != cbHidden.get_active())
+					m_signal_file_set_hidden.emit(cbHidden.get_active());
 				break;
 		}
 
@@ -155,7 +177,28 @@ void uiFileDetailsTreeView::on_view_file_details()
 
 }
 
+void uiFileDetailsTreeView::on_tag_deleted(Glib::ustring tag)
+{
+
+	m_signal_tag_deleted.emit(tag);
+}
+
+bool uiFileDetailsTreeView::on_tag_added(Glib::ustring tag)
+{
+	return m_signal_tag_added.emit(tag);
+}
+
 uiFileDetailsTreeView::type_signal_file_set_hidden uiFileDetailsTreeView::signal_file_set_hidden()
 {
 	return m_signal_file_set_hidden;
+}
+
+uiFileDetailsTreeView::type_signal_tag_added uiFileDetailsTreeView::signal_tag_added()
+{
+	return m_signal_tag_added;
+}
+
+uiFileDetailsTreeView::type_signal_tag_deleted uiFileDetailsTreeView::signal_tag_deleted()
+{
+	return m_signal_tag_deleted;
 }
