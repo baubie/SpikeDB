@@ -439,12 +439,18 @@ std::vector<double> pySpikeDB::list2vec(boost::python::list &l)
 double pySpikeDB::mean(boost::python::list &v)
 {
 	int N = bp::len(v);
+	int rN = 0;
 	double r = 0;
 	for (int i = 0; i < N; ++i)
 	{
-		r += extract<double>(v[i]);
+		double e = extract<double>(v[i]);
+		if (e != EasyPlotmm::NOPOINT)
+		{
+			r += e;
+			rN++;
+		}
 	}
-	if (N > 0) r /= N;
+	if (rN > 0) r /= rN;
 	return r;
 }
 
