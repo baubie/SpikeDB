@@ -458,13 +458,19 @@ double pySpikeDB::stddev(boost::python::list &v)
 {
 	int N = bp::len(v);
 	if (N <= 1) return 0;
+	int rN = 0;
 	double m = mean(v);
 	double r = 0;
 	for (int i = 0; i < N; ++i)
 	{
-		double t = (extract<double>(v[i]) - m);
-		r += t*t;
+		double e = extract<double>(v[i])-m;
+		if (e != EasyPlotmm::NOPOINT)
+		{
+			r += e*e;
+			rN++;
+		}
 	}
-	return r/(N-1);
+	if (rN <= 1) return 0;
+	return r/(rN-1);
 }
 
