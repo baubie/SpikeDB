@@ -21,9 +21,9 @@ GUI::GUI()
 	if (settings.get_string("lastDatabase") != "") openDatabase(settings.get_string("lastDatabase"));
 
 	// Attempt to restore the window size and position
-	if (settings.get_int("winWidth") != 0 && settings.get_int("winHeight") != 0) 
+	if (settings.get_int("winWidth") != 0 && settings.get_int("winHeight") != 0)
 		resize(settings.get_int("winWidth"), settings.get_int("winHeight"));
-	if (settings.get_int("winX") != 0 && settings.get_int("winY") != 0) 
+	if (settings.get_int("winX") != 0 && settings.get_int("winY") != 0)
 		move(settings.get_int("winX"), settings.get_int("winY"));
 
 	uiReady = true;
@@ -75,7 +75,7 @@ void GUI::init_gui()
 	mrp_AnimalTree->set_sort_func(0, sigc::mem_fun(*this, &GUI::on_animal_sort));
 	mrp_AnimalSelection = mp_AnimalsTree->get_selection();
 	hbMain->pack_start(*vbLeft, false, false);
-	
+
 
 	/**
 	 * Notebook
@@ -103,7 +103,7 @@ void GUI::init_gui()
 	vpMiddle->pack2(*hbPlots);
 
 
-	
+
 	Gtk::ScrolledWindow* swDetailPanels = Gtk::manage( new Gtk::ScrolledWindow() );
 	Gtk::VBox *vbRight = Gtk::manage(new Gtk::VBox());
 
@@ -172,7 +172,7 @@ void GUI::init_gui()
 
 	mp_FileDetailsTree->signal_tag_deleted().connect(sigc::mem_fun(*this, &GUI::on_file_tag_deleted));
 	mp_FileDetailsTree->signal_tag_added().connect(sigc::mem_fun(*this, &GUI::on_file_tag_added));
-	
+
 	/**
 	 * Statusbar
 	 */
@@ -186,12 +186,12 @@ void GUI::init_gui()
 
 void GUI::init_menu()
 {
-	mp_MenuBar->m_Menu_File.items().push_back( 
+	mp_MenuBar->m_Menu_File.items().push_back(
 				Gtk::Menu_Helpers::MenuElem(
 					"Create _New Database",
 					sigc::mem_fun(*this, &GUI::on_menuNewDatabase_activate) ));
 
-	mp_MenuBar->m_Menu_File.items().push_back( 
+	mp_MenuBar->m_Menu_File.items().push_back(
 				Gtk::Menu_Helpers::MenuElem(
 					"_Open Database",
 					sigc::mem_fun(*this, &GUI::on_menuOpenDatabase_activate) ));
@@ -203,15 +203,15 @@ void GUI::init_menu()
 
 	mp_MenuBar->m_Menu_File.items().push_back(m_Menu_Import);
 
-	mp_MenuBar->m_Menu_File.items().push_back( 
+	mp_MenuBar->m_Menu_File.items().push_back(
 				Gtk::Menu_Helpers::SeparatorElem());
 
-	mp_MenuBar->m_Menu_File.items().push_back( 
+	mp_MenuBar->m_Menu_File.items().push_back(
 				Gtk::Menu_Helpers::StockMenuElem(
 					Gtk::Stock::QUIT,
 					sigc::mem_fun(*this, &GUI::on_menuQuit_activate) ));
 
-	mp_MenuBar->m_Menu_Help.items().push_back( 
+	mp_MenuBar->m_Menu_Help.items().push_back(
 					Gtk::Menu_Helpers::StockMenuElem(
 					Gtk::Stock::ABOUT,
 					sigc::mem_fun(*this, &GUI::on_menuAbout_activate) ));
@@ -607,8 +607,8 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 				}
 			}
 		}
-	}else{ std::cerr << "ERROR: Failed to read file from database. " << sqlite3_errmsg(db) << std::endl; } 
-	
+	}else{ std::cerr << "ERROR: Failed to read file from database. " << sqlite3_errmsg(db) << std::endl; }
+
 	sqlite3_finalize(stmt);
 }
 
@@ -678,27 +678,27 @@ void GUI::populateAnimalDetailsList(const Glib::ustring animalID)
 		m_uiAnimalDetails.addRow(animalID, "ID", animalID, Static);
 		m_uiAnimalDetails.addRow(animalID, "Cells", numberOfCells, Static);
 
-		m_uiAnimalDetails.addRow(animalID, "Species", 
+		m_uiAnimalDetails.addRow(animalID, "Species",
 			((char*)sqlite3_column_text(stmt, 0) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 0),
 			Editable
 		);
 
-		m_uiAnimalDetails.addRow(animalID, "Sex", 
+		m_uiAnimalDetails.addRow(animalID, "Sex",
 			((char*)sqlite3_column_text(stmt, 1) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 1),
 			Editable
 		);
 
-		m_uiAnimalDetails.addRow(animalID, "Weight (g)", 
+		m_uiAnimalDetails.addRow(animalID, "Weight (g)",
 			((char*)sqlite3_column_text(stmt, 2) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 2),
 			Editable
 		);
 
-		m_uiAnimalDetails.addRow(animalID, "Age", 
+		m_uiAnimalDetails.addRow(animalID, "Age",
 			((char*)sqlite3_column_text(stmt, 3) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 3),
 			Editable
 		);
 
-		m_uiAnimalDetails.addRow(animalID, "Notes", 
+		m_uiAnimalDetails.addRow(animalID, "Notes",
 			((char*)sqlite3_column_text(stmt, 4) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 4),
 			EditableLong
 		);
@@ -854,7 +854,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 	if (db == NULL) return;
 
 	m_uiCellDetails.clear();
-	
+
 	int r;
 	sqlite3_stmt *stmt;
 
@@ -880,17 +880,17 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 		m_uiCellDetails.addRow(ID, "Cell ID", ID.cellID, Static);
 		m_uiCellDetails.addRow(ID, "Files", numberOfFiles, Static);
 
-		m_uiCellDetails.addRow(ID, "CarFreq (Hz)", 
+		m_uiCellDetails.addRow(ID, "CarFreq (Hz)",
 			((char*)sqlite3_column_text(stmt, 1) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 1),
 			Editable
 		);
 
-		m_uiCellDetails.addRow(ID, "Threshold (dB SPL)", 
+		m_uiCellDetails.addRow(ID, "Threshold (dB SPL)",
 			((char*)sqlite3_column_text(stmt, 3) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 3),
 			Editable
 		);
 
-		m_uiCellDetails.addRow(ID, "Depth (um)", 
+		m_uiCellDetails.addRow(ID, "Depth (um)",
 			((char*)sqlite3_column_text(stmt, 0) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 0),
 			Editable
 		);
@@ -899,7 +899,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 			((char*)sqlite3_column_text(stmt, 2) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 2),
 			Editable
 		);
-	} 
+	}
 	sqlite3_finalize(stmt);
 
 	const char query2[] = "SELECT tag FROM tags WHERE animalID=? AND cellID=? AND fileID IS NULL";
@@ -923,7 +923,7 @@ void GUI::populateFileDetailsList(const Glib::ustring animalID, const int cellID
 	if (db == NULL) return;
 
 	m_uiFileDetails.clear();
-	
+
 	int r;
 	sqlite3_stmt *stmt;
 
@@ -946,7 +946,7 @@ void GUI::populateFileDetailsList(const Glib::ustring animalID, const int cellID
 			((char*)sqlite3_column_text(stmt, 2) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 2),
 			Editable
 		);
-	} 
+	}
 	sqlite3_finalize(stmt);
 
 	const char query2[] = "SELECT tag FROM tags WHERE animalID=? AND cellID=? AND fileID=?";
@@ -1149,7 +1149,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 			if (g_time_val_from_iso8601(sd.iso8601(sd.m_head.cDateTime).c_str(), &t))
 			{
 				row[mp_FileDetailsTree->m_Columns.m_col_time] = t.tv_usec;
-			} else { 
+			} else {
 				row[mp_FileDetailsTree->m_Columns.m_col_time] = -1;
 			}
 
@@ -1306,9 +1306,13 @@ void GUI::on_menuImportFolder_activate()
 				std::cerr << "ERROR: Unable to open " << filename << std::endl;
 			} else{
 				while ((dptr = readdir(dirp))) {
+#ifdef _WIN32
+						importSpikeFile(filename, dptr->d_name);
+#else
 					if (dptr->d_type == DT_REG) {
 						importSpikeFile(filename, dptr->d_name);
 					}
+#endif
 				}
 				closedir(dirp);
 			}

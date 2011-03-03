@@ -99,4 +99,4 @@ class pySpikeDB {
 
 };
 
-#endif 
+#endif

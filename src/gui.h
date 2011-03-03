@@ -22,6 +22,7 @@
 #include <sqlite3.h>
 #include "settings.h"
 #include "tokenize.h"
+#include <dirent.h>
 
 #ifdef __APPLE__
 #include <CoreFoundation/CoreFoundation.h>
@@ -128,7 +129,7 @@ class GUI : public Gtk::Window
 		void updateSideLists(const Gtk::TreeModel::iterator& iter);
 		void getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID);
 		void getCellsStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID);
-        
+
 
 
 

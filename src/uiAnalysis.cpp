@@ -72,7 +72,7 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
 uiAnalysis::~uiAnalysis() {}
 
 
-void uiAnalysis::initPlugins() 
+void uiAnalysis::initPlugins()
 {
 	/**
 	 * Setup built-in plugins
@@ -112,7 +112,11 @@ void uiAnalysis::initPlugins()
 			std::cerr << "ERROR: Unable to open " << filename << std::endl;
 		} else{
 			while ((dptr = readdir(dirp))) {
+#ifdef _WIN32
+                {
+#else
 				if (dptr->d_type == DT_REG) {
+#endif
 					std::string possibleFile = dptr->d_name;
 					if (possibleFile.length() >= 4 && possibleFile.substr(possibleFile.length()-3,3) == ".py")
 					{
@@ -168,7 +172,7 @@ void uiAnalysis::on_open_clicked()
 		tbPlugins->set_active_text("Custom Analysis Script");
 		break;
 	}
-}   
+}
 
 void uiAnalysis::on_run_clicked()
 {
@@ -267,7 +271,7 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 	fclose(fp);
 
 	addOutput("\n*** Analysis Plugin Completed ***");
-}                                                          
+}
 
 void uiAnalysis::print(const std::string &s)
 {
