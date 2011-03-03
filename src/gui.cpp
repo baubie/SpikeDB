@@ -832,7 +832,6 @@ bool GUI::on_file_tag_added(Glib::ustring tag)
 	if (sqlite3_step(stmt) != SQLITE_DONE) std::cerr << "ERROR: Could not insert tag. " << sqlite3_errmsg(db) << std::endl;
 	sqlite3_finalize(stmt);
 	updateTagCompletion();
-	populateFileDetailsList(m_curAnimalID, m_curCellID, m_curFileNum);
 	return true;
 }
 
