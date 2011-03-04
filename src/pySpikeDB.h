@@ -50,6 +50,7 @@ class pySpikeDB {
 
 		double stddev(boost::python::list &v);
 		double mean(boost::python::list &v);
+		boost::python::object ttest(boost::python::list &a, boost::python::list &b, bool eqvar);
 
 		void print(const std::string &s);
 

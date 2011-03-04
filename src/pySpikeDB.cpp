@@ -474,3 +474,36 @@ double pySpikeDB::stddev(boost::python::list &v)
 	return r/(rN-1);
 }
 
+bp::object pySpikeDB::ttest(bp::list &a, bp::list &b, bool eqvar)
+{
+	bp::dict r;
+	double t = 0;
+	double p = 0;
+	double df = 0;
+	double ma = mean(a);
+	double mb = mean(b);
+	double sa = stddev(a);
+	double sb = stddev(b);
+	double na = bp::len(a);
+	double nb = bp::len(b);
+	df = na + nb - 2;
+
+	if (eqvar) 
+	{
+		if (bp::len(a) == bp::len(b))
+		{
+			double S = sqrt(0.5*(sa*sa+sb*sb));
+			t = (ma-mb)/(S*sqrt(2.0/na));
+		} else {
+			double S = sqrt(((na-1)*sa*sa+(nb-1)*sb*sb)/(na+nb-2));
+			t = (ma-mb)/(S*sqrt(1.0/na + 1.0/nb));
+		}
+	} else {
+		// Unequal variance not yet implemented
+	}
+	r["t"] = t>0?t:-t; // Absolute value
+	r["p1"] = p;
+	r["p2"] = p;
+	r["df"] = df;
+	return r;
+}
