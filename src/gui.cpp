@@ -341,10 +341,14 @@ bool GUI::openDatabase(std::string filename)
 	// Remember this database for next time
 	settings.set("lastDatabase", filename);
 
+	sqlite3_finalize(stmt);
 
 	// Show the animals and cells from the database
 	populateAnimalTree();
-	sqlite3_finalize(stmt);
+	populateFileDetailsList("",0,0); // Essentially clear the list
+	m_curAnimalID = "";
+	m_curCellID = 0;
+	m_curFileNum = 0;
 	m_Menu_Import.set_sensitive(true);
 	return true;
 }
