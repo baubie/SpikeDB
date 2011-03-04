@@ -37,13 +37,14 @@ bool SpikeData::parse(const char* filename)
         {
             in.read(reinterpret_cast<char*>(&m_head50), sizeof(m_head50));
             hsize = sizeof(m_head50);
-			upgradeheader();
+			upgradeheader(VERSION);
 
         }
         if (VERSION == HEADER_62)
         {
             in.read(reinterpret_cast<char*>(&m_head), sizeof(m_head));
             hsize = sizeof(m_head);
+			upgradeheader(VERSION);
         }
 		int nbytes = fsize-hsize;
 
@@ -74,38 +75,70 @@ bool SpikeData::parse(const char* filename)
     return true;
 }
 
-void SpikeData::upgradeheader()
+void SpikeData::upgradeheader(int version)
 {
-	// Upgrade to a HEADER_62
-	std::cout << "Upgrading V5 to V6.2" << std::endl;
-	memcpy( &m_head, &m_head50, 96 );	
-	m_head.stimFirstCh1.nType = m_head50.stimFirstCh1.nType;
-	m_head.stimFirstCh1.fBegin = m_head50.stimFirstCh1.fBegin;
-	m_head.stimFirstCh1.fDur = m_head50.stimFirstCh1.fDur;
-	m_head.stimFirstCh1.fRfTime = m_head50.stimFirstCh1.fRfTime;
-	m_head.stimFirstCh1.nStimPerSweep = m_head50.stimFirstCh1.nStimPerSweep;
-	m_head.stimFirstCh1.fStimInt = m_head50.stimFirstCh1.fStimInt;
-	m_head.stimFirstCh1.fAtten = m_head50.stimFirstCh1.fAtten;
-	m_head.stimFirstCh1.fFreq = m_head50.stimFirstCh1.fFreq;
-	m_head.stimFirstCh1.params.sin = m_head50.stimFirstCh1.params.sin;
-	m_head.stimFirstCh1.params.amsin = m_head50.stimFirstCh1.params.amsin;
-	m_head.stimFirstCh1.params.fmsin = m_head50.stimFirstCh1.params.fmsin;
-	m_head.stimFirstCh1.params.sweptsin = m_head50.stimFirstCh1.params.sweptsin;
-	m_head.stimFirstCh2.nType = m_head50.stimFirstCh2.nType;
-	m_head.stimFirstCh2.fBegin = m_head50.stimFirstCh2.fBegin;
-	m_head.stimFirstCh2.fDur = m_head50.stimFirstCh2.fDur;
-	m_head.stimFirstCh2.fRfTime = m_head50.stimFirstCh2.fRfTime;
-	m_head.stimFirstCh2.nStimPerSweep = m_head50.stimFirstCh2.nStimPerSweep;
-	m_head.stimFirstCh2.fStimInt = m_head50.stimFirstCh2.fStimInt;
-	m_head.stimFirstCh2.fAtten = m_head50.stimFirstCh2.fAtten;
-	m_head.stimFirstCh2.fFreq = m_head50.stimFirstCh2.fFreq;
-	m_head.stimFirstCh2.params.sin = m_head50.stimFirstCh2.params.sin;
-	m_head.stimFirstCh2.params.amsin = m_head50.stimFirstCh2.params.amsin;
-	m_head.stimFirstCh2.params.fmsin = m_head50.stimFirstCh2.params.fmsin;
-	m_head.stimFirstCh2.params.sweptsin = m_head50.stimFirstCh2.params.sweptsin;
-	m_head.deltaCh1 = m_head50.deltaCh1;
-	m_head.deltaCh2 = m_head50.deltaCh2;
-	m_head.isSPL = 0;
+	// Upgrade to a HEADER_60
+	if (version == HEADER_50)
+	{
+		memcpy( &m_head, &m_head50, 96 );	
+		m_head.stimFirstCh1.nType = m_head50.stimFirstCh1.nType;
+		m_head.stimFirstCh1.fBegin = m_head50.stimFirstCh1.fBegin;
+		m_head.stimFirstCh1.fDur = m_head50.stimFirstCh1.fDur;
+		m_head.stimFirstCh1.fRfTime = m_head50.stimFirstCh1.fRfTime;
+		m_head.stimFirstCh1.nStimPerSweep = m_head50.stimFirstCh1.nStimPerSweep;
+		m_head.stimFirstCh1.fStimInt = m_head50.stimFirstCh1.fStimInt;
+		m_head.stimFirstCh1.fAtten = m_head50.stimFirstCh1.fAtten;
+		m_head.stimFirstCh1.fFreq = m_head50.stimFirstCh1.fFreq;
+		m_head.stimFirstCh1.params.sin = m_head50.stimFirstCh1.params.sin;
+		m_head.stimFirstCh1.params.amsin = m_head50.stimFirstCh1.params.amsin;
+		m_head.stimFirstCh1.params.fmsin = m_head50.stimFirstCh1.params.fmsin;
+		m_head.stimFirstCh1.params.sweptsin = m_head50.stimFirstCh1.params.sweptsin;
+		m_head.stimFirstCh2.nType = m_head50.stimFirstCh2.nType;
+		m_head.stimFirstCh2.fBegin = m_head50.stimFirstCh2.fBegin;
+		m_head.stimFirstCh2.fDur = m_head50.stimFirstCh2.fDur;
+		m_head.stimFirstCh2.fRfTime = m_head50.stimFirstCh2.fRfTime;
+		m_head.stimFirstCh2.nStimPerSweep = m_head50.stimFirstCh2.nStimPerSweep;
+		m_head.stimFirstCh2.fStimInt = m_head50.stimFirstCh2.fStimInt;
+		m_head.stimFirstCh2.fAtten = m_head50.stimFirstCh2.fAtten;
+		m_head.stimFirstCh2.fFreq = m_head50.stimFirstCh2.fFreq;
+		m_head.stimFirstCh2.params.sin = m_head50.stimFirstCh2.params.sin;
+		m_head.stimFirstCh2.params.amsin = m_head50.stimFirstCh2.params.amsin;
+		m_head.stimFirstCh2.params.fmsin = m_head50.stimFirstCh2.params.fmsin;
+		m_head.stimFirstCh2.params.sweptsin = m_head50.stimFirstCh2.params.sweptsin;
+		m_head.deltaCh1 = m_head50.deltaCh1;
+		m_head.deltaCh2 = m_head50.deltaCh2;
+		m_head.isSPL = 0;
+		version = HEADER_60;
+	}
+
+	if (version == HEADER_60)
+	{
+		if (m_head.stimFirstCh1.nType == NOISE) {
+			m_head.stimFirstCh1.params.noise_ex.fModFreq = 0.0f;
+			m_head.stimFirstCh1.params.noise_ex.fAmDepth = 0.0f;
+		}
+		if (m_head.stimFirstCh2.nType == NOISE) {
+			m_head.stimFirstCh2.params.noise_ex.fModFreq = 0.0f;
+			m_head.stimFirstCh2.params.noise_ex.fAmDepth = 0.0f;
+		}
+		m_head.stepFlags[1][0].bWav = 0;
+		m_head.stepFlags[1][1].bWav = 0;
+		m_head.stepFlags[0][1].bWav = 0;
+		if (m_head.stimFirstCh1.nType == WAVEFILE &&
+			m_head.nPasses > 1) {
+			m_head.stepFlags[0][0].bWav = 1;
+		} else {
+			m_head.stepFlags[0][0].bWav = 0;
+		}
+		m_head.cFrozenNoise = 0;	// was not frozen in the past
+		version = HEADER_61;
+	}
+
+	if (version == HEADER_61)
+	{
+		m_head.cAutoAdjPhase = 0;
+		version = HEADER_62;
+	}
 }
 
 int SpikeData::headerversion(char *ID)
@@ -135,10 +168,11 @@ int SpikeData::headerversion(void *header)
 bool SpikeData::setHeader(void *header)
 {
     int VERSION = headerversion(header);
-    if (VERSION == HEADER_62)
+    if (VERSION == HEADER_62 || VERSION == HEADER_61 || VERSION == HEADER_60)
     {
         const HEADER *h = new HEADER(*static_cast<HEADER*>(header));
         m_head = *h;
+		upgradeheader(VERSION);
 		delete h;
         return true;
     }
@@ -146,7 +180,7 @@ bool SpikeData::setHeader(void *header)
     {
         const HEADER50 *h = new HEADER50(*static_cast<HEADER50*>(header));
         m_head50 = *h;
-		upgradeheader();
+		upgradeheader(HEADER_50);
 		delete h;
         return true;
     }

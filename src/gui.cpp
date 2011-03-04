@@ -1361,8 +1361,14 @@ void GUI::importSpikeFile(std::string filename, char* d_name)
 		sqlite3_bind_text(stmt_file, 1, fileTokens[0].c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_int(stmt_file, 2, atoi(fileTokens[1].c_str()));
 		sqlite3_bind_int(stmt_file, 3, atoi(fileTokens[2].c_str()));
-		sqlite3_bind_blob(stmt_file, 4, (void*)&sd.m_head, sizeof(sd.m_head), SQLITE_TRANSIENT);
+
+		if (sd.headerversion(&sd.m_head) == HEADER_50) {
+			sqlite3_bind_blob(stmt_file, 4, (void*)&sd.m_head50, sizeof(sd.m_head50), SQLITE_TRANSIENT);
+		} else {
+			sqlite3_bind_blob(stmt_file, 4, (void*)&sd.m_head, sizeof(sd.m_head), SQLITE_TRANSIENT);
+		}
 		sqlite3_bind_blob(stmt_file, 5, (void*)&sd.m_spikeArray[0], sizeof(SPIKESTRUCT) * sd.m_spikeArray.size(), SQLITE_TRANSIENT);
+
 		sqlite3_step(stmt_file);
 		sqlite3_finalize(stmt_file);
 	}

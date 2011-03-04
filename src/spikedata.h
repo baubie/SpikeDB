@@ -271,22 +271,20 @@ class SpikeData
         double duration(int channel, int sweep);
         double attenuation(int channel, int sweep);
         double frequency(int channel, int sweep);
-
-
         bool setHeader(void *header);
 
         HEADER m_head;
         HEADER50 m_head50;
         std::vector<SPIKESTRUCT> m_spikeArray;
 		std::string iso8601(const char* s);
+        int headerversion(void *header);
 
     private:
         std::vector<DWORD> m_dwDataArray;
         int m_nActualPasses[MAX_SWEEPS];
         bool parsedata();
-        int headerversion(void *header);
         int headerversion(char *ID);
-		void upgradeheader();
+		void upgradeheader(int version);
 };
 
 #endif
