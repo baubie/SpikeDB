@@ -9,7 +9,16 @@ Settings::Settings()
 	mkdir("/Library/Application Support/SpikeDB", 0755);
 	Glib::ustring filename = "/Library/Application Support/SpikeDB/spikedb.settings";
 #else
+#ifdef linux
+	struct passwd *p  = getpwuid(getuid());
+	char *home = p->pw_dir;
+	Glib::ustring filename(home);
+	filename += "/.spikedb";
+	mkdir(filename.c_str(), 0755);
+	filename += "/spikedb.settings";
+#else
 	Glib::ustring filename = "spikedb.settings";
+#endif
 #endif
 
     if (sqlite3_open(filename.c_str(), &db) != SQLITE_OK) {

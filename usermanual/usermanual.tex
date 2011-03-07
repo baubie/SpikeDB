@@ -147,7 +147,8 @@ Several Quick Analysis plugins are included with SpikeDB, however, it is easy to
 		Mac OS X & /Applications/SpikeDB.app/Contents/Resources/plugins/ (built-in) \\
 		\emph{or} & /Library/Application Support/plugins/ (user added)\\
 		\hline
-		Linux & /usr/share/SpikeDB/plugins/ \\
+		Linux & /usr/local/share/spikedb/plugins/ (built-in) \\
+		\emph {or} & ~/.spikedb/plugins/ (user added) \\
 	\end{tabular}
 	\label{tblPluginLocations}
 	\end{center}
@@ -628,6 +629,41 @@ Returns the standard deviation of all the numbers passed in the |values| list. T
 	print sd
 	# Output:
 	#    1.66666666667
+\end{lstlisting}
+
+\clearpage
+\subsection{\method{dict}{ttest}{list values1, list values2, bool eqvar}}
+\subsubsection{Parameters}
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{by}
+		|values1| & First list of values for t-test.\\
+		|values2| & Second list of values for t-test.\\
+		|eqvar| & Set to |True| if you believe the two populations have equal variance.\\
+	\end{tabular}
+\end{center}
+\end{table}
+\subsubsection{Description}
+Returns a list of values calculated for a standard t-test.
+\begin{table}[h]
+	\begin{center}
+	\caption{Dictionary structure of the return value of |ttest()|.}
+	\begin{tabular}{by}
+				`t' & T value.\\
+				`df' & Degrees of freedom.\\
+				`p1' & $p$-value of a one-tailed t-test (Not implemented).\\
+				`p2' & $p$-value of a two-tailed t-test (Not implemented).\\
+			\end{tabular}
+	\label{tblGetCells}
+	\end{center}
+\end{table}
+\begin{lstlisting}[caption=Example]
+	valsA = [1,8,3,5]
+	valsB = [4,2,1,7]
+	results  = SpikeDB.ttest(valsA,valsB,True)
+	print results
+	# Output:
+	# { 't':0.132320752, 'df':6.0 }
 \end{lstlisting}
 
 \clearpage

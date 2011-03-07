@@ -94,10 +94,14 @@ void uiAnalysis::initPlugins()
 	search_paths.push_back(app_path+"/plugins/");
 	search_paths.push_back("/Library/Application Support/SpikeDB/plugins/");
 #endif
-#ifdef __UNIX__
+#ifdef linux
+	struct passwd *p  = getpwuid(getuid());
+	char *home = p->pw_dir;
+	Glib::ustring homedir(home);
+	homedir += "/.spikedb/plugins/";
 	// Figure out where to search here
-	search_paths.push_back("/usr/share/SpikeDB/plugins/");
-	search_paths.push_back("./plugins/");
+	search_paths.push_back("/usr/local/share/spikedb/plugins/");
+	search_paths.push_back(homedir);
 #endif
 
 

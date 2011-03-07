@@ -15,6 +15,10 @@
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
+#ifdef linux
+#include <pwd.h>
+#endif
+
 class uiAnalysis : public Gtk::VBox {
 
 	public:
