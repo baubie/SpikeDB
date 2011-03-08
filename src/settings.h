@@ -13,6 +13,11 @@
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
+#ifdef linux
+#include <sys/stat.h>
+#include <pwd.h>
+#endif
+
 class Settings {
 
 	public:
