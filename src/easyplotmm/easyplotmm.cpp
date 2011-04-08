@@ -343,6 +343,12 @@ void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<
     has_plot = true;
 }
 
+void EasyPlotmm::plotHist(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p)
+{
+
+}
+
+
 void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape shape, bool filled, RGBA col)
 {
     if (s <= 0) return;

@@ -64,6 +64,8 @@ class EasyPlotmm : public Gtk::DrawingArea
         void plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, bool exportable);
         void plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p);
         void plot(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p, bool exportable);
+        void plotHist(std::vector<double> x, std::vector<double> y, Pen p);
+        void plotHist(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p);
         void redraw();
         Pen getPen();
 
@@ -105,6 +107,8 @@ class EasyPlotmm : public Gtk::DrawingArea
         void export_data();
 
         // Store plots
+        std::vector< std::vector<double> > m_x_hist;
+        std::vector< std::vector<double> > m_y_hist;
         std::vector< std::vector<double> > m_x;
         std::vector< std::vector<double> > m_y;
         std::vector< std::vector<double> > m_err;

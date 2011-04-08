@@ -44,6 +44,7 @@ class pySpikeDB {
 		void plotYMin(const float &v);
 		void plotYMax(const float &v);
 		void plotLine(boost::python::list &x, boost::python::list &y, boost::python::list &err);
+		void plotHist(boost::python::list &x, boost::python::list &y, boost::python::list &err);
 		void plotClear();
 		void plotXLabel(const std::string &s);
 		void plotYLabel(const std::string &s);

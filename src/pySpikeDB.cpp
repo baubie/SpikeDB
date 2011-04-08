@@ -399,6 +399,33 @@ void pySpikeDB::plotXMax(const float &v)
 }
 
 
+void pySpikeDB::plotHist(boost::python::list &x, boost::python::list &y, boost::python::list &err)
+{
+	std::vector<double> x, y, err;
+	if (bp::len(pyX) != bp::len(pyY))
+	{
+		std::cerr << "Error: Plot X and Y do not match in length." << std::endl;
+		return;
+	}
+	if (bp::len(pyX) == 0)
+	{
+		std::cerr << "Error: No plot data." << std::endl;
+		return;
+	}
+	x = list2vec(pyX);
+	y = list2vec(pyY);
+	err = list2vec(pyErr);
+
+	if (bp::len(pyX) == bp::len(pyErr) && showErr)
+	{
+		mp_plot->plotHist(x, y, err, m_plotPen);
+	}
+	else
+	{
+		mp_plot->plotHist(x, y, m_plotPen);
+	}
+}
+
 void pySpikeDB::plotLine(bp::list &pyX, bp::list &pyY, bp::list &pyErr)
 {
 	std::vector<double> x, y, err;

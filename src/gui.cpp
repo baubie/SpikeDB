@@ -420,6 +420,7 @@ void GUI::on_celldetails_edited(
 {
 	// Construct the SQL query for the relevant row.
 	Glib::ustring query;
+	if (name == "Location")  query = "UPDATE cells SET location=? WHERE animalID=? AND cellID=?";
 	if (name == "CarFreq (Hz)")  query = "UPDATE cells SET freq=? WHERE animalID=? AND cellID=?";
 	if (name == "Depth (um)")  query = "UPDATE cells SET depth=? WHERE animalID=? AND cellID=?";
 	if (name == "Threshold (dB SPL)")  query = "UPDATE cells SET threshold=? WHERE animalID=? AND cellID=?";
@@ -869,7 +870,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 	int numberOfFiles = sqlite3_column_int(stmt,0);
 	sqlite3_finalize(stmt);
 
-	char query[] = "SELECT depth, freq, notes, threshold FROM cells WHERE animalID=? AND cellID=?";
+	char query[] = "SELECT depth, freq, notes, threshold, location FROM cells WHERE animalID=? AND cellID=?";
 	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
 	sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
 	sqlite3_bind_int(stmt, 2, cellID);
@@ -882,6 +883,11 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 
 		m_uiCellDetails.addRow(ID, "Cell ID", ID.cellID, Static);
 		m_uiCellDetails.addRow(ID, "Files", numberOfFiles, Static);
+
+		m_uiCellDetails.addRow(ID, "Location",
+			((char*)sqlite3_column_text(stmt, 1) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 4),
+			Editable
+		);
 
 		m_uiCellDetails.addRow(ID, "CarFreq (Hz)",
 			((char*)sqlite3_column_text(stmt, 1) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 1),
