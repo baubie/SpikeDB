@@ -401,6 +401,7 @@ void pySpikeDB::plotXMax(const float &v)
 
 void pySpikeDB::plotHist(boost::python::list &x, boost::python::list &y, boost::python::list &err)
 {
+	/*
 	std::vector<double> x, y, err;
 	if (bp::len(pyX) != bp::len(pyY))
 	{
@@ -424,6 +425,7 @@ void pySpikeDB::plotHist(boost::python::list &x, boost::python::list &y, boost::
 	{
 		mp_plot->plotHist(x, y, m_plotPen);
 	}
+	*/
 }
 
 void pySpikeDB::plotLine(bp::list &pyX, bp::list &pyY, bp::list &pyErr)
