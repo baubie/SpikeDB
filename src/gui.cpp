@@ -885,7 +885,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 		m_uiCellDetails.addRow(ID, "Files", numberOfFiles, Static);
 
 		m_uiCellDetails.addRow(ID, "Location",
-			((char*)sqlite3_column_text(stmt, 1) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 4),
+			((char*)sqlite3_column_text(stmt, 4) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 4),
 			Editable
 		);
 
