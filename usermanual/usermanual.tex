@@ -46,7 +46,7 @@
 		\includegraphics[width=0.35\textwidth]{icon.pdf}\\
 		[4.0cm]
 		\hrule\vspace{0.4cm}
-		{ \huge \bfseries SpikeDB Version 1.1 User Manual }\\[0.4cm]
+		{ \huge \bfseries SpikeDB Version 1.2 User Manual }\\[0.4cm]
 		\hrule 
 		\vspace{4cm}
 		\textsc{\LARGE McMaster University}\\
@@ -210,6 +210,7 @@ A list of dictionary objects is returned where each dictionary object represents
 				`CarFreq' & The cell's carrier frequency as manually entered in the cell details window.\\
 				`Threshold' & The cell's threshold as manually entered in the cell details window.\\
 				`Depth' & The cell's depth as manually entered in the cell details window.\\
+				`tags' & A list of tags.\\ 
 			\end{tabular}
 	\label{tblGetCells}
 	\end{center}
@@ -239,8 +240,12 @@ A list of dictionary objects is returned where each dictionary object represents
 				`AnimalID' & The animal ID where the cell was found.\\
 				`CellID' & The ID of the cell.\\
 				`FileID' & The ID of the file.\\
+				`tags' & A list of tags.\\ 
 				`datetime' & A string in the form YYYY-MM-DD HH:MM:SS of the time the file was created.\\
 				`xvar' & String representation of the X variable.\\
+				`speakertype' & String representation of speaker type.\\ 
+				`azimuth' & String representation of speaker azimuth position.\\ 
+				`elevation' & String representation of speaker elevation position.\\ 
 				`type' & 
 			\begin{tabular}{by}
 				1 & Stimulus type (Sinus, Swept Sinus, FM, etc.) on channel 1. Blank if none.\\
@@ -647,7 +652,7 @@ Returns the standard deviation of all the numbers passed in the |values| list. T
 Returns a list of values calculated for a standard t-test.
 \begin{table}[h]
 	\begin{center}
-	\caption{Dictionary structure of the return value of |ttest()|.}
+	\caption{Dictionary structure of the return value of ttest().}
 	\begin{tabular}{by}
 				`t' & T value.\\
 				`df' & Degrees of freedom.\\

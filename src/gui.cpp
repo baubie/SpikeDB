@@ -446,6 +446,9 @@ void GUI::on_filedetails_edited(
 	// Construct the SQL query for the relevant row.
 	Glib::ustring query;
 	if (name == "Notes")  query = "UPDATE files SET notes=? WHERE animalID=? AND cellID=? AND fileID=?";
+	if (name == "Speaker Type")  query = "UPDATE files SET speakertype=? WHERE animalID=? AND cellID=? AND fileID=?";
+	if (name == "Azimuth")  query = "UPDATE files SET azimuth=? WHERE animalID=? AND cellID=? AND fileID=?";
+	if (name == "Elevation")  query = "UPDATE files SET elevation=? WHERE animalID=? AND cellID=? AND fileID=?";
 
 	// Update the database.
 	const char* q = query.c_str();
@@ -936,7 +939,7 @@ void GUI::populateFileDetailsList(const Glib::ustring animalID, const int cellID
 	int r;
 	sqlite3_stmt *stmt;
 
-	char query[] = "SELECT notes FROM files WHERE animalID=? AND cellID=? AND fileID=?";
+	char query[] = "SELECT notes, speakertype, azimuth, elevation FROM files WHERE animalID=? AND cellID=? AND fileID=?";
 	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
 	sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
 	sqlite3_bind_int(stmt, 2, cellID);
@@ -951,8 +954,20 @@ void GUI::populateFileDetailsList(const Glib::ustring animalID, const int cellID
 
 		m_uiFileDetails.addRow(ID, "File Number", ID.fileID, Static);
 
+		m_uiFileDetails.addRow(ID, "Speaker Type", 
+				((char*)sqlite3_column_text(stmt,1) == NULL) ? "" : (char*)sqlite3_column_text(stmt,1),
+				Editable);
+
+		m_uiFileDetails.addRow(ID, "Azimuth", 
+				((char*)sqlite3_column_text(stmt,2) == NULL) ? "" : (char*)sqlite3_column_text(stmt,2),
+				Editable);
+
+		m_uiFileDetails.addRow(ID, "Elevation", 
+				((char*)sqlite3_column_text(stmt,3) == NULL) ? "" : (char*)sqlite3_column_text(stmt,3),
+				Editable);
+
 		m_uiFileDetails.addRow(ID, "Notes",
-			((char*)sqlite3_column_text(stmt, 2) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 2),
+			((char*)sqlite3_column_text(stmt, 0) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 0),
 			Editable
 		);
 	}
@@ -1007,7 +1022,7 @@ void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, c
 
 	if (animalID != "" && cellID != -1) {
 		const char query[] = "SELECT files.animalID, files.cellID, files.fileID, files.header, "
-					 "cells.depth, cells.threshold, cells.freq FROM files, cells "
+					 "cells.depth, cells.threshold, cells.freq, files.speakertype, files.azimuth, files.elevation FROM files, cells "
 				     "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
 				     "USING(animalID, cellID) "
 				     "WHERE files.animalID=? AND files.cellID=? AND file_count >= ? "
@@ -1019,7 +1034,7 @@ void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, c
 		sqlite3_bind_int(*stmt, 3, minFiles);
 	} else if (animalID != "" && cellID == -1) {
 		const char query[] = "SELECT files.animalID, files.cellID, files.fileID, files.header, "
-					 "cells.depth, cells.threshold, cells.freq FROM files, cells "
+					 "cells.depth, cells.threshold, cells.freq, files.speakertype, files.azimuth, files.elevation FROM files, cells "
 				     "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
 				     "USING(animalID, cellID) "
 				     "WHERE files.animalID=? AND file_count >= ? "
@@ -1030,7 +1045,7 @@ void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, c
 		sqlite3_bind_int(*stmt, 2, minFiles);
 	} else if (animalID == "" && cellID == -1) {
 		const char query[] = "SELECT files.animalID, files.cellID, files.fileID, files.header, "
-					 "cells.depth, cells.threshold, cells.freq FROM files, cells "
+					 "cells.depth, cells.threshold, cells.freq, files.speakertype, files.azimuth, files.elevation FROM files, cells "
 				     "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
 				     "USING(animalID, cellID) "
 				     "WHERE file_count >= ? "
@@ -1041,39 +1056,6 @@ void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, c
 	}
 }
 
-void GUI::getCellsStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID)
-{
-	int minFiles = mp_uiFilterFrame->minFiles();
-
-	if (animalID != "" && cellID != -1) {
-		const char query[] = "SELECT animalID, cellID, threshold, depth, freq FROM cells "
-				     "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
-				     "USING(animalID, cellID) "
-				     "WHERE animalID=? AND cellID=? AND file_count >= ? "
-				     "ORDER BY animalID, cellID";
-		sqlite3_prepare_v2(db, query, strlen(query), stmt, NULL);
-		sqlite3_bind_text(*stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int(*stmt, 2, cellID);
-		sqlite3_bind_int(*stmt, 3, minFiles);
-	} else if (animalID != "" && cellID == -1) {
-		const char query[] = "SELECT animalID, cellID, threshold, depth, freq FROM cells "
-				     "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
-				     "USING(animalID, cellID) "
-				     "WHERE animalID=? AND file_count >= ? "
-				     "ORDER BY animalID, cellID";
-		sqlite3_prepare_v2(db, query, strlen(query), stmt, NULL);
-		sqlite3_bind_text(*stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int(*stmt, 2, minFiles);
-	} else if (animalID == "" && cellID == -1) {
-		const char query[] = "SELECT animalID, cellID, threshold, depth, freq FROM cells "
-				     "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
-				     "USING(animalID, cellID) "
-				     "WHERE file_count >= ? "
-				     "ORDER BY animalID, cellID";
-		sqlite3_prepare_v2(db, query, strlen(query), stmt, NULL);
-		sqlite3_bind_int(*stmt, 1, minFiles);
-	}
-}
 
 void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 {
@@ -1174,6 +1156,10 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 			row[mp_FileDetailsTree->m_Columns.m_col_depth] = sqlite3_column_int(stmt, 4);
 			row[mp_FileDetailsTree->m_Columns.m_col_threshold] = sqlite3_column_int(stmt, 5);
 			row[mp_FileDetailsTree->m_Columns.m_col_carfreq] = sqlite3_column_int(stmt, 6);
+
+			row[mp_FileDetailsTree->m_Columns.m_col_speakertype] = ((char*)sqlite3_column_text(stmt, 7) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 7);
+			row[mp_FileDetailsTree->m_Columns.m_col_azimuth] = ((char*)sqlite3_column_text(stmt, 8) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 8);
+			row[mp_FileDetailsTree->m_Columns.m_col_elevation] = ((char*)sqlite3_column_text(stmt, 9) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 9);
 
 			row[mp_FileDetailsTree->m_Columns.m_col_xaxis] = sd.xVariable();
 			row[mp_FileDetailsTree->m_Columns.m_col_trials] = sd.trials();
@@ -1403,7 +1389,7 @@ void GUI::on_menuAbout_activate()
 	dialog.set_transient_for(*this);
 	dialog.set_title("About SpikeDB");
 	dialog.set_program_name("SpikeDB");
-	dialog.set_version("1.1.0");
+	dialog.set_version("1.2");
 	dialog.set_copyright(copyright);
 	dialog.set_website("http://www.aubie.ca");
 	dialog.run();

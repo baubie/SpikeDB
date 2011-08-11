@@ -140,6 +140,10 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 		file["FileID"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_filenum);
 		file["datetime"] = sd.iso8601(sd.m_head.cDateTime).c_str();
 
+		file["speakertype"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_speakertype).c_str();
+		file["azimuth"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_azimuth).c_str();
+		file["elevation"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_elevation).c_str();
+
 		bp::dict type;
 		if (sd.m_head.nOnCh1 == 0) { type[1] = "";} 
 		else { type[1] = sd.type(1); }

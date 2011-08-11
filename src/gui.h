@@ -128,7 +128,6 @@ class GUI : public Gtk::Window
         void addFileToPlot(const Gtk::TreeModel::iterator& iter);
 		void updateSideLists(const Gtk::TreeModel::iterator& iter);
 		void getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID);
-		void getCellsStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID);
 
 
 

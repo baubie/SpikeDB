@@ -22,3 +22,4 @@ _CPack_Packages
 *.dmg
 bin/
 obj/
+.DS_Store

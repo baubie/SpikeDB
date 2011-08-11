@@ -14,58 +14,61 @@
 \contentsline {chapter}{\numberline {3}Analysis Plug-In Module}{6}
 \contentsline {section}{\numberline {3.1}Basic Usage}{6}
 \contentsline {subsubsection}{Quick Analysis Plugins}{6}
-\contentsline {section}{\numberline {3.2}Reference}{6}
-\contentsline {subsection}{\numberline {3.2.1}\method {void}{filterSpikesAbs}{float minSpikeTime}{float maxSpikeTime}}{7}
-\contentsline {subsubsection}{Parameters}{7}
-\contentsline {subsubsection}{Description}{7}
-\contentsline {subsection}{\numberline {3.2.2}\method {void}{filterSpikesRel}{float minSpikeTime}{float maxSpikeTime}}{8}
+\contentsline {section}{\numberline {3.2}Reference}{7}
+\contentsline {subsection}{\numberline {3.2.1}\method {void}{filterSpikesAbs}{float minSpikeTime}{float maxSpikeTime}}{8}
 \contentsline {subsubsection}{Parameters}{8}
 \contentsline {subsubsection}{Description}{8}
-\contentsline {subsection}{\numberline {3.2.3}\method {list}{getCells}}{9}
+\contentsline {subsection}{\numberline {3.2.2}\method {void}{filterSpikesRel}{float minSpikeTime}{float maxSpikeTime}}{9}
+\contentsline {subsubsection}{Parameters}{9}
 \contentsline {subsubsection}{Description}{9}
-\contentsline {subsection}{\numberline {3.2.4}\method {list}{getFiles}{bool onlySelected}}{10}
-\contentsline {subsubsection}{Parameters}{10}
+\contentsline {subsection}{\numberline {3.2.3}\method {list}{getCells}}{10}
 \contentsline {subsubsection}{Description}{10}
-\contentsline {subsection}{\numberline {3.2.5}\method {float}{mean}{list values}}{12}
-\contentsline {subsubsection}{Parameters}{12}
-\contentsline {subsubsection}{Description}{12}
-\contentsline {subsection}{\numberline {3.2.6}\method {void}{plotClear}}{13}
+\contentsline {subsection}{\numberline {3.2.4}\method {list}{getFiles}{bool onlySelected}}{11}
+\contentsline {subsubsection}{Parameters}{11}
+\contentsline {subsubsection}{Description}{11}
+\contentsline {subsection}{\numberline {3.2.5}\method {float}{mean}{list values}}{13}
+\contentsline {subsubsection}{Parameters}{13}
 \contentsline {subsubsection}{Description}{13}
-\contentsline {subsection}{\numberline {3.2.7}\method {void}{plotLine}{list xValues}{list yValues}{list errValues}}{14}
-\contentsline {subsubsection}{Parameters}{14}
+\contentsline {subsection}{\numberline {3.2.6}\method {void}{plotClear}}{14}
 \contentsline {subsubsection}{Description}{14}
-\contentsline {subsection}{\numberline {3.2.8}\method {void}{plotSetLineWidth}{float lineWidth}}{15}
+\contentsline {subsection}{\numberline {3.2.7}\method {void}{plotLine}{list xValues}{list yValues}{list errValues}}{15}
 \contentsline {subsubsection}{Parameters}{15}
 \contentsline {subsubsection}{Description}{15}
-\contentsline {subsection}{\numberline {3.2.9}\method {void}{plotSetPointSize}{float pointSize}}{16}
+\contentsline {subsection}{\numberline {3.2.8}\method {void}{plotSetLineWidth}{float lineWidth}}{16}
 \contentsline {subsubsection}{Parameters}{16}
 \contentsline {subsubsection}{Description}{16}
-\contentsline {subsection}{\numberline {3.2.10}\method {void}{plotSetRGBA}{float red}{float green}{float blue}{float alpha}}{17}
+\contentsline {subsection}{\numberline {3.2.9}\method {void}{plotSetPointSize}{float pointSize}}{17}
 \contentsline {subsubsection}{Parameters}{17}
 \contentsline {subsubsection}{Description}{17}
-\contentsline {subsection}{\numberline {3.2.11}\method {void}{plotXLabel}{string xLabel}}{18}
+\contentsline {subsection}{\numberline {3.2.10}\method {void}{plotSetRGBA}{float red}{float green}{float blue}{float alpha}}{18}
 \contentsline {subsubsection}{Parameters}{18}
 \contentsline {subsubsection}{Description}{18}
-\contentsline {subsection}{\numberline {3.2.12}\method {void}{plotXMin}{float minXValue}}{19}
+\contentsline {subsection}{\numberline {3.2.11}\method {void}{plotXLabel}{string xLabel}}{19}
 \contentsline {subsubsection}{Parameters}{19}
 \contentsline {subsubsection}{Description}{19}
-\contentsline {subsection}{\numberline {3.2.13}\method {void}{plotXMax}{float maxXValue}}{20}
+\contentsline {subsection}{\numberline {3.2.12}\method {void}{plotXMin}{float minXValue}}{20}
 \contentsline {subsubsection}{Parameters}{20}
 \contentsline {subsubsection}{Description}{20}
-\contentsline {subsection}{\numberline {3.2.14}\method {void}{plotYLabel}{string yLabel}}{21}
+\contentsline {subsection}{\numberline {3.2.13}\method {void}{plotXMax}{float maxXValue}}{21}
 \contentsline {subsubsection}{Parameters}{21}
 \contentsline {subsubsection}{Description}{21}
-\contentsline {subsection}{\numberline {3.2.15}\method {void}{plotYMin}{float minYValue}}{22}
+\contentsline {subsection}{\numberline {3.2.14}\method {void}{plotYLabel}{string yLabel}}{22}
 \contentsline {subsubsection}{Parameters}{22}
 \contentsline {subsubsection}{Description}{22}
-\contentsline {subsection}{\numberline {3.2.16}\method {void}{plotYMax}{float maxYValue}}{23}
+\contentsline {subsection}{\numberline {3.2.15}\method {void}{plotYMin}{float minYValue}}{23}
 \contentsline {subsubsection}{Parameters}{23}
 \contentsline {subsubsection}{Description}{23}
-\contentsline {subsection}{\numberline {3.2.17}\method {float}{stddev}{list values}}{24}
+\contentsline {subsection}{\numberline {3.2.16}\method {void}{plotYMax}{float maxYValue}}{24}
 \contentsline {subsubsection}{Parameters}{24}
 \contentsline {subsubsection}{Description}{24}
-\contentsline {subsection}{\numberline {3.2.18}\method {void}{write}{string text}}{25}
+\contentsline {subsection}{\numberline {3.2.17}\method {float}{stddev}{list values}}{25}
 \contentsline {subsubsection}{Parameters}{25}
 \contentsline {subsubsection}{Description}{25}
-\contentsline {section}{\numberline {3.3}Complete Examples}{26}
-\contentsline {subsection}{\numberline {3.3.1}Mean Spike Times}{26}
+\contentsline {subsection}{\numberline {3.2.18}\method {dict}{ttest}{list values1, list values2, bool eqvar}}{26}
+\contentsline {subsubsection}{Parameters}{26}
+\contentsline {subsubsection}{Description}{26}
+\contentsline {subsection}{\numberline {3.2.19}\method {void}{write}{string text}}{27}
+\contentsline {subsubsection}{Parameters}{27}
+\contentsline {subsubsection}{Description}{27}
+\contentsline {section}{\numberline {3.3}Complete Examples}{28}
+\contentsline {subsection}{\numberline {3.3.1}Mean Spike Times}{28}
