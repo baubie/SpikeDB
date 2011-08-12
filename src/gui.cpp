@@ -139,7 +139,6 @@ void GUI::init_gui()
 	hpRight->pack2(*swDetailPanels, false, false);
 	notebook->append_page(*hpRight, "Browse Files", false);
 
-
 	/**
 	 * Analysis Notebook Page
 	 */
@@ -494,9 +493,10 @@ void GUI::updateSideLists(const Gtk::TreeModel::iterator& iter)
 	Gtk::Requisition AnimalReq = m_uiAnimalDetails.size_request();
 	Gtk::Requisition CellReq = m_uiCellDetails.size_request();
 	Gtk::Requisition FileReq = m_uiFileDetails.size_request();
-//	int width = AnimalReq.width > CellReq.width ? AnimalReq.width : CellReq.width;
-//	width = width > FileReq.width ? width : FileReq.width;
-//	hpRight->set_position(hpRight->property_max_position()-width);
+
+	int width = AnimalReq.width > CellReq.width ? AnimalReq.width : CellReq.width;
+	width = width > FileReq.width ? width : FileReq.width;
+	hpRight->set_position(hpRight->property_max_position()-width);
 }
 
 void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
