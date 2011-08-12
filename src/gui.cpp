@@ -914,16 +914,16 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 	}
 	sqlite3_finalize(stmt);
 
-	const char query2[] = "SELECT tag FROM tags WHERE animalID=? AND cellID=? AND fileID IS NULL";
-	sqlite3_prepare_v2(db, query2, -1, &stmt, 0);
-	sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
-	sqlite3_bind_int(stmt, 2, cellID);
-	std::vector<Glib::ustring> tags;
-	while (sqlite3_step(stmt) == SQLITE_ROW) {
-		tags.push_back((char*)sqlite3_column_text(stmt, 0));
-	}
-	sqlite3_finalize(stmt);
-	m_CellTags.tags(tags);
+const char query2[] = "SELECT tag FROM tags WHERE animalID=? AND cellID=? AND fileID IS NULL";
+sqlite3_prepare_v2(db, query2, -1, &stmt, 0);
+sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
+sqlite3_bind_int(stmt, 2, cellID);
+std::vector<Glib::ustring> tags;
+while (sqlite3_step(stmt) == SQLITE_ROW) {
+	tags.push_back((char*)sqlite3_column_text(stmt, 0));
+}
+sqlite3_finalize(stmt);
+m_CellTags.tags(tags);
 }
 
 

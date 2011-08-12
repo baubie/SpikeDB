@@ -96,6 +96,20 @@ bp::object pySpikeDB::getCells()
 			cell["CarFreq"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_carfreq);
 			cell["Threshold"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_threshold);
 			cell["Depth"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_depth);
+
+			// Get the tags
+			bp::list tags;
+			sqlite3_stmt *stmt = 0;
+			const char query[] = "SELECT tag FROM tags WHERE animalID=? AND cellID=? AND fileID IS NULL";
+			sqlite3_prepare_v2(*db, query, strlen(query), &stmt, NULL);
+			sqlite3_bind_text(stmt, 1,row.get_value(mp_FileDetailsTree->m_Columns.m_col_animalID).c_str(), -1, SQLITE_TRANSIENT);
+			sqlite3_bind_int(stmt, 2, row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID));
+			while (sqlite3_step(stmt) == SQLITE_ROW) {
+				tags.append(Glib::ustring((char*)sqlite3_column_text(stmt, 0)).c_str());
+			}
+			sqlite3_finalize(stmt);
+			cell["tags"] = tags;
+
 			list.append(cell);
 		}
 	}
@@ -139,6 +153,20 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 		file["CellID"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID);
 		file["FileID"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_filenum);
 		file["datetime"] = sd.iso8601(sd.m_head.cDateTime).c_str();
+
+		// Get the tags
+		bp::list tags;
+		sqlite3_stmt *stmt = 0;
+		const char query[] = "SELECT tag FROM tags WHERE animalID=? AND cellID=? AND fileID=?";
+		sqlite3_prepare_v2(*db, query, strlen(query), &stmt, NULL);
+		sqlite3_bind_text(stmt, 1,row.get_value(mp_FileDetailsTree->m_Columns.m_col_animalID).c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int(stmt, 2, row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID));
+		sqlite3_bind_int(stmt, 3, row.get_value(mp_FileDetailsTree->m_Columns.m_col_filenum));
+		while (sqlite3_step(stmt) == SQLITE_ROW) {
+			tags.append(Glib::ustring((char*)sqlite3_column_text(stmt, 0)).c_str());
+		}
+		sqlite3_finalize(stmt);
+		file["tags"] = tags;
 
 		file["speakertype"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_speakertype).c_str();
 		file["azimuth"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_azimuth).c_str();
