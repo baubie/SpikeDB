@@ -431,7 +431,7 @@ void pySpikeDB::plotXMax(const float &v)
 }
 
 
-void pySpikeDB::plotHist(boost::python::list &x, boost::python::list &y, boost::python::list &err)
+void pySpikeDB::plotHist(boost::python::list &/*x*/, boost::python::list &/*y*/, boost::python::list &/*err*/)
 {
 	/*
 	std::vector<double> x, y, err;

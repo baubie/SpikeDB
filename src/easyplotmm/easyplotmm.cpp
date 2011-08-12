@@ -343,7 +343,7 @@ void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<
     has_plot = true;
 }
 
-void EasyPlotmm::plotHist(std::vector<double> x, std::vector<double> y, std::vector<double> err, Pen p)
+void EasyPlotmm::plotHist(std::vector<double> /*x*/, std::vector<double> /*y*/, std::vector<double> /*err*/, Pen /*p*/)
 {
 
 }
