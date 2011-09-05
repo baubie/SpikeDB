@@ -269,8 +269,8 @@ void GUI::on_menuNewDatabase_activate()
 		sqlite3_stmt *stmt = 0;
 		std::vector<std::string> query;
 		query.push_back("CREATE TABLE animals (ID TEXT, species TEXT, sex TEXT, weight TEXT, age TEXT, notes TEXT, PRIMARY KEY(ID))");
-		query.push_back("CREATE TABLE cells (animalID TEXT, cellID INTEGER, notes TEXT, threshold TEXT, depth TEXT, freq TEXT, recordedby TEXT, PRIMARY KEY(animalID, cellID))");
-		query.push_back("CREATE TABLE files (animalID TEXT, cellID INTEGER, fileID INTEGER, notes TEXT, header BLOB, spikes BLOB,PRIMARY KEY(animalID, cellID, fileID))");
+		query.push_back("CREATE TABLE cells (animalID TEXT, cellID INTEGER, notes TEXT, threshold TEXT, depth TEXT, freq TEXT, recordedby TEXT, location TEXT, threshold_attn TEXT, PRIMARY KEY(animalID, cellID))");
+		query.push_back("CREATE TABLE files (animalID TEXT, cellID INTEGER, fileID INTEGER, notes TEXT, header BLOB, spikes BLOB, speakertype TEXT, azimuth TEXT, elevation TEXT, PRIMARY KEY(animalID, cellID, fileID))");
 		query.push_back( "CREATE TABLE properties (variable TEXT, value TEXT)");
 		query.push_back("INSERT INTO properties (variable, value) VALUES('version', '1.2')");
 
@@ -423,6 +423,7 @@ void GUI::on_celldetails_edited(
 	if (name == "CarFreq (Hz)")  query = "UPDATE cells SET freq=? WHERE animalID=? AND cellID=?";
 	if (name == "Depth (um)")  query = "UPDATE cells SET depth=? WHERE animalID=? AND cellID=?";
 	if (name == "Threshold (dB SPL)")  query = "UPDATE cells SET threshold=? WHERE animalID=? AND cellID=?";
+	if (name == "Threshold (dB Attn)")  query = "UPDATE cells SET threshold_attn=? WHERE animalID=? AND cellID=?";
 	if (name == "Notes")  query = "UPDATE cells SET notes=? WHERE animalID=? AND cellID=?";
 
 	// Update the database.
@@ -873,7 +874,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 	int numberOfFiles = sqlite3_column_int(stmt,0);
 	sqlite3_finalize(stmt);
 
-	char query[] = "SELECT depth, freq, notes, threshold, location FROM cells WHERE animalID=? AND cellID=?";
+	char query[] = "SELECT depth, freq, notes, threshold, location, threshold_attn FROM cells WHERE animalID=? AND cellID=?";
 	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
 	sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
 	sqlite3_bind_int(stmt, 2, cellID);
@@ -899,6 +900,11 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 
 		m_uiCellDetails.addRow(ID, "Threshold (dB SPL)",
 			((char*)sqlite3_column_text(stmt, 3) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 3),
+			Editable
+		);
+
+		m_uiCellDetails.addRow(ID, "Threshold (dB Attn)",
+			((char*)sqlite3_column_text(stmt, 5) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 5),
 			Editable
 		);
 
