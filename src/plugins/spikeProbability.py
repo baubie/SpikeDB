@@ -24,7 +24,7 @@ for f in files:
 	SpikeDB.plotLine(x,means,err)
 
 
-SpikeDB.plotSetRGBA(0,0,0,0.25);
+SpikeDB.plotSetRGBA(0,0,0,0.15);
 SpikeDB.plotSetPointSize(0);
 SpikeDB.plotSetLineWidth(4);
-SpikeDB.plotLine([x[first_index],x[-1]], [0.5,0.5], [])
+SpikeDB.plotLine([x[0],x[-1]], [0.5,0.5], [])
