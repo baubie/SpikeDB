@@ -95,6 +95,7 @@ bp::object pySpikeDB::getCells()
 			cell["CellID"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID);
 			cell["CarFreq"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_carfreq);
 			cell["Threshold"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_threshold);
+			cell["ThresholdAttn"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_threshold_attn);
 			cell["Depth"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_depth);
 
 			// Get the tags

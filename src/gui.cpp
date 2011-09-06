@@ -1028,7 +1028,7 @@ void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, c
 
 	if (animalID != "" && cellID != -1) {
 		const char query[] = "SELECT files.animalID, files.cellID, files.fileID, files.header, "
-					 "cells.depth, cells.threshold, cells.freq, files.speakertype, files.azimuth, files.elevation FROM files, cells "
+					 "cells.depth, cells.threshold, cells.freq, files.speakertype, files.azimuth, files.elevation, cells.threshold_attn FROM files, cells "
 				     "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
 				     "USING(animalID, cellID) "
 				     "WHERE files.animalID=? AND files.cellID=? AND file_count >= ? "
@@ -1040,7 +1040,7 @@ void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, c
 		sqlite3_bind_int(*stmt, 3, minFiles);
 	} else if (animalID != "" && cellID == -1) {
 		const char query[] = "SELECT files.animalID, files.cellID, files.fileID, files.header, "
-					 "cells.depth, cells.threshold, cells.freq, files.speakertype, files.azimuth, files.elevation FROM files, cells "
+					 "cells.depth, cells.threshold, cells.freq, files.speakertype, files.azimuth, files.elevation, cells.threshold_attn  FROM files, cells "
 				     "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
 				     "USING(animalID, cellID) "
 				     "WHERE files.animalID=? AND file_count >= ? "
@@ -1051,7 +1051,7 @@ void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, c
 		sqlite3_bind_int(*stmt, 2, minFiles);
 	} else if (animalID == "" && cellID == -1) {
 		const char query[] = "SELECT files.animalID, files.cellID, files.fileID, files.header, "
-					 "cells.depth, cells.threshold, cells.freq, files.speakertype, files.azimuth, files.elevation FROM files, cells "
+					 "cells.depth, cells.threshold, cells.freq, files.speakertype, files.azimuth, files.elevation, cells.threshold_attn  FROM files, cells "
 				     "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
 				     "USING(animalID, cellID) "
 				     "WHERE file_count >= ? "
@@ -1166,6 +1166,8 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 			row[mp_FileDetailsTree->m_Columns.m_col_speakertype] = ((char*)sqlite3_column_text(stmt, 7) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 7);
 			row[mp_FileDetailsTree->m_Columns.m_col_azimuth] = ((char*)sqlite3_column_text(stmt, 8) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 8);
 			row[mp_FileDetailsTree->m_Columns.m_col_elevation] = ((char*)sqlite3_column_text(stmt, 9) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 9);
+
+			row[mp_FileDetailsTree->m_Columns.m_col_threshold_attn] = sqlite3_column_int(stmt, 10);
 
 			row[mp_FileDetailsTree->m_Columns.m_col_xaxis] = sd.xVariable();
 			row[mp_FileDetailsTree->m_Columns.m_col_trials] = sd.trials();
