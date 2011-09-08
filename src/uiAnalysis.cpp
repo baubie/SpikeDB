@@ -52,7 +52,14 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
 
 	if (compact)
 	{
-		this->pack_start(*mp_plot);
+		Gtk::VPaned *vp = Gtk::manage( new Gtk::VPaned() );
+		tvOutput->set_size_request(-1,0);
+		swOutput->set_size_request(-1,0);
+		vp->pack1(*mp_plot);
+		vp->pack2(*swOutput);
+		vp->set_position(1000000); // Stupid high position to ensure it is closed by default
+		swOutput->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+		this->pack_start(*vp);
 	} else {
 		Gtk::VPaned *vp = Gtk::manage( new Gtk::VPaned() );
 		vp->pack1(*mp_plot);
@@ -214,10 +221,15 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 	//TODO: Check if we have a valid filename
 	if (m_filename == "" && plugin == "") return;
 
-	mrp_tbOutput->set_text("*** Initializing Analysis Plugin Library ***\n");
-	addOutput("Using Script: ");
-	addOutput(m_filename);
-	addOutput("\n");
+	if (!compact) {
+		mrp_tbOutput->set_text("*** Initializing Analysis Plugin Library ***\n");
+		addOutput("Using Script: ");
+		addOutput(m_filename);
+		addOutput("\n");
+	} else {
+		// Make sure we clear it
+		mrp_tbOutput->set_text("");
+	}
 
 	Py_Initialize();
 
@@ -263,7 +275,7 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 	PyRun_SimpleString("sys.stdout = SpikeDBWrite");
 
 
-	addOutput("*** Running Analysis Plugin ***\n\n");
+	if (!compact) addOutput("*** Running Analysis Plugin ***\n\n");
 
 	// Open the file and run the code
 	FILE *fp;
@@ -275,7 +287,7 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 	PyRun_SimpleFile(fp, m_filename.c_str());
 	fclose(fp);
 
-	addOutput("\n*** Analysis Plugin Completed ***");
+	if (!compact) addOutput("\n*** Analysis Plugin Completed ***");
 }
 
 void uiAnalysis::print(const std::string &s)
