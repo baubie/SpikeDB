@@ -7,7 +7,7 @@ copied = []
 def update_libraries(executable):
 	
 	# Find all the dylib files and recursively add dependencies
-	print "\nChecking dependencies of " + executable
+	print "Checking dependencies of " + executable
 	otool_cmd = ["otool", "-L",executable]
 	execfolder = executable.rsplit("/",1)[0]
 	otool_out = subprocess.check_output(otool_cmd).split("\n\t")
