@@ -4,9 +4,17 @@ import shutil
 
 copied = []
 ignore = ["libSystem.B.dylib","libstdc++.6.dylib"]
-
 basefolder = sys.argv[1].rsplit("/",2)[0]
 
+copy = True
+recur = True
+
+if len(sys.argv) == 3:
+	copy = False
+
+if len(sys.argv) == 4:
+	copy = False
+	recur = False
 
 def update_libraries(executable):
 	
@@ -27,10 +35,12 @@ def update_libraries(executable):
 					print "Requires: " + lib
 					new_lib = execfolder+"/"+libname
 					if (lib != new_lib):
-						shutil.copyfile(lib, basefolder+"/lib/"+libname)
+						if copy:
+							shutil.copyfile(lib, basefolder+"/lib/"+libname)
 						copied.append(libname)
 					new_library = execfolder+"/"+libname
-					update_libraries(basefolder+"/lib/"+libname)
+					if recur:
+						update_libraries(basefolder+"/lib/"+libname)
 
 				# Always run the install tool
 				install_name_tool = ["install_name_tool", "-change", lib, "@executable_path/../lib/"+libname, executable]

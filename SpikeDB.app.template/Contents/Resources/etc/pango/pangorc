@@ -1,4 +1,4 @@
 [Pango]
-ModuleFiles=${HOME}/.inkscape-etc/pango.modules
+ModuleFiles=${HOME}/.spikedb-etc/pango.modules
 [PangoX]
-AliasFiles=${HOME}/.inkscape-etc/pangox.aliases
+AliasFiles=${HOME}/.spikedb-etc/pangox.aliases

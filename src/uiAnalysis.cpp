@@ -98,7 +98,7 @@ void uiAnalysis::initPlugins()
 	CFStringGetCString( str, path, FILENAME_MAX, kCFStringEncodingASCII );
 	CFRelease(str);
 	Glib::ustring app_path(path);
-	search_paths.push_back(app_path+"../plugins/");
+	search_paths.push_back(app_path+"/../plugins/");
 	search_paths.push_back("/Library/Application Support/SpikeDB/plugins/");
 #endif
 #ifdef linux
