@@ -27,5 +27,6 @@ ADD_CUSTOM_COMMAND(TARGET spikedb POST_BUILD
 	COMMAND cp -r ${CMAKE_SOURCE_DIR}/SpikeDB.app.template ${BUNDLE_LOCATION}
 	COMMAND cp -r ${CMAKE_SOURCE_DIR}/src/plugins ${BUNDLE_LOCATION}/Contents/Resources/
 	COMMAND cp ${CMAKE_SOURCE_DIR}/src/spikedb ${BUNDLE_LOCATION}/Contents/Resources/
+	COMMAND python library_magic.py ${BUNDLE_LOCATION}/Contents/Resources/spikedb
     DEPENDS spikedb)
 ENDIF(APPLE)

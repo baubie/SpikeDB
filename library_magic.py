@@ -1,5 +1,6 @@
 import sys
 import subprocess
+import shutil
 
 executable = sys.argv[1]
 execfolder = sys.argv[1].rsplit("/",1)[0]
@@ -14,4 +15,7 @@ for l in otool_out:
 	s = l.split(".dylib")
 	if len(s) > 1:
 		lib = s[0]+".dylib"
-		print "Library Found: " + lib
+		libname = lib.rsplit("/",1)[1]
+		shutil.copyfile(lib, libdir+"/"+libname)
+		install_name_tool = ["install_name_tool", "-change", lib, "@executable_path/lib/"+libname, executable]
+		subprocess.call(install_name_tool)
