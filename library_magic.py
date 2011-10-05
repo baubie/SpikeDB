@@ -3,6 +3,10 @@ import subprocess
 import shutil
 
 copied = []
+ignore = ["libSystem.B.dylib","libstdc++.6.dylib"]
+
+basefolder = sys.argv[1].rsplit("/",2)[0]
+
 
 def update_libraries(executable):
 	
@@ -18,18 +22,20 @@ def update_libraries(executable):
 		if len(s) > 1:
 			lib = s[0]+".dylib"
 			libname = lib.rsplit("/",1)[1]
-			if libname not in copied: 
-				print "Requires: " + lib
-				new_lib = execfolder+"/"+libname
-				if (lib != new_lib):
-					shutil.copyfile(lib, new_lib)
-					copied.append(libname)
-				install_name_tool = ["install_name_tool", "-change", lib, "./"+libname, executable]
+			if libname not in ignore:
+				if libname not in copied: 
+					print "Requires: " + lib
+					new_lib = execfolder+"/"+libname
+					if (lib != new_lib):
+						shutil.copyfile(lib, basefolder+"/lib/"+libname)
+						copied.append(libname)
+					new_library = execfolder+"/"+libname
+					update_libraries(basefolder+"/lib/"+libname)
+
+				# Always run the install tool
+				install_name_tool = ["install_name_tool", "-change", lib, "@executable_path/../lib/"+libname, executable]
 				print "Installing "+lib
 				subprocess.call(install_name_tool)
-				new_library = execfolder+"/"+libname
-				print "Calling on " + new_library
-				update_libraries(new_library)
 
 			
 # Update libraries on the default executable 

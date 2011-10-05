@@ -2,6 +2,6 @@
 # Author: Brandon Aubie (brandon@aubie.ca)
 DIR=`dirname "$0"`
 cd $DIR
-$DIR/spikedb
+$DIR/bin/spikedb
 osascript -e 'tell application "X11" to quit'
 osascript -e 'tell application "SpikeDB" to quit'

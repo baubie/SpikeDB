@@ -1,12 +1,9 @@
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 
 LINK_DIRECTORIES (${PYTHON_LIBRARY_DIRS} ${GTKMM_LIBRARY_DIRS} ${SQLITE3_LIBRARY_DIRS} ${CAIRO_LIBRARY_DIRS} ${Boost_LIBARY_DIRS})
-
 INCLUDE_DIRECTORIES (${PYTHON_INCLUDE_PATH} ${GTKMM_INCLUDE_DIRS}  ${SQLITE3_INCLUDE_DIRS} ${CAIRO_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
-
 ADD_DEFINITIONS (-Wall -W)
-
-SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
 SET (SRC spikedb.cpp gui.cpp uiMenuBar.cpp uiAnalysis.cpp uiFileDetailsTreeView.cpp uiFilterFrame.cpp uiTags.cpp spikedata.cpp settings.cpp easyplotmm/easyplotmm.cpp tokenize.cpp pySpikeDB.cpp)
 
@@ -19,14 +16,13 @@ IF(UNIX)
 	INSTALL (DIRECTORY plugins DESTINATION share/spikedb)
 ENDIF(UNIX)
 
-
 IF(APPLE)
 SET(BUNDLE_LOCATION ${CMAKE_SOURCE_DIR}/src/SpikeDB.app)
 ADD_CUSTOM_COMMAND(TARGET spikedb POST_BUILD
 	COMMAND rm -rf ${BUNDLE_LOCATION}
 	COMMAND cp -r ${CMAKE_SOURCE_DIR}/SpikeDB.app.template ${BUNDLE_LOCATION}
 	COMMAND cp -r ${CMAKE_SOURCE_DIR}/src/plugins ${BUNDLE_LOCATION}/Contents/Resources/
-	COMMAND cp ${CMAKE_SOURCE_DIR}/src/spikedb ${BUNDLE_LOCATION}/Contents/Resources/
-	COMMAND python ${CMAKE_SOURCE_DIR}/library_magic.py ${BUNDLE_LOCATION}/Contents/Resources/spikedb
+	COMMAND cp ${CMAKE_SOURCE_DIR}/src/spikedb ${BUNDLE_LOCATION}/Contents/Resources/bin/spikedb-bin
+	COMMAND python ${CMAKE_SOURCE_DIR}/library_magic.py ${BUNDLE_LOCATION}/Contents/Resources/bin/spikedb-bin
     DEPENDS spikedb)
 ENDIF(APPLE)
