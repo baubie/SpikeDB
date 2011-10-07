@@ -28,26 +28,26 @@ style "clearlooks-default"
 
 	fg[NORMAL]			= "#000000" # black
 	fg[PRELIGHT]		= "#000000" # black
-	fg[SELECTED]		= "#ffffff" # white 
+	fg[SELECTED]		= "#eeeeee" # white 
 	fg[ACTIVE]			= "#000000" # black
 	fg[INSENSITIVE]	= {0.6, 0.6, 0.6} # dark gray
 
-	bg[NORMAL]			= {0.95, 0.95, 0.95} # very light gray
-	bg[PRELIGHT]		= "#ffffff" # white
-	bg[SELECTED]		= OSX_MENU_COLOR_PLACEHOLDER	# menu color
+	bg[NORMAL]			= {0.85, 0.85, 0.85} # very light gray
+	bg[PRELIGHT]		= "#eeeeee" # white
+	bg[SELECTED]		= "#236696"	# menu color
 	bg[INSENSITIVE]	= {0.9, 0.9, 0.9} # light gray
 	bg[ACTIVE]			= {0.85, 0.85, 0.85} # gray
 
-	base[NORMAL]		= "#ffffff" # white 
-	base[PRELIGHT]		= OSX_MENU_COLOR_PLACEHOLDER # menu color
+	base[NORMAL]		= "#eeeeee" # white 
+	base[PRELIGHT]		= "#236696" # menu color
 	base[ACTIVE]		= {0.6, 0.6, 0.6} # dark gray
-	base[SELECTED]		= OSX_HILI_COLOR_PLACEHOLDER # highlight color
-	base[INSENSITIVE] = {0.9, 0.9, 0.9} # light gray
+	base[SELECTED]		= "#236696" # highlight color
+	base[INSENSITIVE] = {0.8, 0.8, 0.8} # light gray
 
 	text[NORMAL]		= "#000000" # black
 	text[PRELIGHT]		= "#000000" # black
-	text[ACTIVE]		= "#ffffff" # white
-	text[SELECTED]		= "#ffffff" # white
+	text[ACTIVE]		= "#eeeeee" # white
+	text[SELECTED]		= "#eeeeee" # white
 	text[INSENSITIVE]	= {0.6, 0.6, 0.6} # dark gray
 }
 	
@@ -63,13 +63,13 @@ style "clearlooks-button" = "clearlooks-default"
 	xthickness = 3
 	ythickness = 3
 
-	bg[NORMAL] = "#f0f1f2" # a hint of blue...
+	bg[NORMAL] = "#CFD2D4" # a hint of blue...
 }
 
 style "clearlooks-notebook" = "clearlooks-wide"
 {
-	bg[NORMAL] = {0.93, 0.93, 0.93}
-	bg[INSENSITIVE] = {0.93, 0.93, 0.93}
+	bg[NORMAL] = {0.83, 0.83, 0.83}
+	bg[INSENSITIVE] = {0.83, 0.83, 0.83}
 }
 
 style "clearlooks-tasklist" = "clearlooks-default"
@@ -82,15 +82,15 @@ style "clearlooks-menu" = "clearlooks-default"
 {
 	xthickness = 2
 	ythickness = 1
-	bg[NORMAL] = "#ffffff"
+	bg[NORMAL] = "#eeeeee"
 }
 
 style "clearlooks-menu-item" = "clearlooks-default"
 {
 	xthickness = 2
 	ythickness = 3
-	fg[PRELIGHT] = "#ffffff"
-	text[PRELIGHT] = "#ffffff"
+	fg[PRELIGHT] = "#eeeeee"
+	text[PRELIGHT] = "#eeeeee"
 	# We want PRELIGHT to be white for widgets, but coloured for the menu.
 	bg[PRELIGHT]		= OSX_MENU_COLOR_PLACEHOLDER
 
@@ -125,7 +125,7 @@ style "clearlooks-progressbar" = "clearlooks-default"
 	xthickness = 1
 	ythickness = 1
 
-	fg[PRELIGHT]	= "#ffffff"
+	fg[PRELIGHT]	= "#eeeeee"
 }
 
 style "clearlooks-combo" = "clearlooks-default"
@@ -181,7 +181,6 @@ gtk-font-name="Lucida Grande 10"
 # gtk-menu			menus in applications: File, Edit
 # panel-menu		general Application/Places menu (not used on OS X)
 #
-# insckape-decoration	layers lock, "affect" icons, etc.
 #
 gtk-icon-sizes = "gtk-dialog=48,48:gtk-button=16,16:gtk-large-toolbar=22,22:gtk-small-toolbar=16,16:gtk-menu=16,16:inkscape-decoration=16,16"
 
