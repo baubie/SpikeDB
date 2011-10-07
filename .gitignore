@@ -24,3 +24,5 @@ bin/
 obj/
 .DS_Store
 spikedb.zip
+SpikeDB_Manual.pdf
+SpikeDB.app.tar.gz

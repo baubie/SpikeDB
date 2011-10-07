@@ -1,0 +1,6 @@
+#!/bin/sh
+cp ../usermanual/usermanual.pdf SpikeDB_Manual.pdf
+echo "Preparing tar file..."
+tar czf SpikeDB.app.tar.gz SpikeDB.app SpikeDB_Manual.pdf
+ftp -u ftp://faure@psyftp.mcmaster.ca/spikedb/ SpikeDB.app.tar.gz index.html SpikeDB.png
+echo "Download at http://psych.mcmaster.ca/faurelab/spikedb/"
