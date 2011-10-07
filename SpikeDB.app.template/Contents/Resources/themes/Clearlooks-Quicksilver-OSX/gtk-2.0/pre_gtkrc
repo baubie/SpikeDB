@@ -146,7 +146,6 @@ class "GtkMenuItem"		 style "clearlooks-menu-item"
 class "GtkStatusbar"	 style "clearlooks-wide"
 class "GtkNotebook"		 style "clearlooks-notebook"
 class "GtkProgressBar" style "clearlooks-progressbar"
-class "GtkScrollbar"	 style "scrollbar"
 
 widget_class "*MenuItem.*" style "clearlooks-menu-item"
 
