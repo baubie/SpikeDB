@@ -1,4 +1,4 @@
-### Tuning Curve (30% Threshold)
+### Tuning Curve (50% Threshold)
 
 # Only look at selected files
 files = SpikeDB.getFiles(True)
@@ -8,7 +8,7 @@ files = SpikeDB.getFiles(True)
 freqs = []
 amps = []
 channel = 1
-threshold = 0.3
+threshold = 0.5
 
 for f in files:
 	if f['frequency'][1] == SpikeDB.VARYING or f['frequency'][2] == SpikeDB.VARYING:
@@ -64,21 +64,21 @@ for f in files:
 		added = False
 		for m in range(len(prob)-1,0,-1):
 			if prob[m] >= threshold:
-				X.insert(0,freqs[m])
+				X2.insert(0,freqs[m])
 				channel = 1
 				if f['frequency'][2] == SpikeDB.VARYING:
 					channel = 2
-				Y.insert(0,-1*f['attenuation'][channel])
+				Y2.insert(0,-1*f['attenuation'][channel])
 				added = True
 				break
 		if added == False:
-			X.insert(0,freqs[-1])
-			Y.insert(0,-1*f['attenuation'][channel])
+			X2.insert(0,freqs[-1])
+			Y2.insert(0,-1*f['attenuation'][channel])
 
 if (len(X+X2) >= 1):
 	SpikeDB.plotXLabel('Frequency (kHz)')
 	SpikeDB.plotYLabel('Attenuation')
-	SpikeDB.plotLine(X+X2,Y+Y2,[])
+	SpikeDB.plotLine(X2+X,Y2+Y,[])
 	SpikeDB.plotXMin(min(X+X2)-0.5*min(X+X2))
 	SpikeDB.plotXMax(max(X+X2)+0.5*max(X+X2))
 	SpikeDB.plotYMin(min(Y+Y2)-10)
