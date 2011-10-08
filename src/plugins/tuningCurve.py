@@ -75,14 +75,12 @@ for f in files:
 			X.insert(0,freqs[-1])
 			Y.insert(0,-1*f['attenuation'][channel])
 
-if (len(X+X2) <= 1):
-	quit()
-
-SpikeDB.plotXLabel('Frequency (kHz)')
-SpikeDB.plotYLabel('Attenuation')
-SpikeDB.plotLine(X+X2,Y+Y2,[])
-SpikeDB.plotXMin(min(X+X2)-0.5*min(X+X2))
-SpikeDB.plotXMax(max(X+X2)+0.5*max(X+X2))
-SpikeDB.plotYMin(min(Y+Y2)-10)
-SpikeDB.plotYMax(max(Y+Y2)+10)
+if (len(X+X2) >= 1):
+	SpikeDB.plotXLabel('Frequency (kHz)')
+	SpikeDB.plotYLabel('Attenuation')
+	SpikeDB.plotLine(X+X2,Y+Y2,[])
+	SpikeDB.plotXMin(min(X+X2)-0.5*min(X+X2))
+	SpikeDB.plotXMax(max(X+X2)+0.5*max(X+X2))
+	SpikeDB.plotYMin(min(Y+Y2)-10)
+	SpikeDB.plotYMax(max(Y+Y2)+10)
 
