@@ -535,14 +535,25 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         if (m_ymin != AUTOMATIC) ymin = m_ymin;
         if (m_ymax != AUTOMATIC) ymax = m_ymax;
 
+
+		/**
         double maxX = fabs(xmin)>fabs(xmax)?fabs(xmin):fabs(xmax);
         double maxY = fabs(ymin)>fabs(ymax)?fabs(ymin):fabs(ymax);
         double minX = fabs(xmin)>fabs(xmax)?fabs(xmax):fabs(xmin);
         double minY = fabs(ymin)>fabs(ymax)?fabs(ymax):fabs(ymin);
+		*/
+
+        double maxX = (xmin)>(xmax)?(xmin):(xmax);
+        double maxY = (ymin)>(ymax)?(ymin):(ymax);
+        double minX = (xmin)>(xmax)?(xmax):(xmin);
+        double minY = (ymin)>(ymax)?(ymax):(ymin);
+
         double xorder = 1;
         double yorder = 1;
+		/**
         if (maxX < 0) maxX = 1;
         if (maxY < 0) maxY = 1;
+		*/
 
         if ((maxX-minX) > 10) while ((maxX-minX) / xorder > 10) { xorder *= 10; }
         if ((maxX-minX) != 0 && (maxX-minX) <= 10) while ((maxX-minX) / xorder <= 1) { xorder /= 10; }
@@ -564,6 +575,8 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         double xmax_bt = xmax;
         double ymax_st = ymax;
         double ymax_bt = ymax;
+
+		/**
         for (double x = 0; x <= xmin; x+=Xst) xmin_st = x+Xst;
         for (double x = 0; x <= xmin; x+=Xbt) xmin_bt = x;
         for (double x = 0; x <= xmax; x+=Xst) xmax_st = x;
@@ -574,6 +587,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         for (double y = 0; y <= ymax; y+=Ybt) ymax_bt = y;
 		if (xmin_bt < xmin) xmin_bt += Xbt;
 		if (ymin_bt < ymin) ymin_bt += Ybt;
+		*/
 
         // Determine the number of required decimal places
         int y_numdec = 0;
@@ -651,30 +665,30 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         cr->save();
         cr->set_line_width(2.0);
 
-        if (xmax != 0 && Xst != 0)
+        if (Xst != 0)
         {
-            for (double x = fabs(xmin_st); x <= fabs(xmax_st); x+=Xst)
+            for (double x = xmin_st; x <= xmax_st; x+=Xst)
             {
                 cr->move_to((x-xmin)*xscale, 0);
                 cr->rel_line_to(0, x_st_size);
                 cr->stroke();
             }
-            for (double x = fabs(xmin_bt); x <= fabs(xmax_bt); x+=Xbt)
+            for (double x = xmin_bt; x <= xmax_bt; x+=Xbt)
             {
                 cr->move_to((x-xmin)*xscale, 0);
                 cr->rel_line_to(0, x_bt_size);
                 cr->stroke();
             }
         }
-        if (ymax != 0 && Yst != 0)
+        if (Yst != 0)
         {
-            for (double y = fabs(ymin_st); y <= fabs(ymax_st); y+=Yst)
+            for (double y = ymin_st; y <= ymax_st; y+=Yst)
             {
                 cr->move_to(0,(y-ymin)*yscale);
                 cr->rel_line_to(-y_st_size, 0);
                 cr->stroke();
             }
-            for (double y = fabs(ymin_bt); y <= fabs(ymax_bt); y+=Ybt)
+            for (double y = ymin_bt; y <= ymax_bt; y+=Ybt)
             {
                 cr->move_to(0,(y-ymin)*yscale);
                 cr->rel_line_to(-y_bt_size, 0);
@@ -708,13 +722,12 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 			cr->restore();
 		}
 
-
         // Add the tick labels
         cr->set_source_rgba(0,0,0,1);
         cr->set_line_width(1.0);
-        if (xmax != 0 && Xbt != 0)
+        if (Xbt != 0)
         {
-            for (double x = fabs(xmin_bt); x <= fabs(xmax_bt); x+=Xbt)
+            for (double x = xmin_bt; x <= xmax_bt; x+=Xbt)
             {
                 Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
                 char buffer[10];
@@ -729,9 +742,9 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
                 pangoLayout->add_to_cairo_context(cr);
             }
         }
-        if (ymax > 0 && Ybt != 0)
+        if (Ybt != 0)
         {
-            for (double y = fabs(ymin_bt); y <= fabs(ymax_bt); y+=Ybt)
+            for (double y = ymin_bt; y <= ymax_bt; y+=Ybt)
             {
                 Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
                 cr->move_to(-ylab_width-y_bt_size-2*label_pad,(y-ymin)*yscale-lab_height/2);
