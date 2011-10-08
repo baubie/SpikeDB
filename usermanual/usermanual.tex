@@ -137,7 +137,7 @@ By default, this plot will display the mean number of spikes per trial. Other an
 The Analysis Plug-In Module allows you to use the Python scripting language write custom analysis routines on one or many Spike recording files. Each Python script will have the |SpikeDB| object available to it.  This object provides access to all of the data held within SpikeDB as well as a host of methods useful for analysis.
 
 \subsubsection{Quick Analysis Plugins}
-Several Quick Analysis plugins are included with SpikeDB, however, it is easy to add your own. Quick Analysis plugins are shown in the drop-down box on the Quick Analysis and Analysis toolbars and are defined by scripts located in the plugins/ folder of the SpikeDB application. The location of this folder depends on your operating system. Refer to Table \ref{tblPluginLocations} for details.
+Several Quick Analysis plugins are included with SpikeDB and it is easy to add your own. Quick Analysis plugins are shown in the drop-down box on the Quick Analysis and Analysis toolbars and are defined by scripts located in the plugins/ folder of the SpikeDB application. The location of this folder depends on your operating system. Refer to Table \ref{tblPluginLocations} for details.
 \begin{table}[h]
 	\begin{center}
 	\caption{Default plugins folder locations on different operating systems.}
@@ -145,7 +145,7 @@ Several Quick Analysis plugins are included with SpikeDB, however, it is easy to
 		Microsoft Windows & C:\textbackslash Program Files\textbackslash SpikeDB\textbackslash plugins\textbackslash \\
 		\hline
 		Mac OS X & /Applications/SpikeDB.app/Contents/Resources/plugins/ (built-in) \\
-		\emph{or} & /Library/Application Support/plugins/ (user added)\\
+		\emph{or} & /Library/Application Support/SpikeDB/plugins/ (user added)\\
 		\hline
 		Linux & /usr/local/share/spikedb/plugins/ (built-in) \\
 		\emph {or} & ~/.spikedb/plugins/ (user added) \\
