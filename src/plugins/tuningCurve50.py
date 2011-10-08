@@ -1,4 +1,4 @@
-### Tuning Curve 
+### Tuning Curve (30% Threshold)
 
 # Only look at selected files
 files = SpikeDB.getFiles(True)
@@ -8,7 +8,7 @@ files = SpikeDB.getFiles(True)
 freqs = []
 amps = []
 channel = 1
-threshold = 0.5
+threshold = 0.3
 
 for f in files:
 	if f['frequency'][1] == SpikeDB.VARYING or f['frequency'][2] == SpikeDB.VARYING:
