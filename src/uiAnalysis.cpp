@@ -19,8 +19,12 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
 	tbOpen = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::OPEN) );
 	tbRun = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::EXECUTE) );
 	tbRun->set_sensitive(false);
-    toolbar->append(*tbOpen, sigc::mem_fun(*this, &uiAnalysis::on_open_clicked) );
-    toolbar->append(*tbRun, sigc::mem_fun(*this, &uiAnalysis::on_run_clicked) );
+
+	if (!compact) {
+		toolbar->append(*tbOpen, sigc::mem_fun(*this, &uiAnalysis::on_open_clicked) );
+		toolbar->append(*tbRun, sigc::mem_fun(*this, &uiAnalysis::on_run_clicked) );
+	}
+
 	tbPlugins = Gtk::manage( new Gtk::ComboBoxText() );
 	Gtk::ToolItem *tbPluginItem = Gtk::manage( new Gtk::ToolItem() );
 	tbPluginItem->add(*tbPlugins);
