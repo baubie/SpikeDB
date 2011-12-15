@@ -26,7 +26,7 @@ bool SpikeData::parse(const char* filename)
         int VERSION = headerversion(cID);
         if (VERSION < HEADER_50)
         {
-            std::cerr << "ERROR: Spike data file is too old." << std::endl;
+            std::cerr << "ERROR: Spike data file is too old (" << filename << ")" << std::endl;
             return false;
         }
 

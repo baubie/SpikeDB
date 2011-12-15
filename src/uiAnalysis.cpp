@@ -89,7 +89,9 @@ void uiAnalysis::initPlugins()
 	 * Setup built-in plugins
 	 */
 
-	plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("", "Custom Analysis Script"));
+	if (!compact) {
+		plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("", "Custom Analysis Script"));
+	}
 
 
 	std::vector<std::string> search_paths;

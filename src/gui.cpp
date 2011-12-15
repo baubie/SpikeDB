@@ -253,11 +253,17 @@ void GUI::on_menuNewDatabase_activate()
 		// First create an empty file
 		Gio::init();
 		std::string filename = dialog.get_filename();
-		// TODO: Add error checking that the file doesn't exist and is valid
+
 		Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(filename);
+		if (file->query_exists() == true) {
+			std::cerr << "CRITICAL ERROR: Datafile file " << filename << " already exists!" << std::endl;
+			return;
+		}
+
 		Glib::RefPtr<Gio::FileOutputStream> stream = file->create_file();
 		stream->close();
 		stream.reset();
+
 
 		// Load it as an sqlite3 database and save the tables
 		if (sqlite3_open(filename.c_str(), &db) != SQLITE_OK) {
@@ -310,6 +316,14 @@ void GUI::on_menuOpenDatabase_activate()
 
 bool GUI::openDatabase(std::string filename)
 {
+	// Does the file even exist?
+	Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(filename);
+	if (file->query_exists() == false) {
+		std::cerr << "CRITICAL ERROR: Datafile file " << filename << " doesn't exist!" << std::endl;
+		return false;
+	}
+
+	// File exists, but can we open it?
 	if (sqlite3_open(filename.c_str(), &db) != SQLITE_OK) {
 		std::cerr << "CRITICAL ERROR: Unable to open database file." << std::endl;
 		return false;
@@ -1335,42 +1349,46 @@ void GUI::importSpikeFile(std::string filename, char* d_name)
 	if (sd.parse(fullfile.c_str())) {
 		std::vector<std::string> fileTokens;
 		std::string shortfilename(d_name);
-		Tokenize(shortfilename, fileTokens, ".");
+		if (Tokenize(shortfilename, fileTokens, ".") == 3)
+		{
 
-		// Insert animal
-		const char q_animal[] = "INSERT INTO animals (ID) VALUES(?)";
-		sqlite3_stmt *stmt_animal = 0;
-		sqlite3_prepare_v2(db, q_animal, strlen(q_animal), &stmt_animal, NULL);
-		sqlite3_bind_text(stmt_animal, 1, fileTokens[0].c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_step(stmt_animal);
-		sqlite3_finalize(stmt_animal);
+			// Insert animal
+			const char q_animal[] = "INSERT INTO animals (ID) VALUES(?)";
+			sqlite3_stmt *stmt_animal = 0;
+			sqlite3_prepare_v2(db, q_animal, strlen(q_animal), &stmt_animal, NULL);
+			sqlite3_bind_text(stmt_animal, 1, fileTokens[0].c_str(), -1, SQLITE_TRANSIENT);
+			sqlite3_step(stmt_animal);
+			sqlite3_finalize(stmt_animal);
 
-		// Insert Cell
-		const char q_cell[] = "INSERT INTO cells (animalID,cellID) VALUES(?,?)";
-		sqlite3_stmt *stmt_cell = 0;
-		sqlite3_prepare_v2(db, q_cell, strlen(q_cell), &stmt_cell, NULL);
-		sqlite3_bind_text(stmt_cell, 1, fileTokens[0].c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int(stmt_cell, 2, atoi(fileTokens[1].c_str()));
-		sqlite3_step(stmt_cell);
-		sqlite3_finalize(stmt_cell);
+			// Insert Cell
+			const char q_cell[] = "INSERT INTO cells (animalID,cellID) VALUES(?,?)";
+			sqlite3_stmt *stmt_cell = 0;
+			sqlite3_prepare_v2(db, q_cell, strlen(q_cell), &stmt_cell, NULL);
+			sqlite3_bind_text(stmt_cell, 1, fileTokens[0].c_str(), -1, SQLITE_TRANSIENT);
+			sqlite3_bind_int(stmt_cell, 2, atoi(fileTokens[1].c_str()));
+			sqlite3_step(stmt_cell);
+			sqlite3_finalize(stmt_cell);
 
-		// Insert File
-		const char q_file[] = "INSERT INTO files (animalID,cellID,fileID,header,spikes) VALUES(?,?,?,?,?)";
-		sqlite3_stmt *stmt_file = 0;
-		sqlite3_prepare_v2(db, q_file, strlen(q_file), &stmt_file, NULL);
-		sqlite3_bind_text(stmt_file, 1, fileTokens[0].c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int(stmt_file, 2, atoi(fileTokens[1].c_str()));
-		sqlite3_bind_int(stmt_file, 3, atoi(fileTokens[2].c_str()));
+			// Insert File
+			const char q_file[] = "INSERT INTO files (animalID,cellID,fileID,header,spikes) VALUES(?,?,?,?,?)";
+			sqlite3_stmt *stmt_file = 0;
+			sqlite3_prepare_v2(db, q_file, strlen(q_file), &stmt_file, NULL);
+			sqlite3_bind_text(stmt_file, 1, fileTokens[0].c_str(), -1, SQLITE_TRANSIENT);
+			sqlite3_bind_int(stmt_file, 2, atoi(fileTokens[1].c_str()));
+			sqlite3_bind_int(stmt_file, 3, atoi(fileTokens[2].c_str()));
 
-		if (sd.headerversion(&sd.m_head) == HEADER_50) {
-			sqlite3_bind_blob(stmt_file, 4, (void*)&sd.m_head50, sizeof(sd.m_head50), SQLITE_TRANSIENT);
+			if (sd.headerversion(&sd.m_head) == HEADER_50) {
+				sqlite3_bind_blob(stmt_file, 4, (void*)&sd.m_head50, sizeof(sd.m_head50), SQLITE_TRANSIENT);
+			} else {
+				sqlite3_bind_blob(stmt_file, 4, (void*)&sd.m_head, sizeof(sd.m_head), SQLITE_TRANSIENT);
+			}
+			sqlite3_bind_blob(stmt_file, 5, (void*)&sd.m_spikeArray[0], sizeof(SPIKESTRUCT) * sd.m_spikeArray.size(), SQLITE_TRANSIENT);
+
+			sqlite3_step(stmt_file);
+			sqlite3_finalize(stmt_file);
 		} else {
-			sqlite3_bind_blob(stmt_file, 4, (void*)&sd.m_head, sizeof(sd.m_head), SQLITE_TRANSIENT);
+			std::cerr << "WARNING: Ignoring file " << filename << "/" << d_name << " due to improper filename format." << std::endl;
 		}
-		sqlite3_bind_blob(stmt_file, 5, (void*)&sd.m_spikeArray[0], sizeof(SPIKESTRUCT) * sd.m_spikeArray.size(), SQLITE_TRANSIENT);
-
-		sqlite3_step(stmt_file);
-		sqlite3_finalize(stmt_file);
 	}
 }
 
@@ -1392,12 +1410,12 @@ void GUI::on_menuQuit_activate()
 
 void GUI::on_menuAbout_activate()
 {
-	Glib::ustring copyright = "Written By Brandon Aubie\nMcMaster University 2011";
+	Glib::ustring copyright = "Written By Brandon Aubie\nMcMaster University 2011-2012";
 	Gtk::AboutDialog dialog;
 	dialog.set_transient_for(*this);
 	dialog.set_title("About SpikeDB");
 	dialog.set_program_name("SpikeDB");
-	dialog.set_version("1.3");
+	dialog.set_version("1.4");
 	dialog.set_copyright(copyright);
 	dialog.set_website("http://www.aubie.ca");
 	dialog.run();
