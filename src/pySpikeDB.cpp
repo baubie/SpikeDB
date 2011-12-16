@@ -97,6 +97,7 @@ bp::object pySpikeDB::getCells()
 			cell["Threshold"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_threshold);
 			cell["ThresholdAttn"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_threshold_attn);
 			cell["Depth"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_depth);
+			cell["Location"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_location);
 
 			// Get the tags
 			bp::list tags;

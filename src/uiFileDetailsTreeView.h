@@ -58,6 +58,7 @@ class uiFileDetailsTreeView : public Gtk::TreeView {
                 Gtk::TreeModelColumn<int> m_col_threshold;
                 Gtk::TreeModelColumn<int> m_col_threshold_attn;
                 Gtk::TreeModelColumn<int> m_col_depth;
+                Gtk::TreeModelColumn<Glib::ustring> m_col_location;
         };
         Columns m_Columns;
 
