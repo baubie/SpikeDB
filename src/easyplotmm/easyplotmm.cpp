@@ -80,6 +80,8 @@ void EasyPlotmm::export_data()
     dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
     dialog.add_button(Gtk::Stock::SAVE, Gtk::RESPONSE_OK);
 
+	if (lastdir != "") dialog.set_current_folder(lastdir);
+
     // Show the dialog
     int result = dialog.run();
 
@@ -88,6 +90,7 @@ void EasyPlotmm::export_data()
         case(Gtk::RESPONSE_OK):
             Gio::init();
             Glib::ustring filename = dialog.get_filename();
+            lastdir = dialog.get_current_folder();
             int fileIndex = 0;
             for (unsigned int i = 0; i < m_x.size(); ++i)
             {

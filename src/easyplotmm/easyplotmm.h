@@ -105,6 +105,7 @@ class EasyPlotmm : public Gtk::DrawingArea
         // Context menu
         Gtk::Menu m_Menu_Popup;
         void export_data();
+		Glib::ustring lastdir;
 
         // Store plots
         std::vector< std::vector<double> > m_x_hist;
