@@ -117,8 +117,13 @@ void EasyPlotmm::export_data()
                         for (unsigned int point = 0; point < m_x.at(i).size(); ++point)
                         {
                             contents << m_x.at(i).at(point) << " ";
-                            contents << m_y.at(i).at(point) << " ";
-                            contents << m_err.at(i).at(point) << std::endl;
+							if (m_y.at(i).at(point) != NOPOINT) {
+								contents << m_y.at(i).at(point) << " ";
+								contents << m_err.at(i).at(point) << std::endl;
+							} else {
+								contents << "-" << " ";
+								contents << "-" << " " << std::endl;
+							}
                         }
                         const int bytes_written = stream->write(contents.str());
 
