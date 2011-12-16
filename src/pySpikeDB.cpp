@@ -97,7 +97,7 @@ bp::object pySpikeDB::getCells()
 			cell["Threshold"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_threshold);
 			cell["ThresholdAttn"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_threshold_attn);
 			cell["Depth"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_depth);
-			cell["Location"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_location);
+			cell["Location"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_location).c_str();
 
 			// Get the tags
 			bp::list tags;
@@ -155,6 +155,7 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 		file["CellID"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID);
 		file["FileID"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_filenum);
 		file["datetime"] = sd.iso8601(sd.m_head.cDateTime).c_str();
+		file["Location"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_location).c_str();
 
 		// Get the tags
 		bp::list tags;

@@ -32,6 +32,7 @@ class uiFileDetailsTreeView : public Gtk::TreeView {
                   add(m_col_type); add(m_col_freq); add(m_col_trials); add(m_col_onset); 
 				  add(m_col_dur); add(m_col_atten); add(m_col_speakertype); add(m_col_azimuth); add(m_col_elevation); 
 				  add(m_col_carfreq); add(m_col_threshold); add(m_col_threshold_attn); add(m_col_depth);
+				  add(m_col_location);
                 }
 
                 Gtk::TreeModelColumn<bool> m_col_hidden;
