@@ -15,3 +15,8 @@ A: On a mac add this to your .bashrc or .zshrc or .yourtermrc
 DYLD_FRAMEWORK_PATH=/opt/local/Library/Frameworks
 
 
+How to build on Windows.
+1) Get a coffee.
+2) Book a few days off of work.
+3) Install Microsoft Visual Studio C++ Express 2010 (or higher)
+4) Download GTK-All-In-One windows package.
