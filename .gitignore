@@ -26,3 +26,6 @@ obj/
 spikedb.zip
 SpikeDB_Manual.pdf
 SpikeDB.app.tar.gz
+
+/VS2010/SpikeDB/Debug
+/VS2010/SpikeDB/Release
