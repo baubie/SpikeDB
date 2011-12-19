@@ -14,6 +14,8 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
 	m_parent = parent;
 	this->settings = settings;
 
+	this->setupPython = false;
+
 	initPlugins();
 
 	Gtk::Toolbar *toolbar = Gtk::manage( new Gtk::Toolbar() );
@@ -95,7 +97,6 @@ void uiAnalysis::initPlugins()
 		plugins.push_back(std::pair<Glib::ustring,Glib::ustring>("", "Custom Analysis Script"));
 	}
 
-
 	std::vector<std::string> search_paths;
 #ifdef __APPLE__
 	CFBundleRef mainBundle = CFBundleGetMainBundle();
@@ -119,7 +120,7 @@ void uiAnalysis::initPlugins()
 	search_paths.push_back(homedir);
 #endif
 #ifdef WIN32
-	
+	search_paths.push_back(".\\plugins\\");
 #endif
 
 	struct dirent *dptr;
@@ -133,7 +134,7 @@ void uiAnalysis::initPlugins()
 			std::cerr << "ERROR: Unable to open " << filename << std::endl;
 		} else{
 			while ((dptr = readdir(dirp))) {
-#ifdef _WIN32
+#ifdef WIN32
                 {
 #else
 				if (dptr->d_type == DT_REG) {
@@ -230,8 +231,9 @@ void uiAnalysis::runPlugin()
 
 void uiAnalysis::runScript(const Glib::ustring &plugin)
 {
-	//TODO: Check if we have a valid filename
 	if (m_filename == "" && plugin == "") return;
+
+	std::cout << "Attempting to run " << plugin << std::endl;
 
 	if (!compact) {
 		mrp_tbOutput->set_text("*** Initializing Analysis Plugin Library ***\n");
@@ -249,6 +251,8 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 		bp::handle<>(bp::borrowed(PyImport_AddModule("__main__")))));
 	bp::object main_namespace = main_module.attr("__dict__");
 
+if (!this->setupPython)
+{
 	main_namespace["pySpikeDB"] = class_<pySpikeDB>("pySpikeDB")
 		.def("getCells", &pySpikeDB::getCells)
 		.def("getFiles", &pySpikeDB::getFiles)
@@ -268,7 +272,8 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 		.def("plotSetRGBA", &pySpikeDB::plotSetRGBA)
 		.def("plotSetPointSize", &pySpikeDB::plotSetPointSize)
 		.def("plotSetLineWidth", &pySpikeDB::plotSetLineWidth)
-		.def("plotLine", &pySpikeDB::plotLine);
+		.def("plotLine", &pySpikeDB::plotLine)
+		.def("write", &pySpikeDB::print);
 	pySpikeDB _pySpikeDB(db, mp_FileDetailsTree, mp_plot, mrp_tbOutput);
 	_pySpikeDB.setShowErr(tbShowErr->get_active());
 	_pySpikeDB.forceSpikesAbs(forceAbsBegin, forceAbsEnd);
@@ -276,15 +281,11 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 	main_namespace["SpikeDB"].attr("__dict__")["VARYING"] = VARYING_STIMULUS;
 	main_namespace["SpikeDB"].attr("__dict__")["NOPOINT"] = EasyPlotmm::NOPOINT;
 
-
-	// Redirect stderr and stdout
-	main_namespace["pySpikeDBWrite"] = class_<pySpikeDB>("pySpikeDBWrite")
-		.def("write", &pySpikeDB::print);
-	pySpikeDB _pySpikeDBWrite(db, mp_FileDetailsTree, mp_plot, mrp_tbOutput);
-	main_namespace["SpikeDBWrite"] = bp::ptr(&_pySpikeDBWrite);
+	this->setupPython = true;
+}
 	PyRun_SimpleString("import sys");
-	PyRun_SimpleString("sys.stderr = SpikeDBWrite");
-	PyRun_SimpleString("sys.stdout = SpikeDBWrite");
+	PyRun_SimpleString("sys.stderr = SpikeDB");
+	PyRun_SimpleString("sys.stdout = SpikeDB");
 
 
 	if (!compact) addOutput("*** Running Analysis Plugin ***\n\n");
@@ -293,11 +294,14 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 	FILE *fp;
 	if (plugin == "") {
 		fp = fopen(m_filename.c_str(), "r");
+		if (fp != NULL) PyRun_SimpleFile(fp, m_filename.c_str());
 	} else {
-		fp = fopen(plugin.c_str(), "r");
+		PyObject* PyFileObject = PyFile_FromString((char *)plugin.c_str(), "r");
+		PyRun_SimpleFile(PyFile_AsFile(PyFileObject), plugin.c_str());
+		//		fp = fopen(plugin.c_str(), "r");
+		//		if (fp != NULL) PyRun_SimpleFile(fp, plugin.c_str());
 	}
-	PyRun_SimpleFile(fp, m_filename.c_str());
-	fclose(fp);
+	//if (fp != NULL) fclose(fp);
 
 	if (!compact) addOutput("\n*** Analysis Plugin Completed ***");
 }

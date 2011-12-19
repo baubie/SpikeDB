@@ -81,6 +81,7 @@ class uiAnalysis : public Gtk::VBox {
 		void initPlugins();
 
 	private:
+		bool setupPython;
 
 };
 

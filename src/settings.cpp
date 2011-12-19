@@ -21,8 +21,10 @@ Settings::Settings()
 #else
 #ifdef WIN32
 	Glib::ustring filename = "spikedb.settings";
-#endif
+#else
+	// Not APPLE or Linux or WIN32. Who knows what this is then.
 	Glib::ustring filename = "spikedb.settings";
+#endif
 #endif
 #endif
 
