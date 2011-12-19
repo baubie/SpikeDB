@@ -5,6 +5,7 @@
 #include <vector>
 #include <float.h>
 #include <giomm.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <sstream>
 #include <iostream>
@@ -126,11 +127,11 @@ class EasyPlotmm : public Gtk::DrawingArea
         int ylab_width,lab_height,xname_width,xname_height,yname_width,yname_height;
 		std::string m_xname, m_yname;
         double m_ixmin,m_ixmax,m_iymin,m_iymax; // Axes
-        int zoom_start, zoom_end;
+        gdouble zoom_start, zoom_end;
         double zoom_start_scale, zoom_end_scale;
         bool in_zoom;
 		bool in_crosshairs;
-		int ch_x, ch_y;
+		gdouble ch_x, ch_y;
         bool has_plot;
 
 };

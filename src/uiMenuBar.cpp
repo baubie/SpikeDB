@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "uiMenuBar.h"
 
 uiMenuBar::uiMenuBar()

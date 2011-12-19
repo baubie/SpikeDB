@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "easyplotmm.h"
 #include <cairomm/context.h>
 #include <iostream>
@@ -395,7 +397,7 @@ void EasyPlotmm::drawshape(Cairo::RefPtr<Cairo::Context> cr, double s, Shape sha
             break;
 
         case DIAMOND:
-            h = sqrt(2)*s;
+            h = 1.41421356*s; // sqrt(2)*s
             cr->rel_move_to(0,-h/2);
             cr->rel_line_to(-h/2,h/2);
             cr->rel_line_to(h/2,h/2);
@@ -600,7 +602,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         // Determine the number of required decimal places
         int y_numdec = 0;
         char y_fmt[5];
-        while (y_numdec < 4 && ((int)(pow(10,y_numdec)*ymin-0.5) == (int)(pow(10,y_numdec)*(ymin+Ybt)-0.5)))
+        while (y_numdec < 4 && ((int)(pow((long double)10,y_numdec)*ymin-0.5) == (int)(pow((long double)10,y_numdec)*(ymin+Ybt)-0.5)))
         {
             ++y_numdec;
         }
@@ -608,7 +610,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 
         int x_numdec = 0;
         char x_fmt[5];
-        while (x_numdec < 4 && ((int)(pow(10,x_numdec)*xmin_bt) == (int)(pow(10,x_numdec)*(xmin_bt+Xbt))))
+        while (x_numdec < 4 && ((int)(pow((long double)10,x_numdec)*xmin_bt) == (int)(pow((long double)10,x_numdec)*(xmin_bt+Xbt))))
         {
             ++x_numdec;
         }
@@ -647,8 +649,8 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 			yname_height /= Pango::SCALE;
 		}
 
-        const int xlength = width-pad_left-pad_right-ylab_width-y_bt_size-label_pad-yname_width;
-        const int ylength = height-pad_top-pad_bottom-lab_height-x_bt_size-label_pad-xname_height;
+        const double xlength = width-pad_left-pad_right-ylab_width-y_bt_size-label_pad-yname_width;
+        const double ylength = height-pad_top-pad_bottom-lab_height-x_bt_size-label_pad-xname_height;
         double xscale = xlength/(xmax-xmin);
         double yscale = -ylength/(ymax-ymin);
 

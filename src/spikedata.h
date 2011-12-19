@@ -105,7 +105,11 @@ typedef struct
 // g++ doesn't pack to the nearest byte by default
 // Here I turn that on for compatibility with the
 // spike files which are packed to the nearest byte.
+#ifdef WIN32
+typedef struct
+#else
 typedef struct __attribute__((__packed__)) 
+#endif
 {
         short nType;
         float fCarFreq;
@@ -127,7 +131,11 @@ typedef struct
 // g++ doesn't pack to the nearest byte by default
 // Here I turn that on for compatibility with the
 // spike files which are packed to the nearest byte.
+#ifdef WIN32
+typedef struct
+#else
 typedef struct __attribute__((__packed__)) 
+#endif
 {
         short nType;		// stimulus type
         float fBegin;
@@ -150,7 +158,11 @@ typedef struct __attribute__((__packed__))
         } params; // (80)
 } STIM; // (108)        
 
+#ifdef WIN32
+typedef struct
+#else
 typedef struct __attribute__((__packed__)) 
+#endif
 {
 	short nType;		// stimulus type
 	float fBegin;

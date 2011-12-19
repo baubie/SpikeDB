@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "spikedata.h"
 
 SpikeData::SpikeData()

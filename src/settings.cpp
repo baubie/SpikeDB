@@ -1,9 +1,11 @@
+#include "stdafx.h"
+
+
 #include "settings.h"
 
 
 Settings::Settings()
 {
-
 
 #ifdef __APPLE__
 	mkdir("/Library/Application Support/SpikeDB", 0755);
@@ -17,6 +19,9 @@ Settings::Settings()
 	mkdir(filename.c_str(), 0755);
 	filename += "/spikedb.settings";
 #else
+#ifdef WIN32
+	Glib::ustring filename = "spikedb.settings";
+#endif
 	Glib::ustring filename = "spikedb.settings";
 #endif
 #endif
@@ -147,7 +152,7 @@ float Settings::get_float(std::string key)
 float Settings::get_float(std::string key, float def)
 {
 	std::string value;
-	if (get_value(key, value)) return atof(value.c_str());
+	if (get_value(key, value)) return (float)atof(value.c_str());
 	return def;
 }
 void Settings::set(std::string key, float value)

@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "tokenize.h"
 
 int Tokenize(const std::string& str,

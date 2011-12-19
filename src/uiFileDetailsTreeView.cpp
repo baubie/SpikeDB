@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "uiFileDetailsTreeView.h"
 
 uiFileDetailsTreeView::uiFileDetailsTreeView(sqlite3 **db, Gtk::Window *parent)

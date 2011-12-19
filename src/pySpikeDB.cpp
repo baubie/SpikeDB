@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "pySpikeDB.h"
 
 namespace bp=boost::python;
@@ -326,18 +328,15 @@ bp::object pySpikeDB::getFiles(bool selOnly)
 {
 	bp::list list;
 	if (selOnly) {
-		std::vector<Gtk::TreeModel::iterator> rows;
-		mp_FileDetailsTree->treeSelection()->selected_foreach_iter(
-			sigc::mem_fun(rows, &std::vector<Gtk::TreeModel::iterator>::push_back)
-			);
-
-		std::vector<Gtk::TreeModel::iterator>::iterator iter;
-		for (iter = rows.begin(); 
-			 iter != rows.end(); 
-			 iter++)
+		
+		std::vector<Gtk::TreeModel::Path> rows;
+		rows = mp_FileDetailsTree->treeSelection()->get_selected_rows();
+		for(unsigned int i = 0; i < rows.size(); i++)
 		{
-			list.append(getFile(*iter));
+			Gtk::TreeModel::iterator iter = mp_FileDetailsTree->get_model()->get_iter(rows[i]);
+			list.append(getFile(iter));
 		}
+
 	} else {
 		Gtk::TreeIter iter;
 		print("Loading files...");

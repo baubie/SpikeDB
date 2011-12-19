@@ -1,5 +1,10 @@
+#include "stdafx.h"
+
 #include "gui.h"
+
+#ifndef WIN32
 #include <unistd.h>
+#endif
 
 GUI::GUI()
 {

@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "uiAnalysis.h"
 
 namespace bp=boost::python;
@@ -116,7 +118,9 @@ void uiAnalysis::initPlugins()
 	search_paths.push_back("/usr/local/share/spikedb/plugins/");
 	search_paths.push_back(homedir);
 #endif
-
+#ifdef WIN32
+	
+#endif
 
 	struct dirent *dptr;
 	DIR *dirp;
@@ -213,13 +217,15 @@ void uiAnalysis::addOutput(Glib::ustring t)
 
 void uiAnalysis::forceSpikesAbs(double begin, double end)
 {
-	forceAbsBegin = begin;
-	forceAbsEnd = end;
+	forceAbsBegin = (float)begin;
+	forceAbsEnd = (float)end;
 }
 
 void uiAnalysis::runPlugin()
 {
-	runScript(plugins[tbPlugins->get_active_row_number()].first);
+	if (!plugins.empty()) {
+		runScript(plugins[tbPlugins->get_active_row_number()].first);
+	}
 }
 
 void uiAnalysis::runScript(const Glib::ustring &plugin)

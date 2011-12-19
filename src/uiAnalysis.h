@@ -1,6 +1,11 @@
 #ifndef UIANALYSIS_H
 #define UIANALYSIS_H
 
+#ifdef WIN32
+#include <Windows.h>
+#endif
+
+
 #include "pySpikeDB.h"
 #include <gtkmm.h>
 #include <sqlite3.h>

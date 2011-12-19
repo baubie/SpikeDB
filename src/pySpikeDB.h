@@ -1,6 +1,10 @@
 #ifndef PYSPIKEDB_H
 #define PYSPIKEDB_H
 
+#ifdef WIN32
+#undef HAVE_UNISTD_H
+#endif
+
 #include <boost/python.hpp>
 #include <boost/python/stl_iterator.hpp>
 #include <gtkmm.h>
