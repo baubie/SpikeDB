@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "Preparing tar file..."
+rm -f SpikeDB.app.tar.gz
+tar czf SpikeDB.app.tar.gz SpikeDB.app
