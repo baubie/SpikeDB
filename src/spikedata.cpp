@@ -12,8 +12,10 @@ SpikeData::~SpikeData()
 
 bool SpikeData::parse(const char* filename)
 {
-    std::ifstream in(filename, std::ios::binary);
-    if (in.good())
+	std::ifstream in;
+	in.open(filename, std::ios::binary);
+
+	if (in.good())
     {
         // Calculate the filesize
         in.seekg(0, std::ios_base::beg);
@@ -66,6 +68,7 @@ bool SpikeData::parse(const char* filename)
         if (!parsedata())
         {
 //          std::cerr << "ERROR: Failed to parse data file." << std::endl;
+			in.close();
             return false;
         }
     }
@@ -74,6 +77,7 @@ bool SpikeData::parse(const char* filename)
 //      std::cerr << "ERROR: Unable to open " << filename << std::endl;
         return false;
     }
+	in.close();
     return true;
 }
 

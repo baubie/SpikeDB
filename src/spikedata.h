@@ -6,12 +6,12 @@
     original Spike2 source code.
 */
 
-#include <iostream>
-#include <fstream>
 #include <stdint.h>
 #include <vector>
 #include <string>
 #include <string.h>
+#include <iostream>
+#include <fstream>
 
 // Porting from windows!
 #define DWORD uint32_t
@@ -106,14 +106,20 @@ typedef struct
 // Here I turn that on for compatibility with the
 // spike files which are packed to the nearest byte.
 #ifdef WIN32
-typedef struct
+typedef struct 
 #else
 typedef struct __attribute__((__packed__)) 
 #endif
 {
+#ifdef WIN32
+#pragma pack(push,1)
+#endif
         short nType;
         float fCarFreq;
         float fDeltaFreq;
+#ifdef WIN32
+#pragma pack(pop)
+#endif
 } SWEPTSIN;
 
 typedef struct
@@ -137,6 +143,9 @@ typedef struct
 typedef struct __attribute__((__packed__)) 
 #endif
 {
+#ifdef WIN32
+#pragma pack(push,1)
+#endif
         short nType;		// stimulus type
         float fBegin;
         float fDur;
@@ -156,6 +165,9 @@ typedef struct __attribute__((__packed__))
                 SWEPTSIN sweptsin; // (10)
                 WAV	 wav;	//(80)	// added for V 6.0
         } params; // (80)
+#ifdef WIN32
+#pragma pack(pop)
+#endif
 } STIM; // (108)        
 
 #ifdef WIN32
@@ -164,6 +176,9 @@ typedef struct
 typedef struct __attribute__((__packed__)) 
 #endif
 {
+#ifdef WIN32
+#pragma pack(push,1)
+#endif
 	short nType;		// stimulus type
 	float fBegin;
 	float fDur;
@@ -180,6 +195,9 @@ typedef struct __attribute__((__packed__))
 		FMSIN	 fmsin;
 		SWEPTSIN sweptsin;
 	} params;
+#ifdef WIN32
+#pragma pack(pop)
+#endif
 	
 }  STIM_50; // 5.0 and earlier
 

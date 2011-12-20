@@ -34,7 +34,9 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
 	tbPluginItem->add(*tbPlugins);
 	for (unsigned int i = 0; i < plugins.size(); ++i) {
 		tbPlugins->append_text(plugins[i].second);
-		if (plugins[i].second == "Mean Spike Count") tbPlugins->set_active_text("Mean Spike Count");
+		if (plugins[i].second == "Mean Spike Count") {
+			tbPlugins->set_active(i);
+		}
 	}
 	tbPlugins->signal_changed().connect(sigc::mem_fun(*this, &uiAnalysis::on_plugin_changed));
 	tbPlugins->set_focus_on_click(false);
@@ -134,16 +136,15 @@ void uiAnalysis::initPlugins()
 			std::cerr << "ERROR: Unable to open " << filename << std::endl;
 		} else{
 			while ((dptr = readdir(dirp))) {
-#ifdef WIN32
-                {
-#else
 				if (dptr->d_type == DT_REG) {
-#endif
 					std::string possibleFile = dptr->d_name;
 					if (possibleFile.length() >= 4 && possibleFile.substr(possibleFile.length()-3,3) == ".py")
 					{
 						Glib::RefPtr<Gio::File> file=Gio::File::create_for_path(filename+possibleFile);
 						Glib::RefPtr<Gio::DataInputStream> fin=Gio::DataInputStream::create(file->read());
+#ifdef WIN32
+						fin->set_newline_type(Gio::DATA_STREAM_NEWLINE_TYPE_CR_LF);
+#endif
 						std::string line;
 						std::string name;
 						fin->read_line(line);
@@ -274,6 +275,8 @@ if (!this->setupPython)
 		.def("plotSetLineWidth", &pySpikeDB::plotSetLineWidth)
 		.def("plotLine", &pySpikeDB::plotLine)
 		.def("write", &pySpikeDB::print);
+	this->setupPython = true;
+}
 	pySpikeDB _pySpikeDB(db, mp_FileDetailsTree, mp_plot, mrp_tbOutput);
 	_pySpikeDB.setShowErr(tbShowErr->get_active());
 	_pySpikeDB.forceSpikesAbs(forceAbsBegin, forceAbsEnd);
@@ -281,8 +284,6 @@ if (!this->setupPython)
 	main_namespace["SpikeDB"].attr("__dict__")["VARYING"] = VARYING_STIMULUS;
 	main_namespace["SpikeDB"].attr("__dict__")["NOPOINT"] = EasyPlotmm::NOPOINT;
 
-	this->setupPython = true;
-}
 	PyRun_SimpleString("import sys");
 	PyRun_SimpleString("sys.stderr = SpikeDB");
 	PyRun_SimpleString("sys.stdout = SpikeDB");
@@ -304,6 +305,8 @@ if (!this->setupPython)
 	//if (fp != NULL) fclose(fp);
 
 	if (!compact) addOutput("\n*** Analysis Plugin Completed ***");
+
+	Py_Finalize();
 }
 
 void uiAnalysis::print(const std::string &s)

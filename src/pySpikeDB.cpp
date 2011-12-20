@@ -329,8 +329,7 @@ bp::object pySpikeDB::getFiles(bool selOnly)
 	bp::list list;
 	if (selOnly) {
 		
-		std::vector<Gtk::TreeModel::Path> rows;
-		rows = mp_FileDetailsTree->treeSelection()->get_selected_rows();
+		std::vector<Gtk::TreeModel::Path> rows = mp_FileDetailsTree->treeSelection()->get_selected_rows();
 		for(unsigned int i = 0; i < rows.size(); i++)
 		{
 			Gtk::TreeModel::iterator iter = mp_FileDetailsTree->get_model()->get_iter(rows[i]);

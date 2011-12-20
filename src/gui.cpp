@@ -1329,13 +1329,9 @@ void GUI::on_menuImportFolder_activate()
 				std::cerr << "ERROR: Unable to open " << filename << std::endl;
 			} else{
 				while ((dptr = readdir(dirp))) {
-#ifdef _WIN32
-						importSpikeFile(filename, dptr->d_name);
-#else
 					if (dptr->d_type == DT_REG) {
 						importSpikeFile(filename, dptr->d_name);
 					}
-#endif
 				}
 				closedir(dirp);
 			}
@@ -1350,7 +1346,11 @@ void GUI::importSpikeFile(std::string filename, char* d_name)
 	SpikeData sd;
 	std::string fullfile(filename);
 
+#ifdef WIN32
+	fullfile += "\\";
+#else
 	fullfile += "/";
+#endif
 	fullfile += d_name;
 	if (sd.parse(fullfile.c_str())) {
 		std::vector<std::string> fileTokens;
