@@ -1,4 +1,4 @@
-#include <stdafx.h>
+#include "stdafx.h"
 
 #include "easyplotmm.h"
 #include <cairomm/context.h>
