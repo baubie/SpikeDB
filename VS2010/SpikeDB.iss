@@ -32,6 +32,7 @@ Source: C:\devel\SpikeDB\VS2010\Redist\lib\*.*; DestDir: {app}\lib; Flags: ignor
 Source: C:\devel\SpikeDB\VS2010\Redist\share\*.*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs
 Source: C:\devel\SpikeDB\media\SpikeDB.ico; DestDir: {app}\share;
 Source: C:\devel\SpikeDB\src\plugins\*.*; DestDir: {app}\plugins; Flags: ignoreversion recursesubdirs
+Source: C:\devel\SpikeDB\VS2010\Redist\python-2.7.2.msi; DestDir: {tmp}; Flags: deleteafterinstall; 
 
 [Icons]
 Name: {group}\SpikeDB; Filename: {app}\bin\SpikeDB.exe; WorkingDir: {app}; IconFilename: {app}\share\SpikeDB.ico; 
@@ -39,3 +40,6 @@ Name: "{group}\Uninstall SpikeDB"; Filename: {uninstallexe};
 
 [UninstallDelete]
 Name: {app}\spikedb.settings; Type: files;
+
+[Run]
+Filename: msiexec.exe; Description: "Python 2.7.2 Installer"; Parameters: "/i {tmp}\python-2.7.2.msi"; 
