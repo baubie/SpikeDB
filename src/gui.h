@@ -11,7 +11,7 @@
 #include "uiFilterFrame.h"
 #include "uiPropTable.h"
 #include "uiTags.h"
-#include "easyplotmm/easyplotmm.h"
+#include "spikePlot.h"
 #include "spikedata.h"
 
 #include <gtkmm.h>
@@ -60,6 +60,7 @@ class GUI : public Gtk::Window
 
         sqlite3 *db; /**< Pointer to out SQLite3 database. */
 		Settings settings; /**< Settings object. */
+		Gtk::Statusbar* mp_statusbar;
 
     protected:
 
@@ -86,7 +87,6 @@ class GUI : public Gtk::Window
         Gtk::TreeView* mp_AnimalsTree;
 		uiMenuBar* mp_MenuBar;
 		Gtk::MenuItem m_Menu_Import;
-		Gtk::Statusbar* mp_statusbar;
 
 		Gtk::HPaned *hpRight;
 		uiPropTable<Glib::ustring> m_uiAnimalDetails; /**< Animal details property table. */
@@ -101,7 +101,7 @@ class GUI : public Gtk::Window
         uiFileDetailsTreeView* mp_FileDetailsTree;
 		Gtk::Statusbar* mp_Statusbar;
         Gtk::HBox* mp_HBoxPlots;
-        EasyPlotmm* mp_PlotSpikes;
+        SpikePlot* mp_PlotSpikes;
 		uiAnalysis* mp_QuickAnalysis;
 
 

@@ -17,7 +17,7 @@ GUI::GUI()
 	this->set_icon(mrp_pbIcon);
 	*/
 
-	set_title("Spike Database - No database open");
+	set_title("SpikeDB - No database open");
 	init_gui();
 
 
@@ -101,12 +101,11 @@ void GUI::init_gui()
 	swFileDetails->add(*mp_FileDetailsTree);
 	vpMiddle->pack1(*swFileDetails);
 	Gtk::HBox *hbPlots = Gtk::manage(new Gtk::HBox());
-	mp_PlotSpikes = Gtk::manage(new EasyPlotmm());
+	mp_PlotSpikes = Gtk::manage(new SpikePlot());
 	mp_QuickAnalysis = Gtk::manage(new uiAnalysis(&db,mp_FileDetailsTree,true,&settings,this));
 	hbPlots->pack_start(*mp_PlotSpikes, true, true);
 	hbPlots->pack_start(*mp_QuickAnalysis, true, true);
 	vpMiddle->pack2(*hbPlots);
-
 
 
 	Gtk::ScrolledWindow* swDetailPanels = Gtk::manage( new Gtk::ScrolledWindow() );
@@ -147,14 +146,13 @@ void GUI::init_gui()
 	/**
 	 * Analysis Notebook Page
 	 */
-	mp_Analysis = Gtk::manage(new uiAnalysis(&db, mp_FileDetailsTree, false,&settings, this));
+	mp_Analysis = Gtk::manage(new uiAnalysis(&db, mp_FileDetailsTree,false,&settings,this));
 	notebook->append_page(*mp_Analysis, "Analysis", false);
 
 
 	/**
 	 * Connect Signals
 	 */
-
 	mp_PlotSpikes->signal_zoom_changed().connect(sigc::mem_fun(*this, &GUI::on_plotspikes_zoom_changed));
 
 	mp_uiFilterFrame->signal_changed().connect(sigc::mem_fun(*this, &GUI::on_filter_changed));
@@ -275,7 +273,7 @@ void GUI::on_menuNewDatabase_activate()
 			std::cerr << "CRITICAL ERROR: Unable to open database file." << std::endl;
 			return;
 		}
-		set_title("Spike Database - " + filename);
+		set_title("SpikeDB - " + filename);
 
 		sqlite3_stmt *stmt = 0;
 		std::vector<std::string> query;
@@ -333,7 +331,7 @@ bool GUI::openDatabase(std::string filename)
 		std::cerr << "CRITICAL ERROR: Unable to open database file." << std::endl;
 		return false;
 	}
-	set_title("Spike Database - " + filename);
+	set_title("SpikeDB - " + filename);
 
 	// Do we have to update the database?
 	sqlite3_stmt *stmt = 0;
@@ -556,9 +554,9 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 		std::vector<double> x_spikes;
 		std::vector<double> y_spikes;
 
-		EasyPlotmm::Pen spikesPen;
+		SpikePlot::Pen spikesPen;
 		spikesPen.linewidth = 0.0;
-		spikesPen.shape = EasyPlotmm::POINT;
+		spikesPen.shape = SpikePlot::POINT;
 		spikesPen.pointsize = 2;
 		spikesPen.filled = true;
 
@@ -589,16 +587,16 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 		mp_PlotSpikes->plot(x_spikes, y_spikes, spikesPen);
 
 		// Add stimuli to spikes plot
-		EasyPlotmm::Pen ch1Pen;
+		SpikePlot::Pen ch1Pen;
 		ch1Pen.linewidth = 2.0;
-		ch1Pen.shape = EasyPlotmm::NONE;
+		ch1Pen.shape = SpikePlot::NONE;
 		ch1Pen.color.r = 1;
 		ch1Pen.color.g = 0;
 		ch1Pen.color.b = 0;
 		ch1Pen.color.a = 1;
-		EasyPlotmm::Pen ch2Pen;
+		SpikePlot::Pen ch2Pen;
 		ch2Pen.linewidth = 2.0;
-		ch2Pen.shape = EasyPlotmm::NONE;
+		ch2Pen.shape = SpikePlot::NONE;
 		ch2Pen.color.r = 0;
 		ch2Pen.color.g = 0;
 		ch2Pen.color.b = 1;
@@ -1421,7 +1419,7 @@ void GUI::on_menuAbout_activate()
 	dialog.set_transient_for(*this);
 	dialog.set_title("About SpikeDB");
 	dialog.set_program_name("SpikeDB");
-	dialog.set_version("1.4");
+	dialog.set_version("1.5");
 	dialog.set_copyright(copyright);
 	dialog.set_website("http://www.aubie.ca");
 	dialog.run();

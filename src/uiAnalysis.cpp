@@ -1,6 +1,9 @@
 #include "stdafx.h"
 
 #include "uiAnalysis.h"
+#include "gui.h"
+
+bool uiAnalysis::setupPython = false;
 
 namespace bp=boost::python;
 using namespace bp;
@@ -53,7 +56,8 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
 
 	this->pack_start(*toolbar, false, false);
 
-	mp_plot = Gtk::manage( new EasyPlotmm() );
+	mp_plot = Gtk::manage( new SpikePlot() );
+	mp_plot->setStatusbar(&(dynamic_cast<GUI*>(parent)->mp_statusbar));
 	Gtk::ScrolledWindow *swOutput = Gtk::manage( new Gtk::ScrolledWindow() );
 	mrp_tbOutput = Gtk::TextBuffer::create();
 	tvOutput = Gtk::manage( new Gtk::TextView(mrp_tbOutput) );
@@ -82,7 +86,6 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
 		toolbar->set_toolbar_style(Gtk::TOOLBAR_ICONS);
 		toolbar->set_icon_size(Gtk::IconSize(Gtk::ICON_SIZE_SMALL_TOOLBAR));
 	}
-
 
 }
 
@@ -234,8 +237,6 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 {
 	if (m_filename == "" && plugin == "") return;
 
-	std::cout << "Attempting to run " << plugin << std::endl;
-
 	if (!compact) {
 		mrp_tbOutput->set_text("*** Initializing Analysis Plugin Library ***\n");
 		addOutput("Using Script: ");
@@ -248,15 +249,15 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 
 	Py_Initialize();
 
-	bp::object main_module((
-		bp::handle<>(bp::borrowed(PyImport_AddModule("__main__")))));
+	bp::object main_module(bp::handle<>(bp::borrowed(PyImport_AddModule("__main__"))));
 	bp::object main_namespace = main_module.attr("__dict__");
 
-if (!this->setupPython)
+if (!uiAnalysis::setupPython)
 {
 	main_namespace["pySpikeDB"] = class_<pySpikeDB>("pySpikeDB")
 		.def("getCells", &pySpikeDB::getCells)
 		.def("getFiles", &pySpikeDB::getFiles)
+		.def("getFilesSingleCell", &pySpikeDB::getFilesSingleCell)
 		.def("write", &pySpikeDB::print)
 		.def("mean", &pySpikeDB::mean)
 		.def("stddev", &pySpikeDB::stddev)
@@ -274,39 +275,34 @@ if (!this->setupPython)
 		.def("plotSetPointSize", &pySpikeDB::plotSetPointSize)
 		.def("plotSetLineWidth", &pySpikeDB::plotSetLineWidth)
 		.def("plotLine", &pySpikeDB::plotLine)
+		.def("setPointNames", &pySpikeDB::setPointNames)
 		.def("write", &pySpikeDB::print);
-	this->setupPython = true;
+	uiAnalysis::setupPython = true;
 }
+
 	pySpikeDB _pySpikeDB(db, mp_FileDetailsTree, mp_plot, mrp_tbOutput);
 	_pySpikeDB.setShowErr(tbShowErr->get_active());
 	_pySpikeDB.forceSpikesAbs(forceAbsBegin, forceAbsEnd);
 	main_namespace["SpikeDB"] = bp::ptr(&_pySpikeDB);
 	main_namespace["SpikeDB"].attr("__dict__")["VARYING"] = VARYING_STIMULUS;
-	main_namespace["SpikeDB"].attr("__dict__")["NOPOINT"] = EasyPlotmm::NOPOINT;
+	main_namespace["SpikeDB"].attr("__dict__")["NOPOINT"] = SpikePlot::NOPOINT;
 
 	PyRun_SimpleString("import sys");
 	PyRun_SimpleString("sys.stderr = SpikeDB");
 	PyRun_SimpleString("sys.stdout = SpikeDB");
 
-
 	if (!compact) addOutput("*** Running Analysis Plugin ***\n\n");
 
 	// Open the file and run the code
-	FILE *fp;
 	if (plugin == "") {
-		fp = fopen(m_filename.c_str(), "r");
-		if (fp != NULL) PyRun_SimpleFile(fp, m_filename.c_str());
+		PyObject* PyFileObject = PyFile_FromString((char *)m_filename.c_str(), "r");
+		PyRun_SimpleFile(PyFile_AsFile(PyFileObject), m_filename.c_str());
 	} else {
 		PyObject* PyFileObject = PyFile_FromString((char *)plugin.c_str(), "r");
 		PyRun_SimpleFile(PyFile_AsFile(PyFileObject), plugin.c_str());
-		//		fp = fopen(plugin.c_str(), "r");
-		//		if (fp != NULL) PyRun_SimpleFile(fp, plugin.c_str());
 	}
-	//if (fp != NULL) fclose(fp);
 
 	if (!compact) addOutput("\n*** Analysis Plugin Completed ***");
-
-	Py_Finalize();
 }
 
 void uiAnalysis::print(const std::string &s)
@@ -314,7 +310,7 @@ void uiAnalysis::print(const std::string &s)
 	addOutput(s);
 }
 
-EasyPlotmm* uiAnalysis::getPlot()
+SpikePlot* uiAnalysis::getPlot()
 {
 	return mp_plot;
 }

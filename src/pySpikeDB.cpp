@@ -8,7 +8,7 @@ using namespace bp;
 pySpikeDB::pySpikeDB() {}
 
 
-pySpikeDB::pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, EasyPlotmm *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput)
+pySpikeDB::pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, SpikePlot *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput)
 {
 	this->db = db;
 	this->mp_FileDetailsTree = fileDetailsTree;
@@ -63,7 +63,7 @@ void pySpikeDB::reset()
 	filterAbsBegin=filterAbsEnd=-1;
 	filterRelBegin=filterRelEnd=-1;
 	forceAbsBegin=forceAbsEnd=-1;
-	xmin=xmax=ymin=ymax=EasyPlotmm::AUTOMATIC;
+	xmin=xmax=ymin=ymax=SpikePlot::AUTOMATIC;
 }
 
 bp::object pySpikeDB::getCells()
@@ -362,6 +362,24 @@ bp::object pySpikeDB::getFiles(bool selOnly)
 	return list;
 }
 
+bp::object pySpikeDB::getFilesSingleCell(const std::string &animalID, const int &cellID)
+{
+	bp::list list;
+	Gtk::TreeIter iter;
+	for (iter = mp_FileDetailsTree->mrp_ListStore->children().begin(); 
+		 iter != mp_FileDetailsTree->mrp_ListStore->children().end(); 
+		 iter++)
+	{
+		Gtk::TreeModel::Row row = *iter;
+		if (row.get_value(mp_FileDetailsTree->m_Columns.m_col_animalID) == animalID) {
+			if (row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID) == cellID ) {
+				list.append(getFile(iter));
+			}
+		}
+	}
+	return list;
+}
+
 void pySpikeDB::plotSetRGBA(const float &r, const float &g, const float &b, const float &a)
 {
 	m_plotPen.color.r = r;
@@ -446,9 +464,9 @@ void pySpikeDB::plotHist(boost::python::list &/*x*/, boost::python::list &/*y*/,
 		std::cerr << "Error: No plot data." << std::endl;
 		return;
 	}
-	x = list2vec(pyX);
-	y = list2vec(pyY);
-	err = list2vec(pyErr);
+	x = list2vec<double>(pyX);
+	y = list2vec<double>(pyY);
+	err = list2vec<double>(pyErr);
 
 	if (bp::len(pyX) == bp::len(pyErr) && showErr)
 	{
@@ -474,9 +492,9 @@ void pySpikeDB::plotLine(bp::list &pyX, bp::list &pyY, bp::list &pyErr)
 		std::cerr << "Error: No plot data." << std::endl;
 		return;
 	}
-	x = list2vec(pyX);
-	y = list2vec(pyY);
-	err = list2vec(pyErr);
+	x = list2vec<double>(pyX);
+	y = list2vec<double>(pyY);
+	err = list2vec<double>(pyErr);
 
 	if (bp::len(pyX) == bp::len(pyErr) && showErr)
 	{
@@ -488,12 +506,25 @@ void pySpikeDB::plotLine(bp::list &pyX, bp::list &pyY, bp::list &pyErr)
 	}
 }
 
-std::vector<double> pySpikeDB::list2vec(boost::python::list &l)
+void pySpikeDB::setPointNames(bp::list &names)
 {
-	std::vector<double> r;
+	std::vector<std::string> n = list2vec<std::string>(names);
+	mp_plot->setPointNames(n);
+}
+
+void pySpikeDB::setPointData(boost::python::list &data)
+{
+	std::vector<std::string> d = list2vec<std::string>(data);
+	mp_plot->setPointData(d);
+}
+
+template<typename T>
+std::vector<T> pySpikeDB::list2vec(bp::list &l)
+{
+	std::vector<T> r;
 	for (int i = 0; i < bp::len(l); ++i)
 	{
-		r.push_back(extract<double>(l[i]));
+		r.push_back(extract<T>(l[i]));
 	}
 	return r;
 }
@@ -506,7 +537,7 @@ double pySpikeDB::mean(boost::python::list &v)
 	for (int i = 0; i < N; ++i)
 	{
 		double e = extract<double>(v[i]);
-		if (e != EasyPlotmm::NOPOINT)
+		if (e != SpikePlot::NOPOINT)
 		{
 			r += e;
 			rN++;
@@ -526,7 +557,7 @@ double pySpikeDB::stddev(boost::python::list &v)
 	for (int i = 0; i < N; ++i)
 	{
 		double e = extract<double>(v[i])-m;
-		if (e != EasyPlotmm::NOPOINT)
+		if (e != SpikePlot::NOPOINT)
 		{
 			r += e*e;
 			rN++;

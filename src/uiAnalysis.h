@@ -12,7 +12,7 @@
 #include <vector>
 #include "spikedata.h"
 #include "uiFileDetailsTreeView.h"
-#include "easyplotmm/easyplotmm.h"
+#include "spikePlot.h"
 #include "settings.h"
 #include <dirent.h>
 
@@ -30,7 +30,7 @@ class uiAnalysis : public Gtk::VBox {
 		uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, bool compact, Settings *settings, Gtk::Window* parent=NULL);
 		virtual ~uiAnalysis();
 
-		EasyPlotmm* getPlot();
+		SpikePlot* getPlot();
 		void runPlugin();
 		void forceSpikesAbs(double begin, double end);
 
@@ -63,7 +63,7 @@ class uiAnalysis : public Gtk::VBox {
 		Gtk::ToolButton *tbRun;
 		Gtk::ComboBoxText *tbPlugins;
 		Gtk::CheckButton *tbShowErr; 
-        EasyPlotmm* mp_plot;
+        SpikePlot* mp_plot;
 
 		/**
 		 * Signal handlers
@@ -81,8 +81,9 @@ class uiAnalysis : public Gtk::VBox {
 		void initPlugins();
 
 	private:
-		bool setupPython;
+		static bool setupPython;
 
 };
+
 
 #endif

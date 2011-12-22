@@ -2,7 +2,6 @@
 
 #include "easyplotmm.h"
 #include <cairomm/context.h>
-#include <iostream>
 
 const double EasyPlotmm::AUTOMATIC = (DBL_MAX -1);
 const double EasyPlotmm::NOPOINT = (DBL_MAX -2);
@@ -39,9 +38,13 @@ EasyPlotmm::EasyPlotmm() :
     this->add_events(Gdk::BUTTON_PRESS_MASK);
     this->add_events(Gdk::BUTTON_MOTION_MASK);
     this->add_events(Gdk::BUTTON_RELEASE_MASK);
+    this->add_events(Gdk::POINTER_MOTION_MASK);
+    this->add_events(Gdk::LEAVE_NOTIFY_MASK);
     this->signal_button_press_event().connect(sigc::mem_fun(*this, &EasyPlotmm::on_event_button_press) );
     this->signal_motion_notify_event().connect(sigc::mem_fun(*this, &EasyPlotmm::on_event_motion) );
+    this->signal_leave_notify_event().connect(sigc::mem_fun(*this, &EasyPlotmm::on_event_leave) );
     this->signal_button_release_event().connect(sigc::mem_fun(*this, &EasyPlotmm::on_event_button_release) );
+	this->signal_drew_point_under_cursor().connect(sigc::mem_fun(*this, &EasyPlotmm::on_cursor_over_point));
 
     // Fill the context menu
     {
@@ -64,6 +67,11 @@ EasyPlotmm::~EasyPlotmm()
 EasyPlotmm::type_signal_zoom_changed EasyPlotmm::signal_zoom_changed()
 {
 	return m_signal_zoom_changed;
+}
+
+EasyPlotmm::type_signal_drew_point_under_cursor EasyPlotmm::signal_drew_point_under_cursor()
+{
+	return m_signal_drew_point_under_cursor;
 }
 
 
@@ -169,6 +177,13 @@ bool EasyPlotmm::on_event_button_press(GdkEventButton* event)
     switch(event->type)
     {
         case GDK_BUTTON_PRESS:
+			if (curPointUnderMouse != -1 )
+			{
+				this->dataPointClicked(m_x[curSetUnderMouse][curPointUnderMouse], 
+									   m_y[curSetUnderMouse][curPointUnderMouse],
+									   m_names[curSetUnderMouse][curPointUnderMouse], 
+									   m_data[curSetUnderMouse][curPointUnderMouse]);
+			}
             if ((event->state & GDK_MOD1_MASK) && event->button == 1)
             {
                in_crosshairs = has_plot;
@@ -204,8 +219,19 @@ bool EasyPlotmm::on_event_button_press(GdkEventButton* event)
     return true;
 }
 
+bool EasyPlotmm::on_event_leave(GdkEventCrossing* /*event*/)
+{
+	motionID.disconnect();
+	return true;
+}
 bool EasyPlotmm::on_event_motion(GdkEventMotion* event)
 {
+	// Assume no point at first
+	curPointUnderMouse = -1;
+	mouse_x = event->x;
+	mouse_y = event->y;
+	motionID.disconnect();
+	motionID = Glib::signal_timeout().connect(sigc::mem_fun(*this, &EasyPlotmm::checkMousePosition), 100);	
     if (in_zoom)
     {
         zoom_end = event->x;
@@ -217,6 +243,21 @@ bool EasyPlotmm::on_event_motion(GdkEventMotion* event)
 		redraw();
 	} 
     return true;
+}
+
+bool EasyPlotmm::checkMousePosition()
+{
+	checkForPointUnderCursor = true;
+	redraw();	
+	// Cancel event
+	return false;
+}
+
+void EasyPlotmm::on_cursor_over_point(const int setIndex, const int pointIndex, const double x, const double y, const std::string name, const std::string data)
+{
+	checkForPointUnderCursor = false;
+	curPointUnderMouse = pointIndex;
+	curSetUnderMouse = setIndex;
 }
 
 bool EasyPlotmm::on_event_button_release(GdkEventButton* event)
@@ -347,11 +388,29 @@ void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<
     m_pens.push_back(p);
     m_exportable.push_back(exportable);
 
+	// Add our blank names and data to be overwritten by a call to setPointNames or setPointData
+	std::vector<std::string> blankStrings(x.size(),"");
+	m_names.push_back(blankStrings);
+	m_data.push_back(blankStrings);
+
     // Force Redraw
     redraw();
 
     has_plot = true;
 }
+
+void EasyPlotmm::setPointNames(std::vector<std::string> names)
+{
+	m_names.pop_back();
+	m_names.push_back(names);
+}
+
+void EasyPlotmm::setPointData(std::vector<std::string> data)
+{
+	m_data.pop_back();
+	m_data.push_back(data);
+}
+
 
 void EasyPlotmm::plotHist(std::vector<double> /*x*/, std::vector<double> /*y*/, std::vector<double> /*err*/, Pen /*p*/)
 {
@@ -545,14 +604,6 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         if (m_ymin != AUTOMATIC) ymin = m_ymin;
         if (m_ymax != AUTOMATIC) ymax = m_ymax;
 
-
-		/**
-        double maxX = fabs(xmin)>fabs(xmax)?fabs(xmin):fabs(xmax);
-        double maxY = fabs(ymin)>fabs(ymax)?fabs(ymin):fabs(ymax);
-        double minX = fabs(xmin)>fabs(xmax)?fabs(xmax):fabs(xmin);
-        double minY = fabs(ymin)>fabs(ymax)?fabs(ymax):fabs(ymin);
-		*/
-
         double maxX = (xmin)>(xmax)?(xmin):(xmax);
         double maxY = (ymin)>(ymax)?(ymin):(ymax);
         double minX = (xmin)>(xmax)?(xmax):(xmin);
@@ -585,19 +636,6 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         double xmax_bt = xmax;
         double ymax_st = ymax;
         double ymax_bt = ymax;
-
-		/**
-        for (double x = 0; x <= xmin; x+=Xst) xmin_st = x+Xst;
-        for (double x = 0; x <= xmin; x+=Xbt) xmin_bt = x;
-        for (double x = 0; x <= xmax; x+=Xst) xmax_st = x;
-        for (double x = 0; x <= xmax; x+=Xbt) xmax_bt = x;
-        for (double y = 0; y <= ymin; y+=Yst) ymin_st = y+Yst;
-        for (double y = 0; y <= ymin; y+=Ybt) ymin_bt = y;
-        for (double y = 0; y <= ymax; y+=Yst) ymax_st = y;
-        for (double y = 0; y <= ymax; y+=Ybt) ymax_bt = y;
-		if (xmin_bt < xmin) xmin_bt += Xbt;
-		if (ymin_bt < ymin) ymin_bt += Ybt;
-		*/
 
         // Determine the number of required decimal places
         int y_numdec = 0;
@@ -656,7 +694,9 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 
         // Translate the window so the bottom left of the graph is
         // (0,0) on the screen
-        cr->translate(pad_left+ylab_width+y_bt_size+2*label_pad+yname_width, height-pad_bottom-lab_height-x_bt_size-2*label_pad-xname_height);
+		double x_translate = pad_left+ylab_width+y_bt_size+2*label_pad+yname_width;
+		double y_translate = height-pad_bottom-lab_height-x_bt_size-2*label_pad-xname_height;
+        cr->translate(x_translate, y_translate);
 
         // Draw background and axes
         cr->save();
@@ -831,6 +871,19 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
                 cr->move_to((cull_x[0]-xmin)*xscale,(cull_y[0]-ymin)*yscale);
 				if (cull_y[0] != NOPOINT)
 				{
+					// Check for mouse positions
+					if (checkForPointUnderCursor) {
+						if (mouse_x-x_translate > (cull_x[0]-xmin)*xscale-m_pens[i].pointsize*0.5 &&
+							mouse_x-x_translate < (cull_x[0]-xmin)*xscale+m_pens[i].pointsize*0.5) {
+							if (mouse_y-y_translate > (cull_y[0]-ymin)*yscale-m_pens[i].pointsize*0.5 &&
+								mouse_y-y_translate < (cull_y[0]-ymin)*yscale+m_pens[i].pointsize*0.5) {
+								m_signal_drew_point_under_cursor.emit(i,0,m_x[i][0+firstPosition],
+																	  m_y[i][0+firstPosition],
+																	  m_names[i][0+firstPosition],
+																	  m_data[i][0+firstPosition]);
+							}
+						}
+					}
 					drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
 				} else {
 					drawshape(cr,m_pens[i].pointsize,NONE,m_pens[i].filled,m_pens[i].color);
@@ -840,6 +893,20 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 					cr->move_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
 					if (cull_y[j] != NOPOINT)
 					{
+						// Check for mouse positions
+						if (checkForPointUnderCursor) {
+
+							if (mouse_x-x_translate > (cull_x[j]-xmin)*xscale-m_pens[i].pointsize*0.5 &&
+								mouse_x-x_translate < (cull_x[j]-xmin)*xscale+m_pens[i].pointsize*0.5) {
+								if (mouse_y-y_translate > (cull_y[j]-ymin)*yscale-m_pens[i].pointsize*0.5 &&
+									mouse_y-y_translate < (cull_y[j]-ymin)*yscale+m_pens[i].pointsize*0.5) {
+									m_signal_drew_point_under_cursor.emit(i,j,m_x[i][j+firstPosition],
+																		  m_y[i][j+firstPosition],
+																		  m_names[i][j+firstPosition],
+																		  m_data[i][j+firstPosition]);
+								}
+							}
+						}
 						drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
 					} else {
 						drawshape(cr,m_pens[i].pointsize,NONE,m_pens[i].filled,m_pens[i].color);
@@ -848,7 +915,6 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 				cr->stroke();
             }
         }
-
 
         // Add zoom box
         if (in_zoom)

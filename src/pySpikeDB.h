@@ -15,7 +15,7 @@
 #include <sstream>
 #include "spikedata.h"
 #include "uiFileDetailsTreeView.h"
-#include "easyplotmm/easyplotmm.h"
+#include "spikePlot.h"
 
 #include <iostream>
 
@@ -27,11 +27,12 @@ class pySpikeDB {
 	public:
 
 		pySpikeDB();
-		pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, EasyPlotmm *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput);
+		pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, SpikePlot *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput);
 
 		void setShowErr(bool showErr);
 
 		boost::python::object getFiles(bool selOnly);
+		boost::python::object getFilesSingleCell(const std::string &animalID, const int &cellID);
 		boost::python::object getCells();
 
 		void reset();
@@ -53,6 +54,9 @@ class pySpikeDB {
 		void plotXLabel(const std::string &s);
 		void plotYLabel(const std::string &s);
 
+		void setPointNames(boost::python::list &names);
+		void setPointData(boost::python::list &data);
+
 		double stddev(boost::python::list &v);
 		double mean(boost::python::list &v);
 		boost::python::object ttest(boost::python::list &a, boost::python::list &b, bool eqvar);
@@ -63,7 +67,7 @@ class pySpikeDB {
 
 		sqlite3 **db;
 		uiFileDetailsTreeView* mp_FileDetailsTree;
-		EasyPlotmm *mp_plot;
+		SpikePlot *mp_plot;
 		Glib::RefPtr<Gtk::TextBuffer> mrp_tbOutput;
 
 		/**
@@ -76,7 +80,7 @@ class pySpikeDB {
 		/**
 		 * Current Plotting Values
 		 */
-		EasyPlotmm::Pen m_plotPen;
+		SpikePlot::Pen m_plotPen;
 		double xmin,xmax,ymin,ymax;
 		bool showErr;
 
@@ -84,7 +88,7 @@ class pySpikeDB {
 		 * Helper Functions
 		 */
 		boost::python::object getFile(const Gtk::TreeModel::iterator& iter);
-		std::vector<double> list2vec(boost::python::list &l);
+		template<typename T> std::vector<T> list2vec(boost::python::list &l);
 
 		/**
 		 * Used to find unique cells.
