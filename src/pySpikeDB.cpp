@@ -1,18 +1,19 @@
 #include "stdafx.h"
 
 #include "pySpikeDB.h"
+#include "gui.h"
 
 namespace bp=boost::python;
 using namespace bp;
 
 pySpikeDB::pySpikeDB() {}
 
-
-pySpikeDB::pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, Gtk::TreeView* animalTree, EasyPlotmm *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput)
+pySpikeDB::pySpikeDB(sqlite3** db, uiFileDetailsTreeView* fileDetailsTree, Gtk::TreeView* animalTree, AnimalColumns* animalColumns, EasyPlotmm *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput)
 {
 	this->db = db;
 	this->mp_FileDetailsTree = fileDetailsTree;
 	this->mp_AnimalTree = animalTree;
+	this->mp_AnimalColumns = animalColumns;
 	this->mp_plot = plot;
 	this->mrp_tbOutput = tbOutput;
 	this->reset();
@@ -82,6 +83,7 @@ bp::object pySpikeDB::getCells()
 	std::set<CellID> uniqueCells;
 
 	Gtk::TreeIter iter;
+	Gtk::TreeIter animalIter;
 	Gtk::TreeIter cellIter;
 
     for (iter = mp_FileDetailsTree->mrp_ListStore->children().begin(); 
@@ -103,11 +105,28 @@ bp::object pySpikeDB::getCells()
 			cell["ThresholdAttn"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_threshold_attn);
 			cell["Depth"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_depth);
 			cell["Location"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_location).c_str();
+			cell["TreePath"] = "";
 
-			std::string treepath = "";
-//			for (cellIter = mp_
-
-			cell["TreePath"] = treepath;
+			/* Search the Animal Tree for this cell */
+			/* We know the top level is "All" so start at the second level */
+			for (animalIter = mp_AnimalTree->get_model()->children().begin()->children().begin();
+				 animalIter != mp_AnimalTree->get_model()->children().begin()->children().end();
+				 animalIter++)
+			{
+				if ((*animalIter).get_value(mp_AnimalColumns->m_col_name) == row.get_value(mp_FileDetailsTree->m_Columns.m_col_animalID))
+				{
+					for (cellIter = animalIter->children().begin();
+						 cellIter != animalIter->children().end();
+						 cellIter++)
+					{
+						if(Glib::Ascii::strtod((*cellIter).get_value(mp_AnimalColumns->m_col_name)) == (double)row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID))
+						{
+							cell["TreePath"] = mp_AnimalTree->get_model()->get_path(cellIter).to_string().c_str();
+						}
+					}
+				}
+			}
+			/* End Search */
 
 			// Get the tags
 			bp::list tags;

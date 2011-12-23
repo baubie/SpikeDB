@@ -2,7 +2,7 @@
 #define GUI_H
 
 #define CURRENT_DB_VERSION 1.2
-#define CURRENT_VERSION 1.2
+#define CURRENT_VERSION 1.5
 
 
 #include "uiMenuBar.h"
@@ -13,6 +13,7 @@
 #include "uiTags.h"
 #include "easyplotmm/easyplotmm.h"
 #include "spikedata.h"
+#include "animalColumns.h"
 
 #include <gtkmm.h>
 #include <giomm.h>
@@ -172,17 +173,7 @@ class GUI : public Gtk::Window
 				uiPropTableRowType type);
 
 
-
-
-        // Animal Tree Model Columns
-        class AnimalColumns : public Gtk::TreeModel::ColumnRecord
-        {
-            public:
-                AnimalColumns()
-                { add(m_col_name); }
-                Gtk::TreeModelColumn<Glib::ustring> m_col_name;
-        } m_AnimalColumns;
-
+		AnimalColumns m_AnimalColumns;	
 
 
 };

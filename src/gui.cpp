@@ -21,7 +21,6 @@ GUI::GUI()
 	init_gui();
 
 
-
 	// Attempt to use the previously opened database.
 	if (settings.get_string("lastDatabase") != "") openDatabase(settings.get_string("lastDatabase"));
 
@@ -103,7 +102,7 @@ void GUI::init_gui()
 	vpMiddle->pack1(*swFileDetails);
 	Gtk::HBox *hbPlots = Gtk::manage(new Gtk::HBox());
 	mp_PlotSpikes = Gtk::manage(new EasyPlotmm());
-	mp_QuickAnalysis = Gtk::manage(new uiAnalysis(&db,mp_FileDetailsTree,mp_AnimalsTree,mp_statusbar,true,&settings,this));
+	mp_QuickAnalysis = Gtk::manage(new uiAnalysis(&db,mp_FileDetailsTree,mp_AnimalsTree,&m_AnimalColumns,mp_statusbar,true,&settings,this));
 	hbPlots->pack_start(*mp_PlotSpikes, true, true);
 	hbPlots->pack_start(*mp_QuickAnalysis, true, true);
 	vpMiddle->pack2(*hbPlots);
@@ -147,7 +146,7 @@ void GUI::init_gui()
 	/**
 	 * Analysis Notebook Page
 	 */
-	mp_Analysis = Gtk::manage(new uiAnalysis(&db, mp_FileDetailsTree,mp_AnimalsTree,mp_statusbar,false,&settings,this));
+	mp_Analysis = Gtk::manage(new uiAnalysis(&db, mp_FileDetailsTree,mp_AnimalsTree,&m_AnimalColumns,mp_statusbar,false,&settings,this));
 	notebook->append_page(*mp_Analysis, "Analysis", false);
 
 

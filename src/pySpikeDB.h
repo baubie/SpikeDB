@@ -16,6 +16,7 @@
 #include "spikedata.h"
 #include "uiFileDetailsTreeView.h"
 #include "easyplotmm/easyplotmm.h"
+#include "animalColumns.h"
 #include <iostream>
 
 #define VARYING_STIMULUS -99999999
@@ -26,7 +27,7 @@ class pySpikeDB {
 	public:
 
 		pySpikeDB();
-		pySpikeDB(sqlite3** db, uiFileDetailsTreeView* fileDetailsTree, Gtk::TreeView* animalTree, EasyPlotmm *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput);
+		pySpikeDB(sqlite3** db, uiFileDetailsTreeView* fileDetailsTree, Gtk::TreeView* animalTree, AnimalColumns* animalColumns, EasyPlotmm *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput);
 
 		void setShowErr(bool showErr);
 
@@ -67,6 +68,7 @@ class pySpikeDB {
 		sqlite3 **db;
 		uiFileDetailsTreeView* mp_FileDetailsTree;
 		Gtk::TreeView* mp_AnimalTree;
+		AnimalColumns* mp_AnimalColumns;
 		EasyPlotmm *mp_plot;
 		Glib::RefPtr<Gtk::TextBuffer> mrp_tbOutput;
 

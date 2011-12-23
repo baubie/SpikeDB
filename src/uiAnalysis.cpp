@@ -7,7 +7,7 @@ bool uiAnalysis::setupPython = false;
 namespace bp=boost::python;
 using namespace bp;
 
-uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, Gtk::TreeView* animalTree, Gtk::Statusbar* statusbar, bool compact, Settings *settings, Gtk::Window* parent=NULL)
+uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, Gtk::TreeView* animalTree, AnimalColumns* animalColumns, Gtk::Statusbar* statusbar, bool compact, Settings *settings, Gtk::Window* parent=NULL)
 {
 	this->db = db;
 	this->compact = compact;
@@ -15,6 +15,7 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, Gtk
 	mp_FileDetailsTree = fileDetailsTree;
 	mp_StatusBar = statusbar;
 	mp_AnimalTree = animalTree;
+	mp_AnimalColumns = animalColumns;
 	mp_parent = parent;
 	this->settings = settings;
 
@@ -302,7 +303,7 @@ if (!uiAnalysis::setupPython)
 	uiAnalysis::setupPython = true;
 }
 
-	pySpikeDB _pySpikeDB(db, mp_FileDetailsTree, mp_AnimalTree,mp_plot, mrp_tbOutput);
+	pySpikeDB _pySpikeDB(db, mp_FileDetailsTree, mp_AnimalTree,mp_AnimalColumns,mp_plot, mrp_tbOutput);
 	_pySpikeDB.setShowErr(tbShowErr->get_active());
 	_pySpikeDB.forceSpikesAbs(forceAbsBegin, forceAbsEnd);
 	main_namespace["SpikeDB"] = bp::ptr(&_pySpikeDB);
