@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "pySpikeDB.h"
 #include "gui.h"
+#include "pySpikeDB.h"
 
 namespace bp=boost::python;
 using namespace bp;

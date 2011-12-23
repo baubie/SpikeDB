@@ -100,6 +100,7 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\animalColumns.h" />
     <ClInclude Include="..\..\src\easyplotmm\easyplotmm.h" />
     <ClInclude Include="..\..\src\gui.h" />
     <ClInclude Include="..\..\src\pySpikeDB.h" />

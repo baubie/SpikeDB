@@ -56,6 +56,8 @@ void GUI::version_check()
 		file->load_contents(raw, bytes_read);
 		Glib::ustring buffer = raw;
 		std::cout << "Read in " << buffer << std::endl;
+		mp_statusbar->push(buffer);
+		return;
 	}
 	catch(const Glib::Exception& ex)
 	{
