@@ -14,7 +14,7 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
 	this->compact = compact;
 	forceAbsBegin = forceAbsEnd = -1;
 	mp_FileDetailsTree = fileDetailsTree;
-	m_parent = parent;
+	mp_parent = parent;
 	this->settings = settings;
 
 	this->setupPython = false;
@@ -56,13 +56,15 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, boo
 
 	this->pack_start(*toolbar, false, false);
 
-	mp_plot = Gtk::manage( new SpikePlot() );
-	mp_plot->setStatusbar(&(dynamic_cast<GUI*>(parent)->mp_statusbar));
+	mp_plot = Gtk::manage( new EasyPlotmm() );
 	Gtk::ScrolledWindow *swOutput = Gtk::manage( new Gtk::ScrolledWindow() );
 	mrp_tbOutput = Gtk::TextBuffer::create();
 	tvOutput = Gtk::manage( new Gtk::TextView(mrp_tbOutput) );
 	tvOutput->set_editable(false);
 	swOutput->add(*tvOutput);
+
+	mp_plot->signal_hovered_on_point().connect(sigc::mem_fun(*this, &uiAnalysis::on_hovered_on_point));
+	mp_plot->signal_moved_off_point().connect(sigc::mem_fun(*this, &uiAnalysis::on_moved_off_point));
 
 	if (compact)
 	{
@@ -166,6 +168,23 @@ void uiAnalysis::initPlugins()
 	}
 }
 
+void uiAnalysis::on_data_point_clicked(const double x, const double y, const std::string name, const std::string data)
+{
+}
+
+void uiAnalysis::on_hovered_on_point(const double x, const double y, const std::string name, const std::string data)
+{
+	// Update status bar
+	std::stringstream ss;
+	ss << "Data Point: (" << x << "," << y << ") " << name;
+	(dynamic_cast<GUI*>(mp_parent))->mp_statusbar->push(ss.str());
+}
+
+void uiAnalysis::on_moved_off_point()
+{
+	(dynamic_cast<GUI*>(mp_parent))->mp_statusbar->pop();
+}
+
 void uiAnalysis::on_showerr_clicked()
 {
 	mp_plot->clear();
@@ -177,7 +196,7 @@ void uiAnalysis::on_open_clicked()
 	Gtk::FileChooserDialog dialog("Select the analysis script",
 				      Gtk::FILE_CHOOSER_ACTION_OPEN);
 
-	dialog.set_transient_for(*m_parent);
+	dialog.set_transient_for(*mp_parent);
 
 	// Set default folder
 	dialog.set_current_folder(settings->get_string("lastScriptFolder", "."));
@@ -276,6 +295,7 @@ if (!uiAnalysis::setupPython)
 		.def("plotSetLineWidth", &pySpikeDB::plotSetLineWidth)
 		.def("plotLine", &pySpikeDB::plotLine)
 		.def("setPointNames", &pySpikeDB::setPointNames)
+		.def("setPointData", &pySpikeDB::setPointData)
 		.def("write", &pySpikeDB::print);
 	uiAnalysis::setupPython = true;
 }
@@ -285,7 +305,7 @@ if (!uiAnalysis::setupPython)
 	_pySpikeDB.forceSpikesAbs(forceAbsBegin, forceAbsEnd);
 	main_namespace["SpikeDB"] = bp::ptr(&_pySpikeDB);
 	main_namespace["SpikeDB"].attr("__dict__")["VARYING"] = VARYING_STIMULUS;
-	main_namespace["SpikeDB"].attr("__dict__")["NOPOINT"] = SpikePlot::NOPOINT;
+	main_namespace["SpikeDB"].attr("__dict__")["NOPOINT"] = EasyPlotmm::NOPOINT;
 
 	PyRun_SimpleString("import sys");
 	PyRun_SimpleString("sys.stderr = SpikeDB");
@@ -310,7 +330,7 @@ void uiAnalysis::print(const std::string &s)
 	addOutput(s);
 }
 
-SpikePlot* uiAnalysis::getPlot()
+EasyPlotmm* uiAnalysis::getPlot()
 {
 	return mp_plot;
 }

@@ -101,7 +101,7 @@ void GUI::init_gui()
 	swFileDetails->add(*mp_FileDetailsTree);
 	vpMiddle->pack1(*swFileDetails);
 	Gtk::HBox *hbPlots = Gtk::manage(new Gtk::HBox());
-	mp_PlotSpikes = Gtk::manage(new SpikePlot());
+	mp_PlotSpikes = Gtk::manage(new EasyPlotmm());
 	mp_QuickAnalysis = Gtk::manage(new uiAnalysis(&db,mp_FileDetailsTree,true,&settings,this));
 	hbPlots->pack_start(*mp_PlotSpikes, true, true);
 	hbPlots->pack_start(*mp_QuickAnalysis, true, true);
@@ -554,9 +554,9 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 		std::vector<double> x_spikes;
 		std::vector<double> y_spikes;
 
-		SpikePlot::Pen spikesPen;
+		EasyPlotmm::Pen spikesPen;
 		spikesPen.linewidth = 0.0;
-		spikesPen.shape = SpikePlot::POINT;
+		spikesPen.shape = EasyPlotmm::POINT;
 		spikesPen.pointsize = 2;
 		spikesPen.filled = true;
 
@@ -587,16 +587,16 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 		mp_PlotSpikes->plot(x_spikes, y_spikes, spikesPen);
 
 		// Add stimuli to spikes plot
-		SpikePlot::Pen ch1Pen;
+		EasyPlotmm::Pen ch1Pen;
 		ch1Pen.linewidth = 2.0;
-		ch1Pen.shape = SpikePlot::NONE;
+		ch1Pen.shape = EasyPlotmm::NONE;
 		ch1Pen.color.r = 1;
 		ch1Pen.color.g = 0;
 		ch1Pen.color.b = 0;
 		ch1Pen.color.a = 1;
-		SpikePlot::Pen ch2Pen;
+		EasyPlotmm::Pen ch2Pen;
 		ch2Pen.linewidth = 2.0;
-		ch2Pen.shape = SpikePlot::NONE;
+		ch2Pen.shape = EasyPlotmm::NONE;
 		ch2Pen.color.r = 0;
 		ch2Pen.color.g = 0;
 		ch2Pen.color.b = 1;

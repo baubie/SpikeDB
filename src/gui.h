@@ -11,7 +11,7 @@
 #include "uiFilterFrame.h"
 #include "uiPropTable.h"
 #include "uiTags.h"
-#include "spikePlot.h"
+#include "easyplotmm/easyplotmm.h"
 #include "spikedata.h"
 
 #include <gtkmm.h>
@@ -101,7 +101,7 @@ class GUI : public Gtk::Window
         uiFileDetailsTreeView* mp_FileDetailsTree;
 		Gtk::Statusbar* mp_Statusbar;
         Gtk::HBox* mp_HBoxPlots;
-        SpikePlot* mp_PlotSpikes;
+        EasyPlotmm* mp_PlotSpikes;
 		uiAnalysis* mp_QuickAnalysis;
 
 

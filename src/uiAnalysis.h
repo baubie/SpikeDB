@@ -12,7 +12,7 @@
 #include <vector>
 #include "spikedata.h"
 #include "uiFileDetailsTreeView.h"
-#include "spikePlot.h"
+#include "easyplotmm/easyplotmm.h"
 #include "settings.h"
 #include <dirent.h>
 
@@ -30,7 +30,7 @@ class uiAnalysis : public Gtk::VBox {
 		uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, bool compact, Settings *settings, Gtk::Window* parent=NULL);
 		virtual ~uiAnalysis();
 
-		SpikePlot* getPlot();
+		EasyPlotmm* getPlot();
 		void runPlugin();
 		void forceSpikesAbs(double begin, double end);
 
@@ -48,7 +48,7 @@ class uiAnalysis : public Gtk::VBox {
 		 */
 		sqlite3 **db;
 		uiFileDetailsTreeView* mp_FileDetailsTree;
-		Gtk::Window* m_parent;
+		Gtk::Window* mp_parent;
 		Glib::ustring m_filename;
 		bool compact;
 		Settings *settings;
@@ -63,7 +63,7 @@ class uiAnalysis : public Gtk::VBox {
 		Gtk::ToolButton *tbRun;
 		Gtk::ComboBoxText *tbPlugins;
 		Gtk::CheckButton *tbShowErr; 
-        SpikePlot* mp_plot;
+        EasyPlotmm* mp_plot;
 
 		/**
 		 * Signal handlers
@@ -72,6 +72,9 @@ class uiAnalysis : public Gtk::VBox {
 		void on_run_clicked();
 		void on_plugin_changed();
 		void on_showerr_clicked();
+		void on_data_point_clicked(const double x, const double y, const std::string name, const std::string data);
+		void on_hovered_on_point(const double x, const double y, const std::string name, const std::string data);
+		void on_moved_off_point();
 
 		/**
 		 * Helper functions

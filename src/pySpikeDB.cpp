@@ -8,7 +8,7 @@ using namespace bp;
 pySpikeDB::pySpikeDB() {}
 
 
-pySpikeDB::pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, SpikePlot *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput)
+pySpikeDB::pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, EasyPlotmm *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput)
 {
 	this->db = db;
 	this->mp_FileDetailsTree = fileDetailsTree;
@@ -63,7 +63,7 @@ void pySpikeDB::reset()
 	filterAbsBegin=filterAbsEnd=-1;
 	filterRelBegin=filterRelEnd=-1;
 	forceAbsBegin=forceAbsEnd=-1;
-	xmin=xmax=ymin=ymax=SpikePlot::AUTOMATIC;
+	xmin=xmax=ymin=ymax=EasyPlotmm::AUTOMATIC;
 }
 
 bp::object pySpikeDB::getCells()
@@ -537,7 +537,7 @@ double pySpikeDB::mean(boost::python::list &v)
 	for (int i = 0; i < N; ++i)
 	{
 		double e = extract<double>(v[i]);
-		if (e != SpikePlot::NOPOINT)
+		if (e != EasyPlotmm::NOPOINT)
 		{
 			r += e;
 			rN++;
@@ -557,7 +557,7 @@ double pySpikeDB::stddev(boost::python::list &v)
 	for (int i = 0; i < N; ++i)
 	{
 		double e = extract<double>(v[i])-m;
-		if (e != SpikePlot::NOPOINT)
+		if (e != EasyPlotmm::NOPOINT)
 		{
 			r += e*e;
 			rN++;

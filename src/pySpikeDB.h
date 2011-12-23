@@ -15,7 +15,7 @@
 #include <sstream>
 #include "spikedata.h"
 #include "uiFileDetailsTreeView.h"
-#include "spikePlot.h"
+#include "easyplotmm/easyplotmm.h"
 
 #include <iostream>
 
@@ -27,7 +27,7 @@ class pySpikeDB {
 	public:
 
 		pySpikeDB();
-		pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, SpikePlot *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput);
+		pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, EasyPlotmm *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput);
 
 		void setShowErr(bool showErr);
 
@@ -67,7 +67,7 @@ class pySpikeDB {
 
 		sqlite3 **db;
 		uiFileDetailsTreeView* mp_FileDetailsTree;
-		SpikePlot *mp_plot;
+		EasyPlotmm *mp_plot;
 		Glib::RefPtr<Gtk::TextBuffer> mrp_tbOutput;
 
 		/**
@@ -80,7 +80,7 @@ class pySpikeDB {
 		/**
 		 * Current Plotting Values
 		 */
-		SpikePlot::Pen m_plotPen;
+		EasyPlotmm::Pen m_plotPen;
 		double xmin,xmax,ymin,ymax;
 		bool showErr;
 

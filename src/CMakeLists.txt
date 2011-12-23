@@ -5,7 +5,7 @@ INCLUDE_DIRECTORIES (${PYTHON_INCLUDE_PATH} ${GTKMM_INCLUDE_DIRS}  ${SQLITE3_INC
 ADD_DEFINITIONS (-Wall -W -g)
 SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-SET (SRC spikedb.cpp gui.cpp uiMenuBar.cpp uiAnalysis.cpp uiFileDetailsTreeView.cpp uiFilterFrame.cpp uiTags.cpp spikedata.cpp settings.cpp easyplotmm/easyplotmm.cpp tokenize.cpp pySpikeDB.cpp spikePlot.cpp)
+SET (SRC spikedb.cpp gui.cpp uiMenuBar.cpp uiAnalysis.cpp uiFileDetailsTreeView.cpp uiFilterFrame.cpp uiTags.cpp spikedata.cpp settings.cpp easyplotmm/easyplotmm.cpp tokenize.cpp pySpikeDB.cpp)
 
 ADD_EXECUTABLE (spikedb ${SRC})
 

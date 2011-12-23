@@ -91,19 +91,27 @@ class EasyPlotmm : public Gtk::DrawingArea
 		typedef sigc::signal<void,double,double> type_signal_zoom_changed;
 		type_signal_zoom_changed signal_zoom_changed();
 
-		// Drew point under cursor 
-		typedef sigc::signal<void,int,int,double,double,std::string,std::string> type_signal_drew_point_under_cursor;
-		type_signal_drew_point_under_cursor signal_drew_point_under_cursor();
+		// Hovered over point 
+		typedef sigc::signal<void,double,double,std::string,std::string> type_signal_hovered_on_point;
+		type_signal_hovered_on_point signal_hovered_on_point();
 
+		// Moved off point 
+		typedef sigc::signal<void> type_signal_moved_off_point;
+		type_signal_moved_off_point signal_moved_off_point();
+
+		// Clicked point under cursor 
+		typedef sigc::signal<void,double,double,std::string,std::string> type_signal_clicked_point;
+		type_signal_clicked_point signal_clicked_point();
 
     protected:
 
 		// To be overridden for custom actions
-		virtual void dataPointClicked(const double /*x*/, const double /*y*/, const std::string /*name*/, const std::string /*data*/) {};
-		virtual void on_cursor_over_point(const int setIndex, const int pointIndex, const double x, const double y, const std::string name, const std::string data);
+		void cursorHoveredOverPoint(const int setIndex, const int pointIndex);
 
 		type_signal_zoom_changed m_signal_zoom_changed;
-		type_signal_drew_point_under_cursor m_signal_drew_point_under_cursor;
+		type_signal_hovered_on_point m_signal_hovered_on_point;
+		type_signal_moved_off_point m_signal_moved_off_point;
+		type_signal_clicked_point m_signal_clicked_point;
 
         // Override default signal handler
         virtual bool on_expose_event(GdkEventExpose* event);
@@ -154,6 +162,7 @@ class EasyPlotmm : public Gtk::DrawingArea
 		bool checkForPointUnderCursor;
 		int curPointUnderMouse;
 		int curSetUnderMouse;
+		bool hoveringOnPoint;
 };
 
 #endif

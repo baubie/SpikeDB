@@ -18,10 +18,4 @@ void SpikePlot::on_cursor_over_point(const int setIndex, const int pointIndex, c
 	// Call parent class
 	EasyPlotmm::on_cursor_over_point(setIndex,pointIndex,x,y,name,data);
 
-	// Update status bar
-	if (mp_statusbar) {
-		std::stringstream ss;
-		ss << "Data Point: (" << x << "," << y << ") " << name;
-		(*mp_statusbar)->push(ss.str());
-	}
 }

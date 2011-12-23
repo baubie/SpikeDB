@@ -44,7 +44,6 @@ EasyPlotmm::EasyPlotmm() :
     this->signal_motion_notify_event().connect(sigc::mem_fun(*this, &EasyPlotmm::on_event_motion) );
     this->signal_leave_notify_event().connect(sigc::mem_fun(*this, &EasyPlotmm::on_event_leave) );
     this->signal_button_release_event().connect(sigc::mem_fun(*this, &EasyPlotmm::on_event_button_release) );
-	this->signal_drew_point_under_cursor().connect(sigc::mem_fun(*this, &EasyPlotmm::on_cursor_over_point));
 
     // Fill the context menu
     {
@@ -69,9 +68,19 @@ EasyPlotmm::type_signal_zoom_changed EasyPlotmm::signal_zoom_changed()
 	return m_signal_zoom_changed;
 }
 
-EasyPlotmm::type_signal_drew_point_under_cursor EasyPlotmm::signal_drew_point_under_cursor()
+EasyPlotmm::type_signal_hovered_on_point EasyPlotmm::signal_hovered_on_point()
 {
-	return m_signal_drew_point_under_cursor;
+	return m_signal_hovered_on_point;
+}
+
+EasyPlotmm::type_signal_moved_off_point EasyPlotmm::signal_moved_off_point()
+{
+	return m_signal_moved_off_point;
+}
+
+EasyPlotmm::type_signal_clicked_point EasyPlotmm::signal_clicked_point()
+{
+	return m_signal_clicked_point;
 }
 
 
@@ -179,10 +188,10 @@ bool EasyPlotmm::on_event_button_press(GdkEventButton* event)
         case GDK_BUTTON_PRESS:
 			if (curPointUnderMouse != -1 )
 			{
-				this->dataPointClicked(m_x[curSetUnderMouse][curPointUnderMouse], 
-									   m_y[curSetUnderMouse][curPointUnderMouse],
-									   m_names[curSetUnderMouse][curPointUnderMouse], 
-									   m_data[curSetUnderMouse][curPointUnderMouse]);
+				m_signal_clicked_point.emit(m_x[curSetUnderMouse][curPointUnderMouse],
+										    m_y[curSetUnderMouse][curPointUnderMouse],
+										    m_names[curSetUnderMouse][curPointUnderMouse],
+										    m_data[curSetUnderMouse][curPointUnderMouse]);
 			}
             if ((event->state & GDK_MOD1_MASK) && event->button == 1)
             {
@@ -226,6 +235,10 @@ bool EasyPlotmm::on_event_leave(GdkEventCrossing* /*event*/)
 }
 bool EasyPlotmm::on_event_motion(GdkEventMotion* event)
 {
+	if (hoveringOnPoint) {
+		m_signal_moved_off_point.emit();
+		hoveringOnPoint = false;
+	}
 	// Assume no point at first
 	curPointUnderMouse = -1;
 	mouse_x = event->x;
@@ -253,11 +266,16 @@ bool EasyPlotmm::checkMousePosition()
 	return false;
 }
 
-void EasyPlotmm::on_cursor_over_point(const int setIndex, const int pointIndex, const double x, const double y, const std::string name, const std::string data)
+void EasyPlotmm::cursorHoveredOverPoint(const int setIndex, const int pointIndex)
 {
 	checkForPointUnderCursor = false;
 	curPointUnderMouse = pointIndex;
 	curSetUnderMouse = setIndex;
+	m_signal_hovered_on_point.emit(m_x[setIndex][pointIndex],
+								   m_y[setIndex][pointIndex],
+								   m_names[setIndex][pointIndex],
+								   m_data[setIndex][pointIndex]);
+	hoveringOnPoint = true;
 }
 
 bool EasyPlotmm::on_event_button_release(GdkEventButton* event)
@@ -877,10 +895,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 							mouse_x-x_translate < (cull_x[0]-xmin)*xscale+m_pens[i].pointsize*0.5) {
 							if (mouse_y-y_translate > (cull_y[0]-ymin)*yscale-m_pens[i].pointsize*0.5 &&
 								mouse_y-y_translate < (cull_y[0]-ymin)*yscale+m_pens[i].pointsize*0.5) {
-								m_signal_drew_point_under_cursor.emit(i,0,m_x[i][0+firstPosition],
-																	  m_y[i][0+firstPosition],
-																	  m_names[i][0+firstPosition],
-																	  m_data[i][0+firstPosition]);
+								this->cursorHoveredOverPoint(i,0+firstPosition);
 							}
 						}
 					}
@@ -900,10 +915,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 								mouse_x-x_translate < (cull_x[j]-xmin)*xscale+m_pens[i].pointsize*0.5) {
 								if (mouse_y-y_translate > (cull_y[j]-ymin)*yscale-m_pens[i].pointsize*0.5 &&
 									mouse_y-y_translate < (cull_y[j]-ymin)*yscale+m_pens[i].pointsize*0.5) {
-									m_signal_drew_point_under_cursor.emit(i,j,m_x[i][j+firstPosition],
-																		  m_y[i][j+firstPosition],
-																		  m_names[i][j+firstPosition],
-																		  m_data[i][j+firstPosition]);
+									this->cursorHoveredOverPoint(i,j+firstPosition);
 								}
 							}
 						}
