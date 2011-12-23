@@ -27,7 +27,7 @@
 class uiAnalysis : public Gtk::VBox {
 
 	public:
-		uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, bool compact, Settings *settings, Gtk::Window* parent=NULL);
+		uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, Gtk::TreeView* animalTree, Gtk::Statusbar* statusbar, bool compact, Settings *settings, Gtk::Window* parent);
 		virtual ~uiAnalysis();
 
 		EasyPlotmm* getPlot();
@@ -48,6 +48,8 @@ class uiAnalysis : public Gtk::VBox {
 		 */
 		sqlite3 **db;
 		uiFileDetailsTreeView* mp_FileDetailsTree;
+		Gtk::Statusbar* mp_StatusBar;
+		Gtk::TreeView* mp_AnimalTree;
 		Gtk::Window* mp_parent;
 		Glib::ustring m_filename;
 		bool compact;

@@ -1,19 +1,20 @@
 #include "stdafx.h"
 
 #include "uiAnalysis.h"
-#include "gui.h"
 
 bool uiAnalysis::setupPython = false;
 
 namespace bp=boost::python;
 using namespace bp;
 
-uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, bool compact, Settings *settings, Gtk::Window* parent)
+uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, Gtk::TreeView* animalTree, Gtk::Statusbar* statusbar, bool compact, Settings *settings, Gtk::Window* parent=NULL)
 {
 	this->db = db;
 	this->compact = compact;
 	forceAbsBegin = forceAbsEnd = -1;
 	mp_FileDetailsTree = fileDetailsTree;
+	mp_StatusBar = statusbar;
+	mp_AnimalTree = animalTree;
 	mp_parent = parent;
 	this->settings = settings;
 
@@ -170,6 +171,7 @@ void uiAnalysis::initPlugins()
 
 void uiAnalysis::on_data_point_clicked(const double x, const double y, const std::string name, const std::string data)
 {
+
 }
 
 void uiAnalysis::on_hovered_on_point(const double x, const double y, const std::string name, const std::string data)
@@ -177,12 +179,12 @@ void uiAnalysis::on_hovered_on_point(const double x, const double y, const std::
 	// Update status bar
 	std::stringstream ss;
 	ss << "Data Point: (" << x << "," << y << ") " << name;
-	(dynamic_cast<GUI*>(mp_parent))->mp_statusbar->push(ss.str());
+	mp_StatusBar->push(ss.str());
 }
 
 void uiAnalysis::on_moved_off_point()
 {
-	(dynamic_cast<GUI*>(mp_parent))->mp_statusbar->pop();
+	mp_StatusBar->pop();
 }
 
 void uiAnalysis::on_showerr_clicked()
@@ -300,7 +302,7 @@ if (!uiAnalysis::setupPython)
 	uiAnalysis::setupPython = true;
 }
 
-	pySpikeDB _pySpikeDB(db, mp_FileDetailsTree, mp_plot, mrp_tbOutput);
+	pySpikeDB _pySpikeDB(db, mp_FileDetailsTree, mp_AnimalTree,mp_plot, mrp_tbOutput);
 	_pySpikeDB.setShowErr(tbShowErr->get_active());
 	_pySpikeDB.forceSpikesAbs(forceAbsBegin, forceAbsEnd);
 	main_namespace["SpikeDB"] = bp::ptr(&_pySpikeDB);

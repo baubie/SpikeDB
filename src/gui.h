@@ -60,7 +60,6 @@ class GUI : public Gtk::Window
 
         sqlite3 *db; /**< Pointer to out SQLite3 database. */
 		Settings settings; /**< Settings object. */
-		Gtk::Statusbar* mp_statusbar;
 
     protected:
 
@@ -84,7 +83,7 @@ class GUI : public Gtk::Window
 		 * Widgets
 		 */
 		uiFilterFrame* mp_uiFilterFrame; /**< Filter widgets in top left corner. */
-        Gtk::TreeView* mp_AnimalsTree;
+		Gtk::TreeView* mp_AnimalsTree;
 		uiMenuBar* mp_MenuBar;
 		Gtk::MenuItem m_Menu_Import;
 
@@ -103,6 +102,7 @@ class GUI : public Gtk::Window
         Gtk::HBox* mp_HBoxPlots;
         EasyPlotmm* mp_PlotSpikes;
 		uiAnalysis* mp_QuickAnalysis;
+		Gtk::Statusbar* mp_statusbar;
 
 
         Glib::RefPtr<Gtk::TreeStore> mrp_AnimalTree;

@@ -8,10 +8,11 @@ using namespace bp;
 pySpikeDB::pySpikeDB() {}
 
 
-pySpikeDB::pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, EasyPlotmm *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput)
+pySpikeDB::pySpikeDB(sqlite3** db,uiFileDetailsTreeView* fileDetailsTree, Gtk::TreeView* animalTree, EasyPlotmm *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput)
 {
 	this->db = db;
 	this->mp_FileDetailsTree = fileDetailsTree;
+	this->mp_AnimalTree = animalTree;
 	this->mp_plot = plot;
 	this->mrp_tbOutput = tbOutput;
 	this->reset();
@@ -81,6 +82,8 @@ bp::object pySpikeDB::getCells()
 	std::set<CellID> uniqueCells;
 
 	Gtk::TreeIter iter;
+	Gtk::TreeIter cellIter;
+
     for (iter = mp_FileDetailsTree->mrp_ListStore->children().begin(); 
 	     iter != mp_FileDetailsTree->mrp_ListStore->children().end(); 
 		 iter++)
@@ -100,6 +103,11 @@ bp::object pySpikeDB::getCells()
 			cell["ThresholdAttn"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_threshold_attn);
 			cell["Depth"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_depth);
 			cell["Location"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_location).c_str();
+
+			std::string treepath = "";
+//			for (cellIter = mp_
+
+			cell["TreePath"] = treepath;
 
 			// Get the tags
 			bp::list tags;

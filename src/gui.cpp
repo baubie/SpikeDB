@@ -88,6 +88,7 @@ void GUI::init_gui()
 	Gtk::Notebook *notebook = Gtk::manage(new Gtk::Notebook());
 	hbMain->pack_start(*notebook, true, true);
 
+	mp_statusbar = Gtk::manage( new Gtk::Statusbar() );
 
 	/**
 	 * Browse Notebook Page
@@ -102,7 +103,7 @@ void GUI::init_gui()
 	vpMiddle->pack1(*swFileDetails);
 	Gtk::HBox *hbPlots = Gtk::manage(new Gtk::HBox());
 	mp_PlotSpikes = Gtk::manage(new EasyPlotmm());
-	mp_QuickAnalysis = Gtk::manage(new uiAnalysis(&db,mp_FileDetailsTree,true,&settings,this));
+	mp_QuickAnalysis = Gtk::manage(new uiAnalysis(&db,mp_FileDetailsTree,mp_AnimalsTree,mp_statusbar,true,&settings,this));
 	hbPlots->pack_start(*mp_PlotSpikes, true, true);
 	hbPlots->pack_start(*mp_QuickAnalysis, true, true);
 	vpMiddle->pack2(*hbPlots);
@@ -146,7 +147,7 @@ void GUI::init_gui()
 	/**
 	 * Analysis Notebook Page
 	 */
-	mp_Analysis = Gtk::manage(new uiAnalysis(&db, mp_FileDetailsTree,false,&settings,this));
+	mp_Analysis = Gtk::manage(new uiAnalysis(&db, mp_FileDetailsTree,mp_AnimalsTree,mp_statusbar,false,&settings,this));
 	notebook->append_page(*mp_Analysis, "Analysis", false);
 
 
@@ -154,7 +155,6 @@ void GUI::init_gui()
 	 * Connect Signals
 	 */
 	mp_PlotSpikes->signal_zoom_changed().connect(sigc::mem_fun(*this, &GUI::on_plotspikes_zoom_changed));
-
 	mp_uiFilterFrame->signal_changed().connect(sigc::mem_fun(*this, &GUI::on_filter_changed));
 	mp_FileDetailsTree->signal_file_set_hidden().connect(sigc::mem_fun(*this, &GUI::on_filedetails_set_hidden));
 	mp_FileDetailsTree->treeSelection()->signal_changed().connect(sigc::mem_fun(*this, &GUI::on_filedetails_selection_changed));
@@ -178,7 +178,6 @@ void GUI::init_gui()
 	/**
 	 * Statusbar
 	 */
-	mp_statusbar = Gtk::manage( new Gtk::Statusbar() );
 	vbMain->pack_start(*mp_statusbar,false,false);
 	mp_statusbar->push("Database ready.");
 
