@@ -1,7 +1,7 @@
 #ifndef GUI_H
 #define GUI_H
 
-#define CURRENT_DB_VERSION 1.2
+#define CURRENT_DB_VERSION 1.5
 #define CURRENT_VERSION 1.5
 
 
@@ -79,6 +79,8 @@ class GUI : public Gtk::Window
 		 */
 		void init_gui();
 		void init_menu();
+		void version_check();
+		double database_version();
 
 		/**
 		 * Widgets
@@ -93,6 +95,7 @@ class GUI : public Gtk::Window
 		uiTags m_AnimalTags;
 		uiPropTable<CellID> m_uiCellDetails; /**< Cell details property table. */
 		uiTags m_CellTags;
+		Gtk::CheckButton* mp_BadCell;
 		uiPropTable<FileID> m_uiFileDetails; /**< Animal details property table. */
 		uiTags m_FileTags;
 
@@ -104,7 +107,7 @@ class GUI : public Gtk::Window
         EasyPlotmm* mp_PlotSpikes;
 		uiAnalysis* mp_QuickAnalysis;
 		Gtk::Statusbar* mp_statusbar;
-
+		Gtk::Notebook *mp_Notebook;
 
         Glib::RefPtr<Gtk::TreeStore> mrp_AnimalTree;
         Glib::RefPtr<Gtk::TreeSelection> mrp_AnimalSelection;
@@ -136,6 +139,7 @@ class GUI : public Gtk::Window
 		/**
 		 * Signal handling
 		 */
+		void on_bad_cell_toggle();
 		void on_plotspikes_zoom_changed(double begin, double end);
         void on_menuNewDatabase_activate(); /**< Handle the New Database menu item. */
         void on_menuOpenDatabase_activate(); /**< Handle the Open Database menu item. */

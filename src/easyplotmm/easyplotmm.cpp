@@ -330,6 +330,8 @@ void EasyPlotmm::clear()
 {
 	m_x.clear();
 	m_y.clear();
+	m_names.clear();
+	m_data.clear();
 	m_err.clear();
 	m_pens.clear();
 	m_xname = "";
@@ -419,12 +421,14 @@ void EasyPlotmm::plot(std::vector<double> x, std::vector<double> y, std::vector<
 
 void EasyPlotmm::setPointNames(std::vector<std::string> names)
 {
+	if (names.empty()) return;
 	m_names.pop_back();
 	m_names.push_back(names);
 }
 
 void EasyPlotmm::setPointData(std::vector<std::string> data)
 {
+	if (data.empty()) return;
 	m_data.pop_back();
 	m_data.push_back(data);
 }

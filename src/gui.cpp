@@ -33,6 +33,7 @@ GUI::GUI()
 	uiReady = true;
 	updateTagCompletion();
 	this->on_filter_changed();
+	version_check();
 }
 
 GUI::~GUI()
@@ -40,6 +41,35 @@ GUI::~GUI()
 	sqlite3_close(db);
 }
 
+void GUI::version_check()
+{
+	bool newVersion = false;
+	mp_statusbar->push("Checking for latest version information...");
+
+	try {
+		Glib::RefPtr<Gio::File> file = Gio::File::create_for_uri("http://spikedb.aubie.ca/version");
+		if(!file)
+			std::cerr << "Gio::File::create_for_uri() returned an empty RefPtr." << std::endl;
+
+		gchar *raw;
+		gsize bytes_read;
+		file->load_contents(raw, bytes_read);
+		Glib::ustring buffer = raw;
+		std::cout << "Read in " << buffer << std::endl;
+	}
+	catch(const Glib::Exception& ex)
+	{
+		std::cerr << "Exception caught: " << ex.what() << std::endl; 
+	}
+	
+
+	mp_statusbar->pop();
+	if (newVersion) {
+		mp_statusbar->push("New version available at http://spikedb.aubie.ca!");
+	} else {
+		mp_statusbar->push("Your SpikeDB is the latest version available.");
+	}
+}
 
 void GUI::init_gui()
 {
@@ -84,8 +114,8 @@ void GUI::init_gui()
 	/**
 	 * Notebook
 	 */
-	Gtk::Notebook *notebook = Gtk::manage(new Gtk::Notebook());
-	hbMain->pack_start(*notebook, true, true);
+	mp_Notebook = Gtk::manage(new Gtk::Notebook());
+	hbMain->pack_start(*mp_Notebook, true, true);
 
 	mp_statusbar = Gtk::manage( new Gtk::Statusbar() );
 
@@ -102,7 +132,7 @@ void GUI::init_gui()
 	vpMiddle->pack1(*swFileDetails);
 	Gtk::HBox *hbPlots = Gtk::manage(new Gtk::HBox());
 	mp_PlotSpikes = Gtk::manage(new EasyPlotmm());
-	mp_QuickAnalysis = Gtk::manage(new uiAnalysis(&db,mp_FileDetailsTree,mp_AnimalsTree,&m_AnimalColumns,mp_statusbar,true,&settings,this));
+	mp_QuickAnalysis = Gtk::manage(new uiAnalysis(&db,mp_Notebook,mp_FileDetailsTree,mp_AnimalsTree,&m_AnimalColumns,mp_statusbar,true,&settings,this));
 	hbPlots->pack_start(*mp_PlotSpikes, true, true);
 	hbPlots->pack_start(*mp_QuickAnalysis, true, true);
 	vpMiddle->pack2(*hbPlots);
@@ -123,6 +153,12 @@ void GUI::init_gui()
 	Gtk::Frame* fCellDetails = Gtk::manage(new Gtk::Frame());
 	fCellDetails->set_label("Cell Details");
 	Gtk::VBox* vbCellDetails = Gtk::manage(new Gtk::VBox());
+	mp_BadCell = Gtk::manage(new Gtk::CheckButton("Hide files from this cell."));
+	mp_BadCell->set_active(false);
+	mp_BadCell->signal_toggled().connect(
+		sigc::mem_fun(*this, &GUI::on_bad_cell_toggle)
+			);
+	vbCellDetails->pack_start(*mp_BadCell);
 	vbCellDetails->pack_start(m_uiCellDetails);
 	vbCellDetails->pack_start(m_CellTags);
 	m_CellTags.set_parent(this);
@@ -141,13 +177,13 @@ void GUI::init_gui()
 	swDetailPanels->add(*vbRight);
 	swDetailPanels->set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
 	hpRight->pack2(*swDetailPanels, false, false);
-	notebook->append_page(*hpRight, "Browse Files", false);
+	mp_Notebook->append_page(*hpRight, "Browse Files", false);
 
 	/**
 	 * Analysis Notebook Page
 	 */
-	mp_Analysis = Gtk::manage(new uiAnalysis(&db, mp_FileDetailsTree,mp_AnimalsTree,&m_AnimalColumns,mp_statusbar,false,&settings,this));
-	notebook->append_page(*mp_Analysis, "Analysis", false);
+	mp_Analysis = Gtk::manage(new uiAnalysis(&db,mp_Notebook,mp_FileDetailsTree,mp_AnimalsTree,&m_AnimalColumns,mp_statusbar,false,&settings,this));
+	mp_Notebook->append_page(*mp_Analysis, "Analysis", false);
 
 
 	/**
@@ -276,7 +312,7 @@ void GUI::on_menuNewDatabase_activate()
 		sqlite3_stmt *stmt = 0;
 		std::vector<std::string> query;
 		query.push_back("CREATE TABLE animals (ID TEXT, species TEXT, sex TEXT, weight TEXT, age TEXT, notes TEXT, PRIMARY KEY(ID))");
-		query.push_back("CREATE TABLE cells (animalID TEXT, cellID INTEGER, notes TEXT, threshold TEXT, depth TEXT, freq TEXT, recordedby TEXT, location TEXT, threshold_attn TEXT, PRIMARY KEY(animalID, cellID))");
+		query.push_back("CREATE TABLE cells (animalID TEXT, cellID INTEGER, notes TEXT, threshold TEXT, depth TEXT, freq TEXT, recordedby TEXT, location TEXT, threshold_attn TEXT, bad INTEGER, PRIMARY KEY(animalID, cellID))");
 		query.push_back("CREATE TABLE files (animalID TEXT, cellID INTEGER, fileID INTEGER, notes TEXT, header BLOB, spikes BLOB, speakertype TEXT, azimuth TEXT, elevation TEXT, PRIMARY KEY(animalID, cellID, fileID))");
 		query.push_back( "CREATE TABLE properties (variable TEXT, value TEXT)");
 		query.push_back("INSERT INTO properties (variable, value) VALUES('version', '1.2')");
@@ -314,6 +350,22 @@ void GUI::on_menuOpenDatabase_activate()
 		break;
 	}
 }
+double GUI::database_version()
+{
+	// Do we have to update the database?
+	sqlite3_stmt *stmtVersionCheck = 0;
+	const char queryVersionCheck[] = "SELECT value FROM properties WHERE variable=?";
+	sqlite3_prepare_v2(db, queryVersionCheck, strlen(queryVersionCheck), &stmtVersionCheck, NULL);
+	sqlite3_bind_text(stmtVersionCheck, 1, "version", -1, SQLITE_TRANSIENT);
+	int r = sqlite3_step(stmtVersionCheck);
+	double version = 0;
+	if (r == SQLITE_ROW) {
+		version = sqlite3_column_double(stmtVersionCheck, 0);
+	}
+	sqlite3_finalize(stmtVersionCheck);
+	std::cout << "Found database version " << version << std::endl;
+	return version;
+}
 
 bool GUI::openDatabase(std::string filename)
 {
@@ -331,31 +383,69 @@ bool GUI::openDatabase(std::string filename)
 	}
 	set_title("SpikeDB - " + filename);
 
-	// Do we have to update the database?
-	sqlite3_stmt *stmt = 0;
-	const char query[] = "SELECT value FROM properties WHERE variable=?";
-	sqlite3_prepare_v2(db, query, strlen(query), &stmt, NULL);
-	sqlite3_bind_text(stmt, 1, "version", -1, SQLITE_TRANSIENT);
-	int r = sqlite3_step(stmt);
-	float version = 0;
-	if (r == SQLITE_ROW) {
-		version = (float)sqlite3_column_double(stmt, 0);
-	}
-	int count = 0;
-	while (version < CURRENT_DB_VERSION) {
-		++count;
-		if (count > 1000) {
-			Gtk::MessageDialog dialog(*this, "Unable to update database file.", false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
-			dialog.set_secondary_text("This could be due to database corruption or a version too old to get updated.  Contact Brandon Aubie at brandon@aubie.ca for more information.");
-			dialog.run();
-			return false;
+	double version = database_version();	
+
+	bool needUpgrade = false;
+	if (version < CURRENT_DB_VERSION) {
+		needUpgrade = true;
+		Gtk::MessageDialog dialog(*this, "Database Upgrade Required", false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK);
+		dialog.set_secondary_text("Thank you for upgrading SpikeDB. Before continuing, your database file needs to be updated. This is usually safe, but just in case it is HIGHLY recommended to back your database file up before continuing.");
+		dialog.run();
+		Gtk::MessageDialog dialog2(*this, "I wasn't kidding...", false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK);
+		dialog2.set_secondary_text("Please make sure you backed your database file up.  Then click OK.");
+		dialog2.run();
+		int count = 0;
+		while (version < CURRENT_DB_VERSION) {
+
+			std::cout << "Database version " << version << " requires updating." << std::endl;
+			if (version == 1.2) {
+				std::cout << "Upgrading database from version 1.2" << std::endl;
+				const char queryUpgrade[] = "UPDATE properties SET value=? WHERE variable=?";
+				sqlite3_stmt *stmtUpgrade = 0;
+				sqlite3_prepare_v2(db, queryUpgrade, strlen(queryUpgrade), &stmtUpgrade, NULL);
+				sqlite3_bind_double(stmtUpgrade, 1, 1.4);
+				sqlite3_bind_text(stmtUpgrade, 2, "version", -1, SQLITE_TRANSIENT);
+				if (sqlite3_step(stmtUpgrade) != SQLITE_DONE) count = 100000000; 
+				sqlite3_finalize(stmtUpgrade);
+			}
+
+			if (version == 1.4) {
+				std::cout << "Upgrading database from version 1.4" << std::endl;
+				const char queryUpgrade[] = "UPDATE properties SET value=? WHERE variable=?";
+				sqlite3_stmt *stmtUpgrade = 0;
+				sqlite3_prepare_v2(db, queryUpgrade, strlen(queryUpgrade), &stmtUpgrade, NULL);
+				sqlite3_bind_double(stmtUpgrade, 1, 1.5);
+				sqlite3_bind_text(stmtUpgrade, 2, "version", -1, SQLITE_TRANSIENT);
+				if (sqlite3_step(stmtUpgrade) != SQLITE_DONE) count = 100000000; 
+				sqlite3_finalize(stmtUpgrade);
+
+				const char queryNewCol1[] = "ALTER TABLE cells ADD COLUMN bad INTEGER";
+				sqlite3_stmt *stmtNewCol1 = 0;
+				sqlite3_prepare_v2(db, queryNewCol1, strlen(queryNewCol1), &stmtNewCol1, NULL);
+				if (sqlite3_step(stmtNewCol1) != SQLITE_DONE) count = 100000000; 
+				sqlite3_finalize(stmtNewCol1);
+			}
+
+			++count;
+			if (count > 1000) {
+				Gtk::MessageDialog dialogerr(*this, "Unable to update database file.", false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
+				dialogerr.set_secondary_text("This could be due to database corruption or a version too old to get updated.  Contact Brandon Aubie at brandon@aubie.ca for more information.");
+				dialogerr.run();
+				return false;
+			}
+			version = database_version();
 		}
+	}
+	if (needUpgrade)
+	{
+		Gtk::MessageDialog dialog(*this, "Database Upgraded!", false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK);
+		dialog.set_secondary_text("Looks like everything went smoothly.");
+		dialog.run();
 	}
 
 	// Remember this database for next time
 	settings.set("lastDatabase", filename);
 
-	sqlite3_finalize(stmt);
 
 	// Show the animals and cells from the database
 	populateAnimalTree();
@@ -869,6 +959,19 @@ void GUI::on_filedetails_set_hidden(bool hidden)
 	this->on_filter_changed();
 }
 
+void GUI::on_bad_cell_toggle() 
+{
+	sqlite3_stmt *stmt;
+	const char query[] = "UPDATE cells SET bad=? WHERE animalID=? AND cellID=?";
+	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
+	sqlite3_bind_int(stmt, 1, mp_BadCell->get_active() ? 1 : 0);
+	sqlite3_bind_text(stmt, 2, m_curAnimalID.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_int(stmt, 3, m_curCellID);
+	if (sqlite3_step(stmt) != SQLITE_DONE) std::cerr << "ERROR: Could not insert tag. " << sqlite3_errmsg(db) << std::endl;
+	sqlite3_finalize(stmt);
+	this->on_filter_changed();
+}
+
 void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID)
 {
 	/*
@@ -889,7 +992,7 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 	int numberOfFiles = sqlite3_column_int(stmt,0);
 	sqlite3_finalize(stmt);
 
-	char query[] = "SELECT depth, freq, notes, threshold, location, threshold_attn FROM cells WHERE animalID=? AND cellID=?";
+	char query[] = "SELECT depth, freq, notes, threshold, location, threshold_attn, bad FROM cells WHERE animalID=? AND cellID=?";
 	sqlite3_prepare_v2(db, query, -1, &stmt, 0);
 	sqlite3_bind_text(stmt, 1, animalID.c_str(), -1, SQLITE_TRANSIENT);
 	sqlite3_bind_int(stmt, 2, cellID);
@@ -932,6 +1035,8 @@ void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID
 			((char*)sqlite3_column_text(stmt, 2) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 2),
 			Editable
 		);
+
+		mp_BadCell->set_active(sqlite3_column_int(stmt,6) == 1);
 	}
 	sqlite3_finalize(stmt);
 
@@ -1043,7 +1148,7 @@ void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, c
 
 	if (animalID != "" && cellID != -1) {
 		const char query[] = "SELECT files.animalID, files.cellID, files.fileID, files.header, "
-					 "cells.depth, cells.threshold, cells.freq, files.speakertype, files.azimuth, files.elevation, cells.threshold_attn, cells.location FROM files, cells "
+					 "cells.depth, cells.threshold, cells.freq, files.speakertype, files.azimuth, files.elevation, cells.threshold_attn, cells.location, cells.bad FROM files, cells "
 				     "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
 				     "USING(animalID, cellID) "
 				     "WHERE files.animalID=? AND files.cellID=? AND file_count >= ? "
@@ -1055,7 +1160,7 @@ void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, c
 		sqlite3_bind_int(*stmt, 3, minFiles);
 	} else if (animalID != "" && cellID == -1) {
 		const char query[] = "SELECT files.animalID, files.cellID, files.fileID, files.header, "
-					 "cells.depth, cells.threshold, cells.freq, files.speakertype, files.azimuth, files.elevation, cells.threshold_attn, cells.location  FROM files, cells "
+					 "cells.depth, cells.threshold, cells.freq, files.speakertype, files.azimuth, files.elevation, cells.threshold_attn, cells.location,  cells.bad FROM files, cells "
 				     "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
 				     "USING(animalID, cellID) "
 				     "WHERE files.animalID=? AND file_count >= ? "
@@ -1066,7 +1171,7 @@ void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, c
 		sqlite3_bind_int(*stmt, 2, minFiles);
 	} else if (animalID == "" && cellID == -1) {
 		const char query[] = "SELECT files.animalID, files.cellID, files.fileID, files.header, "
-					 "cells.depth, cells.threshold, cells.freq, files.speakertype, files.azimuth, files.elevation, cells.threshold_attn, cells.location  FROM files, cells "
+					 "cells.depth, cells.threshold, cells.freq, files.speakertype, files.azimuth, files.elevation, cells.threshold_attn, cells.location, cells.bad  FROM files, cells "
 				     "JOIN(SELECT COUNT(*) AS file_count, animalID, cellID FROM files GROUP BY animalID, cellID) "
 				     "USING(animalID, cellID) "
 				     "WHERE file_count >= ? "
@@ -1184,6 +1289,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 
 			row[mp_FileDetailsTree->m_Columns.m_col_threshold_attn] = sqlite3_column_int(stmt, 10);
 			row[mp_FileDetailsTree->m_Columns.m_col_location] = ((char*)sqlite3_column_text(stmt, 11) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 11);
+			row[mp_FileDetailsTree->m_Columns.m_col_bad] = sqlite3_column_int(stmt, 12);
 
 			row[mp_FileDetailsTree->m_Columns.m_col_xaxis] = sd.xVariable();
 			row[mp_FileDetailsTree->m_Columns.m_col_trials] = sd.trials();

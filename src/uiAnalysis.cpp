@@ -7,11 +7,12 @@ bool uiAnalysis::setupPython = false;
 namespace bp=boost::python;
 using namespace bp;
 
-uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, Gtk::TreeView* animalTree, AnimalColumns* animalColumns, Gtk::Statusbar* statusbar, bool compact, Settings *settings, Gtk::Window* parent=NULL)
+uiAnalysis::uiAnalysis(sqlite3 **db, Gtk::Notebook* notebook, uiFileDetailsTreeView* fileDetailsTree, Gtk::TreeView* animalTree, AnimalColumns* animalColumns, Gtk::Statusbar* statusbar, bool compact, Settings *settings, Gtk::Window* parent=NULL)
 {
 	this->db = db;
 	this->compact = compact;
 	forceAbsBegin = forceAbsEnd = -1;
+	mp_Notebook = notebook;
 	mp_FileDetailsTree = fileDetailsTree;
 	mp_StatusBar = statusbar;
 	mp_AnimalTree = animalTree;
@@ -65,6 +66,7 @@ uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, Gtk
 	tvOutput->set_editable(false);
 	swOutput->add(*tvOutput);
 
+	mp_plot->signal_clicked_point().connect(sigc::mem_fun(*this, &uiAnalysis::on_data_point_clicked));
 	mp_plot->signal_hovered_on_point().connect(sigc::mem_fun(*this, &uiAnalysis::on_hovered_on_point));
 	mp_plot->signal_moved_off_point().connect(sigc::mem_fun(*this, &uiAnalysis::on_moved_off_point));
 
@@ -170,12 +172,16 @@ void uiAnalysis::initPlugins()
 	}
 }
 
-void uiAnalysis::on_data_point_clicked(const double x, const double y, const std::string name, const std::string data)
+void uiAnalysis::on_data_point_clicked(const double /*x*/, const double /*y*/, const std::string /*name*/, const std::string data)
 {
-
+	Gtk::TreeModel::Path path(data);
+	mp_AnimalTree->expand_to_path(path);
+	mp_AnimalTree->scroll_to_row(path);
+	mp_AnimalTree->get_selection()->select(path);
+	mp_Notebook->set_current_page(0);
 }
 
-void uiAnalysis::on_hovered_on_point(const double x, const double y, const std::string name, const std::string data)
+void uiAnalysis::on_hovered_on_point(const double x, const double y, const std::string name, const std::string /*data*/)
 {
 	// Update status bar
 	std::stringstream ss;
@@ -231,7 +237,11 @@ void uiAnalysis::on_run_clicked()
 void uiAnalysis::on_plugin_changed()
 {
 	mp_plot->clear();
-	runPlugin();
+	if (plugins[tbPlugins->get_active_row_number()].first != "")
+	{
+		// Don't automatically run custom scripts
+		runPlugin();
+	}
 }
 
 void uiAnalysis::addOutput(Glib::ustring t)

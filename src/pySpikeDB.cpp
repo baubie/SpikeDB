@@ -373,7 +373,11 @@ bp::object pySpikeDB::getFiles(bool selOnly)
 			 iter != mp_FileDetailsTree->mrp_ListStore->children().end(); 
 			 iter++)
 		{
-			list.append(getFile(iter));
+			if (iter->get_value(mp_FileDetailsTree->m_Columns.m_col_bad) == 0)
+			{
+				// Don't add bad cells
+				list.append(getFile(iter));
+			}
 			count++;
 			if (100*(count/total) >= next) 
 			{
@@ -400,7 +404,11 @@ bp::object pySpikeDB::getFilesSingleCell(const std::string &animalID, const int 
 		Gtk::TreeModel::Row row = *iter;
 		if (row.get_value(mp_FileDetailsTree->m_Columns.m_col_animalID) == animalID) {
 			if (row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID) == cellID ) {
-				list.append(getFile(iter));
+				if (iter->get_value(mp_FileDetailsTree->m_Columns.m_col_bad) == 0)
+				{
+					// Don't add bad cells
+					list.append(getFile(iter));
+				}
 			}
 		}
 	}
