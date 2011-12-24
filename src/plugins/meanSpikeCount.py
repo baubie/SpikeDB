@@ -15,4 +15,5 @@ for f in files:
 	SpikeDB.plotXLabel(f['xvar'])
 	SpikeDB.plotYLabel('Mean Spike Count')
 	SpikeDB.plotLine(x,means,err)
+	SpikeDB.plotYMin(0)
 

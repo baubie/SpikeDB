@@ -23,7 +23,6 @@ for f in files:
 	SpikeDB.plotYMax(1.0000001)
 	SpikeDB.plotLine(x,means,err)
 
-
 SpikeDB.plotSetRGBA(0,0,0,0.15);
 SpikeDB.plotSetPointSize(0);
 SpikeDB.plotSetLineWidth(4);
