@@ -1553,6 +1553,6 @@ void GUI::on_menuAbout_activate()
 	dialog.set_program_name("SpikeDB");
 	dialog.set_version("1.5");
 	dialog.set_copyright(copyright);
-	dialog.set_website("http://www.aubie.ca");
+	dialog.set_website("http://spikedb.aubie.ca");
 	dialog.run();
 }

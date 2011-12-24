@@ -380,6 +380,9 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 
 bp::object pySpikeDB::getFiles(bool selOnly)
 {
+	mp_AnimalTree->set_sensitive(false);
+	mp_FileDetailsTree->set_sensitive(false);
+
 	bp::list list;
 	if (selOnly) {
 		
@@ -417,11 +420,17 @@ bp::object pySpikeDB::getFiles(bool selOnly)
 		print("\n");
 	}
 
+	mp_AnimalTree->set_sensitive(true);
+	mp_FileDetailsTree->set_sensitive(true);
+
 	return list;
 }
 
 bp::object pySpikeDB::getFilesSingleCell(const std::string &animalID, const int &cellID)
 {
+	mp_AnimalTree->set_sensitive(false);
+	mp_FileDetailsTree->set_sensitive(false);
+
 	bp::list list;
 	Gtk::TreeIter iter;
 	for (iter = mp_FileDetailsTree->mrp_ListStore->children().begin(); 
@@ -439,6 +448,9 @@ bp::object pySpikeDB::getFilesSingleCell(const std::string &animalID, const int 
 			}
 		}
 	}
+
+	mp_AnimalTree->set_sensitive(true);
+	mp_FileDetailsTree->set_sensitive(true);
 	return list;
 }
 
