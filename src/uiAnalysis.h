@@ -104,8 +104,8 @@ class uiAnalysis : public Gtk::VBox {
 		void on_run_clicked();
 		void on_plugin_changed();
 		void on_showerr_clicked();
-		void on_data_point_clicked(const double x, const double y, const std::string name, const std::string data);
-		void on_hovered_on_point(const double x, const double y, const std::string name, const std::string data);
+		void on_data_point_clicked(const double &x, const double &y, const std::string &name, const std::string &data);
+		void on_hovered_on_point(const double &x, const double &y, const std::string &name, const std::string &data);
 		void on_moved_off_point();
 
 		/**

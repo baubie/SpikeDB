@@ -184,7 +184,6 @@ void uiAnalysis::initPlugins()
 						fin->set_newline_type(Gio::DATA_STREAM_NEWLINE_TYPE_CR_LF);
 #endif
 						std::string line;
-						std::string name;
 						fin->read_line(line);
 						if (line.substr(0,3) == "###")
 						{
@@ -201,7 +200,7 @@ void uiAnalysis::initPlugins()
 	}
 }
 
-void uiAnalysis::on_data_point_clicked(const double /*x*/, const double /*y*/, const std::string /*name*/, const std::string data)
+void uiAnalysis::on_data_point_clicked(const double &/*x*/, const double &/*y*/, const std::string &/*name*/, const std::string &data)
 {
 	Gtk::TreeModel::Path path(data);
 	mp_AnimalTree->expand_to_path(path);
@@ -210,7 +209,7 @@ void uiAnalysis::on_data_point_clicked(const double /*x*/, const double /*y*/, c
 	mp_Notebook->set_current_page(0);
 }
 
-void uiAnalysis::on_hovered_on_point(const double x, const double y, const std::string name, const std::string /*data*/)
+void uiAnalysis::on_hovered_on_point(const double &x, const double &y, const std::string &name, const std::string &/*data*/)
 {
 	// Update status bar
 	std::stringstream ss;
