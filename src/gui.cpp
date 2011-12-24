@@ -82,16 +82,15 @@ void GUI::version_check()
 		gsize bytes_read;
 		file->load_contents(raw, bytes_read);
 		Glib::ustring buffer = raw;
-		std::cout << "Read in " << buffer << std::endl;
-		mp_statusbar->push(buffer);
-		return;
+		if (Glib::Ascii::strtod(buffer) < CURRENT_VERSION) newVersion = true; 
 	}
 	catch(const Glib::Exception& ex)
 	{
 		std::cerr << "Exception caught: " << ex.what() << std::endl; 
+		mp_statusbar->push("Unable to check for new version online (known Mac bug).");
+		return;
 	}
 	
-
 	mp_statusbar->pop();
 	if (newVersion) {
 		mp_statusbar->push("New version available at http://spikedb.aubie.ca!");

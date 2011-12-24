@@ -215,10 +215,14 @@ bool EasyPlotmm::on_event_button_press(GdkEventButton* event)
         case GDK_BUTTON_PRESS:
 			if (curPointUnderMouse != -1 )
 			{
-				m_signal_clicked_point.emit(m_x[curSetUnderMouse][curPointUnderMouse],
-										    m_y[curSetUnderMouse][curPointUnderMouse],
-										    m_names[curSetUnderMouse][curPointUnderMouse],
-										    m_data[curSetUnderMouse][curPointUnderMouse]);
+				try {
+				m_signal_clicked_point.emit(m_x.at(curSetUnderMouse).at(curPointUnderMouse),
+										    m_y.at(curSetUnderMouse).at(curPointUnderMouse),
+										    m_names.at(curSetUnderMouse).at(curPointUnderMouse),
+										    m_data.at(curSetUnderMouse).at(curPointUnderMouse));
+				} catch (std::out_of_range o) {
+					m_signal_clicked_point.emit(0,0,"Error","");
+				}
 			}
             if ((event->state & GDK_MOD1_MASK) && event->button == 1)
             {
@@ -298,10 +302,15 @@ void EasyPlotmm::cursorHoveredOverPoint(const int setIndex, const int pointIndex
 	checkForPointUnderCursor = false;
 	curPointUnderMouse = pointIndex;
 	curSetUnderMouse = setIndex;
-	m_signal_hovered_on_point.emit(m_x[setIndex][pointIndex],
-								   m_y[setIndex][pointIndex],
-								   m_names[setIndex][pointIndex],
-								   m_data[setIndex][pointIndex]);
+
+	try {
+	m_signal_hovered_on_point.emit(m_x.at(setIndex).at(pointIndex),
+								   m_y.at(setIndex).at(pointIndex),
+								   m_names.at(setIndex).at(pointIndex),
+								   m_data.at(setIndex).at(pointIndex));
+	} catch (std::out_of_range o) {
+		m_signal_hovered_on_point.emit(0, 0, "Error", "");
+	}
 	hoveringOnPoint = true;
 }
 

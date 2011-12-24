@@ -147,6 +147,7 @@ void uiAnalysis::initPlugins()
 	Glib::ustring app_path(path);
 	search_paths.push_back(app_path+"/../plugins/");
 	search_paths.push_back("/Library/Application Support/SpikeDB/plugins/");
+	search_paths.push_back("./plugins/");
 #endif
 #ifdef linux
 	struct passwd *p  = getpwuid(getuid());
@@ -156,6 +157,7 @@ void uiAnalysis::initPlugins()
 	// Figure out where to search here
 	search_paths.push_back("/usr/local/share/spikedb/plugins/");
 	search_paths.push_back(homedir);
+	search_paths.push_back("./plugins/");
 #endif
 #ifdef WIN32
 	search_paths.push_back(".\\plugins\\");
@@ -354,13 +356,15 @@ if (!uiAnalysis::setupPython)
 	if (!compact) addOutput("*** Running Analysis Plugin ***\n\n");
 
 	// Open the file and run the code
+	char *filename;
+	char mode[] = "r";
 	if (plugin == "") {
-		PyObject* PyFileObject = PyFile_FromString((char *)m_filename.c_str(), "r");
-		PyRun_SimpleFile(PyFile_AsFile(PyFileObject), m_filename.c_str());
+		filename = const_cast<char *>(m_filename.c_str());
 	} else {
-		PyObject* PyFileObject = PyFile_FromString((char *)plugin.c_str(), "r");
-		PyRun_SimpleFile(PyFile_AsFile(PyFileObject), plugin.c_str());
+		filename = const_cast<char *>(plugin.c_str());
 	}
+	PyObject* PyFileObject = PyFile_FromString(filename, mode);
+	PyRun_SimpleFile(PyFile_AsFile(PyFileObject), filename);
 
 	if (!compact) addOutput("\n*** Analysis Plugin Completed ***");
 }

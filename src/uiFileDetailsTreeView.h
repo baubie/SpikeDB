@@ -28,9 +28,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef UIFILEDETAILSTREEVIEW_H
 #define UIFILEDETAILSTREEVIEW_H
 
+#ifndef WIN32
+// We don't need 64 bit integers
+#define SQLITE_INT64_TYPE int
+#endif
+#include <sqlite3.h>
+
 #include <gtkmm.h>
 #include <vector>
-#include <sqlite3.h>
 #include "spikedata.h"
 #include "uiTags.h"
 

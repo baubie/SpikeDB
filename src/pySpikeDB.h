@@ -40,11 +40,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <ostream>
 #include <sstream>
+#include <iostream>
+
 #include "spikedata.h"
 #include "uiFileDetailsTreeView.h"
 #include "easyplotmm/easyplotmm.h"
 #include "animalColumns.h"
-#include <iostream>
 
 #define VARYING_STIMULUS -99999999
 
