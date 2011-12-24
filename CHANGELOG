@@ -1,19 +1,19 @@
 Version 1.5
 Released: ??
-- Automatic database upgrades with new versions.
-- Check for new SpikeDB version automatically.
-- Graph data points can be given names and show up in status bar on mouse over
+* Automatic database upgrades with new versions.
+* Check for new SpikeDB version automatically.
+* Graph data points can be given names and show up in status bar on mouse over
 (see SpikeDB.setNames function).
-- Graph data points can be given data to be used by SpikeDB later.
+* Graph data points can be given data to be used by SpikeDB later.
 Currently supports being set to a TreePath from the SpikeDB.getCells()
 "TreePath" item and then clicking on a datapoint brings you to that cell.
-- Added a "bad" column to the Cells database to allow users to mark a bad cell
+* Added a "bad" column to the Cells database to allow users to mark a bad cell
 that should not be used in data analysis. Easier than hiding every file.
-- Fixed memory issues with Python scripts that could cause errors.
+* Fixed memory issues with Python scripts that could cause errors.
 
 
 Version 1.4
 Released December 20, 2011
-- Windows Build
-- Read in Spike 5.0 files
-- Miscellaneous bug and stability fixes
+* Windows Build
+* Read in Spike 5.0 files
+* Miscellaneous bug and stability fixes
