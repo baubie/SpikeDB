@@ -1,0 +1,2 @@
+./cleancmake
+cmake -DDEBUG=true -DNOBUNDLE=true .

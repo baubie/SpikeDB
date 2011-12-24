@@ -2,7 +2,15 @@ CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 
 LINK_DIRECTORIES (${PYTHON_LIBRARY_DIRS} ${GTKMM_LIBRARY_DIRS} ${SQLITE3_LIBRARY_DIRS} ${CAIRO_LIBRARY_DIRS} ${Boost_LIBARY_DIRS})
 INCLUDE_DIRECTORIES (${PYTHON_INCLUDE_PATH} ${GTKMM_INCLUDE_DIRS}  ${SQLITE3_INCLUDE_DIRS} ${CAIRO_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+
+
+IF(DEBUG)
 ADD_DEFINITIONS (-g -O -Wall --pedantic  -Wextra -Wno-long-long)
+ELSE(DEBUG)
+ADD_DEFINITIONS (-O3)
+ENDIF(DEBUG)
+
+
 SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 SET (SRC spikedb.cpp gui.cpp uiMenuBar.cpp uiAnalysis.cpp uiFileDetailsTreeView.cpp uiFilterFrame.cpp uiTags.cpp spikedata.cpp settings.cpp easyplotmm/easyplotmm.cpp tokenize.cpp pySpikeDB.cpp)
