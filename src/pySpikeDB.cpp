@@ -46,6 +46,16 @@ pySpikeDB::pySpikeDB(sqlite3** db, uiFileDetailsTreeView* fileDetailsTree, Gtk::
 	this->reset();
 }
 
+void pySpikeDB::addOptionCheckbox(const std::string &name, const std::string &description, bool def)
+{
+	checkboxOptions.push_back(std::pair< std::pair<Glib::ustring, Glib::ustring>, bool>(std::pair<Glib::ustring, Glib::ustring>(name, description), def));
+}
+
+void pySpikeDB::addOptionNumber(const std::string &name, const std::string &description, double def)
+{
+	numberOptions.push_back(std::pair< std::pair<Glib::ustring, Glib::ustring>, double>(std::pair<Glib::ustring, Glib::ustring>(name, description), def));
+}
+
 void pySpikeDB::setShowErr(bool showErr)
 {
 	this->showErr = showErr;
@@ -93,8 +103,27 @@ void pySpikeDB::reset()
 	filterRelBegin=filterRelEnd=-1;
 	forceAbsBegin=forceAbsEnd=-1;
 	xmin=xmax=ymin=ymax=EasyPlotmm::AUTOMATIC;
+	checkboxOptions.clear();
+	numberOptions.clear();
+
+	// Default
+	addOptionCheckbox("showErrorBars", "Show Error Bars", false);
 }
 
+bp::object pySpikeDB::getOptions()
+{
+	bp::dict opts;
+
+	std::vector< pySpikeDB::checkboxOption >::iterator cbIter;
+	for (cbIter = checkboxOptions.begin(); cbIter != checkboxOptions.end(); cbIter++) {
+		opts[cbIter->first.first.c_str()] = cbIter->second;
+	}
+	std::vector< numberOption >::iterator numIter;
+	for (numIter = numberOptions.begin(); numIter != numberOptions.end(); numIter++) {
+		opts[numIter->first.first.c_str()] = numIter->second;
+	}
+	return opts;
+}
 bp::object pySpikeDB::getCells()
 {
 	bp::list list;

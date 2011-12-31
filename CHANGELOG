@@ -3,6 +3,11 @@ Released: ??
 
 * Automatic database upgrades with new versions of SpikeDB at first launch.
 
+* Python scripts must now be contained within a SpikeDBRun() function.
+
+* Ability to create custom options for analysis scripts in a SpikeDBAdvanced()
+method that calls addOptionCheckbox() or addOptionNumber().
+
 * Check for new SpikeDB version automatically at launch.
 
 * Graph data points can be given names and show up in status bar on mouse over

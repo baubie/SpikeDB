@@ -46,7 +46,7 @@
 		\includegraphics[width=0.35\textwidth]{icon.pdf}\\
 		[4.0cm]
 		\hrule\vspace{0.4cm}
-		{ \huge \bfseries SpikeDB Version 1.4 User Manual }\\[0.4cm]
+		{ \huge \bfseries SpikeDB Version 1.5 User Manual }\\[0.4cm]
 		\hrule 
 		\vspace{4cm}
 		\textsc{\LARGE McMaster University}\\
@@ -134,7 +134,14 @@ By default, this plot will display the mean number of spikes per trial. Other an
 
 \chapter{Analysis Plug-In Module}
 \section{Basic Usage}
-The Analysis Plug-In Module allows you to use the Python scripting language write custom analysis routines on one or many Spike recording files. Each Python script will have the |SpikeDB| object available to it.  This object provides access to all of the data held within SpikeDB as well as a host of methods useful for analysis.
+The Analysis Plug-In Module allows you to use the Python scripting language write custom analysis routines on one or many Spike recording files. Each Python script will have the |SpikeDB| object available to it and must contain a function called |SpikeDBRun| that will be called by SpikeDB when your module is executed\footnote{This requirement was added in SpikeDB 1.5}.  The |SpikeDB| object provides access to all of the data held within SpikeDB as well as a host of methods useful for analysis.
+
+The most basic shell of an application will look like the following:
+\begin{lstlisting}[caption=Example]
+def SpikeDBRun():
+	SpikeDB.print(``Hello World!'')
+\end{lstlisting}
+
 
 \subsubsection{Quick Analysis Plugins}
 Several Quick Analysis plugins are included with SpikeDB and it is easy to add your own. Quick Analysis plugins are shown in the drop-down box on the Quick Analysis and Analysis toolbars and are defined by scripts located in the plugins/ folder of the SpikeDB application. The location of this folder depends on your operating system. Refer to Table \ref{tblPluginLocations} for details.
@@ -159,6 +166,33 @@ Second, when retrieving files with the |getFiles()| method you will generally al
 
 \section{Reference}
 All functions listed in this section are accessed via the SpikeDB object.  For example, |SpikeDB.getFiles(True)| calls the |getFiles()| method.
+
+\clearpage
+\subsection{\method{void}{addOptionCheckbox}{string name}{string description}{bool default}}
+\subsubsection{Parameters}
+\begin{center}
+\begin{tabular}{by}
+	|name| & Variable name for accessing value later.\\
+	|description| & Name to show in SpikeDB option windows.\\
+	|default| & Set to |True| to have the box checked by default.\\
+\end{tabular}
+\end{center}
+\subsubsection{Description}
+Call this function in |SpikeDBAdvanced()| to add a checkbox option to the Advanced options panel.
+
+
+\clearpage
+\subsection{\method{void}{addOptionNumber}{string name}{string description}{float default}}
+\subsubsection{Parameters}
+\begin{center}
+\begin{tabular}{by}
+	|name| & Variable name for accessing value later.\\
+	|description| & Name to show in SpikeDB option windows.\\
+	|default| & Default value for this parameter.\\
+\end{tabular}
+\end{center}
+\subsubsection{Description}
+Call this function in |SpikeDBAdvanced()| to add a numerical option to the Advanced options panel.
 
 \clearpage
 \subsection{\method{void}{filterSpikesAbs}{float minSpikeTime}{float maxSpikeTime}}

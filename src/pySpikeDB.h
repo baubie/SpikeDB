@@ -62,8 +62,12 @@ class pySpikeDB {
 		boost::python::object getFiles(bool selOnly);
 		boost::python::object getFilesSingleCell(const std::string &animalID, const int &cellID);
 		boost::python::object getCells();
+		boost::python::object getOptions();
 
 		void reset();
+
+		void addOptionCheckbox(const std::string &name, const std::string &description, bool def);
+		void addOptionNumber(const std::string &name, const std::string &description, double def);
 
 		void forceSpikesAbs(const float &begin, const float &end);
 		void filterSpikesAbs(const float &begin, const float &end);
@@ -90,6 +94,17 @@ class pySpikeDB {
 		boost::python::object ttest(boost::python::list &a, boost::python::list &b, bool eqvar);
 
 		void print(const std::string &s);
+
+
+		/**
+		 * Option arrays
+		 * Public to be accessed from uiAnalysis
+		 */
+		typedef std::pair< std::pair<Glib::ustring, Glib::ustring>, bool> checkboxOption; 
+		typedef std::pair< std::pair<Glib::ustring, Glib::ustring>, double> numberOption; 
+		std::vector< checkboxOption > checkboxOptions;
+		std::vector< numberOption > numberOptions;
+
 
 	private:
 

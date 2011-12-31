@@ -669,10 +669,6 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 
         double xorder = 1;
         double yorder = 1;
-		/**
-        if (maxX < 0) maxX = 1;
-        if (maxY < 0) maxY = 1;
-		*/
 
         if ((maxX-minX) > 10) while ((maxX-minX) / xorder > 10) { xorder *= 10; }
         if ((maxX-minX) != 0 && (maxX-minX) <= 10) while ((maxX-minX) / xorder <= 1) { xorder /= 10; }

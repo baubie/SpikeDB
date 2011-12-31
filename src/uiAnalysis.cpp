@@ -55,6 +55,7 @@ uiAnalysis::uiAnalysis(sqlite3 **db, Gtk::Notebook* notebook, uiFileDetailsTreeV
 
 	tbOpen = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::OPEN) );
 	tbRun = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::EXECUTE) );
+	tbOptions = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::PREFERENCES) );
 	tbRun->set_sensitive(false);
 
 	if (!compact) {
@@ -75,14 +76,10 @@ uiAnalysis::uiAnalysis(sqlite3 **db, Gtk::Notebook* notebook, uiFileDetailsTreeV
 	tbPlugins->set_focus_on_click(false);
 	toolbar->append(*tbPluginItem);
 
-	tbShowErr = Gtk::manage( new Gtk::CheckButton() );
-	tbShowErr->set_label("Show Error Bars");
-	tbShowErr->set_active(false);
-	Gtk::ToolItem *tbShowErrItem = Gtk::manage( new Gtk::ToolItem() );
-	tbShowErr->signal_clicked().connect(sigc::mem_fun(*this, &uiAnalysis::on_showerr_clicked));
-	tbShowErrItem->add(*tbShowErr);
-	tbShowErr->set_focus_on_click(false);
-	toolbar->append(*tbShowErrItem);
+	Gtk::ToolItem *tbOptionsItem = Gtk::manage( new Gtk::ToolItem() );
+	tbOptions->signal_clicked().connect(sigc::mem_fun(*this, &uiAnalysis::on_options_clicked));
+	tbOptionsItem->add(*tbOptions);
+	toolbar->append(*tbOptionsItem);
 
 	this->pack_start(*toolbar, false, false);
 
@@ -123,7 +120,6 @@ uiAnalysis::uiAnalysis(sqlite3 **db, Gtk::Notebook* notebook, uiFileDetailsTreeV
 }
 
 uiAnalysis::~uiAnalysis() {}
-
 
 void uiAnalysis::initPlugins()
 {
@@ -222,10 +218,12 @@ void uiAnalysis::on_moved_off_point()
 	mp_StatusBar->pop();
 }
 
-void uiAnalysis::on_showerr_clicked()
+void uiAnalysis::on_options_clicked()
 {
 	mp_plot->clear();
-	runPlugin();
+	if (!plugins.empty()) {
+		runScript(true,plugins[tbPlugins->get_active_row_number()].first);
+	}
 }
 
 void uiAnalysis::on_open_clicked()
@@ -259,7 +257,7 @@ void uiAnalysis::on_open_clicked()
 void uiAnalysis::on_run_clicked()
 {
 	mp_plot->clear();
-	runScript();
+	runScript(false);
 }
 
 void uiAnalysis::on_plugin_changed()
@@ -289,11 +287,11 @@ void uiAnalysis::forceSpikesAbs(double begin, double end)
 void uiAnalysis::runPlugin()
 {
 	if (!plugins.empty()) {
-		runScript(plugins[tbPlugins->get_active_row_number()].first);
+		runScript(false,plugins[tbPlugins->get_active_row_number()].first);
 	}
 }
 
-void uiAnalysis::runScript(const Glib::ustring &plugin)
+void uiAnalysis::runScript(bool showAdvanced, const Glib::ustring &plugin)
 {
 	if (m_filename == "" && plugin == "") return;
 
@@ -315,8 +313,11 @@ void uiAnalysis::runScript(const Glib::ustring &plugin)
 if (!uiAnalysis::setupPython)
 {
 	main_namespace["pySpikeDB"] = class_<pySpikeDB>("pySpikeDB")
+		.def("addOptionCheckbox", &pySpikeDB::addOptionCheckbox)
+		.def("addOptionNumber", &pySpikeDB::addOptionNumber)
 		.def("getCells", &pySpikeDB::getCells)
 		.def("getFiles", &pySpikeDB::getFiles)
+		.def("getOptions", &pySpikeDB::getOptions)
 		.def("getFilesSingleCell", &pySpikeDB::getFilesSingleCell)
 		.def("write", &pySpikeDB::print)
 		.def("mean", &pySpikeDB::mean)
@@ -342,7 +343,8 @@ if (!uiAnalysis::setupPython)
 }
 
 	pySpikeDB _pySpikeDB(db, mp_FileDetailsTree, mp_AnimalTree,mp_AnimalColumns,mp_plot, mrp_tbOutput);
-	_pySpikeDB.setShowErr(tbShowErr->get_active());
+
+
 	_pySpikeDB.forceSpikesAbs(forceAbsBegin, forceAbsEnd);
 	main_namespace["SpikeDB"] = bp::ptr(&_pySpikeDB);
 	main_namespace["SpikeDB"].attr("__dict__")["VARYING"] = VARYING_STIMULUS;
@@ -364,6 +366,67 @@ if (!uiAnalysis::setupPython)
 	}
 	PyObject* PyFileObject = PyFile_FromString(filename, mode);
 	PyRun_SimpleFile(PyFile_AsFile(PyFileObject), filename);
+
+	// Run the SpikeDBAdvanced function
+	PyRun_SimpleString("SpikeDBAdvanced()");
+
+
+	if (showAdvanced) {
+
+		Gtk::Dialog dialog("Script Options", *mp_parent, true);
+
+		/**
+		 * Create the custom widgets here
+		 */
+		
+		Gtk::VBox vbox;
+
+		std::vector< pySpikeDB::checkboxOption >::iterator cbIter;
+		std::vector< Gtk::CheckButton* > cbOptions;
+		for (cbIter = _pySpikeDB.checkboxOptions.begin(); cbIter != _pySpikeDB.checkboxOptions.end(); cbIter++) {
+			Gtk::CheckButton* cbOption = Gtk::manage( new Gtk::CheckButton(cbIter->first.second) );
+			cbOption->set_active(cbIter->second);
+			cbOptions.push_back(cbOption);
+			cbOption->show();
+			vbox.pack_end(*cbOption, false, true);
+		}
+		std::vector< pySpikeDB::numberOption >::iterator numIter;
+		std::vector< Gtk::Entry* > numberOptions;
+		for (numIter = _pySpikeDB.numberOptions.begin(); numIter != _pySpikeDB.numberOptions.end(); numIter++) {
+			Gtk::HBox *hbox = Gtk::manage(new Gtk::HBox() );
+			Gtk::Label *label = Gtk::manage(new Gtk::Label(numIter->first.second) );
+			label->show();
+			hbox->pack_start(*label,false,true);
+			Gtk::Entry* numberOption = Gtk::manage( new Gtk::Entry() );
+			numberOption->set_text(Glib::Ascii::dtostr(numIter->second));
+			numberOption->set_width_chars(6);
+			numberOptions.push_back(numberOption);
+			numberOption->show();
+			hbox->pack_end(*numberOption, false, true);
+			hbox->show();
+			vbox.pack_end(*hbox, false, true);
+		}
+		dialog.get_vbox()->pack_start(vbox);
+		vbox.show();
+		dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+		dialog.add_button("Run Script", Gtk::RESPONSE_OK);
+
+		if (dialog.run() == Gtk::RESPONSE_OK) {
+			// Update the option values
+			for(unsigned int i = 0; i < cbOptions.size(); ++i) {
+				_pySpikeDB.checkboxOptions.at(i).second = cbOptions.at(i)->get_active();
+			}
+			for(unsigned int i = 0; i < numberOptions.size(); ++i) {
+				_pySpikeDB.numberOptions.at(i).second = Glib::Ascii::strtod(numberOptions.at(i)->get_text());
+			}
+
+			PyRun_SimpleString("SpikeDBRun()");
+		}
+
+	} else {
+		// Run the SpikeDBRun function
+		PyRun_SimpleString("SpikeDBRun()");
+	}
 
 	if (!compact) addOutput("\n*** Analysis Plugin Completed ***");
 }
