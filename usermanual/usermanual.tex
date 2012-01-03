@@ -375,6 +375,20 @@ A list of dictionary objects is returned where each dictionary object represents
 This function operates exactly the same as |getFiles()| except it returns only those files associated with the given cell that are listed on the browse page. In general, plugins will be run with all files listed on the browse page so that all cells are available to the script. 
 
 \clearpage
+\subsection{\method{list}{getOptions}}
+\subsubsection{Description}
+A list of dictionary objects is returned where each dictionary object represents an option by the name given when |addOptionCheckbox()| or |addOptionNumber()| was called in |SpikeDBAdvanced()|. 
+\begin{lstlisting}[caption=Example]
+	def SpikeDBAdvanced():
+		SpikeDB.addOptionNumber('someNumber','Enter a number', 0)
+
+	def SpikeDBRun():
+		options = SpikeDB.getOptions()
+		print options['someNumber']
+\end{lstlisting}
+
+
+\clearpage
 \subsection[\method{float}{mean}]{\method{float}{mean}{list values}}
 \subsubsection{Parameters}
 \begin{table}[h]
