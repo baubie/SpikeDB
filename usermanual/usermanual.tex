@@ -7,14 +7,16 @@
 \usepackage{courier}
 \usepackage{fancyvrb}
 \usepackage{xparse}
+\usepackage[compact]{titlesec}
 \usepackage{fullpage}
 \usepackage{colortbl}
+\usepackage{setspace}
 \usepackage{graphicx}
 \DefineShortVerb{\|}
 \DeclareCaptionFont{white}{\color{white}}
 \DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
 \captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
-\lstset{language=Python, basicstyle=\ttfamily, showstringspaces=false,showspaces=false}
+\lstset{language=Python, basicstyle=\ttfamily, showstringspaces=false,showspaces=false,tabsize=2}
 \lstdefinestyle{numbers}{numberstyle=\tiny}
 \renewcommand*\arraystretch{1.75}
 \NewDocumentCommand \method{ m m g g g g g g g }{%
@@ -32,6 +34,15 @@
 	}%
 }
 
+\titleformat{\chapter}[display]
+{\singlespacing\bfseries\Huge}
+{\filright\Large\chaptertitlename\ \Large\thechapter}
+{0pt}
+{\filright}
+[]
+\titlespacing*{\chapter}{0pt}{0pt}{*2}
+
+
 \definecolor{lightblue}{rgb}{0.9,0.9,0.9}
 \definecolor{lightyellow}{rgb}{0.95,0.95,0.95}
 \graphicspath{ {./screenshots/} }
@@ -45,15 +56,14 @@
 	\begin{center}
 		\includegraphics[width=0.35\textwidth]{icon.pdf}\\
 		[4.0cm]
-		\hrule\vspace{0.4cm}
+		\vspace{0.4cm}
 		{ \huge \bfseries SpikeDB Version 1.5 User Manual }\\[0.4cm]
-		\hrule 
 		\vspace{4cm}
 		\textsc{\LARGE McMaster University}\\
 		[0.5cm]
 		\textsc{\Large Written by Brandon Aubie}\\
 		\vspace{0.5cm}
-		{\large brandon@aubie.ca}
+		{\large http://spikedb.aubie.ca}
 
 	\end{center}
 \end{titlepage}
@@ -63,7 +73,7 @@
 \chapter{Introduction}
 \begin{figure}[h]
 \begin{center}
-	\includegraphics[width=0.5\textwidth]{main_window.png}
+	\includegraphics[width=0.95\textwidth]{main_window.png}
 \end{center}
 \caption{Main SpikeDB window showing a spike raster and mean spike count analysis plot.}
 \end{figure}
@@ -74,7 +84,7 @@ SpikeDB is a database and analysis tool for electrophysiological recordings done
 \chapter{User Interface}
 \begin{figure}[h]
 \begin{center}
-	\includegraphics[width=0.6\textwidth]{main_window_letters.png}
+	\includegraphics[width=0.65\textwidth]{main_window_letters.png}
 \end{center}
 \end{figure}
 \begin{itemize}
@@ -82,9 +92,10 @@ SpikeDB is a database and analysis tool for electrophysiological recordings done
 	\item[B)] Animal List - List of animals and cells currently imported.  Select an animal or a cell by selecting the arrow head next to each item. Only the selected animals or cells appear in the Browse Files list. Select |All Animals| to display all animals, cells and files in the Browse Files list.
 	\item[C)] Browse Files list - A list of files currently selected and filtered.
 	\item[D)] Spike Raster Plot - Displays each spike as a black dot and each stimulus as a line (red = Channel 1, blue = Channel 2).
-	\item[E)] Quick Analysis Plot - Displays results of analysis script selected in the drop-down box or a custom script selected with the |Open| button in its toolbar.
-	\item[F)] Animal Details Panel - Displays animal details of the currently selected file and allows the entry of custom data.
-	\item[G)] Cell Details Panel - Displays cell details of the currently selected file and allows the entry of custom data.
+	\item[E)] Quick Analysis Plot - Displays results of the analysis script selected in the drop-down box. There is a small panel at the very bottom that can be dragged up to view any text outputted by the analysis script via the |print| command.
+	\item[F)] File Details Panel - Displays details of the currently selected file and allows the entry of custom data.
+	\item[G)] Cell Details Panel - Displays cell details of the currently selected cell and allows the entry of custom data.
+	\item[H)] Animal Details Panel - Displays animal details of the currently selected file and allows the entry of custom data.
 \end{itemize}
 
 		
@@ -121,6 +132,7 @@ Turn this option on to show files in the Browse Files list even if they have bee
 \subsection{General Usage}
 \begin{itemize}
 	\item \textbf{Zoom} - Left click and drag horizontally to zoom in on a subsection of data.  
+	\item \textbf{View Value} - To view the exact value of a data point, hover the mouse cursor over the data point and the value will appear in the SpikeDB status bar in the bottom left. 
 	\item \textbf{Export Data} - Right click anywhere on the plot to bring up the options menu and select |Export Data|. This allows you to export the plotted data in CSV files that are ready for import into Excel or for use in other graphing software such as GLE.
 \end{itemize}
 
@@ -128,7 +140,7 @@ Turn this option on to show files in the Browse Files list even if they have bee
 The spike raster is a built-in plot that displays the stimuli as red (channel 1) and blue (channel 2) lines and spikes as black dots. Zooming in on this plot will limit the spike times available to the Quick Analysis plot on the right.
 
 \subsection{Quick Analysis}
-By default, this plot will display the mean number of spikes per trial. Other analysis plugins are available in the drop down box or additional plugins can be loaded by clicking the |Open| icon. Generally, it is wise to use plugins that operate on selected files only here as no text display is available. For more general analysis on many files use the Analysis tab. That said, if multiple files of the same type are selected, the plots can be overlaid for easy comparison. Turn on the |Show Error Bars| option to display the error bars in graphs (generally shown as standard deviation).
+By default, this plot will display the mean number of spikes per trial. Other analysis plugins are available in the drop down box or additional plugins can be loaded by clicking the |Open| icon. Generally, it is wise to use plugins that operate on selected files only here as no text display is available. For more general analysis on many files use the Analysis tab. That said, if multiple files of the same type are selected, the plots can be overlaid for easy comparison. Click the |Advanced| button beside the drop down list and check off the |Show Error Bars| option to display the error bars in graphs (generally shown as standard deviation).
 
 
 
@@ -168,7 +180,7 @@ Second, when retrieving files with the |getFiles()| method you will generally al
 All functions listed in this section are accessed via the SpikeDB object.  For example, |SpikeDB.getFiles(True)| calls the |getFiles()| method.
 
 \clearpage
-\subsection{\method{void}{addOptionCheckbox}{string name}{string description}{bool default}}
+\subsection[\method{void}{addOptionCheckbox}]{\method{void}{addOptionCheckbox}{string name}{string description}{bool default}}
 \subsubsection{Parameters}
 \begin{center}
 \begin{tabular}{by}
@@ -182,7 +194,7 @@ Call this function in |SpikeDBAdvanced()| to add a checkbox option to the Advanc
 
 
 \clearpage
-\subsection{\method{void}{addOptionNumber}{string name}{string description}{float default}}
+\subsection[\method{void}{addOptionNumber}]{\method{void}{addOptionNumber}{string name}{string description}{float default}}
 \subsubsection{Parameters}
 \begin{center}
 \begin{tabular}{by}
@@ -195,7 +207,7 @@ Call this function in |SpikeDBAdvanced()| to add a checkbox option to the Advanc
 Call this function in |SpikeDBAdvanced()| to add a numerical option to the Advanced options panel.
 
 \clearpage
-\subsection{\method{void}{filterSpikesAbs}{float minSpikeTime}{float maxSpikeTime}}
+\subsection[\method{void}{filterSpikesAbs}]{\method{void}{filterSpikesAbs}{float minSpikeTime}{float maxSpikeTime}}
 \subsubsection{Parameters}
 \begin{center}
 \begin{tabular}{by}
@@ -212,7 +224,7 @@ Filters the spikes for every file based on the absolute time of the spike in the
 \end{lstlisting}
 
 \clearpage
-\subsection{\method{void}{filterSpikesRel}{float minSpikeTime}{float maxSpikeTime}}
+\subsection[\method{void}{filterSpikesRel}]{\method{void}{filterSpikesRel}{float minSpikeTime}{float maxSpikeTime}}
 \subsubsection{Parameters}
 \begin{table}[h]
 \begin{center}
@@ -242,10 +254,11 @@ A list of dictionary objects is returned where each dictionary object represents
 				`AnimalID' & The animal ID where the cell was found.\\
 				`CellID' & The ID of the cell.\\
 				`CarFreq' & The cell's carrier frequency as manually entered in the cell details window.\\
-				`TreePath' & Code used to point to the node in the Cell Selection tree in SpikeDB. Place this into a plotted data point's `data` value to jump to that cell when the point is clicked on.\\
+				`Depth' & The cell's depth as manually entered in the cell details window.\\
+				`Location' & The cell's location as manually entered in the cell details window.\\
 				`Threshold' & The cell's threshold as manually entered in the cell details window.\\
 				`ThresholdAttn' & The cell's threshold relative to attenuation as manually entered in the cell details window.\\
-				`Depth' & The cell's depth as manually entered in the cell details window.\\
+				`TreePath' & Code used to point to the node in the Cell Selection tree in SpikeDB. Place this into a plotted data point's `data` value to jump to that cell when the point is clicked on.\\
 				`tags' & A list of tags.\\ 
 			\end{tabular}
 	\label{tblGetCells}
@@ -258,12 +271,12 @@ A list of dictionary objects is returned where each dictionary object represents
 
 
 \clearpage
-\subsection{\method{list}{getFiles}{bool onlySelected}}
+\subsection[\method{list}{getFiles}]{\method{list}{getFiles}{bool onlySelected}}
 \subsubsection{Parameters}
 \begin{table}[h]
 \begin{center}
 \begin{tabular}{by}
-		|onlySelected| & \begin{minipage}[t]{0.8\columnwidth}When |TRUE|, only return a list of the files selected in the files list on the browse page. This is useful when writing a Quick Analysis plugin.\end{minipage}\\
+		|onlySelected| & \begin{minipage}[t]{0.8\columnwidth}When |TRUE|, only return a list of the files selected in the files list on the browse page. This is useful when writing a Quick Analysis plugin. When |FALSE|, return all files listed on the browse page.\end{minipage}\\
 	\end{tabular}
 \end{center}
 \end{table}
@@ -347,9 +360,22 @@ A list of dictionary objects is returned where each dictionary object represents
 	selFiles = SpikeDB.getFiles(True)
 \end{lstlisting}
 
+\clearpage
+\subsection[\method{list}{getFilesSingleCell}]{\method{list}{getFiles}{string animalID}{int cellID}}
+\subsubsection{Parameters}
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{by}
+		|animalID| & \begin{minipage}[t]{0.8\columnwidth}The animal ID of the desired cell.\end{minipage}\\
+		|cellID| & \begin{minipage}[t]{0.8\columnwidth}The cell ID of the desired cell.\end{minipage}\\
+	\end{tabular}
+\end{center}
+\end{table}
+\subsubsection{Description}
+This function operates exactly the same as |getFiles()| except it returns only those files associated with the given cell that are listed on the browse page. In general, plugins will be run with all files listed on the browse page so that all cells are available to the script. 
 
 \clearpage
-\subsection{\method{float}{mean}{list values}}
+\subsection[\method{float}{mean}]{\method{float}{mean}{list values}}
 \subsubsection{Parameters}
 \begin{table}[h]
 \begin{center}
@@ -379,7 +405,7 @@ Clears the SpikeDB plot and resets the plot variables and style settings. This i
 
 
 \clearpage
-\subsection{\method{void}{plotLine}{list xValues}{list yValues}{list errValues}}
+\subsection[\method{void}{plotLine}]{\method{void}{plotLine}{list xValues}{list yValues}{list errValues}}
 \subsubsection{Parameters}
 \begin{table}[h]
 \begin{center}
@@ -407,7 +433,7 @@ Plot a series of (X,Y) points in the style determined by prior plot setup functi
 
 
 \clearpage
-\subsection{\method{void}{plotSetLineWidth}{float lineWidth}}
+\subsection[\method{void}{plotSetLineWidth}]{\method{void}{plotSetLineWidth}{float lineWidth}}
 \subsubsection{Parameters}
 \begin{table}[h]
 \begin{center}
@@ -432,7 +458,7 @@ Determines the width of the line when plotting data points for the next call to 
 
 
 \clearpage
-\subsection{\method{void}{plotSetPointSize}{float pointSize}}
+\subsection[\method{void}{plotSetPointSize}]{\method{void}{plotSetPointSize}{float pointSize}}
 \subsubsection{Parameters}
 \begin{table}[h]
 \begin{center}
@@ -458,7 +484,7 @@ Determines the size of point shapes when plotting data points for the next call 
 
 
 \clearpage
-\subsection{\method{void}{plotSetRGBA}{float red}{float green}{float blue}{float alpha}}
+\subsection[\method{void}{plotSetRGBA}]{\method{void}{plotSetRGBA}{float red}{float green}{float blue}{float alpha}}
 \subsubsection{Parameters}
 \begin{table}[h]
 \begin{center}
@@ -487,7 +513,7 @@ Determine the color of the points and line for the next call to |plotLine()|.
 
 
 \clearpage
-\subsection{\method{void}{plotXLabel}{string xLabel}}
+\subsection[\method{void}{plotXLabel}]{\method{void}{plotXLabel}{string xLabel}}
 \subsubsection{Parameters}
 \begin{table}[h]
 \begin{center}
@@ -513,7 +539,7 @@ Determine the x-axis label for the next call to |plotLine()|.
 
 
 \clearpage
-\subsection{\method{void}{plotXMin}{float minXValue}}
+\subsection[\method{void}{plotXMin}]{\method{void}{plotXMin}{float minXValue}}
 \subsubsection{Parameters}
 \begin{table}[h]
 \begin{center}
@@ -540,7 +566,7 @@ Use this function to force the plot to have the x-axis begin at |minXValue|.
 \end{lstlisting}
 
 \clearpage
-\subsection{\method{void}{plotXMax}{float maxXValue}}
+\subsection[\method{void}{plotXMax}]{\method{void}{plotXMax}{float maxXValue}}
 \subsubsection{Parameters}
 \begin{table}[h]
 \begin{center}
@@ -568,7 +594,7 @@ Use this function to force the plot to have the x-axis end at |maxXValue|.
 
 
 \clearpage
-\subsection{\method{void}{plotYLabel}{string yLabel}}
+\subsection[\method{void}{plotYLabel}]{\method{void}{plotYLabel}{string yLabel}}
 \subsubsection{Parameters}
 \begin{table}[h]
 \begin{center}
@@ -594,7 +620,7 @@ Determine the y-axis label for the next call to |plotLine()|.
 
 
 \clearpage
-\subsection{\method{void}{plotYMin}{float minYValue}}
+\subsection[\method{void}{plotYMin}]{\method{void}{plotYMin}{float minYValue}}
 \subsubsection{Parameters}
 \begin{table}[h]
 \begin{center}
@@ -622,7 +648,7 @@ Use this function to force the plot to have the y-axis begin at |minYValue|.
 
 
 \clearpage
-\subsection{\method{void}{plotYMax}{float maxYValue}}
+\subsection[\method{void}{plotYMax}]{\method{void}{plotYMax}{float maxYValue}}
 \subsubsection{Parameters}
 \begin{table}[h]
 \begin{center}
@@ -650,7 +676,45 @@ Use this function to force the plot to have the y-axis end at |maxYValue|.
 
 
 \clearpage
-\subsection{\method{float}{stddev}{list values}}
+
+\clearpage
+\subsection[\method{void}{setPointData}]{\method{void}{setPointData}{list data}}
+\subsubsection{Parameters}
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{by}
+		|data| & List of data values that is the same length as the previous |X| and |Y| lists sent to |plotLine()|.\\
+	\end{tabular}
+\end{center}
+\end{table}
+\subsubsection{Description}
+Assigns data values to points previously plotted with |plotLine()| that SpikeDB can then use. Currently, assigning this value to a cell's |TreePath| (returned in the dictionary from |getCells()|) is the only supported function. When a point's data value contains a cell's |TreePath| then clicking on that datapoint will cause SpikeDB to jump to that cell on the Browse page. 
+
+\clearpage
+\subsection[\method{void}{setPointNames}]{\method{void}{setPointNames}{list names}}
+\subsubsection{Parameters}
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{by}
+		|names| & List of names that is the same length as the previous |X| and |Y| lists sent to |plotLine()|.\\
+	\end{tabular}
+\end{center}
+\end{table}
+\subsubsection{Description}
+Assigns names to the points that will be displayed in the SpikeDB status bar when the mouse cursor hovers over a point.
+\begin{lstlisting}[caption=Example]
+	X = [1,2,3,4,5]
+	Y = [1,4,SpikeDB.NOPOINT,16,25]
+	err = [0.5,0.2,0,1.1,0.3]
+	names = ['First', 'Second', 'Third', 'Fourth', 'Fifth']
+
+	SpikeDB.plotLine(X,Y,err)
+	SpikeDB.setPointNames(names)
+\end{lstlisting}
+
+
+\clearpage
+\subsection[\method{float}{stddev}]{\method{float}{stddev}{list values}}
 \subsubsection{Parameters}
 \begin{table}[h]
 \begin{center}
@@ -673,7 +737,7 @@ Returns the standard deviation of all the numbers passed in the |values| list. T
 \end{lstlisting}
 
 \clearpage
-\subsection{\method{dict}{ttest}{list values1, list values2, bool eqvar}}
+\subsection[\method{dict}{ttest}]{\method{dict}{ttest}{list values1, list values2, bool eqvar}}
 \subsubsection{Parameters}
 \begin{table}[h]
 \begin{center}
@@ -708,7 +772,7 @@ Returns a list of values calculated for a standard t-test.
 \end{lstlisting}
 
 \clearpage
-\subsection{\method{void}{write}{string text}}
+\subsection[\method{void}{write}]{\method{void}{write}{string text}}
 \subsubsection{Parameters}
 \begin{center}
 \begin{tabular}{by}
@@ -716,47 +780,47 @@ Returns a list of values calculated for a standard t-test.
 	\end{tabular}
 \end{center}
 \subsubsection{Description}
-This function is used internally to print text to the SpikeDB output window and is generally not needed by analysis script writers. Standard Python output functions like |print| work just fine and print to the SpikeDB output window as expected. Errors are also printed to the SpikeDB window. Note that the output window is only available in the Analysis tab and not in the Quick Analysis plot.
-
+This function is used internally to print text to the SpikeDB output window and is generally not needed by analysis script writers. Standard Python output functions like |print| work just fine and print to the SpikeDB output window as expected. Errors are also printed to the SpikeDB window. 
 \clearpage
 \section{Complete Examples}
 \subsection{Mean Spike Times}
 \begin{lstlisting}[label=codeMean,caption=Calculating the mean spike counts.]
 ### Mean Spike Count
 
-# Get selected files only
-files = SpikeDB.getFiles(True)
+def SpikeDBRun():
+	# Get selected files only
+	files = SpikeDB.getFiles(True)
 
-# Plot means for each file.
-for f in files:
+	# Plot means for each file.
+	for f in files:
 
-	# Create placeholder lists
-	means = []
-	err = []
-	x = []
+		# Create placeholder lists
+		means = []
+		err = []
+		x = []
 
-	# Calculate the mean and standard deviation
-	# for each trial in the file
-	for t in f['trials']:
-		
-		# Placeholder for the spike counts
-		count = []
-		
-		# Get the X value
-		x.append(t['xvalue'])	
+		# Calculate the mean and standard deviation
+		# for each trial in the file
+		for t in f['trials']:
+			
+			# Placeholder for the spike counts
+			count = []
+			
+			# Get the X value
+			x.append(t['xvalue'])	
 
-		# Get the spike counts for each pass
-		for p in t['passes']:
-			count.append(len(p))
+			# Get the spike counts for each pass
+			for p in t['passes']:
+				count.append(len(p))
 
-		# Calculate the mean and standard devations
-		means.append(SpikeDB.mean(count))
-		err.append(SpikeDB.stddev(count))
+			# Calculate the mean and standard devations
+			means.append(SpikeDB.mean(count))
+			err.append(SpikeDB.stddev(count))
 
-	# Plot this file
-	SpikeDB.plotXLabel(f['xvar'])
-	SpikeDB.plotYLabel('Mean Spike Count')
-	SpikeDB.plotLine(x,means,err)
+		# Plot this file
+		SpikeDB.plotXLabel(f['xvar'])
+		SpikeDB.plotYLabel('Mean Spike Count')
+		SpikeDB.plotLine(x,means,err)
 
 \end{lstlisting}
 
