@@ -650,6 +650,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
                 ymax = ymax < m_y[ys][y]+m_err[ys][y] && m_y[ys][y] != NOPOINT ? m_y[ys][y]+m_err[ys][y] : ymax;
             }
         }
+
 		// If we can't get reasonable limits then something is up
 		if (xmax == -DBL_MAX || ymax == -DBL_MAX || xmin == DBL_MAX || ymin == DBL_MAX) {
 			showError("No Data To Plot!");
@@ -694,7 +695,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         // Determine the number of required decimal places
         int y_numdec = 0;
         char y_fmt[5];
-        while (y_numdec < 4 && ((int)(pow((long double)10,y_numdec)*ymin-0.5) == (int)(pow((long double)10,y_numdec)*(ymin+Ybt)-0.5)))
+        while (y_numdec < 4 && ((int)floor((pow((long double)10,y_numdec)*ymin-0.5+0.5)) == (int)floor((pow((long double)10,y_numdec)*(ymin+Ybt)-0.5+0.5))))
         {
             ++y_numdec;
         }
@@ -707,6 +708,21 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
             ++x_numdec;
         }
         sprintf(x_fmt, "%%.%df", x_numdec);
+
+		// Always make sure we have a 0 anchor if the graph is +ve and -ve
+		if (ymin < 0 && ymax > 0 && m_ymin == AUTOMATIC) {
+			// Make sure that x in ymin+x*Xbt=0 is an integer
+			// Otherwise, shift ymin down until it is
+
+			if (-1*ymin/Ybt != floor(-1*ymin/Ybt))
+			{
+				// Diff is the fraction of a step we have to move down
+				double diff = 1-(-1*ymin/Ybt - floor(-1*ymin/Ybt));
+				ymin -= diff*Ybt;
+				ymin_st = ymin;
+				ymin_bt = ymin;
+			}
+		}
 
         Glib::RefPtr<Pango::Layout> pangoLayout = Pango::Layout::create (cr);
         char buffer[10];
@@ -883,8 +899,8 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
                 {
 					if (firstPosition == UINT_MAX) firstPosition = j;
 					lastPosition = j;
-                    cull_x.push_back(m_x[i][j]);
-                    cull_y.push_back(m_y[i][j]);
+                    cull_x.push_back(m_x.at(i).at(j));
+                    cull_y.push_back(m_y.at(i).at(j));
                     cull_err.push_back(m_err.at(i).at(j));
                 }
             }

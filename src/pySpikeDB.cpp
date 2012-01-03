@@ -56,11 +56,6 @@ void pySpikeDB::addOptionNumber(const std::string &name, const std::string &desc
 	numberOptions.push_back(std::pair< std::pair<Glib::ustring, Glib::ustring>, double>(std::pair<Glib::ustring, Glib::ustring>(name, description), def));
 }
 
-void pySpikeDB::setShowErr(bool showErr)
-{
-	this->showErr = showErr;
-}
-
 
 void pySpikeDB::forceSpikesAbs(const float &begin, const float &end)
 {
@@ -98,6 +93,7 @@ void pySpikeDB::print(const std::string &s)
 
 void pySpikeDB::reset()
 {
+	std::cout << "Clearing pySpikeDB" << std::endl;
 	plotClear();
 	filterAbsBegin=filterAbsEnd=-1;
 	filterRelBegin=filterRelEnd=-1;
@@ -599,7 +595,7 @@ void pySpikeDB::plotLine(bp::list &pyX, bp::list &pyY, bp::list &pyErr)
 	y = list2vec<double>(pyY);
 	err = list2vec<double>(pyErr);
 
-	if (bp::len(pyX) == bp::len(pyErr) && showErr)
+	if (bp::len(pyX) == bp::len(pyErr) && getCheckboxOption("showErrorBars"))
 	{
 		mp_plot->plot(x, y, err, m_plotPen);
 	}
@@ -620,6 +616,18 @@ void pySpikeDB::setPointData(boost::python::list &data)
 	std::vector<std::string> d = list2vec<std::string>(data);
 	mp_plot->setPointData(d);
 }
+
+bool pySpikeDB::getCheckboxOption(const std::string &option)
+{
+	std::vector< pySpikeDB::checkboxOption >::iterator cbIter;
+	for (cbIter = checkboxOptions.begin(); cbIter != checkboxOptions.end(); cbIter++) {
+		if (cbIter->first.first == option) {
+			return cbIter->second;
+		}
+	}
+	return false;
+}
+
 
 template<typename T>
 std::vector<T> pySpikeDB::list2vec(bp::list &l)

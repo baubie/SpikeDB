@@ -57,14 +57,13 @@ class pySpikeDB {
 		pySpikeDB();
 		pySpikeDB(sqlite3** db, uiFileDetailsTreeView* fileDetailsTree, Gtk::TreeView* animalTree, AnimalColumns* animalColumns, EasyPlotmm *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput);
 
-		void setShowErr(bool showErr);
-
 		boost::python::object getFiles(bool selOnly);
 		boost::python::object getFilesSingleCell(const std::string &animalID, const int &cellID);
 		boost::python::object getCells();
 		boost::python::object getOptions();
 
 		void reset();
+
 
 		void addOptionCheckbox(const std::string &name, const std::string &description, bool def);
 		void addOptionNumber(const std::string &name, const std::string &description, double def);
@@ -127,11 +126,11 @@ class pySpikeDB {
 		 */
 		EasyPlotmm::Pen m_plotPen;
 		double xmin,xmax,ymin,ymax;
-		bool showErr;
 
 		/**
 		 * Helper Functions
 		 */
+		bool getCheckboxOption(const std::string &option);
 		boost::python::object getFile(const Gtk::TreeModel::iterator& iter);
 		template<typename T> std::vector<T> list2vec(boost::python::list &l);
 

@@ -5,7 +5,7 @@ INCLUDE_DIRECTORIES (${PYTHON_INCLUDE_PATH} ${GTKMM_INCLUDE_DIRS}  ${SQLITE3_INC
 
 
 IF(DEBUG)
-ADD_DEFINITIONS (-g -O -Wall --pedantic  -Wextra -Wno-long-long)
+ADD_DEFINITIONS (-g -O0 -Wall --pedantic  -Wextra -Wno-long-long)
 ELSE(DEBUG)
 ADD_DEFINITIONS (-O3)
 ENDIF(DEBUG)

@@ -356,6 +356,10 @@ if (!uiAnalysis::setupPython)
 
 	if (!compact) addOutput("*** Running Analysis Plugin ***\n\n");
 
+	// Incase our new script doesn't have one of the functions, we'll give default blank ones.
+	PyRun_SimpleString("def SpikeDBAdvanced(): return");
+	PyRun_SimpleString("def SpikeDBRun(): return");
+
 	// Open the file and run the code
 	char *filename;
 	char mode[] = "r";
@@ -412,6 +416,7 @@ if (!uiAnalysis::setupPython)
 		dialog.add_button("Run Script", Gtk::RESPONSE_OK);
 
 		if (dialog.run() == Gtk::RESPONSE_OK) {
+			dialog.hide();
 			// Update the option values
 			for(unsigned int i = 0; i < cbOptions.size(); ++i) {
 				_pySpikeDB.checkboxOptions.at(i).second = cbOptions.at(i)->get_active();

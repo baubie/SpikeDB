@@ -20,6 +20,8 @@ Currently supports being set to a TreePath from the SpikeDB.getCells()
 * Added a "bad" column to the Cells database to allow users to mark a bad cell
 that should not be used in data analysis. Easier than hiding every file.
 
+* Fixed plot axes when displaying error bars.
+
 * Fixed memory issues with Python scripts that could cause errors.
 
 
