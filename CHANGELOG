@@ -1,5 +1,5 @@
 Version 1.5
-Released: ??
+Released: January 3, 2012
 
 * Automatic database upgrades with new versions of SpikeDB at first launch.
 
@@ -28,7 +28,7 @@ that should not be used in data analysis. Easier than hiding every file.
 
 
 Version 1.4
-Released December 20, 2011
+Released: December 20, 2011
 
 * Windows Build
 
