@@ -1,3 +1,11 @@
+Version 1.6
+Released: ???
+
+* Fix incorrect number of decimals showing in some plots.
+
+* Mean spike count will show min and max lines by default for single files.
+
+
 Version 1.5
 Released: January 3, 2012
 

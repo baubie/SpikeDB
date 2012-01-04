@@ -694,22 +694,25 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 
         // Determine the number of required decimal places
         int y_numdec = 0;
-        char y_fmt[5];
-        while (y_numdec < 4 && ((int)floor((pow((long double)10,y_numdec)*ymin-0.5+0.5)) == (int)floor((pow((long double)10,y_numdec)*(ymin+Ybt)-0.5+0.5))))
-        {
-            ++y_numdec;
-        }
+        char y_fmt[7];
+		if (Ybt < 1) y_numdec = 1;
+		if (Ybt < 0.1) y_numdec = 2;
+		if (Ybt < 0.01) y_numdec = 3;
+		if (Ybt < 0.001) y_numdec = 4;
+		if (Ybt < 0.0001) y_numdec = 5;
         sprintf(y_fmt, "%%.%df", y_numdec);
 
         int x_numdec = 0;
-        char x_fmt[5];
-        while (x_numdec < 4 && ((int)(pow((long double)10,x_numdec)*xmin_bt) == (int)(pow((long double)10,x_numdec)*(xmin_bt+Xbt))))
-        {
-            ++x_numdec;
-        }
+        char x_fmt[7];
+		if (Xbt < 1) x_numdec = 1;
+		if (Xbt < 0.1) x_numdec = 2;
+		if (Xbt < 0.01) x_numdec = 3;
+		if (Xbt < 0.001) x_numdec = 4;
+		if (Xbt < 0.0001) x_numdec = 5;
         sprintf(x_fmt, "%%.%df", x_numdec);
 
 		// Always make sure we have a 0 anchor if the graph is +ve and -ve
+		// It's not really NEEDED, but it's a nice asethetic feature.
 		if (ymin < 0 && ymax > 0 && m_ymin == AUTOMATIC) {
 			// Make sure that x in ymin+x*Xbt=0 is an integer
 			// Otherwise, shift ymin down until it is

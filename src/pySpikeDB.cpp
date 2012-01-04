@@ -93,7 +93,6 @@ void pySpikeDB::print(const std::string &s)
 
 void pySpikeDB::reset()
 {
-	std::cout << "Clearing pySpikeDB" << std::endl;
 	plotClear();
 	filterAbsBegin=filterAbsEnd=-1;
 	filterRelBegin=filterRelEnd=-1;

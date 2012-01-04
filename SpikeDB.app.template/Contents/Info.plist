@@ -9,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>SpikeDB</string>
 	<key>CFBundleGetInfoString</key>
-	<string>SpikeDB 1.5 Copyright 2011-2012 Brandon Aubie</string>
+	<string>SpikeDB 1.6 Copyright 2011-2012 Brandon Aubie</string>
 	<key>CFBundleIconFile</key>
 	<string>SpikeDB.icns</string>
 	<key>CFBundleIdentifier</key>
@@ -21,7 +21,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.5</string>
+	<string>1.6</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>LSEnvironment</key>
@@ -35,7 +35,7 @@
 	<key>NSAppleScriptEnabled</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>SpikeDB 1.5 Copyright 2011-2012 Brandon Aubie, McMaster University</string>
+	<string>SpikeDB 1.6 Copyright 2011-2012 Brandon Aubie, McMaster University</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
