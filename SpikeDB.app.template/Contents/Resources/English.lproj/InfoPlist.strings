@@ -1,4 +1,4 @@
 CFBundleName = "SpikeDB";
-CFBundleShortVersionString = "1.5";
-CFBundleGetInfoString = "SpikeDB version 1.5 Copyright 2011-2012 Brandon Aubie, McMaster University";
+CFBundleShortVersionString = "1.6";
+CFBundleGetInfoString = "SpikeDB version 1.6 Copyright 2011-2012 Brandon Aubie, McMaster University";
 NSHumanReadableCopyright = "Copyright 2011-2012 Brandon Aubie, McMaster University.";

@@ -2,44 +2,32 @@ Version 1.6
 Released: ???
 
 * Fix incorrect number of decimals showing in some plots.
-
 * Mean spike count will show min and max lines by default for single files.
+* Mean spike count will show response value for all trials as faded dots.
+* Fixed bug reading in some version 6.0 and 6.1 spike data files.
 
 
 Version 1.5
 Released: January 3, 2012
 
 * Automatic database upgrades with new versions of SpikeDB at first launch.
-
 * Python scripts must now be contained within a SpikeDBRun() function.
-
 * Ability to create custom options for analysis scripts in a SpikeDBAdvanced()
-method that calls addOptionCheckbox() or addOptionNumber().
-
+  method that calls addOptionCheckbox() or addOptionNumber().
 * Check for new SpikeDB version automatically at launch.
-
 * Graph data points can be given names and show up in status bar on mouse over
-(see SpikeDB.setNames function).
-
+  (see SpikeDB.setNames function).
 * Graph data points can be given data to be used by SpikeDB later.
-Currently supports being set to a TreePath from the SpikeDB.getCells()
-"TreePath" item and then clicking on a datapoint brings you to that cell.
-
+  Currently supports being set to a TreePath from the SpikeDB.getCells()
+  "TreePath" item and then clicking on a datapoint brings you to that cell.
 * Added a "bad" column to the Cells database to allow users to mark a bad cell
-that should not be used in data analysis. Easier than hiding every file.
-
+  that should not be used in data analysis. Easier than hiding every file.
 * Fixed plot axes when displaying error bars.
-
 * Fixed memory issues with Python scripts that could cause errors.
-
-
-
 
 Version 1.4
 Released: December 20, 2011
 
 * Windows Build
-
 * Read in Spike 5.0 files
-
 * Miscellaneous bug and stability fixes

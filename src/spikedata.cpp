@@ -71,7 +71,7 @@ bool SpikeData::parse(const char* filename)
 			upgradeheader(VERSION);
 
         }
-        if (VERSION == HEADER_62)
+        if (VERSION == HEADER_60 || VERSION == HEADER_61 || VERSION == HEADER_62)
         {
             in.read(reinterpret_cast<char*>(&m_head), sizeof(m_head));
             hsize = sizeof(m_head);

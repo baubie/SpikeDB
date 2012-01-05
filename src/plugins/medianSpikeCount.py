@@ -1,4 +1,4 @@
-### Mean Spike Count
+### Median Spike Count
 
 
 def SpikeDBAdvanced():
@@ -10,7 +10,7 @@ def SpikeDBRun():
 	options = SpikeDB.getOptions()
 
 	for f in files:
-		means = []
+		medians = []
 		err = []
 		x = []
 		minCount = []

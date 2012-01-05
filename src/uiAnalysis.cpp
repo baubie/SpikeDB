@@ -385,15 +385,6 @@ if (!uiAnalysis::setupPython)
 		
 		Gtk::VBox vbox;
 
-		std::vector< pySpikeDB::checkboxOption >::iterator cbIter;
-		std::vector< Gtk::CheckButton* > cbOptions;
-		for (cbIter = _pySpikeDB.checkboxOptions.begin(); cbIter != _pySpikeDB.checkboxOptions.end(); cbIter++) {
-			Gtk::CheckButton* cbOption = Gtk::manage( new Gtk::CheckButton(cbIter->first.second) );
-			cbOption->set_active(cbIter->second);
-			cbOptions.push_back(cbOption);
-			cbOption->show();
-			vbox.pack_end(*cbOption, false, true);
-		}
 		std::vector< pySpikeDB::numberOption >::iterator numIter;
 		std::vector< Gtk::Entry* > numberOptions;
 		for (numIter = _pySpikeDB.numberOptions.begin(); numIter != _pySpikeDB.numberOptions.end(); numIter++) {
@@ -402,13 +393,24 @@ if (!uiAnalysis::setupPython)
 			label->show();
 			hbox->pack_start(*label,false,true);
 			Gtk::Entry* numberOption = Gtk::manage( new Gtk::Entry() );
-			numberOption->set_text(Glib::Ascii::dtostr(numIter->second));
+			char numBuffer[10];
+			sprintf(numBuffer, "%.3f", numIter->second);
+			numberOption->set_text(numBuffer);
 			numberOption->set_width_chars(6);
 			numberOptions.push_back(numberOption);
 			numberOption->show();
 			hbox->pack_end(*numberOption, false, true);
 			hbox->show();
 			vbox.pack_end(*hbox, false, true);
+		}
+		std::vector< pySpikeDB::checkboxOption >::iterator cbIter;
+		std::vector< Gtk::CheckButton* > cbOptions;
+		for (cbIter = _pySpikeDB.checkboxOptions.begin(); cbIter != _pySpikeDB.checkboxOptions.end(); cbIter++) {
+			Gtk::CheckButton* cbOption = Gtk::manage( new Gtk::CheckButton(cbIter->first.second) );
+			cbOption->set_active(cbIter->second);
+			cbOptions.push_back(cbOption);
+			cbOption->show();
+			vbox.pack_end(*cbOption, false, true);
 		}
 		dialog.get_vbox()->pack_start(vbox);
 		vbox.show();

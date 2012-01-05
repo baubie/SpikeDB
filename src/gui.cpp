@@ -426,8 +426,10 @@ bool GUI::openDatabase(std::string filename)
 		while (version < CURRENT_DB_VERSION) {
 
 			std::cout << "Database version " << version << " requires updating." << std::endl;
+
+			// Upgrade from 1.2 to 1.4
 			if (version == 1.2) {
-				std::cout << "Upgrading database from version 1.2" << std::endl;
+				std::cout << "Upgrading database from version 1.2 to 1.4" << std::endl;
 				const char queryUpgrade[] = "UPDATE properties SET value=? WHERE variable=?";
 				sqlite3_stmt *stmtUpgrade = 0;
 				sqlite3_prepare_v2(db, queryUpgrade, strlen(queryUpgrade), &stmtUpgrade, NULL);
@@ -437,8 +439,9 @@ bool GUI::openDatabase(std::string filename)
 				sqlite3_finalize(stmtUpgrade);
 			}
 
+			// Upgrade from 1.4 to 1.5
 			if (version == 1.4) {
-				std::cout << "Upgrading database from version 1.4" << std::endl;
+				std::cout << "Upgrading database from version 1.4 to 1.5" << std::endl;
 				const char queryUpgrade[] = "UPDATE properties SET value=? WHERE variable=?";
 				sqlite3_stmt *stmtUpgrade = 0;
 				sqlite3_prepare_v2(db, queryUpgrade, strlen(queryUpgrade), &stmtUpgrade, NULL);
@@ -452,6 +455,18 @@ bool GUI::openDatabase(std::string filename)
 				sqlite3_prepare_v2(db, queryNewCol1, strlen(queryNewCol1), &stmtNewCol1, NULL);
 				if (sqlite3_step(stmtNewCol1) != SQLITE_DONE) count = 100000000; 
 				sqlite3_finalize(stmtNewCol1);
+			}
+
+			// Upgrade from 1.5 to 1.6
+			if (version == 1.5) {
+				std::cout << "Upgrading database from version 1.5 to 1.6" << std::endl;
+				const char queryUpgrade[] = "UPDATE properties SET value=? WHERE variable=?";
+				sqlite3_stmt *stmtUpgrade = 0;
+				sqlite3_prepare_v2(db, queryUpgrade, strlen(queryUpgrade), &stmtUpgrade, NULL);
+				sqlite3_bind_double(stmtUpgrade, 1, 1.6);
+				sqlite3_bind_text(stmtUpgrade, 2, "version", -1, SQLITE_TRANSIENT);
+				if (sqlite3_step(stmtUpgrade) != SQLITE_DONE) count = 100000000; 
+				sqlite3_finalize(stmtUpgrade);
 			}
 
 			++count;
@@ -1473,6 +1488,7 @@ void GUI::on_menuImportFolder_activate()
 
 void GUI::importSpikeFile(std::string filename, char* d_name)
 {
+	
 	SpikeData sd;
 	std::string fullfile(filename);
 
@@ -1481,13 +1497,12 @@ void GUI::importSpikeFile(std::string filename, char* d_name)
 #else
 	fullfile += "/";
 #endif
-	fullfile += d_name;
-	if (sd.parse(fullfile.c_str())) {
-		std::vector<std::string> fileTokens;
-		std::string shortfilename(d_name);
-		if (Tokenize(shortfilename, fileTokens, ".") == 3)
-		{
-
+	std::vector<std::string> fileTokens;
+	std::string shortfilename(d_name);
+	if (Tokenize(shortfilename, fileTokens, ".") == 3)
+	{
+		fullfile += d_name;
+		if (sd.parse(fullfile.c_str())) {
 			// Insert animal
 			const char q_animal[] = "INSERT INTO animals (ID) VALUES(?)";
 			sqlite3_stmt *stmt_animal = 0;
@@ -1551,7 +1566,7 @@ void GUI::on_menuAbout_activate()
 	dialog.set_transient_for(*this);
 	dialog.set_title("About SpikeDB");
 	dialog.set_program_name("SpikeDB");
-	dialog.set_version("1.5");
+	dialog.set_version("1.6");
 	dialog.set_copyright(copyright);
 	dialog.set_website("http://spikedb.aubie.ca");
 	dialog.run();
