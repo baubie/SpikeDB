@@ -30,12 +30,18 @@ def SpikeDBRun():
 				allPointsX.append(t['xvalue'])
 			minCount.append(tmpMin)
 			maxCount.append(tmpMax)
-			means.append(SpikeDB.mean(count))
+			median = 0
+			if len(count) > 0:
+				if len(count) % 2 == 1:
+					median = count[int(len(count) * 0.5 - 0.5)]
+				else:
+					median = SpikeDB.mean([count[int(len(count) * 0.5)-1], count[int(len(count) * 0.5)]])
+			medians.append(median)
 			err.append(SpikeDB.stddev(count))
 		SpikeDB.plotSetRGBA(0,0,0,1)
 		SpikeDB.plotXLabel(f['xvar'])
-		SpikeDB.plotYLabel('Mean Spike Count')
-		SpikeDB.plotLine(x,means,err)
+		SpikeDB.plotYLabel('Median Spike Count')
+		SpikeDB.plotLine(x,medians,err)
 		SpikeDB.plotYMin(0)
 
 		if options["showLimits"] and len(files) == 1:
