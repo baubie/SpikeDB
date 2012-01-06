@@ -1,2 +1,3 @@
 ./cleancmake
 cmake -DDEBUG=true -DNOBUNDLE=true .
+make clean

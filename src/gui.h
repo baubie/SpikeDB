@@ -32,8 +32,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define CURRENT_VERSION 1.6
 
 
-#include "uiMenuBar.h"
 #include "uiAnalysis.h"
+#include "uiMenuBar.h"
 #include "uiFileDetailsTreeView.h"
 #include "uiFilterFrame.h"
 #include "uiPropTable.h"

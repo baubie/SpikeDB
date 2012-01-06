@@ -1,509 +1,117 @@
-!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
-!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
-!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
-!_TAG_PROGRAM_NAME	Exuberant Ctags	//
-!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
-!_TAG_PROGRAM_VERSION	5.8	//
-AFX_SPIKEDOC_H__B37A511B_568C_11D1_91CC_00A0244F3C96__INCLUDED_	spikeDoc.h	6;"	d
-AMSIN	spikedata.h	/^} AMSIN;$/;"	t	typeref:struct:__anon3
-AMSINUS	spikedata.cpp	178;"	d	file:
-AMSINUS	spikedata.h	30;"	d
-ATT_STEP	spikedata.h	39;"	d
-AnalyzeColumns	gui.h	/^				AnalyzeColumns()$/;"	f	class:GUI::AnalyzeColumns
-AnalyzeColumns	gui.h	/^		class AnalyzeColumns : public Gtk::TreeModel::ColumnRecord$/;"	c	class:GUI
-AnimalColumns	gui.h	/^                AnimalColumns()$/;"	f	class:GUI::AnimalColumns
-AnimalColumns	gui.h	/^        class AnimalColumns : public Gtk::TreeModel::ColumnRecord$/;"	c	class:GUI
-AssertValid	spikeDoc.cpp	/^void CSpikeDoc::AssertValid() const$/;"	f	class:CSpikeDoc
-CSpikeDoc	spikeDoc.cpp	/^CSpikeDoc::CSpikeDoc()$/;"	f	class:CSpikeDoc
-CSpikeDoc	spikeDoc.h	/^class CSpikeDoc : public CDocument$/;"	c
-CURRENT_DB_VERSION	gui.h	4;"	d
-CURRENT_VERSION	gui.h	5;"	d
-CalcHistogram	spikeDoc.cpp	/^BOOL CSpikeDoc::CalcHistogram(int nBegin, int nEnd)$/;"	f	class:CSpikeDoc
-CalcPreWindow	spikeDoc.cpp	/^float CSpikeDoc::CalcPreWindow(STIM *pStim0, STIM *pStim1)$/;"	f	class:CSpikeDoc
-CalcStimuliCh1	spikeDoc.cpp	/^void CSpikeDoc::CalcStimuliCh1()$/;"	f	class:CSpikeDoc
-CalcStimuliCh2	spikeDoc.cpp	/^void CSpikeDoc::CalcStimuliCh2()$/;"	f	class:CSpikeDoc
-CellID	gui.h	/^struct CellID$/;"	s
-CellID	uiAnalysis.h	/^		struct CellID {$/;"	s	class:uiAnalysis
-Columns	uiFileDetailsTreeView.h	/^                Columns()$/;"	f	class:uiFileDetailsTreeView::Columns
-Columns	uiFileDetailsTreeView.h	/^        class Columns : public Gtk::TreeModel::ColumnRecord$/;"	c	class:uiFileDetailsTreeView
-Columns	uiPropTable.h	/^                Columns()$/;"	f	class:uiPropTable::Columns
-Columns	uiPropTable.h	/^        class Columns : public Gtk::TreeModel::ColumnRecord$/;"	c	class:uiPropTable
-ConvertOldHead	spikeDoc.cpp	/^void CSpikeDoc::ConvertOldHead()$/;"	f	class:CSpikeDoc
-DELTA	spikedata.h	/^}  DELTA;$/;"	t	typeref:struct:__anon13
-DWORD	spikedata.h	17;"	d
-Dump	spikeDoc.cpp	/^void CSpikeDoc::Dump(CDumpContext& dc) const$/;"	f	class:CSpikeDoc
-EOF_MARK	spikedata.h	57;"	d
-EXTERNAL	spikedata.h	43;"	d
-Editable	uiPropTable.h	/^	Editable, \/**< Single line of editable text. *\/$/;"	e	enum:uiPropTableRowType
-EditableLong	uiPropTable.h	/^	EditableLong \/**< Three lines of editable text. *\/$/;"	e	enum:uiPropTableRowType
-Exist	spikeDoc.cpp	/^BOOL CSpikeDoc::Exist(LPCTSTR lpszFileName)$/;"	f	class:CSpikeDoc
-FILT_NOISE	spikedata.cpp	182;"	d	file:
-FILT_NOISE	spikedata.h	34;"	d
-FMSIN	spikedata.h	/^} FMSIN;$/;"	t	typeref:struct:__anon4
-FMSINUS	spikedata.cpp	179;"	d	file:
-FMSINUS	spikedata.h	31;"	d
-FREQ_STEP	spikedata.h	38;"	d
-FileExcelExport	spikeDoc.cpp	/^void CSpikeDoc::FileExcelExport()$/;"	f	class:CSpikeDoc
-FileExport	spikeDoc.cpp	/^void CSpikeDoc::FileExport()$/;"	f	class:CSpikeDoc
-FileWarExport	spikeDoc.cpp	/^void CSpikeDoc::FileWarExport()$/;"	f	class:CSpikeDoc
-GUI	gui.cpp	/^GUI::GUI(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade)$/;"	f	class:GUI
-GUI	gui.h	/^class GUI : public Gtk::Window$/;"	c
-GUI_H	gui.h	2;"	d
-GetData	spikeDoc.cpp	/^BOOL CSpikeDoc::GetData()$/;"	f	class:CSpikeDoc
-HEADER	spikedata.h	/^}  HEADER;				\/\/ Total: (1152) bytes$/;"	t	typeref:struct:__anon15
-HEADER50	spikedata.h	/^}  HEADER50;				\/\/ Total: (1024) bytes ?$/;"	t	typeref:struct:__anon14
-HEADER_50	spikedata.h	22;"	d
-HEADER_60	spikedata.h	23;"	d
-HEADER_61	spikedata.h	24;"	d
-HEADER_62	spikedata.h	25;"	d
-HEADER_UNKNOWN	spikedata.h	21;"	d
-INTERNAL	spikedata.h	44;"	d
-IsOpen	spikeDoc.cpp	/^BOOL CSpikeDoc::IsOpen(LPCTSTR lpszFileName)$/;"	f	class:CSpikeDoc
-LINEAR	spikedata.h	53;"	d
-LOGARITHMIC	spikedata.h	54;"	d
-MAX_SWEEPS	spikedata.h	58;"	d
-MakeName	spikeDoc.cpp	/^BOOL CSpikeDoc::MakeName()$/;"	f	class:CSpikeDoc
-ModelColumns	uiFilterFrame.h	/^				ModelColumns()$/;"	f	class:uiFilterFrame::ModelColumns
-ModelColumns	uiFilterFrame.h	/^		class ModelColumns : public Gtk::TreeModel::ColumnRecord$/;"	c	class:uiFilterFrame
-NOISE	spikedata.cpp	176;"	d	file:
-NOISE	spikedata.h	28;"	d
-NOISE_EX	spikedata.h	/^} NOISE_EX;$/;"	t	typeref:struct:__anon5
-NONINTERLEAVED	spikedata.h	51;"	d
-NO_STEP	spikedata.h	37;"	d
-OnCloseDocument	spikeDoc.cpp	/^void CSpikeDoc::OnCloseDocument() $/;"	f	class:CSpikeDoc
-OnFileExport	spikeDoc.cpp	/^void CSpikeDoc::OnFileExport() $/;"	f	class:CSpikeDoc
-OnNewDocument	spikeDoc.cpp	/^BOOL CSpikeDoc::OnNewDocument()$/;"	f	class:CSpikeDoc
-OnOpenDocument	spikeDoc.cpp	/^BOOL CSpikeDoc::OnOpenDocument(LPCTSTR lpszPathName) $/;"	f	class:CSpikeDoc
-OnSaveDocument	spikeDoc.cpp	/^BOOL CSpikeDoc::OnSaveDocument(LPCTSTR lpszPathName) $/;"	f	class:CSpikeDoc
-RANDOMIZED	spikedata.h	50;"	d
-RASTER_STEP	spikedata.h	40;"	d
-RedrawSpikeView	spikeDoc.cpp	/^void CSpikeDoc::RedrawSpikeView()$/;"	f	class:CSpikeDoc
-SEQUENTIAL	spikedata.h	49;"	d
-SETTINGS_H	settings.h	2;"	d
-SIN	spikedata.h	/^} SIN;$/;"	t	typeref:struct:__anon2
-SINUS	spikedata.cpp	177;"	d	file:
-SINUS	spikedata.h	29;"	d
-SPIKEDATA_H	spikedata.h	2;"	d
-SPIKESTRUCT	spikedata.h	/^} SPIKESTRUCT;$/;"	t	typeref:struct:__anon8
-STEP_FLAGS	spikedata.h	/^} STEP_FLAGS;$/;"	t	typeref:struct:__anon1
-STIM	spikedata.h	/^} STIM; \/\/ (108)        $/;"	t	typeref:struct:__anon9
-STIM_50	spikedata.h	/^}  STIM_50; \/\/ 5.0 and earlier$/;"	t	typeref:struct:__anon11
-SWEEP_MARK	spikedata.h	56;"	d
-SWEPTSIN	spikedata.h	/^} SWEPTSIN;$/;"	t	typeref:struct:__anon6
-SWEPTSINUS	spikedata.cpp	180;"	d	file:
-SWEPTSINUS	spikedata.h	32;"	d
-Serialize	spikeDoc.cpp	/^void CSpikeDoc::Serialize(CArchive& ar)$/;"	f	class:CSpikeDoc
-SetDeltaStimCh1	spikeDoc.cpp	/^void CSpikeDoc::SetDeltaStimCh1(CStimulusPage* pPgStim)$/;"	f	class:CSpikeDoc
-SetDeltaStimCh2	spikeDoc.cpp	/^void CSpikeDoc::SetDeltaStimCh2(CStimulusPage* pPgStim)$/;"	f	class:CSpikeDoc
-SetFirstStimCh1	spikeDoc.cpp	/^void CSpikeDoc::SetFirstStimCh1(CStimulusPage* pPgStim)$/;"	f	class:CSpikeDoc
-SetFirstStimCh2	spikeDoc.cpp	/^void CSpikeDoc::SetFirstStimCh2(CStimulusPage* pPgStim)$/;"	f	class:CSpikeDoc
-SetHeader	spikeDoc.cpp	/^void CSpikeDoc::SetHeader()$/;"	f	class:CSpikeDoc
-Settings	settings.cpp	/^Settings::Settings()$/;"	f	class:Settings
-Settings	settings.h	/^class Settings {$/;"	c
-SpikeData	spikedata.h	/^class SpikeData$/;"	c
-Static	uiPropTable.h	/^	Static, \/**< Single line of static text. *\/$/;"	e	enum:uiPropTableRowType
-StaticLong	uiPropTable.h	/^	StaticLong, \/**< Three lines of static text. *\/$/;"	e	enum:uiPropTableRowType
-TABLE	spikedata.h	47;"	d
-THIS_FILE	spikeDoc.cpp	/^static char THIS_FILE[] = __FILE__;$/;"	v	file:
-THIS_FILE	spikeDoc.cpp	18;"	d	file:
-Tag	uiTags.cpp	/^uiTags::Tag::Tag(Glib::ustring tag)$/;"	f	class:uiTags::Tag
-Tag	uiTags.h	/^		class Tag : public Gtk::EventBox {$/;"	c	class:uiTags
-Tokenize	tokenize.cpp	/^void Tokenize(const std::string& str,$/;"	f
-UIANALYSIS_H	uiAnalysis.h	2;"	d
-UIFILEDETAILSTREEVIEW_H	uiFileDetailsTreeView.h	2;"	d
-UIFILTERFRAME_H	uiFilterFrame.h	2;"	d
-UIPROPTABLE_H	uiPropTable.h	2;"	d
-UITAGS_H	uiTags.h	2;"	d
-WAV	spikedata.h	/^} WAV;$/;"	t	typeref:struct:__anon7
-WAVEFILE	spikedata.cpp	181;"	d	file:
-WAVEFILE	spikedata.h	33;"	d
-XVar	uiFilterFrame.cpp	/^int uiFilterFrame::XVar()$/;"	f	class:uiFilterFrame
-active	uiTags.h	/^		bool active;$/;"	m	class:uiTags
-addFileToPlot	gui.cpp	/^void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)$/;"	f	class:GUI
-addRow	uiPropTable.h	/^void uiPropTable<T>::addRow(T ID, Glib::ustring name, Glib::ustring value, uiPropTableRowType type)$/;"	f	class:uiPropTable
-addRow	uiPropTable.h	/^void uiPropTable<T>::addRow(T ID, Glib::ustring name, int value, uiPropTableRowType type)$/;"	f	class:uiPropTable
-amsin	spikedata.h	/^		AMSIN	 amsin;$/;"	m	union:__anon11::__anon12
-amsin	spikedata.h	/^                AMSIN	 amsin; \/\/ (16)$/;"	m	union:__anon9::__anon10
-animalID	gui.h	/^	Glib::ustring animalID;$/;"	m	struct:CellID
-animalID	uiAnalysis.h	/^			Glib::ustring animalID;$/;"	m	struct:uiAnalysis::CellID
-animalID	uiFileDetailsTreeView.cpp	/^Glib::ustring uiFileDetailsTreeView::animalID(const Gtk::TreeModel::iterator& iter)$/;"	f	class:uiFileDetailsTreeView
-attenuation	spikedata.cpp	/^double SpikeData::attenuation(int channel, int sweep)$/;"	f	class:SpikeData
-bAmDepth	spikedata.h	/^        char bAmDepth;$/;"	m	struct:__anon1
-bAtten	spikedata.h	/^        char bAtten;$/;"	m	struct:__anon1
-bBegin	spikedata.h	/^        char bBegin;$/;"	m	struct:__anon1
-bCarFreq	spikedata.h	/^        char bCarFreq;$/;"	m	struct:__anon1
-bDur	spikedata.h	/^        char bDur;$/;"	m	struct:__anon1
-bFreqDev	spikedata.h	/^        char bFreqDev;$/;"	m	struct:__anon1
-bModFreq	spikedata.h	/^        char bModFreq;$/;"	m	struct:__anon1
-bPhase	spikedata.h	/^        char bPhase;$/;"	m	struct:__anon1
-bStimInt	spikedata.h	/^        char bStimInt;$/;"	m	struct:__anon1
-bWav	spikedata.h	/^        char bWav;$/;"	m	struct:__anon1
-begin	spikedata.cpp	/^double SpikeData::begin(int channel, int sweep)$/;"	f	class:SpikeData
-buildCellList	uiAnalysis.cpp	/^PyObject* uiAnalysis::buildCellList()$/;"	f	class:uiAnalysis
-buildFileList	uiAnalysis.cpp	/^PyObject* uiAnalysis::buildFileList()$/;"	f	class:uiAnalysis
-cAutoAdjPhase	spikedata.h	/^        char	cAutoAdjPhase;	\/\/   (1) v 18-nov-2002$/;"	m	struct:__anon15
-cDate	spikedata.h	/^	char	cDate[8];       \/\/   (8) date of data acquisition $/;"	m	struct:__anon14
-cDateTime	spikedata.h	/^        char	cDateTime[16];       \/\/   (8) date of data acquisition $/;"	m	struct:__anon15
-cFill1	spikedata.h	/^	char	cFill1[6];		\/\/  (6)$/;"	m	struct:__anon14
-cFill1	spikedata.h	/^        char	cFill1[2];		\/\/   (2)$/;"	m	struct:__anon15
-cFill2	spikedata.h	/^	char	cFill2[768];$/;"	m	struct:__anon14
-cFill2	spikedata.h	/^        char	cFill2[768]; $/;"	m	struct:__anon15
-cFrozenNoise	spikedata.h	/^        char	cFrozenNoise;	\/\/   (1) v 6.1$/;"	m	struct:__anon15
-cId	spikedata.h	/^	char	cId[12];		\/\/  (12) file identification \/ validiation $/;"	m	struct:__anon14
-cId	spikedata.h	/^        char	cId[12];		\/\/  (12) file identification \/ validiation $/;"	m	struct:__anon15
-cTime	spikedata.h	/^	char	cTime[8];       \/\/   (8) time of data acquisition $/;"	m	struct:__anon14
-cellID	gui.h	/^	int cellID;$/;"	m	struct:CellID
-cellID	uiAnalysis.h	/^			int cellID;$/;"	m	struct:uiAnalysis::CellID
-cellID	uiFileDetailsTreeView.cpp	/^int uiFileDetailsTreeView::cellID(const Gtk::TreeModel::iterator& iter)$/;"	f	class:uiFileDetailsTreeView
-changeAnimalSelection	gui.cpp	/^void GUI::changeAnimalSelection()$/;"	f	class:GUI
-check_change_queue	uiFilterFrame.cpp	/^bool uiFilterFrame::check_change_queue()$/;"	f	class:uiFilterFrame
-clear	uiFileDetailsTreeView.cpp	/^void uiFileDetailsTreeView::clear()$/;"	f	class:uiFileDetailsTreeView
-clear	uiPropTable.h	/^void uiPropTable<T>::clear()$/;"	f	class:uiPropTable
-clear	uiTags.cpp	/^void uiTags::clear()$/;"	f	class:uiTags
-copySubStr	spikeDoc.cpp	/^static void copySubStr(char *dstStr, char *srcStr, int index)$/;"	f	file:
-curXVariable	gui.h	/^        std::string curXVariable;$/;"	m	class:GUI
-db	gui.h	/^        sqlite3 *db; \/**< Pointer to out SQLite3 database. *\/$/;"	m	class:GUI
-db	settings.h	/^        sqlite3 *db;$/;"	m	class:Settings
-db	uiAnalysis.h	/^		sqlite3 **db;$/;"	m	class:uiAnalysis
-db	uiFileDetailsTreeView.h	/^        sqlite3 **db; \/**< Pointer to out SQLite3 database. *\/$/;"	m	class:uiFileDetailsTreeView
-delta	spikedata.cpp	/^double SpikeData::delta()$/;"	f	class:SpikeData
-deltaCh1	spikedata.h	/^	DELTA	deltaCh1;		\/\/  (36) delta step of stimulus variables for channel1$/;"	m	struct:__anon14
-deltaCh1	spikedata.h	/^        DELTA	deltaCh1;	\/\/  (36) delta step of stimulus variables for channel1$/;"	m	struct:__anon15
-deltaCh2	spikedata.h	/^	DELTA	deltaCh2;		\/\/  (36) delta step of stimulus variables for channel2$/;"	m	struct:__anon14
-deltaCh2	spikedata.h	/^        DELTA	deltaCh2;       \/\/  (36) delta step of stimulus variables for channel2$/;"	m	struct:__anon15
-duration	spikedata.cpp	/^double SpikeData::duration(int channel, int sweep)$/;"	f	class:SpikeData
-fAmDepth	spikedata.h	/^        float fAmDepth; \/\/ >0 = AM$/;"	m	struct:__anon5
-fAmDepth	spikedata.h	/^        float fAmDepth;$/;"	m	struct:__anon13
-fAmDepth	spikedata.h	/^        float fAmDepth;$/;"	m	struct:__anon3
-fAtten	spikedata.h	/^	float fAtten;$/;"	m	struct:__anon11
-fAtten	spikedata.h	/^        float fAtten;$/;"	m	struct:__anon13
-fAtten	spikedata.h	/^        float fAtten;$/;"	m	struct:__anon9
-fBegin	spikedata.h	/^	float fBegin;$/;"	m	struct:__anon11
-fBegin	spikedata.h	/^        float fBegin;$/;"	m	struct:__anon13
-fBegin	spikedata.h	/^        float fBegin;$/;"	m	struct:__anon9
-fCarFreq	spikedata.h	/^        float fCarFreq;	\/\/ 1st 3 fields are same as FMSIN for compat w\/ old files$/;"	m	struct:__anon5
-fCarFreq	spikedata.h	/^        float fCarFreq;$/;"	m	struct:__anon13
-fCarFreq	spikedata.h	/^        float fCarFreq;$/;"	m	struct:__anon3
-fCarFreq	spikedata.h	/^        float fCarFreq;$/;"	m	struct:__anon4
-fCarFreq	spikedata.h	/^        float fCarFreq;$/;"	m	struct:__anon6
-fDeltaFreq	spikedata.h	/^        float fDeltaFreq;$/;"	m	struct:__anon6
-fDur	spikedata.h	/^	float fDur;$/;"	m	struct:__anon11
-fDur	spikedata.h	/^        float fDur;$/;"	m	struct:__anon13
-fDur	spikedata.h	/^        float fDur;$/;"	m	struct:__anon9
-fFreq	spikedata.h	/^	float fFreq;	\/\/ used for compatibility with old code$/;"	m	struct:__anon11
-fFreq	spikedata.h	/^        float fFreq;	\/\/ used for compatibility with old code$/;"	m	struct:__anon9
-fFreq	spikedata.h	/^        float fFreq;$/;"	m	struct:__anon2
-fFreqDev	spikedata.h	/^        float fFreqDev;	\/\/ 0 = wideband$/;"	m	struct:__anon5
-fFreqDev	spikedata.h	/^        float fFreqDev;$/;"	m	struct:__anon13
-fFreqDev	spikedata.h	/^        float fFreqDev;$/;"	m	struct:__anon4
-fModFreq	spikedata.h	/^        float fModFreq;$/;"	m	struct:__anon13
-fModFreq	spikedata.h	/^        float fModFreq;$/;"	m	struct:__anon3
-fModFreq	spikedata.h	/^        float fModFreq;$/;"	m	struct:__anon4
-fModFreq	spikedata.h	/^        float fModFreq;$/;"	m	struct:__anon5
-fPhase	spikedata.h	/^        float fPhase;$/;"	m	struct:__anon13
-fPhase	spikedata.h	/^        float fPhase;$/;"	m	struct:__anon2
-fPhase	spikedata.h	/^        float fPhase;$/;"	m	struct:__anon3
-fRfTime	spikedata.h	/^	float fRfTime;$/;"	m	struct:__anon11
-fRfTime	spikedata.h	/^        float fRfTime;$/;"	m	struct:__anon9
-fStimInt	spikedata.h	/^	float fStimInt;$/;"	m	struct:__anon11
-fStimInt	spikedata.h	/^        float fStimInt;$/;"	m	struct:__anon13
-fStimInt	spikedata.h	/^        float fStimInt;$/;"	m	struct:__anon9
-fTime	spikedata.h	/^        float fTime;$/;"	m	struct:__anon8
-fileID	uiFileDetailsTreeView.cpp	/^int uiFileDetailsTreeView::fileID(const Gtk::TreeModel::iterator& iter)$/;"	f	class:uiFileDetailsTreeView
-fmsin	spikedata.h	/^		FMSIN	 fmsin;$/;"	m	union:__anon11::__anon12
-fmsin	spikedata.h	/^                FMSIN	 fmsin; \/\/ (12)$/;"	m	union:__anon9::__anon10
-frequency	spikedata.cpp	/^double SpikeData::frequency(int channel, int sweep)$/;"	f	class:SpikeData
-g_bHeaderOmit	spikeDoc.cpp	/^BOOL	g_bPlaceHolder=FALSE, g_bHeaderOmit=FALSE, g_bTossPreStim=FALSE;$/;"	v
-g_bPlaceHolder	spikeDoc.cpp	/^BOOL	g_bPlaceHolder=FALSE, g_bHeaderOmit=FALSE, g_bTossPreStim=FALSE;$/;"	v
-g_bTossPreStim	spikeDoc.cpp	/^BOOL	g_bPlaceHolder=FALSE, g_bHeaderOmit=FALSE, g_bTossPreStim=FALSE;$/;"	v
-g_export_file_fmt	spikeDoc.cpp	/^int		g_export_time_mode=TMODE_ABS, g_export_line_end_fmt=MAC_NL, g_export_file_fmt=IGOR_FMT;$/;"	v
-g_export_line_end_fmt	spikeDoc.cpp	/^int		g_export_time_mode=TMODE_ABS, g_export_line_end_fmt=MAC_NL, g_export_file_fmt=IGOR_FMT;$/;"	v
-g_export_strRunMode	spikeDoc.cpp	/^CString	g_export_strRunMode, g_strPlaceHolder="-1.0";$/;"	v
-g_export_time_mode	spikeDoc.cpp	/^int		g_export_time_mode=TMODE_ABS, g_export_line_end_fmt=MAC_NL, g_export_file_fmt=IGOR_FMT;$/;"	v
-g_strPlaceHolder	spikeDoc.cpp	/^CString	g_export_strRunMode, g_strPlaceHolder="-1.0";$/;"	v
-getCellsStatement	gui.cpp	/^void GUI::getCellsStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID)$/;"	f	class:GUI
-getFilesStatement	gui.cpp	/^void GUI::getFilesStatement(sqlite3_stmt **stmt, const Glib::ustring animalID, const int cellID)$/;"	f	class:GUI
-get_bool	settings.cpp	/^bool Settings::get_bool(std::string key)$/;"	f	class:Settings
-get_bool	settings.cpp	/^bool Settings::get_bool(std::string key, bool def)$/;"	f	class:Settings
-get_double	settings.cpp	/^double Settings::get_double(std::string key)$/;"	f	class:Settings
-get_double	settings.cpp	/^double Settings::get_double(std::string key, double def)$/;"	f	class:Settings
-get_float	settings.cpp	/^float Settings::get_float(std::string key)$/;"	f	class:Settings
-get_float	settings.cpp	/^float Settings::get_float(std::string key, float def)$/;"	f	class:Settings
-get_int	settings.cpp	/^int Settings::get_int(std::string key)$/;"	f	class:Settings
-get_int	settings.cpp	/^int Settings::get_int(std::string key, int def)$/;"	f	class:Settings
-get_string	settings.cpp	/^std::string Settings::get_string(std::string key)$/;"	f	class:Settings
-get_string	settings.cpp	/^std::string Settings::get_string(std::string key, std::string def)$/;"	f	class:Settings
-get_value	settings.cpp	/^bool Settings::get_value(std::string key, std::string &value)$/;"	f	class:Settings
-headerversion	spikedata.cpp	/^int SpikeData::headerversion(char *ID)$/;"	f	class:SpikeData
-headerversion	spikedata.cpp	/^int SpikeData::headerversion(void *header)$/;"	f	class:SpikeData
-importSpikeFile	gui.cpp	/^void GUI::importSpikeFile(std::string filename, char* d_name)$/;"	f	class:GUI
-init_toolbar	gui.cpp	/^void GUI::init_toolbar()$/;"	f	class:GUI
-isSPL	spikedata.h	/^        short	isSPL;			\/\/	 (2) 0=atten, 1=SPL$/;"	m	struct:__anon15
-iso8601	spikedata.cpp	/^std::string SpikeData::iso8601(const char* s)$/;"	f	class:SpikeData
-m_AddNew	uiTags.h	/^		Gtk::Button m_AddNew;$/;"	m	class:uiTags
-m_AnimalColumns	gui.h	/^        AnimalColumns m_AnimalColumns;$/;"	m	class:GUI
-m_AnimalTags	gui.h	/^		uiTags m_AnimalTags;$/;"	m	class:GUI
-m_CellTags	gui.h	/^		uiTags m_CellTags;$/;"	m	class:GUI
-m_Close	uiTags.h	/^				Gtk::Button m_Close;	$/;"	m	class:uiTags::Tag
-m_Columns	uiFileDetailsTreeView.h	/^        Columns m_Columns;$/;"	m	class:uiFileDetailsTreeView
-m_Columns	uiPropTable.h	/^        } m_Columns;$/;"	m	class:uiPropTable	typeref:class:uiPropTable::Columns
-m_DataSourceColumns	gui.h	/^		AnalyzeColumns m_DataSourceColumns;$/;"	m	class:GUI
-m_MeanTypeColumns	gui.h	/^		AnalyzeColumns m_MeanTypeColumns;$/;"	m	class:GUI
-m_Value	uiTags.h	/^				Gtk::Label m_Value;$/;"	m	class:uiTags::Tag
-m_XVar	uiFilterFrame.h	/^		Gtk::ComboBoxText m_XVar;$/;"	m	class:uiFilterFrame
-m_XVarColumns	gui.h	/^		AnalyzeColumns m_XVarColumns;$/;"	m	class:GUI
-m_YVarColumns	gui.h	/^		AnalyzeColumns m_YVarColumns;$/;"	m	class:GUI
-m_a	uiTags.h	/^		Gtk::Allocation m_a;$/;"	m	class:uiTags
-m_adjMinFiles	uiFilterFrame.h	/^		Gtk::Adjustment m_adjMinFiles;$/;"	m	class:uiFilterFrame
-m_bSpikeFile	spikeDoc.h	/^	BOOL	m_bSpikeFile;$/;"	m	class:CSpikeDoc
-m_cHeadId	spikeDoc.h	/^	char		m_cHeadId[12];$/;"	m	class:CSpikeDoc
-m_col_ID	uiPropTable.h	/^                Gtk::TreeModelColumn<T> m_col_ID;$/;"	m	class:uiPropTable::Columns
-m_col_animalID	uiFileDetailsTreeView.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_animalID;$/;"	m	class:uiFileDetailsTreeView::Columns
-m_col_atten	uiFileDetailsTreeView.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_atten;$/;"	m	class:uiFileDetailsTreeView::Columns
-m_col_carfreq	uiFileDetailsTreeView.h	/^                Gtk::TreeModelColumn<int> m_col_carfreq;$/;"	m	class:uiFileDetailsTreeView::Columns
-m_col_cellID	uiFileDetailsTreeView.h	/^                Gtk::TreeModelColumn<int> m_col_cellID;$/;"	m	class:uiFileDetailsTreeView::Columns
-m_col_depth	uiFileDetailsTreeView.h	/^                Gtk::TreeModelColumn<int> m_col_depth;$/;"	m	class:uiFileDetailsTreeView::Columns
-m_col_dur	uiFileDetailsTreeView.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_dur;$/;"	m	class:uiFileDetailsTreeView::Columns
-m_col_filenum	uiFileDetailsTreeView.h	/^                Gtk::TreeModelColumn<int> m_col_filenum;$/;"	m	class:uiFileDetailsTreeView::Columns
-m_col_freq	uiFileDetailsTreeView.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_freq;$/;"	m	class:uiFileDetailsTreeView::Columns
-m_col_hidden	uiFileDetailsTreeView.h	/^                Gtk::TreeModelColumn<bool> m_col_hidden;$/;"	m	class:uiFileDetailsTreeView::Columns
-m_col_name	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_name;$/;"	m	class:GUI::AnalyzeColumns
-m_col_name	gui.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_name;$/;"	m	class:GUI::AnimalColumns
-m_col_name	uiFilterFrame.h	/^				Gtk::TreeModelColumn<Glib::ustring> m_col_name;$/;"	m	class:uiFilterFrame::ModelColumns
-m_col_name	uiPropTable.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_name;$/;"	m	class:uiPropTable::Columns
-m_col_onset	uiFileDetailsTreeView.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_onset;$/;"	m	class:uiFileDetailsTreeView::Columns
-m_col_props	uiFileDetailsTreeView.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_props;$/;"	m	class:uiFileDetailsTreeView::Columns
-m_col_threshold	uiFileDetailsTreeView.h	/^                Gtk::TreeModelColumn<int> m_col_threshold;$/;"	m	class:uiFileDetailsTreeView::Columns
-m_col_time	uiFileDetailsTreeView.h	/^				Gtk::TreeModelColumn<glong> m_col_time;$/;"	m	class:uiFileDetailsTreeView::Columns
-m_col_trials	uiFileDetailsTreeView.h	/^                Gtk::TreeModelColumn<int> m_col_trials;$/;"	m	class:uiFileDetailsTreeView::Columns
-m_col_type	uiFileDetailsTreeView.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_type;$/;"	m	class:uiFileDetailsTreeView::Columns
-m_col_type	uiPropTable.h	/^                Gtk::TreeModelColumn<uiPropTableRowType> m_col_type;$/;"	m	class:uiPropTable::Columns
-m_col_value	uiPropTable.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_value;$/;"	m	class:uiPropTable::Columns
-m_col_xaxis	uiFileDetailsTreeView.h	/^                Gtk::TreeModelColumn<Glib::ustring> m_col_xaxis;$/;"	m	class:uiFileDetailsTreeView::Columns
-m_curAnimalID	gui.h	/^		Glib::ustring m_curAnimalID;$/;"	m	class:GUI
-m_curCellID	gui.h	/^		int m_curCellID;$/;"	m	class:GUI
-m_curFileNum	gui.h	/^		int m_curFileNum;$/;"	m	class:GUI
-m_dwDataArray	spikeDoc.h	/^	CDWordArray	m_dwDataArray;		\/\/ for storing data from spike file$/;"	m	class:CSpikeDoc
-m_dwDataArray	spikedata.h	/^        std::vector<DWORD> m_dwDataArray;$/;"	m	class:SpikeData
-m_filename	uiAnalysis.h	/^		Glib::ustring m_filename;$/;"	m	class:uiAnalysis
-m_frame	uiTags.h	/^				Gtk::Frame m_frame;$/;"	m	class:uiTags::Tag
-m_hbox	uiTags.h	/^				Gtk::HBox m_hbox;$/;"	m	class:uiTags::Tag
-m_head	spikeDoc.h	/^	HEADER60	m_head;				\/\/ for storing header from spike file$/;"	m	class:CSpikeDoc
-m_head	spikedata.h	/^        HEADER m_head;$/;"	m	class:SpikeData
-m_head50	spikedata.h	/^        HEADER50 m_head50;$/;"	m	class:SpikeData
-m_head_v30	spikeDoc.h	/^	HEADER30	m_head_v30;			\/\/ for storing header from spike file$/;"	m	class:CSpikeDoc
-m_head_v40	spikeDoc.h	/^	HEADER40	m_head_v40;			\/\/ for storing header from spike file$/;"	m	class:CSpikeDoc
-m_head_v50	spikeDoc.h	/^	HEADER50	m_head_v50;			\/\/ for storing header from spike file$/;"	m	class:CSpikeDoc
-m_nActualPasses	spikeDoc.h	/^	int			m_nActualPasses[MAX_SWEEPS];	\/\/ how many passes for a given sweep$/;"	m	class:CSpikeDoc
-m_nActualPasses	spikedata.h	/^        int m_nActualPasses[MAX_SWEEPS];$/;"	m	class:SpikeData
-m_parent	uiAnalysis.h	/^		Gtk::Window* m_parent;$/;"	m	class:uiAnalysis
-m_parent	uiFileDetailsTreeView.h	/^		Gtk::Window* m_parent;$/;"	m	class:uiFileDetailsTreeView
-m_parent	uiTags.h	/^		Gtk::Window* m_parent;$/;"	m	class:uiTags
-m_refGlade	uiFilterFrame.h	/^        Glib::RefPtr<Gtk::Builder> m_refGlade;$/;"	m	class:uiFilterFrame
-m_refList	uiPropTable.h	/^        Glib::RefPtr<Gtk::ListStore> m_refList;$/;"	m	class:uiPropTable
-m_rend_name	uiPropTable.h	/^        Gtk::CellRendererText m_rend_name;$/;"	m	class:uiPropTable
-m_rend_value	uiPropTable.h	/^        Gtk::CellRendererText m_rend_value;$/;"	m	class:uiPropTable
-m_signal_added	uiTags.h	/^		type_signal_added m_signal_added;$/;"	m	class:uiTags
-m_signal_changed	uiFilterFrame.h	/^		type_signal_changed m_signal_changed;$/;"	m	class:uiFilterFrame
-m_signal_deleted	uiTags.h	/^				type_signal_deleted m_signal_deleted;$/;"	m	class:uiTags::Tag
-m_signal_deleted	uiTags.h	/^		type_signal_deleted m_signal_deleted;$/;"	m	class:uiTags
-m_signal_file_set_hidden	uiFileDetailsTreeView.h	/^		type_signal_file_set_hidden m_signal_file_set_hidden;$/;"	m	class:uiFileDetailsTreeView
-m_signal_rowedited	uiPropTable.h	/^		type_signal_rowedited m_signal_rowedited;$/;"	m	class:uiPropTable
-m_spikeArray	spikeDoc.h	/^	CArray<SPIKESTRUCT, SPIKESTRUCT> m_spikeArray;	\/\/ for storing spikes$/;"	m	class:CSpikeDoc
-m_spikeArray	spikedata.h	/^        std::vector<SPIKESTRUCT> m_spikeArray;$/;"	m	class:SpikeData
-m_stimArrayCh1	spikeDoc.h	/^	CArray<STIM, STIM> m_stimArrayCh1;	\/\/ for storing stimuli$/;"	m	class:CSpikeDoc
-m_stimArrayCh2	spikeDoc.h	/^	CArray<STIM, STIM> m_stimArrayCh2;	\/\/ for storing stimuli$/;"	m	class:CSpikeDoc
-m_strFileName	spikeDoc.h	/^	CString	m_strFileName;$/;"	m	class:CSpikeDoc
-m_tag	uiFilterFrame.h	/^		Gtk::Entry m_tag;$/;"	m	class:uiFilterFrame
-m_tagColumns	uiFilterFrame.h	/^		} m_tagColumns;$/;"	m	class:uiFilterFrame	typeref:class:uiFilterFrame::ModelColumns
-m_tag_widgets	uiTags.h	/^		std::vector<Tag*> m_tag_widgets;$/;"	m	class:uiTags
-m_tags	uiTags.h	/^		std::vector<Glib::ustring> m_tags;$/;"	m	class:uiTags
-m_timer	uiFilterFrame.h	/^		Glib::Timer m_timer;$/;"	m	class:uiFilterFrame
-m_tvcol_name	uiPropTable.h	/^        Gtk::TreeViewColumn m_tvcol_name;$/;"	m	class:uiPropTable
-m_tvcol_value	uiPropTable.h	/^        Gtk::TreeViewColumn m_tvcol_value;$/;"	m	class:uiPropTable
-m_uiAnimalDetails	gui.h	/^		uiPropTable<Glib::ustring> m_uiAnimalDetails; \/**< Animal details property table. *\/$/;"	m	class:GUI
-m_uiCellDetails	gui.h	/^		uiPropTable<CellID> m_uiCellDetails; \/**< Cell details property table. *\/$/;"	m	class:GUI
-m_uiFilterFrame	gui.h	/^		uiFilterFrame m_uiFilterFrame; \/**< Filter widgets in top left corner. *\/$/;"	m	class:GUI
-m_wDataArray	spikeDoc.h	/^	CWordArray	m_wDataArray;		\/\/ for storing data from spike file$/;"	m	class:CSpikeDoc
-m_wHistoArray	spikeDoc.h	/^	CWordArray	m_wHistoArray;		\/\/ for storing histogram$/;"	m	class:CSpikeDoc
-main	spikedb.cpp	/^int main(int argc, char** argv)$/;"	f
-minFiles	uiFilterFrame.cpp	/^int uiFilterFrame::minFiles()$/;"	f	class:uiFilterFrame
-minFiles	uiFilterFrame.cpp	/^void uiFilterFrame::minFiles(int set)$/;"	f	class:uiFilterFrame
-mp_Analysis	gui.h	/^		uiAnalysis* mp_Analysis;$/;"	m	class:GUI
-mp_AnimalsTree	gui.h	/^        Gtk::TreeView* mp_AnimalsTree;$/;"	m	class:GUI
-mp_DataSource	gui.h	/^		Gtk::ComboBox* mp_DataSource;$/;"	m	class:GUI
-mp_FileDetailsTree	gui.h	/^        uiFileDetailsTreeView* mp_FileDetailsTree;$/;"	m	class:GUI
-mp_FileDetailsTree	uiAnalysis.h	/^		uiFileDetailsTreeView* mp_FileDetailsTree;$/;"	m	class:uiAnalysis
-mp_HBoxPlots	gui.h	/^        Gtk::HBox* mp_HBoxPlots;$/;"	m	class:GUI
-mp_MeanType	gui.h	/^		Gtk::ComboBox* mp_MeanType;$/;"	m	class:GUI
-mp_MenuImportFolder	gui.h	/^		Gtk::ImageMenuItem* mp_MenuImportFolder; \/**< Import menu item. Require access to enable\/disable it. *\/$/;"	m	class:GUI
-mp_Menu_FileDetails	uiFileDetailsTreeView.h	/^		Gtk::Menu* mp_Menu_FileDetails;$/;"	m	class:uiFileDetailsTreeView
-mp_PlotAnalyze	gui.h	/^        EasyPlotmm* mp_PlotAnalyze;$/;"	m	class:GUI
-mp_PlotMeans	gui.h	/^        EasyPlotmm* mp_PlotMeans;$/;"	m	class:GUI
-mp_PlotSpikes	gui.h	/^        EasyPlotmm* mp_PlotSpikes;$/;"	m	class:GUI
-mp_Statusbar	gui.h	/^		Gtk::Statusbar* mp_Statusbar;$/;"	m	class:GUI
-mp_VBoxAnalyze	gui.h	/^        Gtk::VBox* mp_VBoxAnalyze;$/;"	m	class:GUI
-mp_VBoxFilter	uiFilterFrame.h	/^		Gtk::VBox *mp_VBoxFilter;	$/;"	m	class:uiFilterFrame
-mp_XVar	gui.h	/^		Gtk::ComboBox* mp_XVar;$/;"	m	class:GUI
-mp_YVar	gui.h	/^		Gtk::ComboBox* mp_YVar;$/;"	m	class:GUI
-mp_cbHidden	uiFilterFrame.h	/^		Gtk::CheckButton *mp_cbHidden;$/;"	m	class:uiFilterFrame
-mp_sbMinFiles	uiFilterFrame.h	/^		Gtk::SpinButton* mp_sbMinFiles;$/;"	m	class:uiFilterFrame
-mrp_AnimalSelection	gui.h	/^        Glib::RefPtr<Gtk::TreeSelection> mrp_AnimalSelection;$/;"	m	class:GUI
-mrp_AnimalTree	gui.h	/^        Glib::RefPtr<Gtk::TreeStore> mrp_AnimalTree;$/;"	m	class:GUI
-mrp_CellDetailsList	gui.h	/^        Glib::RefPtr<Gtk::ListStore> mrp_CellDetailsList;$/;"	m	class:GUI
-mrp_CompletionModel	uiFilterFrame.h	/^		Glib::RefPtr<Gtk::ListStore> mrp_CompletionModel;$/;"	m	class:uiFilterFrame
-mrp_DataSource	gui.h	/^        Glib::RefPtr<Gtk::ListStore> mrp_DataSource;$/;"	m	class:GUI
-mrp_Glade	gui.h	/^        Glib::RefPtr<Gtk::Builder> mrp_Glade; \/**< Reference to Glade file. *\/ $/;"	m	class:GUI
-mrp_ListStore	uiFileDetailsTreeView.h	/^        Glib::RefPtr<Gtk::ListStore> mrp_ListStore;$/;"	m	class:uiFileDetailsTreeView
-mrp_MeanType	gui.h	/^        Glib::RefPtr<Gtk::ListStore> mrp_MeanType;$/;"	m	class:GUI
-mrp_Selection	uiFileDetailsTreeView.h	/^        Glib::RefPtr<Gtk::TreeSelection> mrp_Selection;$/;"	m	class:uiFileDetailsTreeView
-mrp_TypeFilter	gui.h	/^        Glib::RefPtr<Gtk::ListStore> mrp_TypeFilter;$/;"	m	class:GUI
-mrp_XVar	gui.h	/^        Glib::RefPtr<Gtk::ListStore> mrp_XVar;$/;"	m	class:GUI
-mrp_YVar	gui.h	/^        Glib::RefPtr<Gtk::ListStore> mrp_YVar;$/;"	m	class:GUI
-mrp_tbOutput	uiAnalysis.h	/^		Glib::RefPtr<Gtk::TextBuffer> mrp_tbOutput;$/;"	m	class:uiAnalysis
-nMagic	spikedata.h	/^	int	    nMagic;			\/\/   (4) for internal use of the spike programs $/;"	m	struct:__anon14
-nMagic	spikedata.h	/^        int	nMagic;			\/\/   (4) for internal use of the spike programs $/;"	m	struct:__anon15
-nOnCh1	spikedata.h	/^	short	nOnCh1;			\/\/   (2) stimulus channel1 on\/off $/;"	m	struct:__anon14
-nOnCh1	spikedata.h	/^        short	nOnCh1;			\/\/   (2) stimulus channel1 on\/off $/;"	m	struct:__anon15
-nOnCh2	spikedata.h	/^	short	nOnCh2;			\/\/   (2) stimulus channel2 on\/off $/;"	m	struct:__anon14
-nOnCh2	spikedata.h	/^        short	nOnCh2;			\/\/   (2) stimulus channel2 on\/off $/;"	m	struct:__anon15
-nPass	spikedata.h	/^        short nPass;$/;"	m	struct:__anon8
-nPasses	spikedata.h	/^	short	nPasses;		\/\/   (2) number of repetitions of each stimulus $/;"	m	struct:__anon14
-nPasses	spikedata.h	/^        short	nPasses;		\/\/   (2) number of repetitions of each stimulus $/;"	m	struct:__anon15
-nPresentation	spikedata.h	/^	short	nPresentation;	\/\/   (2) presentation -> sequential\/randomized $/;"	m	struct:__anon14
-nPresentation	spikedata.h	/^        short	nPresentation;	\/\/   (2) presentation -> sequential\/randomized\/seq-noninterleaved$/;"	m	struct:__anon15
-nRepInt	spikedata.h	/^	int	    nRepInt;		\/\/   (4) repetition interval$/;"	m	struct:__anon14
-nRepInt	spikedata.h	/^        int	nRepInt;		\/\/   (4) repetition interval$/;"	m	struct:__anon15
-nScaling	spikedata.h	/^	short	nScaling;		\/\/   (2) scaling steps -> linear\/logarithmic $/;"	m	struct:__anon14
-nScaling	spikedata.h	/^        short	nScaling;		\/\/   (2) scaling steps -> linear\/logarithmic $/;"	m	struct:__anon15
-nStepMode	spikedata.h	/^	short	nStepMode;		\/\/   (2) frequency, attenuation or both$/;"	m	struct:__anon14
-nStepMode	spikedata.h	/^        short	nStepMode;		\/\/   (2) frequency, attenuation or both$/;"	m	struct:__anon15
-nStimPerSweep	spikedata.h	/^	short nStimPerSweep;$/;"	m	struct:__anon11
-nStimPerSweep	spikedata.h	/^        short nStimPerSweep;$/;"	m	struct:__anon9
-nSweep	spikedata.h	/^        short nSweep;$/;"	m	struct:__anon8
-nSweeps	spikedata.h	/^	short	nSweeps;		\/\/   (2) number of values (=stimuli) used $/;"	m	struct:__anon14
-nSweeps	spikedata.h	/^        short	nSweeps;		\/\/   (2) number of values (=stimuli) used $/;"	m	struct:__anon15
-nType	spikedata.h	/^	short nType;		\/\/ stimulus type$/;"	m	struct:__anon11
-nType	spikedata.h	/^        short nType;		\/\/ stimulus type$/;"	m	struct:__anon9
-nType	spikedata.h	/^        short nType;$/;"	m	struct:__anon6
-name_cell_data	uiPropTable.h	/^void uiPropTable<T>::name_cell_data(Gtk::CellRenderer* \/*renderer*\/, const Gtk::TreeModel::iterator& iter)$/;"	f	class:uiPropTable
-needput	uiTags.h	/^		bool needput;$/;"	m	class:uiTags
-new	spikeDoc.cpp	17;"	d	file:
-newrow	uiFileDetailsTreeView.cpp	/^Gtk::TreeModel::Row uiFileDetailsTreeView::newrow()$/;"	f	class:uiFileDetailsTreeView
-noise_ex	spikedata.h	/^                NOISE_EX noise_ex; \/\/ (16)$/;"	m	union:__anon9::__anon10
-on_XVar_changed	uiFilterFrame.cpp	/^void uiFilterFrame::on_XVar_changed()$/;"	f	class:uiFilterFrame
-on_addnew_clicked	uiTags.cpp	/^void uiTags::on_addnew_clicked() $/;"	f	class:uiTags
-on_adjMinFiles_changed	uiFilterFrame.cpp	/^void uiFilterFrame::on_adjMinFiles_changed()$/;"	f	class:uiFilterFrame
-on_analyze_changed	gui.cpp	/^void GUI::on_analyze_changed()$/;"	f	class:GUI
-on_animal_sort	gui.cpp	/^int GUI::on_animal_sort(const Gtk::TreeModel::iterator& a_, const Gtk::TreeModel::iterator& b_)$/;"	f	class:GUI
-on_animal_tag_added	gui.cpp	/^bool GUI::on_animal_tag_added(Glib::ustring tag)$/;"	f	class:GUI
-on_animal_tag_deleted	gui.cpp	/^void GUI::on_animal_tag_deleted(Glib::ustring tag)$/;"	f	class:GUI
-on_animaldetails_edited	gui.cpp	/^void GUI::on_animaldetails_edited($/;"	f	class:GUI
-on_cell_tag_added	gui.cpp	/^bool GUI::on_cell_tag_added(Glib::ustring tag)$/;"	f	class:GUI
-on_cell_tag_deleted	gui.cpp	/^void GUI::on_cell_tag_deleted(Glib::ustring tag)$/;"	f	class:GUI
-on_celldetails_edited	gui.cpp	/^void GUI::on_celldetails_edited($/;"	f	class:GUI
-on_delete_clicked	uiTags.cpp	/^void uiTags::Tag::on_delete_clicked()$/;"	f	class:uiTags::Tag
-on_file_details_button_press_event	uiFileDetailsTreeView.cpp	/^void uiFileDetailsTreeView::on_file_details_button_press_event(GdkEventButton* event)$/;"	f	class:uiFileDetailsTreeView
-on_file_tag_added	gui.cpp	/^bool GUI::on_file_tag_added(Glib::ustring tag)$/;"	f	class:GUI
-on_file_tag_deleted	gui.cpp	/^void GUI::on_file_tag_deleted(Glib::ustring tag)$/;"	f	class:GUI
-on_filedetails_selection_changed	gui.cpp	/^void GUI::on_filedetails_selection_changed()$/;"	f	class:GUI
-on_filedetails_set_hidden	gui.cpp	/^void GUI::on_filedetails_set_hidden(bool hidden)$/;"	f	class:GUI
-on_filter_changed	gui.cpp	/^void GUI::on_filter_changed()$/;"	f	class:GUI
-on_hidden_toggled	uiFilterFrame.cpp	/^void uiFilterFrame::on_hidden_toggled()$/;"	f	class:uiFilterFrame
-on_meantype_changed	gui.cpp	/^void GUI::on_meantype_changed()$/;"	f	class:GUI
-on_menuImportFolder_activate	gui.cpp	/^void GUI::on_menuImportFolder_activate()$/;"	f	class:GUI
-on_menuNewDatabase_activate	gui.cpp	/^void GUI::on_menuNewDatabase_activate()$/;"	f	class:GUI
-on_menuOpenDatabase_activate	gui.cpp	/^void GUI::on_menuOpenDatabase_activate()$/;"	f	class:GUI
-on_menuQuit_activate	gui.cpp	/^void GUI::on_menuQuit_activate()$/;"	f	class:GUI
-on_open_clicked	uiAnalysis.cpp	/^void uiAnalysis::on_open_clicked()$/;"	f	class:uiAnalysis
-on_run_clicked	uiAnalysis.cpp	/^void uiAnalysis::on_run_clicked()$/;"	f	class:uiAnalysis
-on_tag_changed	uiFilterFrame.cpp	/^void uiFilterFrame::on_tag_changed()$/;"	f	class:uiFilterFrame
-on_tag_deleted	uiTags.cpp	/^void uiTags::on_tag_deleted(Glib::ustring tag)$/;"	f	class:uiTags
-on_uiTags_size_allocate	uiTags.cpp	/^void uiTags::on_uiTags_size_allocate(Gtk::Allocation& a)$/;"	f	class:uiTags
-on_value_edited	uiPropTable.h	/^void uiPropTable<T>::on_value_edited(const Glib::ustring& path_string, const Glib::ustring& new_text)$/;"	f	class:uiPropTable
-on_view_file_details	uiFileDetailsTreeView.cpp	/^void uiFileDetailsTreeView::on_view_file_details()$/;"	f	class:uiFileDetailsTreeView
-openDatabase	gui.cpp	/^bool GUI::openDatabase(std::string filename)$/;"	f	class:GUI
-operator <	uiAnalysis.h	/^			friend bool operator<(CellID const& a, CellID const& b)$/;"	f	struct:uiAnalysis::CellID
-params	spikedata.h	/^	} params;$/;"	m	struct:__anon11	typeref:union:__anon11::__anon12
-params	spikedata.h	/^        } params; \/\/ (80)$/;"	m	struct:__anon9	typeref:union:__anon9::__anon10
-parent	uiFilterFrame.h	/^		Gtk::Object *parent;$/;"	m	class:uiFilterFrame
-parse	spikedata.cpp	/^bool SpikeData::parse(const char* filename)$/;"	f	class:SpikeData
-parsedata	spikedata.cpp	/^bool SpikeData::parsedata()$/;"	f	class:SpikeData
-populateAnimalDetailsList	gui.cpp	/^void GUI::populateAnimalDetailsList(const Glib::ustring animalID)$/;"	f	class:GUI
-populateAnimalTree	gui.cpp	/^void GUI::populateAnimalTree()$/;"	f	class:GUI
-populateCellDetailsList	gui.cpp	/^void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID)$/;"	f	class:GUI
-populateDetailsList	gui.cpp	/^void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)$/;"	f	class:GUI
-printfile	spikedata.cpp	/^void SpikeData::printfile()$/;"	f	class:SpikeData
-queue_change_signal	uiFilterFrame.h	/^		bool queue_change_signal;$/;"	m	class:uiFilterFrame
-redraw	uiTags.cpp	/^void uiTags::redraw()$/;"	f	class:uiTags
-runScript	uiAnalysis.cpp	/^void uiAnalysis::runScript()$/;"	f	class:uiAnalysis
-set	settings.cpp	/^void Settings::set(std::string key, bool value)$/;"	f	class:Settings
-set	settings.cpp	/^void Settings::set(std::string key, double value)$/;"	f	class:Settings
-set	settings.cpp	/^void Settings::set(std::string key, float value)$/;"	f	class:Settings
-set	settings.cpp	/^void Settings::set(std::string key, int value)$/;"	f	class:Settings
-set	settings.cpp	/^void Settings::set(std::string key, std::string value)$/;"	f	class:Settings
-setHeader	spikedata.cpp	/^bool SpikeData::setHeader(void *header)$/;"	f	class:SpikeData
-set_parent	uiTags.cpp	/^void uiTags::set_parent(Gtk::Window* parent)$/;"	f	class:uiTags
-settings	gui.h	/^		Settings settings; \/**< Settings object. *\/$/;"	m	class:GUI
-showHidden	uiFilterFrame.cpp	/^bool uiFilterFrame::showHidden()$/;"	f	class:uiFilterFrame
-showHidden	uiFilterFrame.cpp	/^void uiFilterFrame::showHidden(bool set)$/;"	f	class:uiFilterFrame
-show_file_details	uiFileDetailsTreeView.cpp	/^void uiFileDetailsTreeView::show_file_details(const Gtk::TreeModel::iterator& iter)$/;"	f	class:uiFileDetailsTreeView
-signal_added	uiTags.cpp	/^uiTags::type_signal_added uiTags::signal_added()$/;"	f	class:uiTags
-signal_changed	uiFilterFrame.cpp	/^uiFilterFrame::type_signal_changed uiFilterFrame::signal_changed()$/;"	f	class:uiFilterFrame
-signal_deleted	uiTags.cpp	/^uiTags::Tag::type_signal_deleted uiTags::Tag::signal_deleted()$/;"	f	class:uiTags::Tag
-signal_deleted	uiTags.cpp	/^uiTags::type_signal_deleted uiTags::signal_deleted()$/;"	f	class:uiTags
-signal_file_set_hidden	uiFileDetailsTreeView.cpp	/^uiFileDetailsTreeView::type_signal_file_set_hidden uiFileDetailsTreeView::signal_file_set_hidden()$/;"	f	class:uiFileDetailsTreeView
-signal_rowedited	uiPropTable.h	/^typename uiPropTable<T>::type_signal_rowedited uiPropTable<T>::signal_rowedited()$/;"	f	class:uiPropTable
-sin	spikedata.h	/^		SIN		 sin;$/;"	m	union:__anon11::__anon12
-sin	spikedata.h	/^                SIN	 sin; \/\/ (8)$/;"	m	union:__anon9::__anon10
-stepFlags	spikedata.h	/^	STEP_FLAGS stepFlags[2][2];\/\/(40) [0=chan1,1=chan2][0=X,1=Y]$/;"	m	struct:__anon14
-stepFlags	spikedata.h	/^        STEP_FLAGS stepFlags[2][2];\/\/(40) [0=chan1,1=chan2][0=X,1=Y]$/;"	m	struct:__anon15
-stimFirstCh1	spikedata.h	/^	STIM_50	stimFirstCh1;	\/\/  (44) first stimulus parameters for channel1$/;"	m	struct:__anon14
-stimFirstCh1	spikedata.h	/^        STIM	stimFirstCh1;	\/\/ (108) first stimulus parameters for channel1$/;"	m	struct:__anon15
-stimFirstCh2	spikedata.h	/^	STIM_50	stimFirstCh2;	\/\/  (44) first stimulus parameters for channel2$/;"	m	struct:__anon14
-stimFirstCh2	spikedata.h	/^        STIM	stimFirstCh2;	\/\/ (108) first stimulus parameters for channel2$/;"	m	struct:__anon15
-stimTypes	spikeDoc.cpp	/^CString stimTypes[] = {"NOISE", "SINUS", "AMSINUS", "FMSINUS", "SWEPTSINUS", "WAVEFILE", "FILT_NOISE"};$/;"	v
-strFileName	spikedata.h	/^        char strFileName[80];$/;"	m	struct:__anon7
-sweptsin	spikedata.h	/^		SWEPTSIN sweptsin;$/;"	m	union:__anon11::__anon12
-sweptsin	spikedata.h	/^                SWEPTSIN sweptsin; \/\/ (10)$/;"	m	union:__anon9::__anon10
-tag	uiFilterFrame.cpp	/^Glib::ustring uiFilterFrame::tag()$/;"	f	class:uiFilterFrame
-tags	uiTags.cpp	/^std::vector<Glib::ustring> uiTags::tags()$/;"	f	class:uiTags
-tags	uiTags.cpp	/^void uiTags::tags(std::vector<Glib::ustring> tags)$/;"	f	class:uiTags
-tbRun	uiAnalysis.h	/^		Gtk::ToolButton *tbRun;$/;"	m	class:uiAnalysis
-treeSelection	uiFileDetailsTreeView.cpp	/^Glib::RefPtr<Gtk::TreeSelection> uiFileDetailsTreeView::treeSelection()$/;"	f	class:uiFileDetailsTreeView
-trials	spikedata.cpp	/^int SpikeData::trials()$/;"	f	class:SpikeData
-type	spikedata.cpp	/^std::string SpikeData::type(int channel)$/;"	f	class:SpikeData
-type_signal_added	uiTags.h	/^		typedef sigc::signal<bool,Glib::ustring> type_signal_added;$/;"	t	class:uiTags
-type_signal_changed	uiFilterFrame.h	/^		typedef sigc::signal<void> type_signal_changed;$/;"	t	class:uiFilterFrame
-type_signal_deleted	uiTags.h	/^				typedef sigc::signal<void,Glib::ustring> type_signal_deleted;$/;"	t	class:uiTags::Tag
-type_signal_deleted	uiTags.h	/^		typedef sigc::signal<void,Glib::ustring> type_signal_deleted;$/;"	t	class:uiTags
-type_signal_file_set_hidden	uiFileDetailsTreeView.h	/^		typedef sigc::signal<void,bool> type_signal_file_set_hidden;$/;"	t	class:uiFileDetailsTreeView
-type_signal_rowedited	uiPropTable.h	/^						 	 > type_signal_rowedited;$/;"	t	class:uiPropTable
-uiAnalysis	uiAnalysis.cpp	/^uiAnalysis::uiAnalysis(sqlite3 **db, uiFileDetailsTreeView* fileDetailsTree, Gtk::Window* parent)$/;"	f	class:uiAnalysis
-uiAnalysis	uiAnalysis.h	/^class uiAnalysis : public Gtk::VBox {$/;"	c
-uiFileDetailsTreeView	uiFileDetailsTreeView.cpp	/^uiFileDetailsTreeView::uiFileDetailsTreeView(sqlite3 **db, Gtk::Window *parent)$/;"	f	class:uiFileDetailsTreeView
-uiFileDetailsTreeView	uiFileDetailsTreeView.h	/^class uiFileDetailsTreeView : public Gtk::TreeView {$/;"	c
-uiFilterFrame	uiFilterFrame.cpp	/^uiFilterFrame::uiFilterFrame(const Glib::RefPtr<Gtk::Builder>& refGlade)$/;"	f	class:uiFilterFrame
-uiFilterFrame	uiFilterFrame.h	/^class uiFilterFrame {$/;"	c
-uiPropTable	uiPropTable.h	/^class uiPropTable : public Gtk::TreeView {$/;"	c
-uiPropTable	uiPropTable.h	/^uiPropTable<T>::uiPropTable()$/;"	f	class:uiPropTable
-uiPropTableRowType	uiPropTable.h	/^enum uiPropTableRowType {$/;"	g
-uiReady	gui.h	/^		bool uiReady; \/**< When FALSE, block UI updates. *\/$/;"	m	class:GUI
-uiTags	uiTags.cpp	/^uiTags::uiTags(Gtk::Window *parent) $/;"	f	class:uiTags
-uiTags	uiTags.h	/^class uiTags : public Gtk::Fixed {$/;"	c
-updateAnalyzePlot	gui.cpp	/^void GUI::updateAnalyzePlot()$/;"	f	class:GUI
-updateSideLists	gui.cpp	/^void GUI::updateSideLists(const Gtk::TreeModel::iterator& iter)$/;"	f	class:GUI
-updateTagCompletion	gui.cpp	/^void GUI::updateTagCompletion()$/;"	f	class:GUI
-updateTagCompletion	uiFilterFrame.cpp	/^void uiFilterFrame::updateTagCompletion(std::vector<Glib::ustring> tags)$/;"	f	class:uiFilterFrame
-value_cell_data	uiPropTable.h	/^void uiPropTable<T>::value_cell_data(Gtk::CellRenderer* \/*renderer*\/, const Gtk::TreeModel::iterator& iter)$/;"	f	class:uiPropTable
-wav	spikedata.h	/^                WAV	 wav;	\/\/(80)	\/\/ added for V 6.0$/;"	m	union:__anon9::__anon10
-xVariable	spikedata.cpp	/^std::string SpikeData::xVariable()$/;"	f	class:SpikeData
-xvalue	spikedata.cpp	/^double SpikeData::xvalue(int sweep)$/;"	f	class:SpikeData
-~CSpikeDoc	spikeDoc.cpp	/^CSpikeDoc::~CSpikeDoc()$/;"	f	class:CSpikeDoc
-~GUI	gui.cpp	/^GUI::~GUI()$/;"	f	class:GUI
-~Settings	settings.cpp	/^Settings::~Settings()$/;"	f	class:Settings
-~uiAnalysis	uiAnalysis.cpp	/^uiAnalysis::~uiAnalysis() {}$/;"	f	class:uiAnalysis
-~uiFileDetailsTreeView	uiFileDetailsTreeView.cpp	/^uiFileDetailsTreeView::~uiFileDetailsTreeView() {}$/;"	f	class:uiFileDetailsTreeView
-~uiFilterFrame	uiFilterFrame.cpp	/^uiFilterFrame::~uiFilterFrame()$/;"	f	class:uiFilterFrame
-~uiPropTable	uiPropTable.h	/^uiPropTable<T>::~uiPropTable() {}$/;"	f	class:uiPropTable
-~uiTags	uiTags.cpp	/^uiTags::~uiTags() {}$/;"	f	class:uiTags
+GUI	gui.cpp	/^GUI::GUI()$/
+Mspikedb.cpp	spikedb.cpp	/^int main(int argc, char** argv)$/
+Settings	settings.cpp	/^Settings::Settings()$/
+SpikeData	spikedata.cpp	/^SpikeData::SpikeData()$/
+Tag	uiTags.cpp	/^uiTags::Tag::Tag(Glib::ustring tag)$/
+Tokenize	tokenize.cpp	/^int Tokenize(const std::string& str,$/
+XVar	uiFilterFrame.cpp	/^int uiFilterFrame::XVar()$/
+addOptionCheckbox	pySpikeDB.cpp	/^void pySpikeDB::addOptionCheckbox(const std::strin/
+addOptionNumber	pySpikeDB.cpp	/^void pySpikeDB::addOptionNumber(const std::string /
+animalID	uiFileDetailsTreeView.cpp	/^Glib::ustring uiFileDetailsTreeView::animalID(cons/
+attenuation	spikedata.cpp	/^double SpikeData::attenuation(int channel, int swe/
+begin	spikedata.cpp	/^double SpikeData::begin(int channel, int sweep)$/
+cellID	uiFileDetailsTreeView.cpp	/^int uiFileDetailsTreeView::cellID(const Gtk::TreeM/
+check_change_queue	uiFilterFrame.cpp	/^bool uiFilterFrame::check_change_queue()$/
+clear	uiFileDetailsTreeView.cpp	/^void uiFileDetailsTreeView::clear()$/
+database_version	gui.cpp	/^double GUI::database_version()$/
+delta	spikedata.cpp	/^double SpikeData::delta()$/
+duration	spikedata.cpp	/^double SpikeData::duration(int channel, int sweep)/
+fileID	uiFileDetailsTreeView.cpp	/^int uiFileDetailsTreeView::fileID(const Gtk::TreeM/
+filterSpikesAbs	pySpikeDB.cpp	/^void pySpikeDB::filterSpikesAbs(const float &begin/
+filterSpikesRel	pySpikeDB.cpp	/^void pySpikeDB::filterSpikesRel(const float &begin/
+forceSpikesAbs	pySpikeDB.cpp	/^void pySpikeDB::forceSpikesAbs(const float &begin,/
+frequency	spikedata.cpp	/^double SpikeData::frequency(int channel, int sweep/
+getCells	pySpikeDB.cpp	/^bp::object pySpikeDB::getCells()$/
+getCheckboxOption	pySpikeDB.cpp	/^bool pySpikeDB::getCheckboxOption(const std::strin/
+getFile	pySpikeDB.cpp	/^bp::object pySpikeDB::getFile(const Gtk::TreeModel/
+getFiles	pySpikeDB.cpp	/^bp::object pySpikeDB::getFiles(bool selOnly)$/
+getOptions	pySpikeDB.cpp	/^bp::object pySpikeDB::getOptions()$/
+get_bool	settings.cpp	/^bool Settings::get_bool(std::string key)$/
+get_double	settings.cpp	/^double Settings::get_double(std::string key)$/
+get_float	settings.cpp	/^float Settings::get_float(std::string key)$/
+get_int	settings.cpp	/^int Settings::get_int(std::string key)$/
+get_string	settings.cpp	/^std::string Settings::get_string(std::string key)$/
+get_value	settings.cpp	/^bool Settings::get_value(std::string key, std::str/
+headerversion	spikedata.cpp	/^int SpikeData::headerversion(char *ID)$/
+initPlugins	uiAnalysis.cpp	/^void uiAnalysis::initPlugins()$/
+init_gui	gui.cpp	/^void GUI::init_gui()$/
+init_menu	gui.cpp	/^void GUI::init_menu()$/
+iso8601	spikedata.cpp	/^std::string SpikeData::iso8601(const char* s)$/
+list2vec	pySpikeDB.cpp	/^std::vector<T> pySpikeDB::list2vec(bp::list &l)$/
+m_adjMinFiles	uiFilterFrame.cpp	/^	: m_adjMinFiles(1, 1, 20, 1, 3, 0)$/
+mean	pySpikeDB.cpp	/^double pySpikeDB::mean(boost::python::list &v)$/
+minFiles	uiFilterFrame.cpp	/^int uiFilterFrame::minFiles()$/
+newrow	uiFileDetailsTreeView.cpp	/^Gtk::TreeModel::Row uiFileDetailsTreeView::newrow(/
+on_XVar_changed	uiFilterFrame.cpp	/^void uiFilterFrame::on_XVar_changed()$/
+on_addnew_clicked	uiTags.cpp	/^void uiTags::on_addnew_clicked() $/
+on_adjMinFiles_changed	uiFilterFrame.cpp	/^void uiFilterFrame::on_adjMinFiles_changed()$/
+on_animal_sort	gui.cpp	/^int GUI::on_animal_sort(const Gtk::TreeModel::iter/
+on_data_point_clicked	uiAnalysis.cpp	/^void uiAnalysis::on_data_point_clicked(const doubl/
+on_delete_clicked	uiTags.cpp	/^void uiTags::Tag::on_delete_clicked()$/
+on_file_details_button_press_event	uiFileDetailsTreeView.cpp	/^void uiFileDetailsTreeView::on_file_details_button/
+on_filter_changed	gui.cpp	/^void GUI::on_filter_changed()$/
+on_hidden_toggled	uiFilterFrame.cpp	/^void uiFilterFrame::on_hidden_toggled()$/
+on_hovered_on_point	uiAnalysis.cpp	/^void uiAnalysis::on_hovered_on_point(const double /
+on_menuNewDatabase_activate	gui.cpp	/^void GUI::on_menuNewDatabase_activate()$/
+on_menuOpenDatabase_activate	gui.cpp	/^void GUI::on_menuOpenDatabase_activate()$/
+on_moved_off_point	uiAnalysis.cpp	/^void uiAnalysis::on_moved_off_point()$/
+on_open_clicked	uiAnalysis.cpp	/^void uiAnalysis::on_open_clicked()$/
+on_options_clicked	uiAnalysis.cpp	/^void uiAnalysis::on_options_clicked()$/
+on_plotspikes_zoom_changed	gui.cpp	/^void GUI::on_plotspikes_zoom_changed(double begin,/
+on_plugin_changed	uiAnalysis.cpp	/^void uiAnalysis::on_plugin_changed()$/
+on_run_clicked	uiAnalysis.cpp	/^void uiAnalysis::on_run_clicked()$/
+on_tag_added	uiFileDetailsTreeView.cpp	/^bool uiFileDetailsTreeView::on_tag_added(Glib::ust/
+on_tag_changed	uiFilterFrame.cpp	/^void uiFilterFrame::on_tag_changed()$/
+on_tag_deleted	uiFileDetailsTreeView.cpp	/^void uiFileDetailsTreeView::on_tag_deleted(Glib::u/
+on_uiTags_size_allocate	uiTags.cpp	/^void uiTags::on_uiTags_size_allocate(Gtk::Allocati/
+on_view_file_details	uiFileDetailsTreeView.cpp	/^void uiFileDetailsTreeView::on_view_file_details()/
+openDatabase	gui.cpp	/^bool GUI::openDatabase(std::string filename)$/
+parse	spikedata.cpp	/^bool SpikeData::parse(const char* filename)$/
+parsedata	spikedata.cpp	/^bool SpikeData::parsedata()$/
+plotClear	pySpikeDB.cpp	/^void pySpikeDB::plotClear()$/
+plotHist	pySpikeDB.cpp	/^void pySpikeDB::plotHist(boost::python::list &\/*x/
+plotLine	pySpikeDB.cpp	/^void pySpikeDB::plotLine(bp::list &pyX, bp::list &/
+plotSetLineWidth	pySpikeDB.cpp	/^void pySpikeDB::plotSetLineWidth(const float &s)$/
+plotSetPointSize	pySpikeDB.cpp	/^void pySpikeDB::plotSetPointSize(const float &s)$/
+plotSetRGBA	pySpikeDB.cpp	/^void pySpikeDB::plotSetRGBA(const float &r, const /
+plotXLabel	pySpikeDB.cpp	/^void pySpikeDB::plotXLabel(const std::string &s)$/
+plotXMax	pySpikeDB.cpp	/^void pySpikeDB::plotXMax(const float &v)$/
+plotXMin	pySpikeDB.cpp	/^void pySpikeDB::plotXMin(const float &v)$/
+plotYLabel	pySpikeDB.cpp	/^void pySpikeDB::plotYLabel(const std::string &s)$/
+plotYMax	pySpikeDB.cpp	/^void pySpikeDB::plotYMax(const float &v)$/
+plotYMin	pySpikeDB.cpp	/^void pySpikeDB::plotYMin(const float &v)$/
+print	pySpikeDB.cpp	/^void pySpikeDB::print(const std::string &s)$/
+printfile	spikedata.cpp	/^void SpikeData::printfile()$/
+pySpikeDB	pySpikeDB.cpp	/^pySpikeDB::pySpikeDB() {}$/
+redraw	uiTags.cpp	/^void uiTags::redraw()$/
+reset	pySpikeDB.cpp	/^void pySpikeDB::reset()$/
+set	settings.cpp	/^void Settings::set(std::string key, bool value)$/
+setHeader	spikedata.cpp	/^bool SpikeData::setHeader(void *header)$/
+setPointData	pySpikeDB.cpp	/^void pySpikeDB::setPointData(boost::python::list &/
+setPointNames	pySpikeDB.cpp	/^void pySpikeDB::setPointNames(bp::list &names)$/
+set_parent	uiTags.cpp	/^void uiTags::set_parent(Gtk::Window* parent)$/
+showHidden	uiFilterFrame.cpp	/^bool uiFilterFrame::showHidden()$/
+show_file_details	uiFileDetailsTreeView.cpp	/^void uiFileDetailsTreeView::show_file_details(cons/
+signal_added	uiTags.cpp	/^uiTags::type_signal_added uiTags::signal_added()$/
+signal_changed	uiFilterFrame.cpp	/^uiFilterFrame::type_signal_changed uiFilterFrame::/
+signal_deleted	uiTags.cpp	/^uiTags::type_signal_deleted uiTags::signal_deleted/
+signal_file_set_hidden	uiFileDetailsTreeView.cpp	/^uiFileDetailsTreeView::type_signal_file_set_hidden/
+signal_tag_added	uiFileDetailsTreeView.cpp	/^uiFileDetailsTreeView::type_signal_tag_added uiFil/
+signal_tag_deleted	uiFileDetailsTreeView.cpp	/^uiFileDetailsTreeView::type_signal_tag_deleted uiF/
+stddev	pySpikeDB.cpp	/^double pySpikeDB::stddev(boost::python::list &v)$/
+tag	uiFilterFrame.cpp	/^Glib::ustring uiFilterFrame::tag()$/
+tags	uiTags.cpp	/^std::vector<Glib::ustring> uiTags::tags()$/
+treeSelection	uiFileDetailsTreeView.cpp	/^Glib::RefPtr<Gtk::TreeSelection> uiFileDetailsTree/
+trials	spikedata.cpp	/^int SpikeData::trials()$/
+ttest	pySpikeDB.cpp	/^bp::object pySpikeDB::ttest(bp::list &a, bp::list /
+type	spikedata.cpp	/^std::string SpikeData::type(int channel)$/
+uiAnalysis	uiAnalysis.cpp	/^uiAnalysis::uiAnalysis(sqlite3 **db, Gtk::Notebook/
+uiFileDetailsTreeView	uiFileDetailsTreeView.cpp	/^uiFileDetailsTreeView::uiFileDetailsTreeView(sqlit/
+uiFilterFrame	uiFilterFrame.cpp	/^uiFilterFrame::~uiFilterFrame() {}$/
+uiMenuBar	uiMenuBar.cpp	/^uiMenuBar::uiMenuBar()$/
+uiTags	uiTags.cpp	/^uiTags::uiTags(Gtk::Window *parent) $/
+updateTagCompletion	gui.cpp	/^void GUI::updateTagCompletion()$/
+upgradeheader	spikedata.cpp	/^void SpikeData::upgradeheader(int version)$/
+version_check	gui.cpp	/^void GUI::version_check()$/
+xVariable	spikedata.cpp	/^std::string SpikeData::xVariable()$/
+xvalue	spikedata.cpp	/^double SpikeData::xvalue(int sweep)$/

@@ -162,6 +162,7 @@ void uiAnalysis::initPlugins()
 	struct dirent *dptr;
 	DIR *dirp;
 	std::vector<std::string>::iterator it;
+	std::vector<std::string> addedPlugins;
 	std::string filename;
 
 	for (it = search_paths.begin(); it != search_paths.end(); it++) {
@@ -183,10 +184,16 @@ void uiAnalysis::initPlugins()
 						fin->read_line(line);
 						if (line.substr(0,3) == "###")
 						{
-							plugins.push_back(std::pair<Glib::ustring,Glib::ustring>(
-										filename+possibleFile,
-										line.substr(4))
-									);
+							if (std::find(addedPlugins.begin(), addedPlugins.end(), filename+possibleFile) == addedPlugins.end())
+							{
+								// Ensure we don't double up the same plugins
+								plugins.push_back(std::pair<Glib::ustring,Glib::ustring>(
+											filename+possibleFile,
+											line.substr(4))
+										);
+
+								addedPlugins.push_back(filename+possibleFile);
+							}
 						}
 					}
 				}

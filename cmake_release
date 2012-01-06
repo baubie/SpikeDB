@@ -1,0 +1,3 @@
+./cleancmake
+cmake .
+make clean

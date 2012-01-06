@@ -5,13 +5,12 @@ INCLUDE_DIRECTORIES (${PYTHON_INCLUDE_PATH} ${GTKMM_INCLUDE_DIRS}  ${SQLITE3_INC
 
 
 IF(DEBUG)
-ADD_DEFINITIONS (-g -O0 -Wall --pedantic  -Wextra -Wno-long-long)
+SET (CMAKE_CXX_FLAGS "-g -O0 -Wall --pedantic -Wextra -Wno-long-long ${CMAKE_CXX_FLAGS}")
 ELSE(DEBUG)
-ADD_DEFINITIONS (-O2)
+SET (CMAKE_CXX_FLAGS "-O3 ${CMAKE_CXX_FLAGS}")
 ENDIF(DEBUG)
 
 
-SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 SET (SRC spikedb.cpp gui.cpp uiMenuBar.cpp uiAnalysis.cpp uiFileDetailsTreeView.cpp uiFilterFrame.cpp uiTags.cpp spikedata.cpp settings.cpp easyplotmm/easyplotmm.cpp tokenize.cpp pySpikeDB.cpp)
 
