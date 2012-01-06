@@ -1,4 +1,2 @@
 [Pango]
 ModuleFiles=${HOME}/.spikedb-etc/pango.modules
-[PangoX]
-AliasFiles=${HOME}/.spikedb-etc/pangox.aliases
