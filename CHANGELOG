@@ -1,5 +1,12 @@
+Version 1.7
+Released: ????
+
+* OS X Version now uses Quartz as a backend for nicer integration with the OS.
+
+
+
 Version 1.6
-Released: ???
+Released: January 5, 2012
 
 * Fix incorrect number of decimals showing in some plots.
 * Mean spike count will show min and max lines by default for single files.

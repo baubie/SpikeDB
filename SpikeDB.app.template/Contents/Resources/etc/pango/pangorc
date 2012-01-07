@@ -1,2 +1,8 @@
+#
+# pangorc file for uninstalled operation.
+# We set the path as ../modules, such that it works from any of
+# top level build subdirs.
+#
+
 [Pango]
-ModuleFiles=${HOME}/.spikedb-etc/pango.modules
+ModuleFiles = ${HOME}/.spikedb-etc/pango.modules

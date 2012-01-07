@@ -168,7 +168,7 @@ void uiAnalysis::initPlugins()
 	for (it = search_paths.begin(); it != search_paths.end(); it++) {
 		filename = *it;
 		if ((dirp = opendir(filename.c_str())) == NULL) {
-			std::cerr << "ERROR: Unable to open " << filename << std::endl;
+//			std::cerr << "ERROR: Unable to open " << filename << std::endl;
 		} else{
 			while ((dptr = readdir(dirp))) {
 				if (dptr->d_type == DT_REG) {
