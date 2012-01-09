@@ -184,7 +184,7 @@ void uiAnalysis::initPlugins()
 						fin->read_line(line);
 						if (line.substr(0,3) == "###")
 						{
-							if (std::find(addedPlugins.begin(), addedPlugins.end(), filename+possibleFile) == addedPlugins.end())
+							if (std::find(addedPlugins.begin(), addedPlugins.end(), file->get_path()) == addedPlugins.end())
 							{
 								// Ensure we don't double up the same plugins
 								plugins.push_back(std::pair<Glib::ustring,Glib::ustring>(
@@ -192,7 +192,7 @@ void uiAnalysis::initPlugins()
 											line.substr(4))
 										);
 
-								addedPlugins.push_back(filename+possibleFile);
+								addedPlugins.push_back(file->get_path());
 							}
 						}
 					}
