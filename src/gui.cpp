@@ -469,6 +469,18 @@ bool GUI::openDatabase(std::string filename)
 				sqlite3_finalize(stmtUpgrade);
 			}
 
+			// Upgrade from 1.6 to 1.7
+			if (version == 1.6) {
+				std::cout << "Upgrading database from version 1.6 to 1.7" << std::endl;
+				const char queryUpgrade[] = "UPDATE properties SET value=? WHERE variable=?";
+				sqlite3_stmt *stmtUpgrade = 0;
+				sqlite3_prepare_v2(db, queryUpgrade, strlen(queryUpgrade), &stmtUpgrade, NULL);
+				sqlite3_bind_double(stmtUpgrade, 1, 1.7);
+				sqlite3_bind_text(stmtUpgrade, 2, "version", -1, SQLITE_TRANSIENT);
+				if (sqlite3_step(stmtUpgrade) != SQLITE_DONE) count = 100000000; 
+				sqlite3_finalize(stmtUpgrade);
+			}
+
 			++count;
 			if (count > 1000) {
 				Gtk::MessageDialog dialogerr(*this, "Unable to update database file.", false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);

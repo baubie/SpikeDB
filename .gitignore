@@ -1,6 +1,7 @@
 *.swp
 *.o
 *.out
+*.sublime-workspace
 spikedb.app
 GLE_scripts
 CMakeFiles
