@@ -1578,7 +1578,7 @@ void GUI::on_menuAbout_activate()
 	dialog.set_transient_for(*this);
 	dialog.set_title("About SpikeDB");
 	dialog.set_program_name("SpikeDB");
-	dialog.set_version("1.6");
+	dialog.set_version("1.7");
 	dialog.set_copyright(copyright);
 	dialog.set_website("http://spikedb.aubie.ca");
 	dialog.run();
