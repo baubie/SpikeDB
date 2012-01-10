@@ -37,6 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <gtkmm.h>
 #include <sqlite3.h>
 #include <vector>
+#include <map>
 #include <algorithm>
 #include "spikedata.h"
 #include "uiFileDetailsTreeView.h"
@@ -86,6 +87,8 @@ class uiAnalysis : public Gtk::VBox {
 		bool compact;
 		Settings *settings;
 		float forceAbsBegin, forceAbsEnd;
+		std::map<std::pair<std::string,std::string>, double> savedNumberOptions;
+		std::map<std::pair<std::string,std::string>, bool> savedCheckboxOptions;
 
 		/**
 		 * Child widgets

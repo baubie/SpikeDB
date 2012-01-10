@@ -99,8 +99,8 @@ class pySpikeDB {
 		 * Option arrays
 		 * Public to be accessed from uiAnalysis
 		 */
-		typedef std::pair< std::pair<Glib::ustring, Glib::ustring>, bool> checkboxOption; 
-		typedef std::pair< std::pair<Glib::ustring, Glib::ustring>, double> numberOption; 
+		typedef std::pair< std::pair<Glib::ustring, Glib::ustring>, bool> checkboxOption;
+		typedef std::pair< std::pair<Glib::ustring, Glib::ustring>, double> numberOption;
 		std::vector< checkboxOption > checkboxOptions;
 		std::vector< numberOption > numberOptions;
 
