@@ -1,0 +1,3 @@
+
+sed -i '' -e s/"SPIKEDBVERSION/$1/" build/SpikeDB.app/Contents/Info.plist
+sed -i '' -e s/"SPIKEDBVERSION/$1/" build/SpikeDB.app/Contents/Resources/English.lproj/InfoPlist.strings
