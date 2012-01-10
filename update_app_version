@@ -1,3 +1,4 @@
 
-sed -i '' -e s/"SPIKEDBVERSION/$1/" build/SpikeDB.app/Contents/Info.plist
-sed -i '' -e s/"SPIKEDBVERSION/$1/" build/SpikeDB.app/Contents/Resources/English.lproj/InfoPlist.strings
+echo "Updating SpikeDB.app version to $1"
+sed -i '' -e s/"SPIKEDBVERSION/$1/" $2/build/SpikeDB.app/Contents/Info.plist
+sed -i '' -e s/"SPIKEDBVERSION/$1/" $2/build/SpikeDB.app/Contents/Resources/English.lproj/InfoPlist.strings

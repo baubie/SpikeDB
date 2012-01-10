@@ -285,14 +285,14 @@ bool EasyPlotmm::on_event_motion(GdkEventMotion* event)
 		ch_x = event->x;
 		ch_y = event->y;
 		redraw();
-	} 
+	}
     return true;
 }
 
 bool EasyPlotmm::checkMousePosition()
 {
 	checkForPointUnderCursor = true;
-	redraw();	
+	redraw();
 	// Cancel event
 	return false;
 }
@@ -731,7 +731,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         char buffer[10];
         if (y_numdec == 0) sprintf(buffer,"%i",(int)(ymax_bt));
         else sprintf(buffer,y_fmt,ymax_bt); 
-        Pango::FontDescription label_font_descr("sans normal 8");
+        Pango::FontDescription label_font_descr("sans normal 9");
         Pango::FontDescription name_font_descr("sans normal 10");
         pangoLayout->set_font_description(label_font_descr);
 

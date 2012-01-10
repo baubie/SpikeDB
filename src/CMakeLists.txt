@@ -33,5 +33,6 @@ ADD_CUSTOM_COMMAND(TARGET spikedb POST_BUILD
 	COMMAND python ${CMAKE_SOURCE_DIR}/library_magic.py ${BUNDLE_LOCATION}/Contents/Resources/bin/spikedb-bin
 	COMMAND rm -rf ${CMAKE_SOURCE_DIR}/build/SpikeDB.app
 	COMMAND mv ${BUNDLE_LOCATION} ${CMAKE_SOURCE_DIR}/build/
+	COMMAND ${CMAKE_SOURCE_DIR}/update_app_version ${SPIKEDBVERSION} "${CMAKE_SOURCE_DIR}"
     DEPENDS spikedb)
 ENDIF(APPLE AND NOT NOBUNDLE)
