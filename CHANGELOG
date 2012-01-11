@@ -4,6 +4,7 @@ Released: ????
 * OS X Version now uses Quartz as a backend for nicer integration with the OS.
 * Added ability to save plugin options within a session.
 * FIXED: Some plugins would show up twice in dropdown list on Mac OS X.
+* Exporting graph data no longer appends "_1" for single files.
 
 
 

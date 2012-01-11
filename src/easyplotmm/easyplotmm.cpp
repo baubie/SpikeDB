@@ -144,7 +144,11 @@ void EasyPlotmm::export_data()
                 {
                     ++fileIndex;
                     std::ostringstream ssIn;
-                    ssIn << filename << "_" << fileIndex;
+					if (m_x.size() > 1 ) {
+						ssIn << filename << "_" << fileIndex;
+					} else {
+						ssIn << filename;
+					}
                     Glib::ustring datafilename = ssIn.str();
                     try
                     {
