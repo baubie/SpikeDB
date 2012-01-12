@@ -317,6 +317,7 @@ void uiAnalysis::runScript(bool showAdvanced, const Glib::ustring &plugin)
 		mrp_tbOutput->set_text("");
 	}
 
+
 	Py_Initialize();
 
 	bp::object main_module(bp::handle<>(bp::borrowed(PyImport_AddModule("__main__"))));
@@ -325,13 +326,13 @@ void uiAnalysis::runScript(bool showAdvanced, const Glib::ustring &plugin)
 if (!uiAnalysis::setupPython)
 {
 	main_namespace["pySpikeDB"] = class_<pySpikeDB>("pySpikeDB")
+		.def("write", &pySpikeDB::print)
 		.def("addOptionCheckbox", &pySpikeDB::addOptionCheckbox)
 		.def("addOptionNumber", &pySpikeDB::addOptionNumber)
 		.def("getCells", &pySpikeDB::getCells)
 		.def("getFiles", &pySpikeDB::getFiles)
 		.def("getOptions", &pySpikeDB::getOptions)
 		.def("getFilesSingleCell", &pySpikeDB::getFilesSingleCell)
-		.def("write", &pySpikeDB::print)
 		.def("mean", &pySpikeDB::mean)
 		.def("stddev", &pySpikeDB::stddev)
 		.def("ttest", &pySpikeDB::ttest)
@@ -349,8 +350,7 @@ if (!uiAnalysis::setupPython)
 		.def("plotSetLineWidth", &pySpikeDB::plotSetLineWidth)
 		.def("plotLine", &pySpikeDB::plotLine)
 		.def("setPointNames", &pySpikeDB::setPointNames)
-		.def("setPointData", &pySpikeDB::setPointData)
-		.def("write", &pySpikeDB::print);
+		.def("setPointData", &pySpikeDB::setPointData);
 	uiAnalysis::setupPython = true;
 }
 
@@ -363,8 +363,8 @@ if (!uiAnalysis::setupPython)
 	main_namespace["SpikeDB"].attr("__dict__")["NOPOINT"] = EasyPlotmm::NOPOINT;
 
 	PyRun_SimpleString("import sys");
-	PyRun_SimpleString("sys.stderr = SpikeDB");
 	PyRun_SimpleString("sys.stdout = SpikeDB");
+	PyRun_SimpleString("sys.stderr = SpikeDB");
 
 	if (!compact) addOutput("*** Running Analysis Plugin ***\n\n");
 
@@ -479,6 +479,8 @@ if (!uiAnalysis::setupPython)
 		// Run the SpikeDBRun function
 		PyRun_SimpleString("SpikeDBRun()");
 	}
+
+	Py_Finalize();
 
 	if (!compact) addOutput("\n*** Analysis Plugin Completed ***");
 }

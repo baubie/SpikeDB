@@ -85,7 +85,9 @@ void pySpikeDB::filterSpikesRel(const float &begin, const float &end)
 
 void pySpikeDB::print(const std::string &s)
 {
-	mrp_tbOutput->insert(mrp_tbOutput->end(), s);
+	if (mrp_tbOutput != NULL) {
+		mrp_tbOutput->insert(mrp_tbOutput->end(), s);
+	}
 	while (Gtk::Main::events_pending()) {
     	Gtk::Main::iteration();
 	}
@@ -409,7 +411,6 @@ bp::object pySpikeDB::getFiles(bool selOnly)
 
 	bp::list list;
 	if (selOnly) {
-		
 		std::vector<Gtk::TreeModel::Path> rows = mp_FileDetailsTree->treeSelection()->get_selected_rows();
 		for(unsigned int i = 0; i < rows.size(); i++)
 		{

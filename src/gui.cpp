@@ -86,7 +86,7 @@ void GUI::version_check()
 	}
 	catch(const Glib::Exception& ex)
 	{
-		std::cerr << "Exception caught: " << ex.what() << std::endl; 
+	//	std::cerr << "Exception caught: " << ex.what() << std::endl; 
 		mp_statusbar->push("Unable to check for new version online (known Mac bug).");
 		return;
 	}
