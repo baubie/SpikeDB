@@ -93,6 +93,7 @@ uiAnalysis::uiAnalysis(sqlite3 **db, Gtk::Notebook* notebook, uiFileDetailsTreeV
 	mrp_tbOutput = Gtk::TextBuffer::create();
 	tvOutput = Gtk::manage( new Gtk::TextView(mrp_tbOutput) );
 	tvOutput->set_editable(false);
+	tvOutput->set_cursor_visible(false);
 	swOutput->add(*tvOutput);
 
 	mp_plot->signal_clicked_point().connect(sigc::mem_fun(*this, &uiAnalysis::on_data_point_clicked));
@@ -307,6 +308,12 @@ void uiAnalysis::runScript(bool showAdvanced, const Glib::ustring &plugin)
 {
 	if (m_filename == "" && plugin == "") return;
 
+
+	tvOutput->add_modal_grab();
+	while (Gtk::Main::events_pending()) {
+    	Gtk::Main::iteration();
+	}
+
 	if (!compact) {
 		mrp_tbOutput->set_text("*** Initializing Analysis Plugin Library ***\n");
 		addOutput("Using Script: ");
@@ -480,9 +487,9 @@ if (!uiAnalysis::setupPython)
 		PyRun_SimpleString("SpikeDBRun()");
 	}
 
-	Py_Finalize();
-
+	//Py_Finalize();
 	if (!compact) addOutput("\n*** Analysis Plugin Completed ***");
+	tvOutput->remove_modal_grab();
 }
 
 void uiAnalysis::print(const std::string &s)

@@ -1,10 +1,15 @@
 Version 1.7
 Released: ????
 
+New Features:
 * OS X Version now uses Quartz as a backend for nicer integration with the OS.
 * Added ability to save plugin options within a session.
-* FIXED: Some plugins would show up twice in dropdown list on Mac OS X.
 * Exporting graph data no longer appends "_1" for single files.
+* Updated About Box with testers and special thanks.
+
+Bug Fixes:
+* FIXED: Some plugins would show up twice in dropdown list on Mac OS X.
+* FIXED: When moving "too fast" between scripts SpikeDB should no longer crash occasionally. 
 
 
 Version 1.6

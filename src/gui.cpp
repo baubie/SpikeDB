@@ -1580,6 +1580,12 @@ void GUI::on_menuAbout_activate()
 	dialog.set_program_name("SpikeDB");
 	dialog.set_version("1.7");
 	dialog.set_copyright(copyright);
+	std::vector<Glib::ustring> authors;
+	authors.push_back("Programming: Brandon Aubie");
+	authors.push_back("Testing: Riziq Sayegh");
+	authors.push_back("Encouragement: Rachel Aubie");
+	dialog.set_authors(authors);
+	dialog.set_comments("SpikeDB was first developed in the McMaster Bat Lab in Hamilton, Ontario, Canada. If you used SpikeDB to analyze data for a publication, an acknowledgement is always appreciated!");
 	dialog.set_website("http://spikedb.aubie.ca");
 	dialog.run();
 }

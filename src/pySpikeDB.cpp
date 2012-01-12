@@ -85,9 +85,7 @@ void pySpikeDB::filterSpikesRel(const float &begin, const float &end)
 
 void pySpikeDB::print(const std::string &s)
 {
-	if (mrp_tbOutput != NULL) {
-		mrp_tbOutput->insert(mrp_tbOutput->end(), s);
-	}
+	mrp_tbOutput->insert(mrp_tbOutput->end(), s);
 	while (Gtk::Main::events_pending()) {
     	Gtk::Main::iteration();
 	}
