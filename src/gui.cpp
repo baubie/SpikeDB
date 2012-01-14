@@ -509,6 +509,7 @@ bool GUI::openDatabase(std::string filename)
 	m_curCellID = 0;
 	m_curFileNum = 0;
 	m_Menu_Import.set_sensitive(true);
+	mp_AnimalsTree->expand_row(Gtk::TreePath("0"), false);
 	return true;
 }
 
