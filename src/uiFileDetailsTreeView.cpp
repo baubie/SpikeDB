@@ -35,7 +35,6 @@ uiFileDetailsTreeView::uiFileDetailsTreeView(sqlite3 **db, Gtk::Window *parent)
 	m_parent = parent;
 	this->db = db;
 
-
 	mrp_ListStore = Gtk::ListStore::create(m_Columns);
 	mrp_ListStore->set_sort_column(m_Columns.m_col_time, Gtk::SORT_ASCENDING);
 	this->set_model(mrp_ListStore);
