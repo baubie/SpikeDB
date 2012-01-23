@@ -6,6 +6,7 @@ New Features:
 * Added ability to save plugin options within a session.
 * Exporting graph data no longer appends "_1" for single files.
 * Updated About Box with testers and special thanks.
+* Added an Action button for plugins to run extra features via SpikeDBAction() 
 
 Bug Fixes:
 * FIXED: Some plugins would show up twice in dropdown list on Mac OS X.
@@ -26,16 +27,11 @@ Released: January 3, 2012
 
 * Automatic database upgrades with new versions of SpikeDB at first launch.
 * Python scripts must now be contained within a SpikeDBRun() function.
-* Ability to create custom options for analysis scripts in a SpikeDBAdvanced()
-  method that calls addOptionCheckbox() or addOptionNumber().
+* Ability to create custom options for analysis scripts in a SpikeDBAdvanced() method that calls addOptionCheckbox() or addOptionNumber().
 * Check for new SpikeDB version automatically at launch.
-* Graph data points can be given names and show up in status bar on mouse over
-  (see SpikeDB.setNames function).
-* Graph data points can be given data to be used by SpikeDB later.
-  Currently supports being set to a TreePath from the SpikeDB.getCells()
-  "TreePath" item and then clicking on a datapoint brings you to that cell.
-* Added a "bad" column to the Cells database to allow users to mark a bad cell
-  that should not be used in data analysis. Easier than hiding every file.
+* Graph data points can be given names and show up in status bar on mouse over (see SpikeDB.setNames function).
+* Graph data points can be given data to be used by SpikeDB later. Currently supports being set to a TreePath from the SpikeDB.getCells() "TreePath" item and then clicking on a datapoint brings you to that cell.
+* Added a "bad" column to the Cells database to allow users to mark a bad cell that should not be used in data analysis. Easier than hiding every file.
 * Fixed plot axes when displaying error bars.
 * Fixed memory issues with Python scripts that could cause errors.
 

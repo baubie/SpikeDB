@@ -101,8 +101,15 @@ void pySpikeDB::reset()
 	checkboxOptions.clear();
 	numberOptions.clear();
 
+	actionButton = false;
+
 	// Default
 	addOptionCheckbox("showErrorBars", "Show Error Bars", false);
+}
+
+void pySpikeDB::enableActionButton()
+{
+	actionButton = true;
 }
 
 bp::object pySpikeDB::getOptions()

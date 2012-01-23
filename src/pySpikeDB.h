@@ -94,6 +94,8 @@ class pySpikeDB {
 
 		void print(const std::string &s);
 
+		void enableActionButton();
+
 
 		/**
 		 * Option arrays
@@ -103,6 +105,7 @@ class pySpikeDB {
 		typedef std::pair< std::pair<Glib::ustring, Glib::ustring>, double> numberOption;
 		std::vector< checkboxOption > checkboxOptions;
 		std::vector< numberOption > numberOptions;
+		bool actionButton;
 
 
 	private:

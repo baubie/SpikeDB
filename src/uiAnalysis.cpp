@@ -56,6 +56,7 @@ uiAnalysis::uiAnalysis(sqlite3 **db, Gtk::Notebook* notebook, uiFileDetailsTreeV
 	tbOpen = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::OPEN) );
 	tbRun = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::EXECUTE) );
 	tbOptions = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::PREFERENCES) );
+	tbAction = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::ADD) );
 	tbRun->set_sensitive(false);
 
 	if (!compact) {
@@ -81,10 +82,15 @@ uiAnalysis::uiAnalysis(sqlite3 **db, Gtk::Notebook* notebook, uiFileDetailsTreeV
 	tbPlugins->set_focus_on_click(false);
 	toolbar->append(*tbPluginItem);
 
-	Gtk::ToolItem *tbOptionsItem = Gtk::manage( new Gtk::ToolItem() );
 	tbOptions->signal_clicked().connect(sigc::mem_fun(*this, &uiAnalysis::on_options_clicked));
+	tbAction->signal_clicked().connect(sigc::mem_fun(*this, &uiAnalysis::on_action_clicked));
+	tbAction->set_sensitive(false);
+	Gtk::ToolItem *tbOptionsItem = Gtk::manage( new Gtk::ToolItem() );
+	Gtk::ToolItem *tbActionItem = Gtk::manage( new Gtk::ToolItem() );
 	tbOptionsItem->add(*tbOptions);
+	tbActionItem->add(*tbAction);
 	toolbar->append(*tbOptionsItem);
+	toolbar->append(*tbActionItem);
 
 	this->pack_start(*toolbar, false, false);
 
@@ -235,7 +241,15 @@ void uiAnalysis::on_options_clicked()
 {
 	mp_plot->clear();
 	if (!plugins.empty()) {
-		runScript(true,plugins[tbPlugins->get_active_row_number()].first);
+		runScript(true,false,plugins[tbPlugins->get_active_row_number()].first);
+	}
+}
+
+void uiAnalysis::on_action_clicked()
+{
+	mp_plot->clear();
+	if (!plugins.empty()) {
+		runScript(false,true,plugins[tbPlugins->get_active_row_number()].first);
 	}
 }
 
@@ -270,7 +284,7 @@ void uiAnalysis::on_open_clicked()
 void uiAnalysis::on_run_clicked()
 {
 	mp_plot->clear();
-	runScript(false);
+	runScript(false,false);
 }
 
 void uiAnalysis::on_plugin_changed()
@@ -300,11 +314,11 @@ void uiAnalysis::forceSpikesAbs(double begin, double end)
 void uiAnalysis::runPlugin()
 {
 	if (!plugins.empty()) {
-		runScript(false,plugins[tbPlugins->get_active_row_number()].first);
+		runScript(false,false,plugins[tbPlugins->get_active_row_number()].first);
 	}
 }
 
-void uiAnalysis::runScript(bool showAdvanced, const Glib::ustring &plugin)
+void uiAnalysis::runScript(bool showAdvanced, bool runAction, const Glib::ustring &plugin)
 {
 	if (m_filename == "" && plugin == "") return;
 
@@ -357,7 +371,8 @@ if (!uiAnalysis::setupPython)
 		.def("plotSetLineWidth", &pySpikeDB::plotSetLineWidth)
 		.def("plotLine", &pySpikeDB::plotLine)
 		.def("setPointNames", &pySpikeDB::setPointNames)
-		.def("setPointData", &pySpikeDB::setPointData);
+		.def("setPointData", &pySpikeDB::setPointData)
+		.def("enableActionButton", &pySpikeDB::enableActionButton);
 	uiAnalysis::setupPython = true;
 }
 
@@ -378,6 +393,7 @@ if (!uiAnalysis::setupPython)
 	// Incase our new script doesn't have one of the functions, we'll give default blank ones.
 	PyRun_SimpleString("def SpikeDBAdvanced(): return");
 	PyRun_SimpleString("def SpikeDBRun(): return");
+	PyRun_SimpleString("def SpikeDBAction(): return");
 
 	// Open the file and run the code
 	char *filename;
@@ -393,6 +409,7 @@ if (!uiAnalysis::setupPython)
 	// Run the SpikeDBAdvanced function
 	PyRun_SimpleString("SpikeDBAdvanced()");
 
+
 	// If we have a previously saved settings, overide the defaults with them now
 	std::vector< pySpikeDB::checkboxOption >::iterator cbIter;
 	std::vector< pySpikeDB::numberOption >::iterator numIter;
@@ -406,6 +423,9 @@ if (!uiAnalysis::setupPython)
 			cbIter->second = savedCheckboxOptions.find((std::pair<std::string,std::string>(filename, cbIter->first.first)))->second;
 		}
 	}
+
+	// Enable the button if the script called SpikeDB().enableActionButton()
+	tbAction->set_sensitive(_pySpikeDB.actionButton);
 
 	if (showAdvanced) {
 
@@ -483,8 +503,13 @@ if (!uiAnalysis::setupPython)
 		}
 
 	} else {
-		// Run the SpikeDBRun function
-		PyRun_SimpleString("SpikeDBRun()");
+		if (runAction) {
+			// Run the action item
+			PyRun_SimpleString("SpikeDBAction()");
+		} else {
+			// Run the SpikeDBRun function
+			PyRun_SimpleString("SpikeDBRun()");
+		}
 	}
 
 	//Py_Finalize();
