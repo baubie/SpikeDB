@@ -138,13 +138,21 @@ void EasyPlotmm::export_data()
             Glib::ustring filename = dialog.get_filename();
             lastdir = dialog.get_current_folder();
             int fileIndex = 0;
+			int filesToExport = 0;
+            for (unsigned int i = 0; i < m_x.size(); ++i)
+            {
+                if (m_exportable.at(i))
+                {
+					filesToExport++;
+				}
+			}
             for (unsigned int i = 0; i < m_x.size(); ++i)
             {
                 if (m_exportable.at(i))
                 {
                     ++fileIndex;
                     std::ostringstream ssIn;
-					if (m_x.size() > 1 ) {
+					if (filesToExport > 1 ) {
 						ssIn << filename << "_" << fileIndex;
 					} else {
 						ssIn << filename;
