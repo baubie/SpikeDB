@@ -6,7 +6,7 @@ New Features:
 * Added ability to save plugin options within a session.
 * Exporting graph data no longer appends "_1" for single files.
 * Updated About Box with testers and special thanks.
-* Added an Action button for plugins to run extra features via SpikeDBAction() 
+* Added an Action button for plugins to run extra features via SpikeDBAction().
 
 Bug Fixes:
 * FIXED: Some plugins would show up twice in dropdown list on Mac OS X.
