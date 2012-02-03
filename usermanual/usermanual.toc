@@ -1,91 +1,94 @@
-\contentsline {chapter}{\numberline {1}Introduction}{2}
-\contentsline {chapter}{\numberline {2}User Interface}{3}
-\contentsline {section}{\numberline {2.1}Importing Spike Data}{4}
-\contentsline {section}{\numberline {2.2}Browse Files List}{4}
-\contentsline {section}{\numberline {2.3}Filter Panel}{4}
-\contentsline {subsection}{\numberline {2.3.1}Required Number of Files}{4}
-\contentsline {subsection}{\numberline {2.3.2}X-Variable}{4}
-\contentsline {subsection}{\numberline {2.3.3}Tag Filter}{4}
-\contentsline {subsection}{\numberline {2.3.4}Show hidden files}{4}
-\contentsline {section}{\numberline {2.4}Plots}{5}
-\contentsline {subsection}{\numberline {2.4.1}General Usage}{5}
-\contentsline {subsection}{\numberline {2.4.2}Spike Raster}{5}
-\contentsline {subsection}{\numberline {2.4.3}Quick Analysis}{5}
-\contentsline {chapter}{\numberline {3}Analysis Plug-In Module}{6}
-\contentsline {section}{\numberline {3.1}Basic Usage}{6}
-\contentsline {subsubsection}{Quick Analysis Plugins}{6}
-\contentsline {section}{\numberline {3.2}Reference}{7}
-\contentsline {subsection}{\numberline {3.2.1}\method {void}{addOptionCheckbox}}{8}
-\contentsline {subsubsection}{Parameters}{8}
-\contentsline {subsubsection}{Description}{8}
-\contentsline {subsection}{\numberline {3.2.2}\method {void}{addOptionNumber}}{9}
+\contentsline {chapter}{\numberline {1}Introduction}{3}
+\contentsline {chapter}{\numberline {2}User Interface}{4}
+\contentsline {section}{\numberline {2.1}Importing Spike Data}{5}
+\contentsline {section}{\numberline {2.2}Browse Files List}{5}
+\contentsline {section}{\numberline {2.3}Filter Panel}{5}
+\contentsline {subsection}{\numberline {2.3.1}Required Number of Files}{5}
+\contentsline {subsection}{\numberline {2.3.2}X-Variable}{5}
+\contentsline {subsection}{\numberline {2.3.3}Tag Filter}{5}
+\contentsline {subsection}{\numberline {2.3.4}Show hidden files}{5}
+\contentsline {section}{\numberline {2.4}Plots}{6}
+\contentsline {subsection}{\numberline {2.4.1}General Usage}{6}
+\contentsline {subsection}{\numberline {2.4.2}Spike Raster}{6}
+\contentsline {subsection}{\numberline {2.4.3}Quick Analysis}{6}
+\contentsline {chapter}{\numberline {3}Analysis Plug-In Module}{7}
+\contentsline {section}{\numberline {3.1}Basic Usage}{7}
+\contentsline {subsubsection}{Quick Analysis Plugins}{7}
+\contentsline {section}{\numberline {3.2}Reference}{8}
+\contentsline {subsection}{\numberline {3.2.1}\method {void}{addOptionCheckbox}}{9}
 \contentsline {subsubsection}{Parameters}{9}
 \contentsline {subsubsection}{Description}{9}
-\contentsline {subsection}{\numberline {3.2.3}\method {void}{filterSpikesAbs}}{10}
+\contentsline {subsection}{\numberline {3.2.2}\method {void}{addOptionNumber}}{10}
 \contentsline {subsubsection}{Parameters}{10}
 \contentsline {subsubsection}{Description}{10}
-\contentsline {subsection}{\numberline {3.2.4}\method {void}{filterSpikesRel}}{11}
+\contentsline {subsection}{\numberline {3.2.3}\method {void}{filterSpikesAbs}}{11}
 \contentsline {subsubsection}{Parameters}{11}
 \contentsline {subsubsection}{Description}{11}
-\contentsline {subsection}{\numberline {3.2.5}\method {list}{getCells}}{12}
+\contentsline {subsection}{\numberline {3.2.4}\method {void}{filterSpikesRel}}{12}
+\contentsline {subsubsection}{Parameters}{12}
 \contentsline {subsubsection}{Description}{12}
-\contentsline {subsection}{\numberline {3.2.6}\method {list}{getFiles}}{13}
-\contentsline {subsubsection}{Parameters}{13}
+\contentsline {subsection}{\numberline {3.2.5}\method {list}{getCells}}{13}
 \contentsline {subsubsection}{Description}{13}
-\contentsline {subsection}{\numberline {3.2.7}\method {list}{getFilesSingleCell}}{15}
-\contentsline {subsubsection}{Parameters}{15}
-\contentsline {subsubsection}{Description}{15}
-\contentsline {subsection}{\numberline {3.2.8}\method {list}{getOptions}}{16}
+\contentsline {subsection}{\numberline {3.2.6}\method {list}{getFiles}}{14}
+\contentsline {subsubsection}{Parameters}{14}
+\contentsline {subsubsection}{Description}{14}
+\contentsline {subsection}{\numberline {3.2.7}\method {list}{getFilesSingleCell}}{16}
+\contentsline {subsubsection}{Parameters}{16}
 \contentsline {subsubsection}{Description}{16}
-\contentsline {subsection}{\numberline {3.2.9}\method {float}{mean}}{17}
-\contentsline {subsubsection}{Parameters}{17}
+\contentsline {subsection}{\numberline {3.2.8}\method {list}{getOptions}}{17}
 \contentsline {subsubsection}{Description}{17}
-\contentsline {subsection}{\numberline {3.2.10}\method {void}{plotClear}}{18}
+\contentsline {subsection}{\numberline {3.2.9}\method {float}{mean}}{18}
+\contentsline {subsubsection}{Parameters}{18}
 \contentsline {subsubsection}{Description}{18}
-\contentsline {subsection}{\numberline {3.2.11}\method {void}{plotLine}}{19}
-\contentsline {subsubsection}{Parameters}{19}
+\contentsline {subsection}{\numberline {3.2.10}\method {void}{plotClear}}{19}
 \contentsline {subsubsection}{Description}{19}
-\contentsline {subsection}{\numberline {3.2.12}\method {void}{plotSetLineWidth}}{20}
+\contentsline {subsection}{\numberline {3.2.11}\method {void}{plotLine}}{20}
 \contentsline {subsubsection}{Parameters}{20}
 \contentsline {subsubsection}{Description}{20}
-\contentsline {subsection}{\numberline {3.2.13}\method {void}{plotSetPointSize}}{21}
+\contentsline {subsection}{\numberline {3.2.12}\method {void}{plotSetLineWidth}}{21}
 \contentsline {subsubsection}{Parameters}{21}
 \contentsline {subsubsection}{Description}{21}
-\contentsline {subsection}{\numberline {3.2.14}\method {void}{plotSetRGBA}}{22}
+\contentsline {subsection}{\numberline {3.2.13}\method {void}{plotSetPointSize}}{22}
 \contentsline {subsubsection}{Parameters}{22}
 \contentsline {subsubsection}{Description}{22}
-\contentsline {subsection}{\numberline {3.2.15}\method {void}{plotXLabel}}{23}
+\contentsline {subsection}{\numberline {3.2.14}\method {void}{plotSetRGBA}}{23}
 \contentsline {subsubsection}{Parameters}{23}
 \contentsline {subsubsection}{Description}{23}
-\contentsline {subsection}{\numberline {3.2.16}\method {void}{plotXMin}}{24}
+\contentsline {subsection}{\numberline {3.2.15}\method {void}{plotXLabel}}{24}
 \contentsline {subsubsection}{Parameters}{24}
 \contentsline {subsubsection}{Description}{24}
-\contentsline {subsection}{\numberline {3.2.17}\method {void}{plotXMax}}{25}
+\contentsline {subsection}{\numberline {3.2.16}\method {void}{plotXMin}}{25}
 \contentsline {subsubsection}{Parameters}{25}
 \contentsline {subsubsection}{Description}{25}
-\contentsline {subsection}{\numberline {3.2.18}\method {void}{plotYLabel}}{26}
+\contentsline {subsection}{\numberline {3.2.17}\method {void}{plotXMax}}{26}
 \contentsline {subsubsection}{Parameters}{26}
 \contentsline {subsubsection}{Description}{26}
-\contentsline {subsection}{\numberline {3.2.19}\method {void}{plotYMin}}{27}
+\contentsline {subsection}{\numberline {3.2.18}\method {void}{plotYLabel}}{27}
 \contentsline {subsubsection}{Parameters}{27}
 \contentsline {subsubsection}{Description}{27}
-\contentsline {subsection}{\numberline {3.2.20}\method {void}{plotYMax}}{28}
+\contentsline {subsection}{\numberline {3.2.19}\method {void}{plotYMin}}{28}
 \contentsline {subsubsection}{Parameters}{28}
 \contentsline {subsubsection}{Description}{28}
-\contentsline {subsection}{\numberline {3.2.21}\method {void}{setPointData}}{29}
+\contentsline {subsection}{\numberline {3.2.20}\method {void}{plotYMax}}{29}
 \contentsline {subsubsection}{Parameters}{29}
 \contentsline {subsubsection}{Description}{29}
-\contentsline {subsection}{\numberline {3.2.22}\method {void}{setPointNames}}{30}
+\contentsline {subsection}{\numberline {3.2.21}\method {void}{setPointData}}{30}
 \contentsline {subsubsection}{Parameters}{30}
 \contentsline {subsubsection}{Description}{30}
-\contentsline {subsection}{\numberline {3.2.23}\method {float}{stddev}}{31}
+\contentsline {subsection}{\numberline {3.2.22}\method {void}{setPointNames}}{31}
 \contentsline {subsubsection}{Parameters}{31}
 \contentsline {subsubsection}{Description}{31}
-\contentsline {subsection}{\numberline {3.2.24}\method {dict}{ttest}}{32}
+\contentsline {subsection}{\numberline {3.2.23}\method {float}{stddev}}{32}
 \contentsline {subsubsection}{Parameters}{32}
 \contentsline {subsubsection}{Description}{32}
-\contentsline {subsection}{\numberline {3.2.25}\method {void}{write}}{33}
+\contentsline {subsection}{\numberline {3.2.24}\method {dict}{ttest}}{33}
 \contentsline {subsubsection}{Parameters}{33}
 \contentsline {subsubsection}{Description}{33}
-\contentsline {section}{\numberline {3.3}Complete Examples}{34}
-\contentsline {subsection}{\numberline {3.3.1}Mean Spike Times}{34}
+\contentsline {subsection}{\numberline {3.2.25}\method {void}{updateProgress}}{34}
+\contentsline {subsubsection}{Parameters}{34}
+\contentsline {subsubsection}{Description}{34}
+\contentsline {subsection}{\numberline {3.2.26}\method {void}{write}}{35}
+\contentsline {subsubsection}{Parameters}{35}
+\contentsline {subsubsection}{Description}{35}
+\contentsline {section}{\numberline {3.3}Complete Examples}{36}
+\contentsline {subsection}{\numberline {3.3.1}Mean Spike Times}{36}

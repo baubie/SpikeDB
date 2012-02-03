@@ -71,6 +71,7 @@ class uiAnalysis : public Gtk::VBox {
 
 		std::vector<std::pair<Glib::ustring, Glib::ustring> > plugins;
 
+
 	protected:
 
 		/**
@@ -89,10 +90,11 @@ class uiAnalysis : public Gtk::VBox {
 		float forceAbsBegin, forceAbsEnd;
 		std::map<std::pair<std::string,std::string>, double> savedNumberOptions;
 		std::map<std::pair<std::string,std::string>, bool> savedCheckboxOptions;
+		Gtk::ProgressBar *mp_pbStatus;
 
 		/**
 		 * Child widgets
-		 */  
+		 */
 		Gtk::TextView *tvOutput;
 		Glib::RefPtr<Gtk::TextBuffer> mrp_tbOutput;
 		Gtk::ToolButton *tbOpen;

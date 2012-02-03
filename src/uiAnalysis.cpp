@@ -57,7 +57,11 @@ uiAnalysis::uiAnalysis(sqlite3 **db, Gtk::Notebook* notebook, uiFileDetailsTreeV
 	tbRun = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::EXECUTE) );
 	tbOptions = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::PREFERENCES) );
 	tbAction = Gtk::manage( new Gtk::ToolButton(Gtk::Stock::ADD) );
+	mp_pbStatus = Gtk::manage( new Gtk::ProgressBar() );
 	tbRun->set_sensitive(false);
+
+	Gtk::ToolItem *tiProgressBar = Gtk::manage( new Gtk::ToolItem() );
+	tiProgressBar->add(*mp_pbStatus);
 
 	if (!compact) {
 		toolbar->append(*tbOpen, sigc::mem_fun(*this, &uiAnalysis::on_open_clicked) );
@@ -92,6 +96,9 @@ uiAnalysis::uiAnalysis(sqlite3 **db, Gtk::Notebook* notebook, uiFileDetailsTreeV
 	toolbar->append(*tbOptionsItem);
 	toolbar->append(*tbActionItem);
 
+	if (!compact) {
+		toolbar->append(*tiProgressBar);
+	}
 	this->pack_start(*toolbar, false, false);
 
 	mp_plot = Gtk::manage( new EasyPlotmm() );
@@ -372,11 +379,12 @@ if (!uiAnalysis::setupPython)
 		.def("plotLine", &pySpikeDB::plotLine)
 		.def("setPointNames", &pySpikeDB::setPointNames)
 		.def("setPointData", &pySpikeDB::setPointData)
+		.def("updateProgress", &pySpikeDB::updateProgress)
 		.def("enableActionButton", &pySpikeDB::enableActionButton);
 	uiAnalysis::setupPython = true;
 }
 
-	pySpikeDB _pySpikeDB(db, mp_FileDetailsTree, mp_AnimalTree,mp_AnimalColumns,mp_plot, mrp_tbOutput);
+	pySpikeDB _pySpikeDB(db, mp_FileDetailsTree, mp_AnimalTree,mp_AnimalColumns,mp_plot, mrp_tbOutput, mp_pbStatus);
 
 
 	_pySpikeDB.forceSpikesAbs(forceAbsBegin, forceAbsEnd);

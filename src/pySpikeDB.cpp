@@ -35,7 +35,7 @@ using namespace bp;
 
 pySpikeDB::pySpikeDB() {}
 
-pySpikeDB::pySpikeDB(sqlite3** db, uiFileDetailsTreeView* fileDetailsTree, Gtk::TreeView* animalTree, AnimalColumns* animalColumns, EasyPlotmm *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput)
+pySpikeDB::pySpikeDB(sqlite3** db, uiFileDetailsTreeView* fileDetailsTree, Gtk::TreeView* animalTree, AnimalColumns* animalColumns, EasyPlotmm *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput, Gtk::ProgressBar* pbStatus)
 {
 	this->db = db;
 	this->mp_FileDetailsTree = fileDetailsTree;
@@ -43,6 +43,7 @@ pySpikeDB::pySpikeDB(sqlite3** db, uiFileDetailsTreeView* fileDetailsTree, Gtk::
 	this->mp_AnimalColumns = animalColumns;
 	this->mp_plot = plot;
 	this->mrp_tbOutput = tbOutput;
+	this->mp_pbStatus = pbStatus;
 	this->reset();
 }
 
@@ -56,6 +57,22 @@ void pySpikeDB::addOptionNumber(const std::string &name, const std::string &desc
 	numberOptions.push_back(std::pair< std::pair<Glib::ustring, Glib::ustring>, double>(std::pair<Glib::ustring, Glib::ustring>(name, description), def));
 }
 
+void pySpikeDB::updateProgress(const float &val)
+{
+	if (mp_pbStatus) {
+		float limitedVal = val;
+		if (val < 0) limitedVal = 0;
+		if (val > 1) limitedVal = 1;
+		Glib::ustring text;
+		char buffer[5];
+		sprintf(buffer, "%d%%", (int)(limitedVal*100));
+		mp_pbStatus->set_fraction(limitedVal);
+		mp_pbStatus->set_text(buffer);
+		while (Gtk::Main::events_pending()) {
+			Gtk::Main::iteration();
+		}
+	}
+}
 
 void pySpikeDB::forceSpikesAbs(const float &begin, const float &end)
 {
@@ -100,8 +117,9 @@ void pySpikeDB::reset()
 	xmin=xmax=ymin=ymax=EasyPlotmm::AUTOMATIC;
 	checkboxOptions.clear();
 	numberOptions.clear();
-
 	actionButton = false;
+	mp_pbStatus->set_fraction(0);
+	mp_pbStatus->set_text("");
 
 	// Default
 	addOptionCheckbox("showErrorBars", "Show Error Bars", false);

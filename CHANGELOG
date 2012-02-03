@@ -1,3 +1,14 @@
+Version 1.8
+Released: ????
+
+New Features:
+* Added a programmable progress bar to the Analysis tab and updated with
+SpikeDB.updateProgress().
+
+Bug Fixes:
+
+
+
 Version 1.7
 Released: January 30, 2012
 

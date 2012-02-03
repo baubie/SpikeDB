@@ -198,7 +198,7 @@ void uiFileDetailsTreeView::on_view_file_details()
 {
 
 	std::vector<Gtk::TreeModel::Path> sel = mrp_Selection->get_selected_rows();
-	if (sel.size() == 1) 
+	if (sel.size() == 1)
 	{
 		show_file_details(mrp_ListStore->get_iter(sel[0]));
 	}

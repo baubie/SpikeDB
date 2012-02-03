@@ -29,6 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define UIPROPTABLE_H
 
 #include <gtkmm.h>
+#include <iostream>
 
 /**
  * Define the types of rows that are allowed in the table.
@@ -71,9 +72,9 @@ class uiPropTable : public Gtk::TreeView {
 		 * @param[in] value Text for the value cell.
 		 * @param[in] type Define the behaviour and display style of the value cell.
 		 */
-		void addRow(T ID, 
-					Glib::ustring name, 
-					Glib::ustring value, 
+		void addRow(T ID,
+					Glib::ustring name,
+					Glib::ustring value,
                     uiPropTableRowType type);
 
         /**
@@ -83,16 +84,16 @@ class uiPropTable : public Gtk::TreeView {
 		 * @param[in] value Integer for the value cell.
 		 * @param[in] type Define the behaviour and display style of the value cell.
 		 */
-		void addRow(T ID, 
-					Glib::ustring name, 
-					int value, 
+		void addRow(T ID,
+					Glib::ustring name,
+					int value,
                     uiPropTableRowType type);
 
 		typedef sigc::signal<void,
 						     T,
-						     Glib::ustring, 
-							 Glib::ustring, 
-							 Glib::ustring, 
+						     Glib::ustring,
+							 Glib::ustring,
+							 Glib::ustring,
 							 uiPropTableRowType
 						 	 > type_signal_rowedited;
 
@@ -135,7 +136,7 @@ class uiPropTable : public Gtk::TreeView {
 template <class T>
 uiPropTable<T>::uiPropTable()
 {
-	
+
 	// Setup the ListStore and add it to our tree
 	m_refList = Gtk::ListStore::create(m_Columns);
 	this->set_model(m_refList);
@@ -144,7 +145,7 @@ uiPropTable<T>::uiPropTable()
 	m_tvcol_name.set_title("Name");
 	m_tvcol_name.pack_start(m_rend_name);
 	this->append_column(m_tvcol_name);
-	m_tvcol_name.set_cell_data_func(m_rend_name, sigc::mem_fun(*this, &uiPropTable::name_cell_data)); 
+	m_tvcol_name.set_cell_data_func(m_rend_name, sigc::mem_fun(*this, &uiPropTable::name_cell_data));
 
 
 	// Add the Value column to the tree
@@ -153,11 +154,14 @@ uiPropTable<T>::uiPropTable()
 	m_tvcol_value.pack_start(m_rend_value);
 	this->append_column(m_tvcol_value);
 	m_rend_value.signal_edited().connect(sigc::mem_fun(*this, &uiPropTable::on_value_edited));
-	m_tvcol_value.set_cell_data_func(m_rend_value, sigc::mem_fun(*this, &uiPropTable::value_cell_data)); 
+	m_tvcol_value.set_cell_data_func(m_rend_value, sigc::mem_fun(*this, &uiPropTable::value_cell_data));
 	m_tvcol_value.set_sizing(Gtk::TREE_VIEW_COLUMN_AUTOSIZE);
 
 	// Enable grid lines
 	this->set_grid_lines(Gtk::TREE_VIEW_GRID_LINES_BOTH);
+
+	// Disable the search box
+	this->set_enable_search(false);
 }
 
 template <class T>
@@ -260,6 +264,5 @@ void uiPropTable<T>::on_value_edited(const Glib::ustring& path_string, const Gli
 
 	}
 }
-
 
 #endif

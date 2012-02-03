@@ -55,7 +55,7 @@ class pySpikeDB {
 	public:
 
 		pySpikeDB();
-		pySpikeDB(sqlite3** db, uiFileDetailsTreeView* fileDetailsTree, Gtk::TreeView* animalTree, AnimalColumns* animalColumns, EasyPlotmm *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput);
+		pySpikeDB(sqlite3** db, uiFileDetailsTreeView* fileDetailsTree, Gtk::TreeView* animalTree, AnimalColumns* animalColumns, EasyPlotmm *plot, Glib::RefPtr<Gtk::TextBuffer> tbOutput, Gtk::ProgressBar* pbStatus);
 
 		boost::python::object getFiles(bool selOnly);
 		boost::python::object getFilesSingleCell(const std::string &animalID, const int &cellID);
@@ -94,6 +94,8 @@ class pySpikeDB {
 
 		void print(const std::string &s);
 
+		void updateProgress(const float &val);
+
 		void enableActionButton();
 
 
@@ -116,6 +118,7 @@ class pySpikeDB {
 		AnimalColumns* mp_AnimalColumns;
 		EasyPlotmm *mp_plot;
 		Glib::RefPtr<Gtk::TextBuffer> mrp_tbOutput;
+		Gtk::ProgressBar *mp_pbStatus;
 
 		/**
 		 * Filtering Mode

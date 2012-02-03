@@ -57,7 +57,7 @@
 		\includegraphics[width=0.35\textwidth]{icon.pdf}\\
 		[4.0cm]
 		\vspace{0.4cm}
-		{ \huge \bfseries SpikeDB Version 1.6 User Manual }\\[0.4cm]
+		{ \huge \bfseries SpikeDB Version 1.8 User Manual }\\[0.4cm]
 		\vspace{4cm}
 		\textsc{\LARGE McMaster University}\\
 		[0.5cm]
@@ -783,6 +783,28 @@ Returns a list of values calculated for a standard t-test.
 	print results
 	# Output:
 	# { 't':0.132320752, 'df':6.0 }
+\end{lstlisting}
+
+\clearpage
+\subsection[\method{void}{updateProgress}]{\method{void}{updateProgress}{float fraction}}
+\subsubsection{Parameters}
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{by}
+		|fraction| & A value between 0 and 1 to set the progress bar to.\\
+	\end{tabular}
+\end{center}
+\end{table}
+\subsubsection{Description}
+When in the Analysis window, a progress bar is available on the right hand side of the toolbar that can be used to show the progress of long running analysis scripts. This is especially useful when running scripts that iterate over many files and take a significant amount of time to run. This function has no effect on the Browse Files tab in the Quick Analysis window.
+\begin{lstlisting}[caption=Example]
+	files = SpikeDB.getFiles()
+
+	count = 0.0
+	for f in files:
+		doSomething(f)
+		count = count + 1
+		SpikeDB.updateProgress(count/len(files))
 \end{lstlisting}
 
 \clearpage
