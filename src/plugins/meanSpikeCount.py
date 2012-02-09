@@ -1,7 +1,9 @@
-### Mean Spike Count
+### Spike Count Analysis
 
 
 def SpikeDBAdvanced():
+	SpikeDB.addOptionRadio("type", ["Mean Spike Count", "Median Spike Count", "Shapiro-Wilk Test"], "Analysis Type", 0)
+	SpikeDB.addRuler()
 	SpikeDB.addOptionCheckbox("showLimits", "Draw Minimum and Maximum Lines (Single File Only)", True)
 	SpikeDB.addOptionCheckbox("showAllPoints", "Draw spike counts for all trials (Single File Only)", True)
 
@@ -21,7 +23,7 @@ def SpikeDBRun():
 			tmpMin = 10000000000;
 			tmpMax = 0;
 			count = []
-			x.append(t['xvalue'])	
+			x.append(t['xvalue'])
 			for p in t['passes']:
 				count.append(len(p))
 				if len(p) > tmpMax: tmpMax = len(p)

@@ -49,12 +49,33 @@ pySpikeDB::pySpikeDB(sqlite3** db, uiFileDetailsTreeView* fileDetailsTree, Gtk::
 
 void pySpikeDB::addOptionCheckbox(const std::string &name, const std::string &description, bool def)
 {
-	checkboxOptions.push_back(std::pair< std::pair<Glib::ustring, Glib::ustring>, bool>(std::pair<Glib::ustring, Glib::ustring>(name, description), def));
+	boost::shared_ptr<checkboxOption> opt(new checkboxOption(def));
+	opt->name = name;
+	opt->description = description;
+	options.push_back(opt);
+}
+
+void pySpikeDB::addOptionRadio(const std::string &name, boost::python::list &items, const std::string &description, int def)
+{
+	boost::shared_ptr<radioOption> opt(new radioOption(def));
+	opt->name = name;
+	opt->description = description;
+	opt->setItems(list2vec<std::string>(items));
+	options.push_back(opt);
 }
 
 void pySpikeDB::addOptionNumber(const std::string &name, const std::string &description, double def)
 {
-	numberOptions.push_back(std::pair< std::pair<Glib::ustring, Glib::ustring>, double>(std::pair<Glib::ustring, Glib::ustring>(name, description), def));
+	boost::shared_ptr<numberOption> opt(new numberOption(def));
+	opt->name = name;
+	opt->description = description;
+	options.push_back(opt);
+}
+
+void pySpikeDB::addRuler()
+{
+	boost::shared_ptr<rulerOption> opt(new rulerOption());
+	options.push_back(opt);
 }
 
 void pySpikeDB::updateProgress(const float &val)
@@ -115,14 +136,11 @@ void pySpikeDB::reset()
 	filterRelBegin=filterRelEnd=-1;
 	forceAbsBegin=forceAbsEnd=-1;
 	xmin=xmax=ymin=ymax=EasyPlotmm::AUTOMATIC;
-	checkboxOptions.clear();
-	numberOptions.clear();
+	options.clear();
 	actionButton = false;
 	mp_pbStatus->set_fraction(0);
 	mp_pbStatus->set_text("");
 
-	// Default
-	addOptionCheckbox("showErrorBars", "Show Error Bars", false);
 }
 
 void pySpikeDB::enableActionButton()
@@ -134,13 +152,20 @@ bp::object pySpikeDB::getOptions()
 {
 	bp::dict opts;
 
-	std::vector< pySpikeDB::checkboxOption >::iterator cbIter;
-	for (cbIter = checkboxOptions.begin(); cbIter != checkboxOptions.end(); cbIter++) {
-		opts[cbIter->first.first.c_str()] = cbIter->second;
-	}
-	std::vector< numberOption >::iterator numIter;
-	for (numIter = numberOptions.begin(); numIter != numberOptions.end(); numIter++) {
-		opts[numIter->first.first.c_str()] = numIter->second;
+	std::vector<boost::shared_ptr<pySpikeDB::Option> >::iterator optIter;
+	for (optIter = options.begin(); optIter != options.end(); optIter++) {
+		if ((*optIter)->type == pySpikeDB::Option::NUMBER) {
+			pySpikeDB::numberOption* opt = static_cast<pySpikeDB::numberOption *>((*optIter).get());
+			opts[opt->name] = opt->getValue();
+		}
+		if ((*optIter)->type == pySpikeDB::Option::CHECKBOX) {
+			pySpikeDB::checkboxOption* opt = static_cast<pySpikeDB::checkboxOption *>((*optIter).get());
+			opts[opt->name] = opt->getValue();
+		}
+		if ((*optIter)->type == pySpikeDB::Option::RADIO) {
+			pySpikeDB::radioOption* opt = static_cast<pySpikeDB::radioOption *>((*optIter).get());
+			opts[opt->name] = opt->getValue();
+		}
 	}
 	return opts;
 }
@@ -618,7 +643,8 @@ void pySpikeDB::plotLine(bp::list &pyX, bp::list &pyY, bp::list &pyErr)
 	y = list2vec<double>(pyY);
 	err = list2vec<double>(pyErr);
 
-	if (bp::len(pyX) == bp::len(pyErr) && getCheckboxOption("showErrorBars"))
+	checkboxOption* showErrorBars = static_cast<checkboxOption*>(findOptionByName("showErrorBars"));
+	if (bp::len(pyX) == bp::len(pyErr) && showErrorBars && showErrorBars->getValue())
 	{
 		mp_plot->plot(x, y, err, m_plotPen);
 	}
@@ -640,16 +666,6 @@ void pySpikeDB::setPointData(boost::python::list &data)
 	mp_plot->setPointData(d);
 }
 
-bool pySpikeDB::getCheckboxOption(const std::string &option)
-{
-	std::vector< pySpikeDB::checkboxOption >::iterator cbIter;
-	for (cbIter = checkboxOptions.begin(); cbIter != checkboxOptions.end(); cbIter++) {
-		if (cbIter->first.first == option) {
-			return cbIter->second;
-		}
-	}
-	return false;
-}
 
 
 template<typename T>
@@ -733,4 +749,15 @@ bp::object pySpikeDB::ttest(bp::list &a, bp::list &b, bool eqvar)
 	r["p2"] = p;
 	r["df"] = df;
 	return r;
+}
+
+pySpikeDB::Option* pySpikeDB::findOptionByName(const Glib::ustring &name) {
+
+	std::vector<boost::shared_ptr<Option> >::iterator it;
+	for (it = options.begin(); it != options.end(); it++) {
+		if ((*it).get()->name == name) {
+			return (*it).get();
+		}
+	}
+	return NULL;
 }

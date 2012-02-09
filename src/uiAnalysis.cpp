@@ -74,7 +74,7 @@ uiAnalysis::uiAnalysis(sqlite3 **db, Gtk::Notebook* notebook, uiFileDetailsTreeV
 	bool foundActive = false;
 	for (unsigned int i = 0; i < plugins.size(); ++i) {
 		tbPlugins->append_text(plugins[i].second);
-		if (plugins[i].second == "Mean Spike Count") {
+		if (plugins[i].second == "Spike Count Analysis") {
 			tbPlugins->set_active(i);
 			foundActive = true;
 		}
@@ -356,7 +356,9 @@ if (!uiAnalysis::setupPython)
 	main_namespace["pySpikeDB"] = class_<pySpikeDB>("pySpikeDB")
 		.def("write", &pySpikeDB::print)
 		.def("addOptionCheckbox", &pySpikeDB::addOptionCheckbox)
+		.def("addOptionRadio", &pySpikeDB::addOptionRadio)
 		.def("addOptionNumber", &pySpikeDB::addOptionNumber)
+		.def("addRuler", &pySpikeDB::addRuler)
 		.def("getCells", &pySpikeDB::getCells)
 		.def("getFiles", &pySpikeDB::getFiles)
 		.def("getOptions", &pySpikeDB::getOptions)
@@ -416,19 +418,28 @@ if (!uiAnalysis::setupPython)
 
 	// Run the SpikeDBAdvanced function
 	PyRun_SimpleString("SpikeDBAdvanced()");
-
+	_pySpikeDB.addOptionCheckbox("showErrorBars", "Show Error Bars", false);
 
 	// If we have a previously saved settings, overide the defaults with them now
-	std::vector< pySpikeDB::checkboxOption >::iterator cbIter;
-	std::vector< pySpikeDB::numberOption >::iterator numIter;
-	for (numIter = _pySpikeDB.numberOptions.begin(); numIter != _pySpikeDB.numberOptions.end(); numIter++) {
-		if (savedNumberOptions.find(std::pair<std::string,std::string>(filename, numIter->first.first)) != savedNumberOptions.end()) {
-			numIter->second = savedNumberOptions.find((std::pair<std::string,std::string>(filename, numIter->first.first)))->second;
+	std::vector<boost::shared_ptr<pySpikeDB::Option> >::iterator optIter;
+	for (optIter = _pySpikeDB.options.begin(); optIter != _pySpikeDB.options.end(); optIter++) {
+		if (savedNumberOptions.find(std::pair<std::string,std::string>(filename, (*optIter)->name)) != savedNumberOptions.end()) {
+			if ((*optIter)->type == pySpikeDB::Option::NUMBER) {
+				pySpikeDB::numberOption* opt = static_cast<pySpikeDB::numberOption *>((*optIter).get());
+				opt->setValue(savedNumberOptions.find((std::pair<std::string,std::string>(filename, opt->name)))->second );
+			}
 		}
-	}
-	for (cbIter = _pySpikeDB.checkboxOptions.begin(); cbIter != _pySpikeDB.checkboxOptions.end(); cbIter++) {
-		if (savedCheckboxOptions.find(std::pair<std::string,std::string>(filename, cbIter->first.first)) != savedCheckboxOptions.end()) {
-			cbIter->second = savedCheckboxOptions.find((std::pair<std::string,std::string>(filename, cbIter->first.first)))->second;
+		if (savedCheckboxOptions.find(std::pair<std::string,std::string>(filename, (*optIter)->name)) != savedCheckboxOptions.end()) {
+			if ((*optIter)->type == pySpikeDB::Option::CHECKBOX) {
+				pySpikeDB::checkboxOption* opt = static_cast<pySpikeDB::checkboxOption *>((*optIter).get());
+				opt->setValue( savedCheckboxOptions.find((std::pair<std::string,std::string>(filename, opt->name)))->second );
+			}
+		}
+		if (savedRadioOptions.find(std::pair<std::string,std::string>(filename, (*optIter)->name)) != savedRadioOptions.end()) {
+			if ((*optIter)->type == pySpikeDB::Option::RADIO) {
+				pySpikeDB::radioOption* opt = static_cast<pySpikeDB::radioOption *>((*optIter).get());
+				opt->setValue(savedRadioOptions.find((std::pair<std::string,std::string>(filename, opt->name)))->second );
+			}
 		}
 	}
 
@@ -445,68 +456,117 @@ if (!uiAnalysis::setupPython)
 		Gtk::VBox vbox;
 
 		Gtk::CheckButton *saveSettings = Gtk::manage( new Gtk::CheckButton("Save Settings For This Session") );
+		saveSettings->set_active(true); // Save options by default
 		Gtk::HSeparator *sep = Gtk::manage( new Gtk::HSeparator() );
 		vbox.pack_end(*saveSettings);
 		saveSettings->show();
 		vbox.pack_end(*sep);
 		sep->show();
 
-		std::vector< Gtk::Entry* > numberOptions;
-		for (numIter = _pySpikeDB.numberOptions.begin(); numIter != _pySpikeDB.numberOptions.end(); numIter++) {
-			Gtk::HBox *hbox = Gtk::manage(new Gtk::HBox() );
-			Gtk::Label *label = Gtk::manage(new Gtk::Label(numIter->first.second) );
-			label->show();
-			hbox->pack_start(*label,false,true);
-			Gtk::Entry* numberOption = Gtk::manage( new Gtk::Entry() );
-			char numBuffer[10];
-			sprintf(numBuffer, "%.3f", numIter->second);
-			numberOption->set_text(numBuffer);
-			numberOption->set_width_chars(6);
-			numberOptions.push_back(numberOption);
-			numberOption->show();
-			hbox->pack_end(*numberOption, false, true);
-			hbox->show();
-			vbox.pack_end(*hbox, false, true);
+		std::vector< std::pair<Glib::ustring,Gtk::Entry*> > numberOptions;
+		std::vector< std::pair<Glib::ustring,std::vector<Gtk::RadioButton*> > > radioOptions;
+		std::vector< std::pair<Glib::ustring,Gtk::CheckButton*> > cbOptions;
+
+		for (optIter = _pySpikeDB.options.begin(); optIter != _pySpikeDB.options.end(); optIter++) {
+			if ((*optIter)->type == pySpikeDB::Option::NUMBER) {
+				pySpikeDB::numberOption* opt = static_cast<pySpikeDB::numberOption *>((*optIter).get());
+				Gtk::HBox *hbox = Gtk::manage(new Gtk::HBox() );
+				Gtk::Label *label = Gtk::manage(new Gtk::Label(opt->description) );
+				hbox->pack_start(*label,false,true);
+				Gtk::Entry* numberOption = Gtk::manage( new Gtk::Entry() );
+				char numBuffer[10];
+				sprintf(numBuffer, "%.3f", opt->getValue());
+				numberOption->set_text(numBuffer);
+				numberOption->set_width_chars(6);
+				numberOptions.push_back(std::make_pair(opt->name,numberOption));
+				hbox->pack_start(*numberOption, false, true);
+				vbox.pack_end(*hbox, false, true);
+			}
+			if ((*optIter)->type == pySpikeDB::Option::CHECKBOX) {
+				pySpikeDB::checkboxOption* opt = static_cast<pySpikeDB::checkboxOption *>((*optIter).get());
+				Gtk::CheckButton* cbOption = Gtk::manage( new Gtk::CheckButton(opt->description) );
+				cbOption->set_active(opt->getValue());
+				cbOptions.push_back(std::make_pair(opt->name,cbOption));
+				vbox.pack_start(*cbOption, false, true);
+			}
+			if ((*optIter)->type == pySpikeDB::Option::RADIO) {
+				pySpikeDB::radioOption* opt = static_cast<pySpikeDB::radioOption *>((*optIter).get());
+				Gtk::RadioButtonGroup group;
+				unsigned int count = 0;
+				std::vector<Gtk::RadioButton*> buttons;
+				for (std::vector<std::string>::iterator it = opt->getItems()->begin(); it != opt->getItems()->end(); it++) {
+					Gtk::RadioButton* radioOption = Gtk::manage( new Gtk::RadioButton(group, *it) );
+					if (count == opt->getValue()) radioOption->set_active(true);
+					buttons.push_back(radioOption);
+					vbox.pack_start(*radioOption, false, true);
+					count++;
+				}
+				radioOptions.push_back(make_pair(opt->name, buttons));
+			}
+			if ((*optIter)->type == pySpikeDB::Option::RULER) {
+				vbox.pack_start(*Gtk::manage( new Gtk::HSeparator() ), false, true);
+			}
 		}
-		std::vector< Gtk::CheckButton* > cbOptions;
-		for (cbIter = _pySpikeDB.checkboxOptions.begin(); cbIter != _pySpikeDB.checkboxOptions.end(); cbIter++) {
-			Gtk::CheckButton* cbOption = Gtk::manage( new Gtk::CheckButton(cbIter->first.second) );
-			cbOption->set_active(cbIter->second);
-			cbOptions.push_back(cbOption);
-			cbOption->show();
-			vbox.pack_end(*cbOption, false, true);
-		}
+
 		dialog.get_vbox()->pack_start(vbox);
-		vbox.show();
 		dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
 		dialog.add_button("Run Script", Gtk::RESPONSE_OK);
+		dialog.show_all_children();
 
 		if (dialog.run() == Gtk::RESPONSE_OK) {
 			dialog.hide();
 			// Update the option values
 			for(unsigned int i = 0; i < cbOptions.size(); ++i) {
-				if (saveSettings->get_active()) {
-					savedCheckboxOptions[std::pair<std::string,std::string>(filename,_pySpikeDB.checkboxOptions.at(i).first.first)] = cbOptions.at(i)->get_active(); 
+				for (optIter = _pySpikeDB.options.begin(); optIter != _pySpikeDB.options.end(); optIter++) {
+					if ((*optIter)->name == cbOptions.at(i).first && (*optIter)->type == pySpikeDB::Option::CHECKBOX) {
+						pySpikeDB::checkboxOption* opt = static_cast<pySpikeDB::checkboxOption *>((*optIter).get());
+						opt->setValue(cbOptions.at(i).second->get_active());
+						if (saveSettings->get_active()) {
+							savedCheckboxOptions[std::pair<std::string,std::string>(filename,(*optIter)->name)] = opt->getValue();
+						}
+					}
 				}
-				_pySpikeDB.checkboxOptions.at(i).second = cbOptions.at(i)->get_active();
 			}
 			for(unsigned int i = 0; i < numberOptions.size(); ++i) {
-				if (saveSettings->get_active()) {
-					savedNumberOptions[std::pair<std::string,std::string>(filename,_pySpikeDB.numberOptions.at(i).first.first)] = Glib::Ascii::strtod(numberOptions.at(i)->get_text());
+				for (optIter = _pySpikeDB.options.begin(); optIter != _pySpikeDB.options.end(); optIter++) {
+					if ((*optIter)->name == numberOptions.at(i).first && (*optIter)->type == pySpikeDB::Option::NUMBER) {
+						pySpikeDB::numberOption* opt = static_cast<pySpikeDB::numberOption *>((*optIter).get());
+						opt->setValue(Glib::Ascii::strtod(numberOptions.at(i).second->get_text()));
+						if (saveSettings->get_active()) {
+							savedNumberOptions[std::pair<std::string,std::string>(filename,(*optIter)->name)] = opt->getValue();
+						}
+					}
 				}
-				_pySpikeDB.numberOptions.at(i).second = Glib::Ascii::strtod(numberOptions.at(i)->get_text());
+			}
+			for(unsigned int i = 0; i < radioOptions.size(); ++i) {
+				for (optIter = _pySpikeDB.options.begin(); optIter != _pySpikeDB.options.end(); optIter++) {
+					if ((*optIter)->name == radioOptions.at(i).first && (*optIter)->type == pySpikeDB::Option::RADIO) {
+						pySpikeDB::radioOption* opt = static_cast<pySpikeDB::radioOption *>((*optIter).get());
+						unsigned int value;
+						for (value = 0; value < radioOptions.at(i).second.size(); ++value) {
+							if (radioOptions.at(i).second.at(value)->get_active()) {
+								break;
+							}
+						}
+						opt->setValue(value);
+						if (saveSettings->get_active()) {
+							savedRadioOptions[std::pair<std::string,std::string>(filename,(*optIter)->name)] = value;
+						}
+					}
+				}
 			}
 
 			if (!saveSettings->get_active()) {
 				// Delete saved settings
-				for (numIter = _pySpikeDB.numberOptions.begin(); numIter != _pySpikeDB.numberOptions.end(); numIter++) {
-					savedNumberOptions.erase((std::pair<std::string,std::string>(filename, numIter->first.first)));
-				}
-				for (cbIter = _pySpikeDB.checkboxOptions.begin(); cbIter != _pySpikeDB.checkboxOptions.end(); cbIter++) {
-					savedCheckboxOptions.erase((std::pair<std::string,std::string>(filename, cbIter->first.first)));
+				for (optIter = _pySpikeDB.options.begin(); optIter != _pySpikeDB.options.end(); optIter++) {
+					if ((*optIter)->type == pySpikeDB::Option::NUMBER) {
+						savedNumberOptions.erase((std::pair<std::string,std::string>(filename, (*optIter)->name)));
+					}
+					if ((*optIter)->type == pySpikeDB::Option::CHECKBOX) {
+						savedCheckboxOptions.erase((std::pair<std::string,std::string>(filename, (*optIter)->name)));
+					}
 				}
 			}
-
 			PyRun_SimpleString("SpikeDBRun()");
 		}
 

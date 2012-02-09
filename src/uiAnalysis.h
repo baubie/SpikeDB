@@ -32,7 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Windows.h>
 #endif
 
-
+#include <boost/shared_ptr.hpp>
 #include "pySpikeDB.h"
 #include <gtkmm.h>
 #include <sqlite3.h>
@@ -89,6 +89,7 @@ class uiAnalysis : public Gtk::VBox {
 		Settings *settings;
 		float forceAbsBegin, forceAbsEnd;
 		std::map<std::pair<std::string,std::string>, double> savedNumberOptions;
+		std::map<std::pair<std::string,std::string>, int> savedRadioOptions;
 		std::map<std::pair<std::string,std::string>, bool> savedCheckboxOptions;
 		Gtk::ProgressBar *mp_pbStatus;
 

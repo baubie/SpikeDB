@@ -2,11 +2,12 @@ Version 1.8
 Released: ????
 
 New Features:
-* Added a programmable progress bar to the Analysis tab and updated with
-SpikeDB.updateProgress().
+* Added a programmable progress bar to the Analysis tab and updated with SpikeDB.updateProgress().
+* Added addRadioOption() to add radio buttons to the advanced options window.
+* Added addRuler() to add a horizontal ruler to the advanced options window.
 
 Bug Fixes:
-
+* FIXED: Analysis script options are shown in ordered as added.
 
 
 Version 1.7
@@ -21,7 +22,7 @@ New Features:
 
 Bug Fixes:
 * FIXED: Some plugins would show up twice in dropdown list on Mac OS X.
-* FIXED: When moving "too fast" between scripts SpikeDB should no longer crash occasionally. 
+* FIXED: When moving "too fast" between scripts SpikeDB should no longer crash occasionally.
 
 
 Version 1.6

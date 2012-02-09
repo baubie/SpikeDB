@@ -34,6 +34,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <boost/python.hpp>
 #include <boost/python/stl_iterator.hpp>
+#include <boost/shared_ptr.hpp>
 #include <gtkmm.h>
 #include <sqlite3.h>
 #include <set>
@@ -66,7 +67,9 @@ class pySpikeDB {
 
 
 		void addOptionCheckbox(const std::string &name, const std::string &description, bool def);
+		void addOptionRadio(const std::string &name, boost::python::list &items, const std::string &description, int def);
 		void addOptionNumber(const std::string &name, const std::string &description, double def);
+		void addRuler();
 
 		void forceSpikesAbs(const float &begin, const float &end);
 		void filterSpikesAbs(const float &begin, const float &end);
@@ -103,10 +106,66 @@ class pySpikeDB {
 		 * Option arrays
 		 * Public to be accessed from uiAnalysis
 		 */
-		typedef std::pair< std::pair<Glib::ustring, Glib::ustring>, bool> checkboxOption;
-		typedef std::pair< std::pair<Glib::ustring, Glib::ustring>, double> numberOption;
-		std::vector< checkboxOption > checkboxOptions;
-		std::vector< numberOption > numberOptions;
+		class Option {
+			public:
+				enum OptionType { RULER, CHECKBOX, NUMBER, RADIO };
+				Option(OptionType type) : type(type) {}
+				std::string name;
+				std::string description;
+				OptionType type;
+		};
+
+		class rulerOption : public Option {
+			public:
+				rulerOption() : Option(RULER) { }
+		};
+
+		class checkboxOption : public Option {
+
+			public:
+				checkboxOption(double def) : Option(CHECKBOX)
+					{ this->def = def; setValue(def); }
+				bool def;
+				bool getValue() { return value;  }
+				void setValue(bool value) { this->value = value; }
+			private:
+				bool value;
+		};
+
+		class numberOption : public Option {
+
+			public:
+				numberOption(double def) : Option(NUMBER)
+					{ this->def = def; setValue(def); }
+				double def;
+				double getValue() { return value;  }
+				void setValue(double value) { this->value = value; }
+			private:
+				double value;
+		};
+
+		class radioOption : public Option {
+
+			public:
+				radioOption(int def) : Option(RADIO)
+					{ this->def = def; setValue(def); }
+				unsigned int def;
+				unsigned int getValue() { return value; }
+				Glib::ustring getStringValue()
+				{ try { return items.at(value); }
+				  catch(std::out_of_range e) { return ""; }
+				}
+				Glib::ustring getSelected();
+				void setValue(unsigned int value) { this->value = value; }
+				void setItems(const std::vector<std::string>& items) { this->items = items; }
+				std::vector<std::string>* getItems() { return &this->items; }
+			private:
+				unsigned int value;
+				std::vector<std::string> items;
+		};
+
+		std::vector <boost::shared_ptr<Option> > options;
+
 		bool actionButton;
 
 
@@ -136,7 +195,7 @@ class pySpikeDB {
 		/**
 		 * Helper Functions
 		 */
-		bool getCheckboxOption(const std::string &option);
+		Option* findOptionByName(const Glib::ustring &name);
 		boost::python::object getFile(const Gtk::TreeModel::iterator& iter);
 		template<typename T> std::vector<T> list2vec(boost::python::list &l);
 

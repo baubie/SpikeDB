@@ -21,7 +21,7 @@ def SpikeDBRun():
 			tmpMin = 10000000000;
 			tmpMax = 0;
 			count = []
-			x.append(t['xvalue'])	
+			x.append(t['xvalue'])
 			for p in t['passes']:
 				count.append(len(p))
 				if len(p) > tmpMax: tmpMax = len(p)
