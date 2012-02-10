@@ -5,6 +5,9 @@ New Features:
 * Added a programmable progress bar to the Analysis tab and updated with SpikeDB.updateProgress().
 * Added addRadioOption() to add radio buttons to the advanced options window.
 * Added addRuler() to add a horizontal ruler to the advanced options window.
+* Condensed built in plugins by moving similar analyeses into one file with more options.
+* Added a progress window when loading the database instead of just having an
+unresponsive program.
 
 Bug Fixes:
 * FIXED: Analysis script options are shown in ordered as added.

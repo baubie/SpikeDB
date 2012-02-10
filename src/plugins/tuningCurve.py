@@ -1,4 +1,8 @@
-### Tuning Curve (30% Threshold)
+### Tuning Curve
+
+def SpikeDBAdvanced():
+	SpikeDB.addOptionNumber("threshold", "Minimum Spikes per Trial Threshold", 0.3)
+
 
 def SpikeDBRun():
 # Only look at selected files
@@ -9,7 +13,8 @@ def SpikeDBRun():
 	freqs = []
 	amps = []
 	channel = 1
-	threshold = 0.3
+	options = SpikeDB.getOptions()
+	threshold = options["threshold"]
 
 	for f in files:
 		if f['frequency'][1] == SpikeDB.VARYING or f['frequency'][2] == SpikeDB.VARYING:
@@ -38,14 +43,14 @@ def SpikeDBRun():
 			x = []
 			for t in f['trials']:
 				count = []
-				x.append(t['xvalue'])	
+				x.append(t['xvalue'])
 				for p in t['passes']:
 					if len(p) > 0:
 						count.append(1)
 					else:
 						count.append(0)
 				prob.append(SpikeDB.mean(count))
-			
+
 			# Figure out the lower threshold
 			added = False
 			for m in range(0,len(prob)):

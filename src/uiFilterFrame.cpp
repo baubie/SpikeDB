@@ -52,7 +52,7 @@ uiFilterFrame::uiFilterFrame()
 	m_adjMinFiles.signal_value_changed().connect(
 			sigc::mem_fun(*this, &uiFilterFrame::on_adjMinFiles_changed)
 	);
-	
+
 
 	/*
 	 * ComboBox to select the X-Variable 
@@ -84,9 +84,6 @@ uiFilterFrame::uiFilterFrame()
 	m_tag.signal_changed().connect(
 			sigc::mem_fun(*this, &uiFilterFrame::on_tag_changed)
 	);
-
-	m_timer.start();
-	Glib::signal_timeout().connect(sigc::mem_fun(*this, &uiFilterFrame::check_change_queue), 250);
 
 	/*
 	 * Hidden file checkbox
@@ -139,7 +136,7 @@ void uiFilterFrame::on_adjMinFiles_changed()
 
 void uiFilterFrame::on_tag_changed()
 {
-	if (m_timer.elapsed() >= 1) 
+	if (m_timer.elapsed() >= 1)
 	{
 		m_signal_changed.emit();
 		m_timer.reset();

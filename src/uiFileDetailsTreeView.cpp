@@ -34,10 +34,9 @@ uiFileDetailsTreeView::uiFileDetailsTreeView(sqlite3 **db, Gtk::Window *parent)
 
 	m_parent = parent;
 	this->db = db;
-
 	mrp_ListStore = Gtk::ListStore::create(m_Columns);
-	mrp_ListStore->set_sort_column(m_Columns.m_col_time, Gtk::SORT_ASCENDING);
-	this->set_model(mrp_ListStore);
+//	mrp_ListStore->set_sort_column(m_Columns.m_col_time, Gtk::SORT_ASCENDING);
+	this->linkModel();
 	this->append_column("", m_Columns.m_col_props);
 	this->append_column("AnimalID", m_Columns.m_col_animalID);
 	this->append_column("CellID", m_Columns.m_col_cellID);
@@ -51,7 +50,7 @@ uiFileDetailsTreeView::uiFileDetailsTreeView(sqlite3 **db, Gtk::Window *parent)
 	this->append_column("Atten (db)", m_Columns.m_col_atten);
 	mrp_Selection = this->get_selection();
 	mrp_Selection->set_mode(Gtk::SELECTION_MULTIPLE);
-	this->set_rules_hint(true);
+	this->set_rules_hint(false);
 
 	// Setup right click handling
 	this->signal_button_press_event().connect_notify(
@@ -66,6 +65,8 @@ uiFileDetailsTreeView::uiFileDetailsTreeView(sqlite3 **db, Gtk::Window *parent)
 	}
 
 
+	hasRows = false;
+
 }
 
 uiFileDetailsTreeView::~uiFileDetailsTreeView() {}
@@ -75,14 +76,27 @@ Glib::RefPtr<Gtk::TreeSelection> uiFileDetailsTreeView::treeSelection()
 	return mrp_Selection;
 }
 
+void uiFileDetailsTreeView::linkModel()
+{
+	this->set_model(mrp_ListStore);
+}
+
 void uiFileDetailsTreeView::clear()
 {
 	mrp_ListStore->clear();
+	this->unset_model();
+	hasRows = false;
 }
 
 Gtk::TreeModel::Row uiFileDetailsTreeView::newrow()
 {
-	return *(mrp_ListStore->append());
+	if (!hasRows) {
+		m_lastInsertedRow = mrp_ListStore->append();
+		hasRows = true;
+	} else {
+		m_lastInsertedRow = mrp_ListStore->insert_after(m_lastInsertedRow);
+	}
+	return *m_lastInsertedRow;
 }
 
 Glib::ustring uiFileDetailsTreeView::animalID(const Gtk::TreeModel::iterator& iter)

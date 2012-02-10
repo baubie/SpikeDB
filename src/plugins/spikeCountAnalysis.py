@@ -7,7 +7,7 @@ except ImportError:
 
 
 def SpikeDBAdvanced():
-	typeOptions = ["Mean SpikeCount", "Median Spike Count"]
+	typeOptions = ["Mean SpikeCount", "Median Spike Count", "Spike Probability"]
 	if hasSciPy:
 		typeOptions.append("Shapiro-Wilk Test")
 
@@ -53,6 +53,22 @@ def meanSpikeCount(f):
 		means.append(SpikeDB.mean(count))
 		err.append(SpikeDB.stddev(count))
 	return x, means, err, minCount, maxCount, allPointsX, allPointsY
+
+def spikeProbability(f):
+	prob = []
+	err = []
+	x = []
+	for t in f['trials']:
+		count = []
+		x.append(t['xvalue'])
+		for p in t['passes']:
+			if len(p) > 0:
+				count.append(1)
+			else:
+				count.append(0)
+		prob.append(SpikeDB.mean(count))
+		err.append(SpikeDB.stddev(count))
+	return x, prob, err
 
 def medianSpikeCount(f):
 	means = []
@@ -117,12 +133,32 @@ def SpikeDBRun():
 			SpikeDB.plotYMin(0)
 
 		if options["type"] == 2:
+			x, values, err = spikeProbability(f)
+			SpikeDB.plotSetRGBA(0,0,0,1)
+			SpikeDB.plotXLabel(f['xvar'])
+			SpikeDB.plotYLabel('Spike Probability')
+			SpikeDB.plotLine(x,values,err)
+			SpikeDB.plotYMin(0)
+			SpikeDB.plotYMax(1.0000001)
+
+		if options["type"] == 3:
 			x, values = ShapiroWilk(f)
 			SpikeDB.plotSetRGBA(0,0,0,1)
 			SpikeDB.plotXLabel(f['xvar'])
 			SpikeDB.plotYLabel('Shapiro-Wilk p-value')
 			SpikeDB.plotLine(x,values,[])
 			SpikeDB.plotYMin(0)
+			for i in range(len(x)):
+				if values[i] < 0.0001:
+					print "p("+str(x[i])+") < 0.0001"
+				elif values[i] < 0.001:
+					print "p("+str(x[i])+") < 0.001"
+				elif values[i] < 0.01:
+					print "p("+str(x[i])+") < 0.01"
+				elif values[i] < 0.05:
+					print "p("+str(x[i])+") < 0.05"
+				else:
+					print "p("+str(x[i])+") >= 0.05"
 
 		if options["type"] == 0 or options["type"] == 1:
 			if options["showLimits"] and len(files) == 1:

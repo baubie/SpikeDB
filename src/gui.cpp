@@ -23,7 +23,7 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/ 
+*/
 
 
 #include "stdafx.h"
@@ -47,7 +47,6 @@ GUI::GUI()
 	set_title("SpikeDB - No database open");
 	init_gui();
 
-
 	// Attempt to use the previously opened database.
 	if (settings.get_string("lastDatabase") != "") openDatabase(settings.get_string("lastDatabase"));
 
@@ -59,7 +58,7 @@ GUI::GUI()
 
 	uiReady = true;
 	updateTagCompletion();
-	this->on_filter_changed();
+//	this->on_filter_changed();
 	version_check();
 }
 
@@ -90,7 +89,7 @@ void GUI::version_check()
 		mp_statusbar->push("Unable to check for new version online (known Mac bug).");
 		return;
 	}
-	
+
 	mp_statusbar->pop();
 	if (newVersion) {
 		mp_statusbar->push("New version available at http://spikedb.aubie.ca!");
@@ -144,8 +143,8 @@ void GUI::init_gui()
 	 */
 	mp_Notebook = Gtk::manage(new Gtk::Notebook());
 	hbMain->pack_start(*mp_Notebook, true, true);
-
 	mp_statusbar = Gtk::manage( new Gtk::Statusbar() );
+
 
 	/**
 	 * Browse Notebook Page
@@ -164,7 +163,6 @@ void GUI::init_gui()
 	hbPlots->pack_start(*mp_PlotSpikes, true, true);
 	hbPlots->pack_start(*mp_QuickAnalysis, true, true);
 	vpMiddle->pack2(*hbPlots);
-
 
 	Gtk::ScrolledWindow* swDetailPanels = Gtk::manage( new Gtk::ScrolledWindow() );
 	Gtk::VBox *vbRight = Gtk::manage(new Gtk::VBox());
@@ -411,7 +409,7 @@ bool GUI::openDatabase(std::string filename)
 	}
 	set_title("SpikeDB - " + filename);
 
-	double version = database_version();	
+	double version = database_version();
 
 	bool needUpgrade = false;
 	if (version < CURRENT_DB_VERSION) {
@@ -435,7 +433,7 @@ bool GUI::openDatabase(std::string filename)
 				sqlite3_prepare_v2(db, queryUpgrade, strlen(queryUpgrade), &stmtUpgrade, NULL);
 				sqlite3_bind_double(stmtUpgrade, 1, 1.4);
 				sqlite3_bind_text(stmtUpgrade, 2, "version", -1, SQLITE_TRANSIENT);
-				if (sqlite3_step(stmtUpgrade) != SQLITE_DONE) count = 100000000; 
+				if (sqlite3_step(stmtUpgrade) != SQLITE_DONE) count = 100000000;
 				sqlite3_finalize(stmtUpgrade);
 			}
 
@@ -447,13 +445,13 @@ bool GUI::openDatabase(std::string filename)
 				sqlite3_prepare_v2(db, queryUpgrade, strlen(queryUpgrade), &stmtUpgrade, NULL);
 				sqlite3_bind_double(stmtUpgrade, 1, 1.5);
 				sqlite3_bind_text(stmtUpgrade, 2, "version", -1, SQLITE_TRANSIENT);
-				if (sqlite3_step(stmtUpgrade) != SQLITE_DONE) count = 100000000; 
+				if (sqlite3_step(stmtUpgrade) != SQLITE_DONE) count = 100000000;
 				sqlite3_finalize(stmtUpgrade);
 
 				const char queryNewCol1[] = "ALTER TABLE cells ADD COLUMN bad INTEGER";
 				sqlite3_stmt *stmtNewCol1 = 0;
 				sqlite3_prepare_v2(db, queryNewCol1, strlen(queryNewCol1), &stmtNewCol1, NULL);
-				if (sqlite3_step(stmtNewCol1) != SQLITE_DONE) count = 100000000; 
+				if (sqlite3_step(stmtNewCol1) != SQLITE_DONE) count = 100000000;
 				sqlite3_finalize(stmtNewCol1);
 			}
 
@@ -465,7 +463,7 @@ bool GUI::openDatabase(std::string filename)
 				sqlite3_prepare_v2(db, queryUpgrade, strlen(queryUpgrade), &stmtUpgrade, NULL);
 				sqlite3_bind_double(stmtUpgrade, 1, 1.6);
 				sqlite3_bind_text(stmtUpgrade, 2, "version", -1, SQLITE_TRANSIENT);
-				if (sqlite3_step(stmtUpgrade) != SQLITE_DONE) count = 100000000; 
+				if (sqlite3_step(stmtUpgrade) != SQLITE_DONE) count = 100000000;
 				sqlite3_finalize(stmtUpgrade);
 			}
 
@@ -477,7 +475,7 @@ bool GUI::openDatabase(std::string filename)
 				sqlite3_prepare_v2(db, queryUpgrade, strlen(queryUpgrade), &stmtUpgrade, NULL);
 				sqlite3_bind_double(stmtUpgrade, 1, 1.7);
 				sqlite3_bind_text(stmtUpgrade, 2, "version", -1, SQLITE_TRANSIENT);
-				if (sqlite3_step(stmtUpgrade) != SQLITE_DONE) count = 100000000; 
+				if (sqlite3_step(stmtUpgrade) != SQLITE_DONE) count = 100000000;
 				sqlite3_finalize(stmtUpgrade);
 			}
 
@@ -1247,7 +1245,25 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 
 	mp_FileDetailsTree->clear();
 	Gtk::TreeModel::Row row;
+
+	// Create pop-up dialog box
+	Gtk::Dialog progress("Loading Database", this, true);
+	Gtk::ProgressBar *p_pbStatus = Gtk::manage( new Gtk::ProgressBar() );
+	progress.get_vbox()->pack_end(*p_pbStatus, true, true);
+	p_pbStatus->show();
+	p_pbStatus->set_pulse_step(0.05);
+	p_pbStatus->set_text("Loaded (0) Files");
+	progress.set_position(Gtk::WIN_POS_CENTER_ALWAYS);
+	progress.set_transient_for(*this);
+	progress.show();
+	p_pbStatus->pulse();
+	while (Gtk::Main::events_pending()) {
+		Gtk::Main::iteration(false);
+	}
+
+	int count = 0;
 	while (sqlite3_step(stmt) == SQLITE_ROW) {
+
 		bool filtered = true;
 
 		SpikeData sd;
@@ -1316,6 +1332,18 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 		filtered = filtered && (!hidden_file || mp_uiFilterFrame->showHidden());
 
 		if (filtered) {
+
+			count++;
+			if (count % 1000 == 0) {
+				p_pbStatus->pulse();
+				char buffer[25];
+				sprintf(buffer, "Loaded (%d) Files", count);
+				p_pbStatus->set_text(buffer);
+				while (Gtk::Main::events_pending()) {
+					Gtk::Main::iteration(false);
+				}
+			}
+
 			row = mp_FileDetailsTree->newrow();
 
 			GTimeVal t;
@@ -1453,6 +1481,10 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 			buffer[0] = '\0';
 		}
 	}
+	p_pbStatus->set_text("Populating Table");
+	p_pbStatus->pulse();
+	mp_FileDetailsTree->linkModel();
+	progress.hide();
 	sqlite3_finalize(stmt);
 }
 

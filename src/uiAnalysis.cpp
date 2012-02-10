@@ -72,12 +72,15 @@ uiAnalysis::uiAnalysis(sqlite3 **db, Gtk::Notebook* notebook, uiFileDetailsTreeV
 	Gtk::ToolItem *tbPluginItem = Gtk::manage( new Gtk::ToolItem() );
 	tbPluginItem->add(*tbPlugins);
 	bool foundActive = false;
-	for (unsigned int i = 0; i < plugins.size(); ++i) {
-		tbPlugins->append_text(plugins[i].second);
-		if (plugins[i].second == "Spike Count Analysis") {
-			tbPlugins->set_active(i);
+	std::vector<std::pair<Glib::ustring, Glib::ustring> >::iterator it;
+	int count = 0;
+	for (it = plugins.begin(); it != plugins.end(); it++) {
+		tbPlugins->append((*it).second);
+		if (plugins[count].second == "Spike Count Analysis") {
+			tbPlugins->set_active(count);
 			foundActive = true;
 		}
+		count++;
 	}
 	if (!foundActive) {
 		tbPlugins->set_active(0);

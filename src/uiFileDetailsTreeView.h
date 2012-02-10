@@ -40,7 +40,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "uiTags.h"
 
 class uiFileDetailsTreeView : public Gtk::TreeView {
-	
+
 	public:
 		uiFileDetailsTreeView(sqlite3** db, Gtk::Window *parent);
         virtual ~uiFileDetailsTreeView();
@@ -52,13 +52,14 @@ class uiFileDetailsTreeView : public Gtk::TreeView {
 		int fileID(const Gtk::TreeModel::iterator& iter);
 
 		void clear();
+		void linkModel();
 
         // Files Details Tree Model Columns
         class Columns : public Gtk::TreeModel::ColumnRecord
         {
             public:
                 Columns()
-                { 
+                {
 				  add(m_col_hidden); add(m_col_time); add(m_col_props);
 				  add(m_col_animalID); add(m_col_cellID); add(m_col_filenum); add(m_col_xaxis); 
                   add(m_col_type); add(m_col_freq); add(m_col_trials); add(m_col_onset); 
@@ -121,6 +122,10 @@ class uiFileDetailsTreeView : public Gtk::TreeView {
 
         Glib::RefPtr<Gtk::TreeSelection> mrp_Selection;
 		Gtk::Menu m_Menu_FileDetails;
+
+
+		Gtk::TreeIter m_lastInsertedRow;
+		bool hasRows;
 
 		void on_view_file_details();
 		void show_file_details(const Gtk::TreeModel::iterator& iter);
