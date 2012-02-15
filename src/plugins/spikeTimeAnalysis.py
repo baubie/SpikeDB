@@ -1,9 +1,18 @@
 ### Spike Time Analysis
+try:
+	from scipy import stats
+	hasSciPy = True
+except ImportError:
+	hasSciPy = False
 
 def SpikeDBAdvanced():
 	SpikeDB.addOptionRadio("spikeType", ["First Spike Latency", "Last Spike Latency", "Interspike Intervals"], "Spikes", 0)
 	SpikeDB.addRuler()
-	SpikeDB.addOptionRadio("type", ["Mean", "Median"], "Analysis Type", 0)
+
+	typeOptions = ["Mean", "Median"]
+	if hasSciPy:
+		typeOptions.append("Shapiro-Wilk Test")
+	SpikeDB.addOptionRadio("type", typeOptions, "Analysis Type", 0)
 
 def SpikeDBRun():
 	SpikeDB.plotClear()
@@ -26,8 +35,22 @@ def SpikeDBRun():
 					if options["spikeType"] == 1:
 						count.append(p[-1])
 			if len(count) > 0:
-				means.append(SpikeDB.mean(count))
-				err.append(SpikeDB.stddev(count))
+				if options["type"] == 0:
+					means.append(SpikeDB.mean(count))
+					err.append(SpikeDB.stddev(count))
+				if options["type"] == 1:
+					if len(count) % 2 == 1:
+						median = count[int(len(count) * 0.5 - 0.5)]
+					else:
+						median = SpikeDB.mean([count[int(len(count) * 0.5)-1], count[int(len(count) * 0.5)]])
+					means.append(median)
+				if options["type"] == 2:
+
+					if len(count) >= 3:
+						W, p = stats.shapiro(count)
+						means.append(p)
+					else:
+						means.append(SpikeDB.NOPOINT)
 			else:
 				means.append(SpikeDB.NOPOINT)
 				err.append(SpikeDB.NOPOINT)
@@ -42,9 +65,11 @@ def SpikeDBRun():
 			spikeType = "Last"
 
 		if options["type"] == 0:
-			typeName = "Mean"
+			typeName = "Mean (ms)"
 		if options["type"] == 1:
-			typeName = "Median"
+			typeName = "Median (ms)"
+		if options["type"] == 1:
+			typeName = "Shapiro-Wilk p-value"
 
-		SpikeDB.plotYLabel(spikeType + ' ' + typeName + ' (ms)')
+		SpikeDB.plotYLabel(spikeType + ' ' + typeName)
 		SpikeDB.plotLine(x,means,err)
