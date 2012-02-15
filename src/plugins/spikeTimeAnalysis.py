@@ -62,15 +62,15 @@ def SpikeDBRun():
 		spikeType = ""
 		typeName = ""
 		if options["spikeType"] == 0:
-			spikeType = "First"
+			spikeType = "First Spikes"
 		if options["spikeType"] == 1:
-			spikeType = "Last"
+			spikeType = "Last Spikes"
 
 		if options["type"] == 0:
 			typeName = "Mean (ms)"
 		if options["type"] == 1:
 			typeName = "Median (ms)"
-		if options["type"] == 1:
+		if options["type"] == 2:
 			typeName = "Shapiro-Wilk p-value"
 
 		SpikeDB.plotYLabel(spikeType + ' ' + typeName)
