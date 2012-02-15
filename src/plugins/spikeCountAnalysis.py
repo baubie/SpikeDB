@@ -28,10 +28,10 @@ def ShapiroWilk(f):
 		if (len(count) >= 3):
 			W, p = stats.shapiro(count)
 			values.append(p)
-			print t['xvalue']+'->(W:'+str(W)+', p:'+str(p)+')'
+			print str(t['xvalue'])+'->(W:'+str(W)+', p:'+str(p)+')'
 		else:
 			values.append(SpikeDB.NOPOINT)
-			print t['xvalue']+'->Too Few Points (< 3)'
+			print str(t['xvalue'])+'->Too Few Points (< 3)'
 	return x, values
 
 def meanSpikeCount(f):
