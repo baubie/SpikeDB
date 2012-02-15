@@ -26,8 +26,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include "stdafx.h"
-
 #include "uiFileDetailsTreeView.h"
+
+#include "gui.h"
 
 uiFileDetailsTreeView::uiFileDetailsTreeView(sqlite3 **db, Gtk::Window *parent)
 {
@@ -121,6 +122,7 @@ void uiFileDetailsTreeView::on_file_details_button_press_event(GdkEventButton* e
 {
 	if ( (event->type == GDK_BUTTON_PRESS) && (event->button == 3) )
 	{
+		(static_cast<GUI*>(this->m_parent))->ignoreFileDetailsChange = true;
 		Gtk::Menu::MenuList& menulist = m_Menu_FileDetails.items();
 		if (mrp_Selection->count_selected_rows() > 1)
 		{

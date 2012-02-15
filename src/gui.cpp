@@ -628,16 +628,21 @@ void GUI::on_filedetails_edited(
 
 void GUI::on_filedetails_selection_changed()
 {
-	mp_QuickAnalysis->forceSpikesAbs(-1,-1);
-	mp_QuickAnalysis->runPlugin();
-	mp_PlotSpikes->clear();
-	curXVariable = "";
-	mp_FileDetailsTree->treeSelection()->selected_foreach_iter(
-		sigc::mem_fun(*this, &GUI::addFileToPlot)
-		);
-	mp_FileDetailsTree->treeSelection()->selected_foreach_iter(
-		sigc::mem_fun(*this, &GUI::updateSideLists)
-		);
+
+	if (!ignoreFileDetailsChange) {
+		mp_QuickAnalysis->forceSpikesAbs(-1,-1);
+		mp_QuickAnalysis->runPlugin();
+		mp_PlotSpikes->clear();
+		curXVariable = "";
+		mp_FileDetailsTree->treeSelection()->selected_foreach_iter(
+			sigc::mem_fun(*this, &GUI::addFileToPlot)
+			);
+		mp_FileDetailsTree->treeSelection()->selected_foreach_iter(
+			sigc::mem_fun(*this, &GUI::updateSideLists)
+			);
+	} else {
+		ignoreFileDetailsChange = false;
+	}
 }
 
 void GUI::updateSideLists(const Gtk::TreeModel::iterator& iter)

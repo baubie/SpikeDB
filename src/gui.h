@@ -89,6 +89,8 @@ class GUI : public Gtk::Window
         sqlite3 *db; /**< Pointer to out SQLite3 database. */
 		Settings settings; /**< Settings object. */
 
+		bool ignoreFileDetailsChange;
+
     protected:
 
 		/**
