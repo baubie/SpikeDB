@@ -49,8 +49,10 @@ def SpikeDBRun():
 					if len(count) >= 3:
 						W, p = stats.shapiro(count)
 						means.append(p)
+						print t['xvalue']+'->(W:'+str(W)+', p:'+str(p)+')'
 					else:
 						means.append(SpikeDB.NOPOINT)
+						print t['xvalue']+'->Too Few Points (< 3)'
 			else:
 				means.append(SpikeDB.NOPOINT)
 				err.append(SpikeDB.NOPOINT)
