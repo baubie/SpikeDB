@@ -223,7 +223,6 @@ void uiFileDetailsTreeView::on_view_file_details()
 
 void uiFileDetailsTreeView::on_tag_deleted(Glib::ustring tag)
 {
-
 	m_signal_tag_deleted.emit(tag);
 }
 

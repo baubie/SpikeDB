@@ -1018,7 +1018,7 @@ void GUI::on_filedetails_set_hidden(bool hidden)
 	this->on_filter_changed();
 }
 
-void GUI::on_bad_cell_toggle() 
+void GUI::on_bad_cell_toggle()
 {
 	sqlite3_stmt *stmt;
 	const char query[] = "UPDATE cells SET bad=? WHERE animalID=? AND cellID=?";

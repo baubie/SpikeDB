@@ -19,6 +19,7 @@
 \lstset{language=Python, basicstyle=\ttfamily, showstringspaces=false,showspaces=false,tabsize=2}
 \lstdefinestyle{numbers}{numberstyle=\tiny}
 \renewcommand*\arraystretch{1.75}
+
 \NewDocumentCommand \method{ m m g g g g g g g }{%
 	{\tt{\textcolor{red}{#1} #2(}%
 		\IfValueTF{#3}{\textcolor{blue}{#3}%
@@ -34,6 +35,7 @@
 	}%
 }
 
+
 \titleformat{\chapter}[display]
 {\singlespacing\bfseries\Huge}
 {\filright\Large\chaptertitlename\ \Large\thechapter}
@@ -46,7 +48,6 @@
 \definecolor{lightblue}{rgb}{0.9,0.9,0.9}
 \definecolor{lightyellow}{rgb}{0.95,0.95,0.95}
 \graphicspath{ {./screenshots/} }
-
 
 \begin{document}
 \newcolumntype{b}{>{\columncolor{lightblue}}c}
@@ -361,7 +362,7 @@ A list of dictionary objects is returned where each dictionary object represents
 \end{lstlisting}
 
 \clearpage
-\subsection[\method{list}{getFilesSingleCell}]{\method{list}{getFiles}{string animalID}{int cellID}}
+\subsection[\method{list}{getFilesSingleCell}]{\method{list}{getFilesSingleCell}{string animalID}{int cellID}}
 \subsubsection{Parameters}
 \begin{table}[h]
 \begin{center}

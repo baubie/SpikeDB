@@ -1,3 +1,4 @@
+*.synctex.gz
 *.swp
 *.o
 *.out
