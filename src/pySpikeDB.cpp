@@ -714,7 +714,7 @@ double pySpikeDB::stddev(boost::python::list &v)
 		}
 	}
 	if (rN <= 1) return 0;
-	return r/(rN-1);
+	return sqrt(r/(rN-1));
 }
 
 bp::object pySpikeDB::ttest(bp::list &a, bp::list &b, bool eqvar)
