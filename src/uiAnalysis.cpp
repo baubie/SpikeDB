@@ -483,7 +483,7 @@ if (!uiAnalysis::setupPython)
 				numberOption->set_width_chars(6);
 				numberOptions.push_back(std::make_pair(opt->name,numberOption));
 				hbox->pack_start(*numberOption, false, true);
-				vbox.pack_end(*hbox, false, true);
+				vbox.pack_start(*hbox, false, true);
 			}
 			if ((*optIter)->type == pySpikeDB::Option::CHECKBOX) {
 				pySpikeDB::checkboxOption* opt = static_cast<pySpikeDB::checkboxOption *>((*optIter).get());

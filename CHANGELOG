@@ -11,6 +11,7 @@ unresponsive program.
 
 Bug Fixes:
 * FIXED: Analysis script options are shown in ordered as added.
+* FIXED: stddev() in the analysis script was output variance, not stddev.
 
 
 Version 1.7
