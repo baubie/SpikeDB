@@ -173,7 +173,7 @@ void EasyPlotmm::export_data()
 
                         if (!stream)
                             std::cerr << "Gio::File::create_file() returned an empty RefPtr." << std::endl;
-                        
+
                         std::ostringstream contents;
                         for (unsigned int point = 0; point < m_x.at(i).size(); ++point)
                         {
@@ -639,7 +639,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 			showError("X and ERR list lengths do not match.");
             return true;
         }
-        
+
         // Draw datasets
         // Determine axes
         double xmin,xmax,ymin,ymax;
@@ -906,19 +906,41 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
             for (unsigned int j = 0; j < m_x[i].size(); ++j)
             {
                 if (
-					m_x[i][j] >= xmin && 
-					m_x[i][j] <= xmax && 
-					m_y[i][j] >= ymin && 
+					m_x[i][j] >= xmin &&
+					m_x[i][j] <= xmax &&
+					m_y[i][j] >= ymin &&
 					m_y[i][j] <= ymax
 				   )
                 {
 					if (firstPosition == UINT_MAX) firstPosition = j;
 					lastPosition = j;
+
+
                     cull_x.push_back(m_x.at(i).at(j));
                     cull_y.push_back(m_y.at(i).at(j));
                     cull_err.push_back(m_err.at(i).at(j));
-                }
-            }
+                } else {
+
+					// Draw lines in zoomed in view even if end points are not visible if robost
+					if (m_pens[i].robustLines) {
+						if (j < m_x[i].size()-1) {
+							if (m_x[i][j] < xmin && m_x[i][j+1] >= xmin) {
+								cull_x.push_back(xmin);
+								cull_y.push_back(m_y.at(i).at(j));
+								cull_err.push_back(0);
+							}
+						}
+						if (j > 0) {
+							if (m_x[i][j-1] < xmax && m_x[i][j] >= xmax) {
+								cull_x.push_back(xmax);
+								cull_y.push_back(m_y.at(i).at(j));
+								cull_err.push_back(0);
+							}
+						}
+					}
+				}
+			}
+
 
             if (!cull_x.empty())
             {

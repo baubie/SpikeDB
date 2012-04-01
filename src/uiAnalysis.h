@@ -63,6 +63,7 @@ class uiAnalysis : public Gtk::VBox {
 		EasyPlotmm* getPlot();
 		void runPlugin();
 		void forceSpikesAbs(double begin, double end);
+		void forceSpikesRel(double begin, double end);
 
 		/**
 		 * Python print for window
@@ -88,6 +89,7 @@ class uiAnalysis : public Gtk::VBox {
 		bool compact;
 		Settings *settings;
 		float forceAbsBegin, forceAbsEnd;
+		float forceRelBegin, forceRelEnd;
 		std::map<std::pair<std::string,std::string>, double> savedNumberOptions;
 		std::map<std::pair<std::string,std::string>, int> savedRadioOptions;
 		std::map<std::pair<std::string,std::string>, bool> savedCheckboxOptions;

@@ -47,15 +47,24 @@ class uiFilterFrame : public Gtk::Frame {
 		bool showHidden();
 		void showHidden(bool set);
 
+		double minSpikeTime();
+		double maxSpikeTime();
+		bool absoluteSpikeTime();
+
 		int XVar();
 
-		typedef sigc::signal<void> type_signal_changed;
-		type_signal_changed signal_changed();
+		typedef sigc::signal<void> type_signal_fileFilter_changed;
+		type_signal_fileFilter_changed signal_fileFilter_changed();
 
+		typedef sigc::signal<void> type_signal_spikeFilter_changed;
+		type_signal_spikeFilter_changed signal_spikeFilter_changed();
+
+		bool on_spikeTimeFocusLost(GdkEventFocus *e);
 
 
 	protected:
-		type_signal_changed m_signal_changed;
+		type_signal_fileFilter_changed m_signal_fileFilter_changed;
+		type_signal_spikeFilter_changed m_signal_spikeFilter_changed;
 
 		/**
 		 * Parent window
@@ -74,9 +83,6 @@ class uiFilterFrame : public Gtk::Frame {
 		} m_tagColumns;
 		Glib::RefPtr<Gtk::ListStore> mrp_CompletionModel;
 		void on_tag_changed();
-		bool queue_change_signal;
-		bool check_change_queue();
-		Glib::Timer m_timer;
 
 
 		/**
@@ -102,6 +108,13 @@ class uiFilterFrame : public Gtk::Frame {
 		 */
 		Gtk::CheckButton *mp_cbHidden;
 		void on_hidden_toggled();
+
+		/**
+		 * Spike Filter 
+		 */
+		Gtk::Entry m_minSpikes;
+		Gtk::Entry m_maxSpikes;
+		Gtk::CheckButton *mp_cbSpikeFilterAbsolute;
+		void on_spikeTime_changed();
 };
-					  
 #endif

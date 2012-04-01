@@ -105,6 +105,16 @@ void pySpikeDB::forceSpikesAbs(const float &begin, const float &end)
 	filterRelEnd = -1;
 }
 
+void pySpikeDB::forceSpikesRel(const float &begin, const float &end)
+{
+	forceRelBegin = begin;
+	forceRelEnd = end;
+	filterAbsBegin = -1;
+	filterAbsEnd = -1;
+	filterRelBegin = -1;
+	filterRelEnd = -1;
+}
+
 void pySpikeDB::filterSpikesAbs(const float &begin, const float &end)
 {
 	filterAbsBegin = begin;
@@ -115,10 +125,10 @@ void pySpikeDB::filterSpikesAbs(const float &begin, const float &end)
 
 void pySpikeDB::filterSpikesRel(const float &begin, const float &end)
 {
-	filterRelBegin = begin;
-	filterRelEnd = end;
 	filterAbsBegin = -1;
 	filterAbsEnd = -1;
+	filterRelBegin = begin;
+	filterRelEnd = end;
 }
 
 void pySpikeDB::print(const std::string &s)
@@ -135,6 +145,7 @@ void pySpikeDB::reset()
 	filterAbsBegin=filterAbsEnd=-1;
 	filterRelBegin=filterRelEnd=-1;
 	forceAbsBegin=forceAbsEnd=-1;
+	forceRelBegin=forceRelEnd=-1;
 	xmin=xmax=ymin=ymax=EasyPlotmm::AUTOMATIC;
 	options.clear();
 	actionButton = false;
@@ -251,12 +262,16 @@ bp::object pySpikeDB::getCells()
 
 bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 {
+
 	// Ensure forced filter overrides anything set in script
 	if (forceAbsBegin != -1) {
 		filterAbsBegin = forceAbsBegin;
 		filterAbsEnd = forceAbsEnd;
 	}
-
+	if (forceRelBegin != -1) {
+		filterRelBegin = forceRelBegin;
+		filterRelEnd = forceRelEnd;
+	}
 
 	bp::dict file;
 	sqlite3_stmt *stmt = 0;
@@ -426,7 +441,7 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 						{
 							pass.append(sd.m_spikeArray[s].fTime);
 						} else if (filterAbsBegin != -1 && filterAbsEnd > filterAbsBegin &&
-								   sd.m_spikeArray[s].fTime >= filterAbsBegin && 
+								   sd.m_spikeArray[s].fTime >= filterAbsBegin &&
 								   sd.m_spikeArray[s].fTime <= filterAbsEnd)
 						{
 							pass.append(sd.m_spikeArray[s].fTime);
@@ -540,7 +555,6 @@ void pySpikeDB::plotSetPointSize(const float &s)
 	m_plotPen.pointsize = s;
 }
 
-
 void pySpikeDB::plotSetLineWidth(const float &s)
 {
 	m_plotPen.linewidth = s;
@@ -558,19 +572,15 @@ void pySpikeDB::plotClear()
 	m_plotPen.pointsize = 8.0;
 }
 
-
 void pySpikeDB::plotXLabel(const std::string &s)
 {
 	mp_plot->xname(s);
 }
 
-
 void pySpikeDB::plotYLabel(const std::string &s)
 {
 	mp_plot->yname(s);
 }
-
-
 
 void pySpikeDB::plotYMin(const float &v)
 {
@@ -595,7 +605,6 @@ void pySpikeDB::plotXMax(const float &v)
 	xmax = v;
 	mp_plot->axes(xmin,v,ymin,ymax);
 }
-
 
 void pySpikeDB::plotHist(boost::python::list &/*x*/, boost::python::list &/*y*/, boost::python::list &/*err*/)
 {
@@ -665,8 +674,6 @@ void pySpikeDB::setPointData(boost::python::list &data)
 	std::vector<std::string> d = list2vec<std::string>(data);
 	mp_plot->setPointData(d);
 }
-
-
 
 template<typename T>
 std::vector<T> pySpikeDB::list2vec(bp::list &l)

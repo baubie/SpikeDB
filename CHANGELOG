@@ -6,12 +6,13 @@ New Features:
 * Added addRadioOption() to add radio buttons to the advanced options window.
 * Added addRuler() to add a horizontal ruler to the advanced options window.
 * Condensed built in plugins by moving similar analyeses into one file with more options.
-* Added a progress window when loading the database instead of just having an
-unresponsive program.
+* Added a progress window when loading the database instead of just having an unresponsive program.
+* Added a spike time filter window and removed the filter caused by zooming in.
 
 Bug Fixes:
 * FIXED: Analysis script options are shown in ordered as added.
-* FIXED: stddev() in the analysis script was output variance, not stddev.
+* FIXED: stddev() in the analysis script was outputting variance, not stddev.
+* FIXED: Stimuli will be drawn on spike raster even when zoomed in. 
 
 
 Version 1.7

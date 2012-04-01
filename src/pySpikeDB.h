@@ -35,6 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <boost/python.hpp>
 #include <boost/python/stl_iterator.hpp>
 #include <boost/shared_ptr.hpp>
+
 #include <gtkmm.h>
 #include <sqlite3.h>
 #include <set>
@@ -72,6 +73,7 @@ class pySpikeDB {
 		void addRuler();
 
 		void forceSpikesAbs(const float &begin, const float &end);
+		void forceSpikesRel(const float &begin, const float &end);
 		void filterSpikesAbs(const float &begin, const float &end);
 		void filterSpikesRel(const float &begin, const float &end);
 
@@ -185,6 +187,7 @@ class pySpikeDB {
 		float filterAbsBegin, filterAbsEnd;
 		float filterRelBegin, filterRelEnd;
 		float forceAbsBegin, forceAbsEnd;
+		float forceRelBegin, forceRelEnd;
 
 		/**
 		 * Current Plotting Values

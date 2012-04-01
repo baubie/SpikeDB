@@ -39,6 +39,7 @@ uiAnalysis::uiAnalysis(sqlite3 **db, Gtk::Notebook* notebook, uiFileDetailsTreeV
 	this->db = db;
 	this->compact = compact;
 	forceAbsBegin = forceAbsEnd = -1;
+	forceRelBegin = forceRelEnd = -1;
 	mp_Notebook = notebook;
 	mp_FileDetailsTree = fileDetailsTree;
 	mp_StatusBar = statusbar;
@@ -321,6 +322,12 @@ void uiAnalysis::forceSpikesAbs(double begin, double end)
 	forceAbsEnd = (float)end;
 }
 
+void uiAnalysis::forceSpikesRel(double begin, double end)
+{
+	forceRelBegin = (float)begin;
+	forceRelEnd = (float)end;
+}
+
 void uiAnalysis::runPlugin()
 {
 	if (!plugins.empty()) {
@@ -393,6 +400,8 @@ if (!uiAnalysis::setupPython)
 
 
 	_pySpikeDB.forceSpikesAbs(forceAbsBegin, forceAbsEnd);
+	_pySpikeDB.forceSpikesRel(forceRelBegin, forceRelEnd);
+
 	main_namespace["SpikeDB"] = bp::ptr(&_pySpikeDB);
 	main_namespace["SpikeDB"].attr("__dict__")["VARYING"] = VARYING_STIMULUS;
 	main_namespace["SpikeDB"].attr("__dict__")["NOPOINT"] = EasyPlotmm::NOPOINT;

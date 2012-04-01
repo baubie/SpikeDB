@@ -58,7 +58,6 @@ GUI::GUI()
 
 	uiReady = true;
 	updateTagCompletion();
-//	this->on_filter_changed();
 	version_check();
 }
 
@@ -216,7 +215,8 @@ void GUI::init_gui()
 	 * Connect Signals
 	 */
 	mp_PlotSpikes->signal_zoom_changed().connect(sigc::mem_fun(*this, &GUI::on_plotspikes_zoom_changed));
-	mp_uiFilterFrame->signal_changed().connect(sigc::mem_fun(*this, &GUI::on_filter_changed));
+	mp_uiFilterFrame->signal_fileFilter_changed().connect(sigc::mem_fun(*this, &GUI::on_filterFile_changed));
+	mp_uiFilterFrame->signal_spikeFilter_changed().connect(sigc::mem_fun(*this, &GUI::on_filterSpikes_changed));
 	mp_FileDetailsTree->signal_file_set_hidden().connect(sigc::mem_fun(*this, &GUI::on_filedetails_set_hidden));
 	mp_FileDetailsTree->treeSelection()->signal_changed().connect(sigc::mem_fun(*this, &GUI::on_filedetails_selection_changed));
 	mrp_AnimalSelection->signal_changed().connect(sigc::mem_fun(*this, &GUI::changeAnimalSelection));
@@ -514,12 +514,31 @@ bool GUI::openDatabase(std::string filename)
 
 void GUI::on_plotspikes_zoom_changed(double begin, double end)
 {
+	spikeZoomBegin = begin;
+	spikeZoomEnd = end;
+
+	// New in version 1.8
+	// Zooming on spike plot doesn't update spike filter
+
+	/*
+	double beginFil = mp_uiFilterFrame->minSpikeTime();
+	double endFil = mp_uiFilterFrame->maxSpikeTime();
+
+	begin = begin > beginFil ? begin : beginFil;
+	end = end < endFil ? end : endFil;
 	mp_QuickAnalysis->forceSpikesAbs(begin,end);
+
 	mp_QuickAnalysis->runPlugin();
+	*/
 }
 
+void GUI::on_filterSpikes_changed()
+{
+	// Pretend we just click on the file again
+	on_filedetails_selection_changed();
+}
 
-void GUI::on_filter_changed()
+void GUI::on_filterFile_changed()
 {
 	if (!uiReady) return;
 
@@ -630,7 +649,19 @@ void GUI::on_filedetails_selection_changed()
 {
 
 	if (!ignoreFileDetailsChange) {
+
+		double begin = mp_uiFilterFrame->minSpikeTime();
+		double end = mp_uiFilterFrame->maxSpikeTime();
+
 		mp_QuickAnalysis->forceSpikesAbs(-1,-1);
+		mp_QuickAnalysis->forceSpikesRel(-1,-1);
+
+		if (mp_uiFilterFrame->absoluteSpikeTime()) {
+			mp_QuickAnalysis->forceSpikesAbs(begin,end);
+		} else {
+			mp_QuickAnalysis->forceSpikesRel(begin,end);
+		}
+
 		mp_QuickAnalysis->runPlugin();
 		mp_PlotSpikes->clear();
 		curXVariable = "";
@@ -700,6 +731,8 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 
 		std::vector<double> x_spikes;
 		std::vector<double> y_spikes;
+		std::vector<double> x_spikes_ignore;
+		std::vector<double> y_spikes_ignore;
 
 		EasyPlotmm::Pen spikesPen;
 		spikesPen.linewidth = 0.0;
@@ -715,8 +748,44 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 				for (unsigned int s = 0; s < sd.m_spikeArray.size(); ++s) {
 					// Spike sweeps are 1 based but here we are 0 based
 					if (sd.m_spikeArray[s].nSweep == i + 1 && sd.m_spikeArray[s].nPass == p+1) {
-						x_spikes.push_back(sd.m_spikeArray[s].fTime);
-						y_spikes.push_back(sd.xvalue(i) + dy * p);
+						double xVal = sd.m_spikeArray[s].fTime;
+						double yVal = sd.xvalue(i) + dy*p;
+
+						double stim1Start = DBL_MAX;
+						double stim2Start = DBL_MAX;
+						double stim1End = -1;
+						double stim2End = -1;
+
+						if (sd.m_head.nOnCh1 == 1) {
+							stim1Start = sd.m_head.stimFirstCh1.fBegin + sd.m_head.deltaCh1.fBegin * i;
+							stim1End = sd.m_head.stimFirstCh1.fBegin + sd.m_head.stimFirstCh1.fDur + sd.m_head.deltaCh1.fBegin * i + sd.m_head.deltaCh1.fDur * i;
+						}
+						if (sd.m_head.nOnCh2 == 1) {
+							stim2Start = sd.m_head.stimFirstCh2.fBegin + sd.m_head.deltaCh2.fBegin * i;
+							stim2End = sd.m_head.stimFirstCh2.fBegin + sd.m_head.stimFirstCh2.fDur + sd.m_head.deltaCh2.fBegin * i + sd.m_head.deltaCh2.fDur * i;
+						}
+
+						// Check if the spike is within the spike filter
+						if (mp_uiFilterFrame->absoluteSpikeTime() && xVal >= mp_uiFilterFrame->minSpikeTime() && xVal <= mp_uiFilterFrame->maxSpikeTime()) {
+
+							x_spikes.push_back(xVal);
+							y_spikes.push_back(yVal);
+
+						} else if (!mp_uiFilterFrame->absoluteSpikeTime() &&
+
+								((xVal >= mp_uiFilterFrame->minSpikeTime()+stim1Start &&  xVal <= mp_uiFilterFrame->maxSpikeTime()+stim1End) ||
+								(xVal >= mp_uiFilterFrame->minSpikeTime()+stim2Start &&  xVal <= mp_uiFilterFrame->maxSpikeTime()+stim2End))) {
+
+							x_spikes.push_back(xVal);
+							y_spikes.push_back(yVal);
+
+						} else // Nobody wants these spikes
+						{
+
+							x_spikes_ignore.push_back(xVal);
+							y_spikes_ignore.push_back(yVal);
+
+						}
 					}
 				}
 			}
@@ -732,10 +801,16 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 		mp_PlotSpikes->xname("Time (ms)");
 		mp_PlotSpikes->yname(sd.xVariable());
 		mp_PlotSpikes->plot(x_spikes, y_spikes, spikesPen);
+		spikesPen.color.a = 0.65;
+		spikesPen.color.r = 1.0;
+		spikesPen.color.g = 0.0;
+		spikesPen.color.b = 0.5;
+		mp_PlotSpikes->plot(x_spikes_ignore, y_spikes_ignore, spikesPen);
 
 		// Add stimuli to spikes plot
 		EasyPlotmm::Pen ch1Pen;
 		ch1Pen.linewidth = 2.0;
+		ch1Pen.robustLines = true;
 		ch1Pen.shape = EasyPlotmm::NONE;
 		ch1Pen.color.r = 1;
 		ch1Pen.color.g = 0;
@@ -743,6 +818,7 @@ void GUI::addFileToPlot(const Gtk::TreeModel::iterator& iter)
 		ch1Pen.color.a = 1;
 		EasyPlotmm::Pen ch2Pen;
 		ch2Pen.linewidth = 2.0;
+		ch2Pen.robustLines = true;
 		ch2Pen.shape = EasyPlotmm::NONE;
 		ch2Pen.color.r = 0;
 		ch2Pen.color.g = 0;
@@ -821,7 +897,8 @@ void GUI::changeAnimalSelection()
 			m_FileTags.clear();
 		}
 	} else{
-		populateDetailsList("", -1);
+		// Showing all the files can be slow. Disabled for now.	
+		//populateDetailsList("", -1);
 	}
 }
 
@@ -1015,7 +1092,7 @@ void GUI::on_filedetails_set_hidden(bool hidden)
 	} else {
 		on_file_tag_deleted("__HIDDEN__");
 	}
-	this->on_filter_changed();
+	this->on_filterFile_changed();
 }
 
 void GUI::on_bad_cell_toggle()
@@ -1028,7 +1105,7 @@ void GUI::on_bad_cell_toggle()
 	sqlite3_bind_int(stmt, 3, m_curCellID);
 	if (sqlite3_step(stmt) != SQLITE_DONE) std::cerr << "ERROR: Could not insert tag. " << sqlite3_errmsg(db) << std::endl;
 	sqlite3_finalize(stmt);
-	this->on_filter_changed();
+	this->on_filterFile_changed();
 }
 
 void GUI::populateCellDetailsList(const Glib::ustring animalID, const int cellID)
@@ -1183,7 +1260,7 @@ void GUI::populateAnimalTree()
 	Gtk::TreeModel::Row row;
 	Gtk::TreeModel::Row childrow;
 	base = *(mrp_AnimalTree->append());
-	base[m_AnimalColumns.m_col_name] = "All Animals";
+	base[m_AnimalColumns.m_col_name] = "Animals";
 	while (sqlite3_step(stmt_animals) == SQLITE_ROW) {
 		row = *(mrp_AnimalTree->append(base.children()));
 		char* animalID = (char*)sqlite3_column_text(stmt_animals, 0);

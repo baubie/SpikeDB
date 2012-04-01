@@ -37,37 +37,36 @@ uiFilterFrame::uiFilterFrame()
 	/*
 	 * Default initialization
 	 */
-    queue_change_signal = false;
 
+	Gtk::VBox *vbFilter = Gtk::manage( new Gtk::VBox() );
 
-	Gtk::VBox *vbFilter = Gtk::manage( new Gtk::VBox());
+	Gtk::HBox *hbTopName = Gtk::manage( new Gtk::HBox() );
+	Gtk::HBox *hbTopWidget = Gtk::manage( new Gtk::HBox() );
+	hbTopName->pack_start(*Gtk::manage(new Gtk::Label("Min Files")));
+	hbTopName->pack_start(*Gtk::manage(new Gtk::Label("X-Var")));
+	vbFilter->pack_start( *hbTopName );
 
 	/*
 	 * Spin button to select minimum number of files.
 	 */
-	vbFilter->pack_start(*Gtk::manage(new Gtk::Label("Required # of Files")));
 	mp_sbMinFiles = Gtk::manage( new Gtk::SpinButton() );
-	vbFilter->pack_start(*mp_sbMinFiles);
+	hbTopWidget->pack_start(*mp_sbMinFiles);
 	mp_sbMinFiles->set_adjustment(m_adjMinFiles);
-	m_adjMinFiles.signal_value_changed().connect(
-			sigc::mem_fun(*this, &uiFilterFrame::on_adjMinFiles_changed)
-	);
-
+	m_adjMinFiles.signal_value_changed().connect(sigc::mem_fun(*this, &uiFilterFrame::on_adjMinFiles_changed));
 
 	/*
 	 * ComboBox to select the X-Variable 
 	 */
-	vbFilter->pack_start(*Gtk::manage(new Gtk::Label("X-Variable")));
 	m_XVar.append_text("All");
 	m_XVar.append_text("Freq");
 	m_XVar.append_text("Dur");
 	m_XVar.append_text("Onset");
 	m_XVar.append_text("Atten");
 	m_XVar.set_active(0);
-	m_XVar.signal_changed().connect(
-		sigc::mem_fun(*this, &uiFilterFrame::on_XVar_changed)
-	);
-	vbFilter->pack_start(m_XVar, false, false, 0);
+	m_XVar.signal_changed().connect(sigc::mem_fun(*this, &uiFilterFrame::on_XVar_changed));
+	hbTopWidget->pack_start(m_XVar, false, false, 0);
+	vbFilter->pack_start( *hbTopWidget );
+
 
 	/*
 	 * Tag filter
@@ -80,10 +79,8 @@ uiFilterFrame::uiFilterFrame()
 	mrp_CompletionModel = Gtk::ListStore::create(m_tagColumns);
 	mrp_tagCompletion->set_model(mrp_CompletionModel);
 	mrp_tagCompletion->set_text_column(m_tagColumns.m_col_name);
-
-	m_tag.signal_changed().connect(
-			sigc::mem_fun(*this, &uiFilterFrame::on_tag_changed)
-	);
+	m_tag.set_activates_default(false);
+	m_tag.signal_activate().connect(sigc::mem_fun(*this, &uiFilterFrame::on_tag_changed));
 
 	/*
 	 * Hidden file checkbox
@@ -91,9 +88,38 @@ uiFilterFrame::uiFilterFrame()
 	mp_cbHidden = Gtk::manage(new Gtk::CheckButton("Show hidden files"));
 	mp_cbHidden->set_active(false);
 	vbFilter->pack_start(*mp_cbHidden, false, false, 0);
-	mp_cbHidden->signal_toggled().connect(
-		sigc::mem_fun(*this, &uiFilterFrame::on_hidden_toggled)
-			);
+	mp_cbHidden->signal_toggled().connect(sigc::mem_fun(*this, &uiFilterFrame::on_hidden_toggled));
+
+	/*
+	 * Spike Filter
+	 */
+	Gtk::HSeparator *sep  = Gtk::manage(new Gtk::HSeparator());
+	vbFilter->pack_start( *sep );
+
+	Gtk::HBox *spikeFilterName = Gtk::manage( new Gtk::HBox() );
+	Gtk::Label *spikeLabel = Gtk::manage(new Gtk::Label("Spike Filter"));
+	Gtk::Label *minSpikeLabel = Gtk::manage(new Gtk::Label("Min"));
+	Gtk::Label *maxSpikeLabel = Gtk::manage(new Gtk::Label("Max"));
+	vbFilter->pack_start( *spikeLabel );
+	spikeFilterName->pack_start( *minSpikeLabel );
+	spikeFilterName->pack_start( *maxSpikeLabel );
+	vbFilter->pack_start( *spikeFilterName );
+	Gtk::HBox *spikeFilterEntryBox = Gtk::manage( new Gtk::HBox() );
+	spikeFilterEntryBox->pack_start( m_minSpikes );
+	spikeFilterEntryBox->pack_start( m_maxSpikes );
+	m_minSpikes.set_width_chars(4);
+	m_maxSpikes.set_width_chars(4);
+	vbFilter->pack_start( *spikeFilterEntryBox, false, false, 0);
+	mp_cbSpikeFilterAbsolute = Gtk::manage(new Gtk::CheckButton("Use Absolute Time"));
+	vbFilter->pack_start( *mp_cbSpikeFilterAbsolute, false, false, 0);
+
+	m_minSpikes.set_activates_default(false);
+	m_minSpikes.signal_activate().connect(sigc::mem_fun(*this, &uiFilterFrame::on_spikeTime_changed));
+	m_minSpikes.signal_focus_out_event().connect(sigc::mem_fun(*this, &uiFilterFrame::on_spikeTimeFocusLost));
+	m_maxSpikes.set_activates_default(false);
+	m_maxSpikes.signal_activate().connect(sigc::mem_fun(*this, &uiFilterFrame::on_spikeTime_changed));
+	m_maxSpikes.signal_focus_out_event().connect(sigc::mem_fun(*this, &uiFilterFrame::on_spikeTimeFocusLost));
+	mp_cbSpikeFilterAbsolute->signal_toggled().connect(sigc::mem_fun(*this, &uiFilterFrame::on_spikeTime_changed));
 
 	this->add(*vbFilter);
 }
@@ -104,14 +130,18 @@ uiFilterFrame::~uiFilterFrame() {}
 /*
  * Changed Signal
  */
-uiFilterFrame::type_signal_changed uiFilterFrame::signal_changed()
+uiFilterFrame::type_signal_fileFilter_changed uiFilterFrame::signal_fileFilter_changed()
 {
-	return m_signal_changed;
+	return m_signal_fileFilter_changed;
+}
+uiFilterFrame::type_signal_spikeFilter_changed uiFilterFrame::signal_spikeFilter_changed()
+{
+	return m_signal_spikeFilter_changed;
 }
 
 void uiFilterFrame::on_hidden_toggled()
 {
-	m_signal_changed.emit();
+	m_signal_fileFilter_changed.emit();
 }
 
 bool uiFilterFrame::showHidden()
@@ -126,32 +156,17 @@ void uiFilterFrame::showHidden(bool set)
 
 void uiFilterFrame::on_XVar_changed()
 {
-		m_signal_changed.emit();
+	m_signal_fileFilter_changed.emit();
 }
 
 void uiFilterFrame::on_adjMinFiles_changed()
 {
-	m_signal_changed.emit();
+	m_signal_fileFilter_changed.emit();
 }
 
 void uiFilterFrame::on_tag_changed()
 {
-	if (m_timer.elapsed() >= 1)
-	{
-		m_signal_changed.emit();
-		m_timer.reset();
-	} else {
-		queue_change_signal = true;
-	}
-}
-
-bool uiFilterFrame::check_change_queue()
-{
-	if (queue_change_signal) {
-		m_signal_changed.emit();
-		queue_change_signal = false;
-	}
-	return true;
+	m_signal_fileFilter_changed.emit();
 }
 
 void uiFilterFrame::updateTagCompletion(std::vector<Glib::ustring> tags)
@@ -171,6 +186,33 @@ Glib::ustring uiFilterFrame::tag()
 	return m_tag.get_text();
 }
 
+double uiFilterFrame::minSpikeTime()
+{
+	if (m_minSpikes.get_text() == "") return -1*DBL_MAX;
+	double val =  Glib::Ascii::strtod(m_minSpikes.get_text());
+	return val;
+}
+double uiFilterFrame::maxSpikeTime()
+{
+	if (m_maxSpikes.get_text() == "") return DBL_MAX;
+	double val = Glib::Ascii::strtod(m_maxSpikes.get_text());
+	return val;
+}
+bool uiFilterFrame::absoluteSpikeTime()
+{
+	return mp_cbSpikeFilterAbsolute->get_active();
+}
+void uiFilterFrame::on_spikeTime_changed()
+{
+	m_signal_spikeFilter_changed.emit();
+}
+
+
+bool uiFilterFrame::on_spikeTimeFocusLost(GdkEventFocus *e)
+{
+	on_spikeTime_changed();
+}
+
 /*
  * Return the currently selected minimum number of files
  */
@@ -182,7 +224,6 @@ void uiFilterFrame::minFiles(int set)
 {
 	m_adjMinFiles.set_value(set);
 }
-
 int uiFilterFrame::XVar()
 {
 	return m_XVar.get_active_row_number();

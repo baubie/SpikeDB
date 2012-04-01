@@ -101,6 +101,7 @@ class GUI : public Gtk::Window
 		Glib::ustring m_curAnimalID;
 		int m_curCellID;
 		int m_curFileNum;
+		double spikeZoomBegin, spikeZoomEnd;
 
 
 		/**
@@ -175,7 +176,9 @@ class GUI : public Gtk::Window
         void on_menuImportFolder_activate(); /**< Handle the Import Folder menu item. */
         void on_menuQuit_activate(); /**< Handle the Quit menu item. */
 		void on_menuAbout_activate();
-		void on_filter_changed(); /**< Handle when the filter changes in any way. */
+		void on_filterFile_changed(); /**< Handle when the filter changes in any way. */
+		void on_filterSpikes_changed(); /**< Handle when the filter changes in any way. */
+
         void on_filedetails_selection_changed();
 		void on_animal_tag_deleted(Glib::ustring tag);
 		void on_cell_tag_deleted(Glib::ustring tag);

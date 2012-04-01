@@ -70,10 +70,12 @@ class EasyPlotmm : public Gtk::DrawingArea
                 pointsize = 8;
                 filled = false;
                 shape = CIRCLE;
+				robustLines = false;
             }
             float linewidth;
             float pointsize;
             bool filled;
+			bool robustLines;
             Shape shape;
             RGBA color;
             RGBA errcolor;
