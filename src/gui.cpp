@@ -1699,6 +1699,7 @@ void GUI::on_menuAbout_activate()
 	authors.push_back("Programming: Brandon Aubie");
 	authors.push_back("Testing: Riziq Sayegh");
 	authors.push_back("Testing: Heather Mayberry");
+	authors.push_back("Testing: Dr. Paul A. Faure");
 	dialog.set_authors(authors);
 	dialog.set_comments("SpikeDB was first developed in the McMaster Bat Lab in Hamilton, Ontario, Canada. If you use SpikeDB to analyze data for a publication, an acknowledgement is always appreciated!");
 	dialog.set_website("http://spikedb.aubie.ca");
