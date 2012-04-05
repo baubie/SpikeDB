@@ -76,7 +76,7 @@ uiAnalysis::uiAnalysis(sqlite3 **db, Gtk::Notebook* notebook, uiFileDetailsTreeV
 	std::vector<std::pair<Glib::ustring, Glib::ustring> >::iterator it;
 	int count = 0;
 	for (it = plugins.begin(); it != plugins.end(); it++) {
-		tbPlugins->append((*it).second);
+		tbPlugins->append_text((*it).second);
 		if (plugins[count].second == "Spike Count Analysis") {
 			tbPlugins->set_active(count);
 			foundActive = true;

@@ -82,25 +82,6 @@ SpikeDB is a database and analysis tool for electrophysiological recordings done
 
 
 \clearpage
-\chapter{User Interface}
-\begin{figure}[h]
-\begin{center}
-	\includegraphics[width=0.65\textwidth]{main_window_letters.png}
-\end{center}
-\end{figure}
-\begin{itemize}
-	\item[A)] Filter Panel - Filter the files shown in the Browse Files list.
-	\item[B)] Animal List - List of animals and cells currently imported.  Select an animal or a cell by selecting the arrow head next to each item. Only the selected animals or cells appear in the Browse Files list. Select |All Animals| to display all animals, cells and files in the Browse Files list.
-	\item[C)] Browse Files list - A list of files currently selected and filtered.
-	\item[D)] Spike Raster Plot - Displays each spike as a black dot and each stimulus as a line (red = Channel 1, blue = Channel 2).
-	\item[E)] Quick Analysis Plot - Displays results of the analysis script selected in the drop-down box. There is a small panel at the very bottom that can be dragged up to view any text outputted by the analysis script via the |print| command.
-	\item[F)] File Details Panel - Displays details of the currently selected file and allows the entry of custom data.
-	\item[G)] Cell Details Panel - Displays cell details of the currently selected cell and allows the entry of custom data.
-	\item[H)] Animal Details Panel - Displays animal details of the currently selected file and allows the entry of custom data.
-\end{itemize}
-
-		
-\clearpage
 \section{Importing Spike Data}
 SpikeDB uses a database file (SQLite) to store spike data. This means that your SPIKE files are not modified in any way. Before viewing your SPIKE data in SpikeDB you must create a new database file and then import the spike files.
 \begin{enumerate}
@@ -129,6 +110,9 @@ Animals and Cells and be given tags in their respective details panels on the ri
 \subsection{Show hidden files}
 Turn this option on to show files in the Browse Files list even if they have been manually marked as hidden. The hidden files will be tagged with an |H| to the left of the list when shown.
 
+\subsection{Spike Window}
+Leave blank to use all spikes in analysis.  Enter values to window spike times relative to stimulus onset and offset, or, absolute file time when that check box is checked.
+
 \section{Plots}
 \subsection{General Usage}
 \begin{itemize}
@@ -138,12 +122,10 @@ Turn this option on to show files in the Browse Files list even if they have bee
 \end{itemize}
 
 \subsection{Spike Raster}
-The spike raster is a built-in plot that displays the stimuli as red (channel 1) and blue (channel 2) lines and spikes as black dots. Zooming in on this plot will limit the spike times available to the Quick Analysis plot on the right.
+The spike raster is a built-in plot that displays the stimuli as red (channel 1) and blue (channel 2) lines and spikes as black dots. Zooming in on this plot will show you a subset of the data but does \emph{not} window the spike times for analysis. 
 
 \subsection{Quick Analysis}
 By default, this plot will display the mean number of spikes per trial. Other analysis plugins are available in the drop down box or additional plugins can be loaded by clicking the |Open| icon. Generally, it is wise to use plugins that operate on selected files only here as no text display is available. For more general analysis on many files use the Analysis tab. That said, if multiple files of the same type are selected, the plots can be overlaid for easy comparison. Click the |Advanced| button beside the drop down list and check off the |Show Error Bars| option to display the error bars in graphs (generally shown as standard deviation).
-
-
 
 \chapter{Analysis Plug-In Reference}
 \section{Basic Usage}
