@@ -97,7 +97,7 @@ uiFilterFrame::uiFilterFrame()
 	vbFilter->pack_start( *sep );
 
 	Gtk::HBox *spikeFilterName = Gtk::manage( new Gtk::HBox() );
-	Gtk::Label *spikeLabel = Gtk::manage(new Gtk::Label("Spike Filter"));
+	Gtk::Label *spikeLabel = Gtk::manage(new Gtk::Label("Spike Window"));
 	Gtk::Label *minSpikeLabel = Gtk::manage(new Gtk::Label("Min"));
 	Gtk::Label *maxSpikeLabel = Gtk::manage(new Gtk::Label("Max"));
 	vbFilter->pack_start( *spikeLabel );
