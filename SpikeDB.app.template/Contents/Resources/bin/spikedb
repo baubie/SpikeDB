@@ -1,0 +1,50 @@
+#!/bin/sh
+#
+# Original Author: Aaron Voisine <aaron@voisine.org>
+# Inkscape Modifications:
+#	Michael Wybrow <mjwybrow@users.sourceforge.net>
+#	Jean-Olivier Irisson <jo.irisson@gmail.com>
+# SpikeDB Modifications
+# 	Brandon Aubie <brandon@aubie.ca>
+
+CWD="`(cd \"\`dirname \\\"$0\\\"\`\"; echo \"$PWD\")`"
+# e.g. /Applications/SpikeDB.app/Contents/Resources/bin
+TOP="`dirname \"$CWD\"`"
+# e.g. /Applications/SpikeDB.app/Contents/Resources
+
+mkdir -p "${HOME}/.spikedb-etc"
+
+export FONTCONFIG_PATH="$TOP/etc/fonts"
+export PANGO_RC_FILE="$HOME/.spikedb-etc/pangorc"
+export GTK_IM_MODULE_FILE="$HOME/.spikedb-etc/gtk.immodules"
+export GDK_PIXBUF_MODULE_FILE="$HOME/.spikedb-etc/gdk-pixbuf.loaders"
+export GTK_DATA_PREFIX="$TOP"
+export GTK_EXE_PREFIX="$TOP"
+export GNOME_VFS_MODULE_CONFIG_PATH="$TOP/etc/gnome-vfs-2.0/modules"
+export GNOME_VFS_MODULE_PATH="$TOP/lib/gnome-vfs-2.0/modules"
+export XDG_DATA_DIRS="$TOP/share"
+export ASPELL_CONF="prefix $TOP;"
+
+export SPIKEDB_SHAREDIR="$TOP"
+
+# Handle the case where the directory storing SpikeDB has special characters
+# ('#', '&', '|') in the name.  These need to be escaped to work properly for 
+# various configuration files.
+ESCAPEDTOP=`echo "$TOP" | sed 's/#/\\\\\\\\#/' | sed 's/&/\\\\\\&/g' | sed 's/|/\\\\\\|/g'`
+
+# NOTE: Have to add ".UTF-8" to the LANG since omitting causes Inkscape
+#       to crash on startup in locale_from_utf8().
+#export LANG="`grep \"\`echo $LANGSTR\`_\" /usr/share/locale/locale.alias | \
+#	tail -n1 | sed 's/\./ /' | awk '{print $2}'`.UTF-8"
+# echo "Setting Language: $LANG" 1>&2
+
+sed 's|${HOME}|'"$HOME|g" "$TOP/etc/pango/pangorc" > "${HOME}/.spikedb-etc/pangorc"
+sed 's|${CWD}|'"$ESCAPEDTOP|g" "$TOP/etc/pango/pango.modules" \
+    > "${HOME}/.spikedb-etc/pango.modules"
+sed 's|${CWD}|'"$ESCAPEDTOP|g" "$TOP/etc/gtk-2.0/gtk.immodules" \
+    > "${HOME}/.spikedb-etc/gtk.immodules"
+sed 's|${CWD}|'"$ESCAPEDTOP|g" "$TOP/etc/gtk-2.0/gdk-pixbuf.loaders" \
+    > "${HOME}/.spikedb-etc/gdk-pixbuf.loaders"
+
+export LC_ALL=C
+exec "$CWD/spikedb-bin"

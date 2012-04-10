@@ -22,7 +22,6 @@ CPackSourceConfig.cmake
 install_manifest.txt
 _CPack_Packages
 *.dmg
-bin/
 obj/
 .DS_Store
 spikedb.zip
