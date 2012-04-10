@@ -542,7 +542,11 @@ if (!uiAnalysis::setupPython)
 				for (optIter = _pySpikeDB.options.begin(); optIter != _pySpikeDB.options.end(); optIter++) {
 					if ((*optIter)->name == numberOptions.at(i).first && (*optIter)->type == pySpikeDB::Option::NUMBER) {
 						pySpikeDB::numberOption* opt = static_cast<pySpikeDB::numberOption *>((*optIter).get());
-						opt->setValue(Glib::Ascii::strtod(numberOptions.at(i).second->get_text()));
+						if (numberOptions.at(i).second->get_text() != "") {
+							opt->setValue(Glib::Ascii::strtod(numberOptions.at(i).second->get_text()));
+						} else {
+							opt->setValue(0.0);
+						}
 						if (saveSettings->get_active()) {
 							savedNumberOptions[std::pair<std::string,std::string>(filename,(*optIter)->name)] = opt->getValue();
 						}
