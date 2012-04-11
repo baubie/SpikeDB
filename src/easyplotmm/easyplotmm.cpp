@@ -376,6 +376,8 @@ void EasyPlotmm::axes(double xmin, double xmax, double ymin, double ymax)
 
 void EasyPlotmm::clear()
 {
+
+
 	std::cout << "Clearing Plot" << std::endl;
 	std::cout << "m_x.size() = " << m_x.size() << std::endl;
 	std::cout << "m_y.size() = " << m_y.size() << std::endl;

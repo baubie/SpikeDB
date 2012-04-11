@@ -1,3 +1,3 @@
 ./cleancmake
-cmake -DNOBUNDLE=true .
+cmake -DCMAKE_CXX_COMPILER=g++ -DNOBUNDLE=true .
 make clean

@@ -47,8 +47,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <vector>
 #include <dirent.h>
-#
-#include <sqlite3.h>
+#include "sqlite3.h"
 #include "settings.h"
 #include "tokenize.h"
 #include <dirent.h>

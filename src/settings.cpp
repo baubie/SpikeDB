@@ -33,6 +33,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Settings::Settings()
 {
 
+	db = NULL;
+
 #ifdef __APPLE__
 	mkdir("/Library/Application Support/SpikeDB", 0755);
 	Glib::ustring filename = "/Library/Application Support/SpikeDB/spikedb.settings";
@@ -54,7 +56,7 @@ Settings::Settings()
 #endif
 #endif
 
-    if (sqlite3_open(filename.c_str(), &db) != SQLITE_OK) {
+    if (sqlite3_open(filename.c_str(), &(this->db)) != SQLITE_OK) {
         std::cerr << "CRITICAL ERROR: Unable to open settings file." << std::endl;
     }
 

@@ -23,3 +23,11 @@ How to build on Windows.
 2) Book a few days off of work.
 3) Install Microsoft Visual Studio C++ Express 2010 (or higher)
 4) Download GTK-All-In-One windows package.
+
+
+Redistributing for Mac OS X
+---------------------------
+1) Ensure that the environment variable LDFLAGS has -header_pad_max_install_names and -headerpad in it.
+2) Install MacPorts and then install all required dependencies (boost+python27, GTKmm (+no_X11, +quartz), sqlite3).
+3) Use cmake_release script to build the cmake script and then run make in the SpikeDB folder.
+4) Ensure that the library_magic.py script runs and pulls in all required libraries to ./build/SpikeDB.app

@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include <sqlite3.h>
+#include "sqlite3.h"
 #include <string>
 #include <string.h>
 #include <stdlib.h>
