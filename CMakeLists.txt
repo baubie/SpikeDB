@@ -19,6 +19,7 @@ FIND_PACKAGE(PythonLibs)
 FIND_PACKAGE(Boost COMPONENTS python REQUIRED)
 pkg_check_modules(GTKMM gtkmm-2.4)
 pkg_check_modules(CAIRO cairo)
+pkg_check_modules(SQLITE3 sqlite3)
 
 ADD_SUBDIRECTORY(src)
 

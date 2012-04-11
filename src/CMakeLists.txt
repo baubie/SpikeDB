@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 
-LINK_DIRECTORIES (${PYTHON_LIBRARY_DIRS} ${GTKMM_LIBRARY_DIRS} ${CAIRO_LIBRARY_DIRS} ${Boost_LIBARY_DIRS})
-INCLUDE_DIRECTORIES (${PYTHON_INCLUDE_PATH} ${GTKMM_INCLUDE_DIRS} ${CAIRO_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+LINK_DIRECTORIES (${PYTHON_LIBRARY_DIRS} ${GTKMM_LIBRARY_DIRS} ${SQLITE3_LIBRARY_DIRS} ${CAIRO_LIBRARY_DIRS} ${Boost_LIBARY_DIRS})
+INCLUDE_DIRECTORIES (${PYTHON_INCLUDE_PATH} ${GTKMM_INCLUDE_DIRS}  ${SQLITE3_INCLUDE_DIRS} ${CAIRO_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
 
 IF(DEBUG)
@@ -12,11 +12,11 @@ ENDIF(DEBUG)
 
 
 
-SET (SRC sqlite3.c spikedb.cpp gui.cpp uiMenuBar.cpp uiAnalysis.cpp uiFileDetailsTreeView.cpp uiFilterFrame.cpp uiTags.cpp spikedata.cpp settings.cpp easyplotmm/easyplotmm.cpp tokenize.cpp pySpikeDB.cpp)
+SET (SRC spikedb.cpp gui.cpp uiMenuBar.cpp uiAnalysis.cpp uiFileDetailsTreeView.cpp uiFilterFrame.cpp uiTags.cpp spikedata.cpp settings.cpp easyplotmm/easyplotmm.cpp tokenize.cpp pySpikeDB.cpp)
 
 ADD_EXECUTABLE (spikedb ${SRC})
 
-TARGET_LINK_LIBRARIES (spikedb ${COREFOUNDATION_LIBRARY} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES} ${GTKMM_LIBRARIES}  ${CAIRO_LIBRARIES})
+TARGET_LINK_LIBRARIES (spikedb ${COREFOUNDATION_LIBRARY} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES} ${GTKMM_LIBRARIES} ${SQLITE3_LIBRARIES} ${CAIRO_LIBRARIES})
 
 IF(UNIX)
 	INSTALL (TARGETS spikedb RUNTIME DESTINATION bin)
