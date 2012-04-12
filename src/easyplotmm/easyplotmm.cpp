@@ -53,6 +53,8 @@ EasyPlotmm::EasyPlotmm() :
     bg.g = 1;
     bg.b = 1;
 
+	hoveringOnPoint = false;
+
     m_ixmin = m_xmin;
     m_ixmax = m_xmax;
     m_iymin = m_ymin;
@@ -376,16 +378,6 @@ void EasyPlotmm::axes(double xmin, double xmax, double ymin, double ymax)
 
 void EasyPlotmm::clear()
 {
-
-
-	std::cout << "Clearing Plot" << std::endl;
-	std::cout << "m_x.size() = " << m_x.size() << std::endl;
-	std::cout << "m_y.size() = " << m_y.size() << std::endl;
-	std::cout << "m_names.size() = " << m_names.size() << std::endl;
-	std::cout << "m_data.size() = " << m_data.size() << std::endl;
-	std::cout << "m_err.size() = " << m_err.size() << std::endl;
-	std::cout << "m_pens.size() = " << m_pens.size() << std::endl;
-
 	m_x.clear();
 	m_y.clear();
 	m_names.clear();

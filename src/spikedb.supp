@@ -1,4 +1,79 @@
 {
+   fhohfowhofhwofh
+   Memcheck:Leak
+   fun:malloc
+   fun:_Znwm
+   fun:_ZNSs4_Rep9_S_createEmmRKSaIcE
+   fun:_ZNSs12_S_constructIPKcEEPcT_S3_RKSaIcESt20forward_iterator_tag
+   fun:_ZNSsC2EPKcRKSaIcE
+   fun:_ZNSt4pairIKjSsEC2IjPcEERKS_IT_T0_E
+   fun:MachPortTrackerAdd
+   fun:_ZN9SCSessionC2Ejj
+   fun:_ZN15SCClientSessionC2Ejjj
+   fun:_ZN15SCClientSession17checkinWithServerEPj
+   fun:_ZL22connectToCoreServicesDv
+   fun:_ZL9getStatusv
+   fun:scCreateSystemServiceVersion
+   fun:_ZL45SetupCoreApplicationServicesCommunicationPortv
+   fun:_Z19IsLSServerConnectedb
+   fun:_LSApplicationCheckIn
+   fun:_RegisterApplication
+   fun:TransformProcessType
+   fun:_gdk_windowing_init
+   fun:pre_parse_hook
+}
+
+{
+   fdsofsdhofhdwf
+   Memcheck:Leak
+   fun:malloc
+   fun:_Znwm
+   fun:_ZNSs4_Rep9_S_createEmmRKSaIcE
+   fun:_ZNSs12_S_constructIPKcEEPcT_S3_RKSaIcESt20forward_iterator_tag
+   fun:_ZNSsC2EPKcRKSaIcE
+   fun:_ZNSt4pairIKjSsEC2IjPcEERKS_IT_T0_E
+   fun:MachPortTrackerAdd
+   fun:_ZN9SCSessionC2Ejj
+   fun:_ZN15SCClientSessionC2Ejjj
+   fun:_ZN15SCClientSessionC2Ejjj
+   fun:_ZN15SCClientSession17checkinWithServerEPj
+   fun:_ZL22connectToCoreServicesDv
+   fun:_ZL9getStatusv
+   fun:scCreateSystemServiceVersion
+   fun:_ZL45SetupCoreApplicationServicesCommunicationPortv
+   fun:_Z19IsLSServerConnectedb
+   fun:_LSApplicationCheckIn
+   fun:_RegisterApplication
+   fun:TransformProcessType
+   fun:_gdk_windowing_init
+}
+
+{
+   Stuff Of Names Goes Here
+   Memcheck:Leak
+   fun:malloc_zone_malloc
+   fun:malloc_set_zone_name
+   fun:dispatch_once_f
+   fun:_dispatch_continuation_alloc_from_heap
+   fun:_dispatch_barrier_async_f_slow
+   fun:dispatch_source_create
+   fun:_dispatch_mach_notify_source_init
+   fun:dispatch_once_f
+   fun:dispatch_source_type_mach_send_init
+   fun:dispatch_source_create
+   fun:_ZL22connectToCoreServicesDv
+   fun:_ZL9getStatusv
+   fun:scCreateSystemServiceVersion
+   fun:_ZL45SetupCoreApplicationServicesCommunicationPortv
+   fun:_Z19IsLSServerConnectedb
+   fun:_LSApplicationCheckIn
+   fun:_RegisterApplication
+   fun:TransformProcessType
+   fun:_gdk_windowing_init
+   fun:pre_parse_hook
+}
+
+{
 	Initial conditional jump on uninitialized value on macs
 	Memcheck:Cond
 	fun:pthread_rwlock_init
@@ -12,6 +87,27 @@
 	fun:_ZN3Gtk4Main4initEPiPPPcb
 	fun:_ZN3Gtk4MainC2ERiRPPcb
     fun:main
+}
+
+{
+	gtk_init_Memcheck
+	Memcheck:Cond
+	...
+	fun:gtk_init
+	fun:_ZN3Gtk4Main4initEPiPPPcb
+	fun:_ZN3Gtk4MainC1ERiRPPcb
+	fun:main
+}
+
+{
+	someimageloader
+	Memcheck:Leak
+	...
+	fun:_ZN11ImageLoader15runInitializersERKNS_11LinkContextERNS_21InitializerTimingListE
+	fun:_ZN4dyld24initializeMainExecutableEv
+	fun:_ZN4dyld5_mainEPK12macho_headermiPPKcS5_S5_
+	fun:_dyld_start
+	obj:*
 }
 
 {
