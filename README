@@ -31,3 +31,5 @@ Redistributing for Mac OS X
 2) Install MacPorts and then install all required dependencies (boost+python27, GTKmm (+no_X11, +quartz), sqlite3).
 3) Use cmake_release script to build the cmake script and then run make in the SpikeDB folder.
 4) Ensure that the library_magic.py script runs and pulls in all required libraries to ./build/SpikeDB.app
+5) In /opt/local/share/macports/Tcl/port1.0/portconfigure.tcl set  default configure.ldflags   {"-L${prefix}/lib -Xlinker -headerpad_max_install_names"}
+
