@@ -625,7 +625,6 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 
 
         // Stop here if there is no data to plot
-        if (m_x.empty()) return true;
         if (m_x.size() != m_y.size())
         {
 			showError("X and Y list lengths do not match.");
@@ -903,8 +902,7 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
         {
             // Cull data to be within the x,y axes
 			std::vector<double> cull_x, cull_y, cull_err;
-			unsigned int firstPosition = UINT_MAX;
-			unsigned int lastPosition = UINT_MAX;
+			std::vector<int> cull_indexes;
             for (unsigned int j = 0; j < m_x[i].size(); ++j)
             {
                 if (
@@ -914,13 +912,10 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 					m_y[i][j] <= ymax
 				   )
                 {
-					if (firstPosition == UINT_MAX) firstPosition = j;
-					lastPosition = j;
-
-
                     cull_x.push_back(m_x.at(i).at(j));
                     cull_y.push_back(m_y.at(i).at(j));
                     cull_err.push_back(m_err.at(i).at(j));
+					cull_indexes.push_back(j);
                 } else {
 
 					// Draw lines in zoomed in view even if end points are not visible if robost
@@ -986,14 +981,16 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 							mouse_x-x_translate < (cull_x[0]-xmin)*xscale+m_pens[i].pointsize*0.5) {
 							if (mouse_y-y_translate > (cull_y[0]-ymin)*yscale-m_pens[i].pointsize*0.5 &&
 								mouse_y-y_translate < (cull_y[0]-ymin)*yscale+m_pens[i].pointsize*0.5) {
-								this->cursorHoveredOverPoint(i,0+firstPosition);
+								this->cursorHoveredOverPoint(i,cull_indexes.at(0));
 							}
 						}
 					}
 					drawshape(cr,m_pens[i].pointsize,m_pens[i].shape,m_pens[i].filled,m_pens[i].color);
-				} else {
+				} 
+				else {
 					drawshape(cr,m_pens[i].pointsize,NONE,m_pens[i].filled,m_pens[i].color);
 				}
+
                 for (unsigned int j = 1; j < cull_x.size(); ++j) 
                 {
 					cr->move_to((cull_x[j]-xmin)*xscale,(cull_y[j]-ymin)*yscale);
@@ -1001,12 +998,11 @@ bool EasyPlotmm::on_expose_event(GdkEventExpose* event)
 					{
 						// Check for mouse positions
 						if (checkForPointUnderCursor) {
-
 							if (mouse_x-x_translate > (cull_x[j]-xmin)*xscale-m_pens[i].pointsize*0.5 &&
 								mouse_x-x_translate < (cull_x[j]-xmin)*xscale+m_pens[i].pointsize*0.5) {
 								if (mouse_y-y_translate > (cull_y[j]-ymin)*yscale-m_pens[i].pointsize*0.5 &&
 									mouse_y-y_translate < (cull_y[j]-ymin)*yscale+m_pens[i].pointsize*0.5) {
-									this->cursorHoveredOverPoint(i,j+firstPosition);
+									this->cursorHoveredOverPoint(i,cull_indexes.at(j));
 								}
 							}
 						}

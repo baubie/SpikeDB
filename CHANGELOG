@@ -1,5 +1,13 @@
+Version 1.9
+Released: ???
+
+New Features:
+
+Bug Fixes:
+* FIXED: Point shown in status bar incorrect when SpikeDB.NOPOINT used.
+
 Version 1.8
-Released: ????
+Released: April 12, 2012
 
 New Features:
 * Added a programmable progress bar to the Analysis tab and updated with SpikeDB.updateProgress().
