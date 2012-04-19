@@ -208,7 +208,7 @@ void uiFilterFrame::on_spikeTime_changed()
 }
 
 
-bool uiFilterFrame::on_spikeTimeFocusLost(GdkEventFocus *e)
+bool uiFilterFrame::on_spikeTimeFocusLost(GdkEventFocus* /*e*/)
 {
 	on_spikeTime_changed();
 	return false;
