@@ -113,10 +113,10 @@
     <ClCompile Include="..\..\src\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\sqlite\sqlite3.c">
+    <ClCompile Include="..\..\src\easyplotmm\easyplotmm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\easyplotmm\easyplotmm.cpp">
+    <ClCompile Include="..\..\..\sqlite\sqlite3.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

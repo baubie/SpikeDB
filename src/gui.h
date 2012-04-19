@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define GUI_H
 
 #define CURRENT_DB_VERSION 1.7
-#define CURRENT_VERSION 1.8
+#define CURRENT_VERSION 1.9
 
 
 #include "uiAnalysis.h"
@@ -206,7 +206,7 @@ class GUI : public Gtk::Window
 				Glib::ustring oldvalue,
 				Glib::ustring newvalue,
 				uiPropTableRowType type);
-
+		void on_filedetails_menu_will_show();
 
 		AnimalColumns m_AnimalColumns;	
 

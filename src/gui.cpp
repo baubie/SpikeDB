@@ -82,7 +82,7 @@ void GUI::version_check()
 		Glib::ustring buffer = raw;
 		if (Glib::Ascii::strtod(buffer) < CURRENT_VERSION) newVersion = true; 
 	}
-	catch(const Glib::Exception& ex)
+	catch(const Glib::Exception& /*ex*/)
 	{
 	//	std::cerr << "Exception caught: " << ex.what() << std::endl; 
 		mp_statusbar->push("Unable to check for new version online (known Mac bug).");
@@ -235,6 +235,8 @@ void GUI::init_gui()
 
 	mp_FileDetailsTree->signal_tag_deleted().connect(sigc::mem_fun(*this, &GUI::on_file_tag_deleted));
 	mp_FileDetailsTree->signal_tag_added().connect(sigc::mem_fun(*this, &GUI::on_file_tag_added));
+
+	mp_FileDetailsTree->signal_menu_will_show().connect(sigc::mem_fun(*this, &GUI::on_filedetails_menu_will_show));
 
 	/**
 	 * Statusbar
@@ -643,7 +645,10 @@ void GUI::on_filedetails_edited(
 	populateFileDetailsList(ID.animalID,ID.cellID,ID.fileID);
 }
 
-
+void GUI::on_filedetails_menu_will_show()
+{
+	this->ignoreFileDetailsChange = true;
+}
 
 void GUI::on_filedetails_selection_changed()
 {

@@ -35,6 +35,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifdef WIN32
 #include "targetver.h"
 #define WIN32_LEAN_AND_MEAN
-#include <stdio.h>
+//#include <stdio.h>
 #include <gtkmm.h>
 #endif

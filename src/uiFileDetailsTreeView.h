@@ -29,11 +29,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define UIFILEDETAILSTREEVIEW_H
 
 #ifndef WIN32
-// We don't need 64 bit integers
+//We don't need 64 bit integers
 #define SQLITE_INT64_TYPE int
 #endif
-#include <sqlite3.h>
 
+#include <sqlite3.h>
 #include <gtkmm.h>
 #include <vector>
 #include "spikedata.h"
@@ -100,15 +100,16 @@ class uiFileDetailsTreeView : public Gtk::TreeView {
         Glib::RefPtr<Gtk::ListStore> mrp_ListStore;
 
 		/**
-		 * Signal that a file was hidden.
+		 * Signals
 		 */
 		typedef sigc::signal<void,bool> type_signal_file_set_hidden;
 		type_signal_file_set_hidden signal_file_set_hidden();
-
 		typedef sigc::signal<void,Glib::ustring> type_signal_tag_deleted;
-		typedef sigc::signal<bool,Glib::ustring> type_signal_tag_added;
 		type_signal_tag_deleted signal_tag_deleted();
+		typedef sigc::signal<bool,Glib::ustring> type_signal_tag_added;
 		type_signal_tag_added signal_tag_added();
+		typedef sigc::signal<void> type_signal_menu_will_show;
+		type_signal_menu_will_show signal_menu_will_show();
 
 
 	protected:
@@ -119,6 +120,7 @@ class uiFileDetailsTreeView : public Gtk::TreeView {
 		type_signal_file_set_hidden m_signal_file_set_hidden;
 		type_signal_tag_deleted m_signal_tag_deleted;
 		type_signal_tag_added m_signal_tag_added;
+		type_signal_menu_will_show m_signal_menu_will_show;
 
         Glib::RefPtr<Gtk::TreeSelection> mrp_Selection;
 		Gtk::Menu m_Menu_FileDetails;

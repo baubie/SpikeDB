@@ -28,15 +28,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "stdafx.h"
 #include "uiFileDetailsTreeView.h"
 
-#include "gui.h"
-
 uiFileDetailsTreeView::uiFileDetailsTreeView(sqlite3 **db, Gtk::Window *parent)
 {
-
 	m_parent = parent;
 	this->db = db;
 	mrp_ListStore = Gtk::ListStore::create(m_Columns);
-//	mrp_ListStore->set_sort_column(m_Columns.m_col_time, Gtk::SORT_ASCENDING);
 	this->linkModel();
 	this->append_column("", m_Columns.m_col_props);
 	this->append_column("AnimalID", m_Columns.m_col_animalID);
@@ -122,7 +118,7 @@ void uiFileDetailsTreeView::on_file_details_button_press_event(GdkEventButton* e
 {
 	if ( (event->type == GDK_BUTTON_PRESS) && (event->button == 3) )
 	{
-		(static_cast<GUI*>(this->m_parent))->ignoreFileDetailsChange = true;
+		m_signal_menu_will_show.emit();
 		Gtk::Menu::MenuList& menulist = m_Menu_FileDetails.items();
 		if (mrp_Selection->count_selected_rows() > 1)
 		{
@@ -212,7 +208,6 @@ void uiFileDetailsTreeView::show_file_details(const Gtk::TreeModel::iterator& it
 
 void uiFileDetailsTreeView::on_view_file_details()
 {
-
 	std::vector<Gtk::TreeModel::Path> sel = mrp_Selection->get_selected_rows();
 	if (sel.size() == 1)
 	{
@@ -244,4 +239,9 @@ uiFileDetailsTreeView::type_signal_tag_added uiFileDetailsTreeView::signal_tag_a
 uiFileDetailsTreeView::type_signal_tag_deleted uiFileDetailsTreeView::signal_tag_deleted()
 {
 	return m_signal_tag_deleted;
+}
+
+uiFileDetailsTreeView::type_signal_menu_will_show uiFileDetailsTreeView::signal_menu_will_show()
+{
+	return m_signal_menu_will_show;
 }
