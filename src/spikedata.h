@@ -335,6 +335,7 @@ class SpikeData
         std::vector<SPIKESTRUCT> m_spikeArray;
 		std::string iso8601(const char* s);
         int headerversion(void *header);
+		std::vector<int> m_sweepOrder;
 
     private:
         std::vector<DWORD> m_dwDataArray;

@@ -255,6 +255,10 @@ bool SpikeData::parsedata()
                     i++;
                     nSweepCount++;
                     nSweep = m_dwDataArray[i];
+
+					// Record the sweep number in the sweep order presentation vector
+					m_sweepOrder.push_back(nSweep);
+
                     if (nSweep < 1 || nSweep > m_head.nSweeps) {
                         std::cerr << "ERROR: Bad sweep number found. Corrupt data file." << std::endl;
                         nSweep = 1;
@@ -625,4 +629,3 @@ void SpikeData::printfile()
     std::cout << "stimFirstCh2.nType: " << m_head.stimFirstCh2.nType << std::endl;
     std::cout << "stimFirstCh2.fBegin: " << m_head.stimFirstCh2.fBegin << std::endl;
 }
-

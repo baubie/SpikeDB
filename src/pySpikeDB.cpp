@@ -405,6 +405,16 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 
 		file["xvar"] = sd.xVariable();
 
+		// Added June 13, 2012
+		// Create an array of x-vars that signify the order stimuli were presented
+		bp::list presentations;
+		for (unsigned int i = 0; i < sd.m_sweepOrder.size(); ++i)
+		{
+			//presentations.append(sd.xvalue(i));
+			presentations.append(sd.xvalue(sd.m_sweepOrder.at(i)));
+		}
+		file["presentations"] = presentations;
+
 		bp::list trials;
 		for (int i = 0; i < sd.m_head.nSweeps; ++i) {
 			bp::dict trial;
