@@ -480,6 +480,23 @@ bool GUI::openDatabase(std::string filename)
 				if (sqlite3_step(stmtUpgrade) != SQLITE_DONE) count = 100000000;
 				sqlite3_finalize(stmtUpgrade);
 			}
+			// Upgrade from 1.7 to 1.8
+			if (version == 1.7) {
+				std::cout << "Upgrading database from version 1.7 to 1.8" << std::endl;
+				const char queryUpgrade[] = "UPDATE properties SET value=? WHERE variable=?";
+				sqlite3_stmt *stmtUpgrade = 0;
+				sqlite3_prepare_v2(db, queryUpgrade, strlen(queryUpgrade), &stmtUpgrade, NULL);
+				sqlite3_bind_double(stmtUpgrade, 1, 1.8);
+				sqlite3_bind_text(stmtUpgrade, 2, "version", -1, SQLITE_TRANSIENT);
+				if (sqlite3_step(stmtUpgrade) != SQLITE_DONE) count = 100000000;
+				sqlite3_finalize(stmtUpgrade);
+
+				const char queryNewCol1[] = "ALTER TABLE files ADD COLUMN sweeporder TEXT";
+				sqlite3_stmt *stmtNewCol1 = 0;
+				sqlite3_prepare_v2(db, queryNewCol1, strlen(queryNewCol1), &stmtNewCol1, NULL);
+				if (sqlite3_step(stmtNewCol1) != SQLITE_DONE) count = 100000000;
+				sqlite3_finalize(stmtNewCol1);
+			}
 
 			++count;
 			if (count > 1000) {
@@ -1669,6 +1686,19 @@ void GUI::importSpikeFile(std::string filename, char* d_name)
 
 			sqlite3_step(stmt_file);
 			sqlite3_finalize(stmt_file);
+
+
+			// Update the file with sweep order.
+			const char q_update[] = "UPDATE files SET sweeporder=? WHERE animalID=? AND cellID=? AND fileID=?";
+			sqlite3_stmt *stmt_update = 0;
+			sqlite3_prepare_v2(db, q_update, strlen(q_update), &stmt_update, NULL);
+			sqlite3_bind_text(stmt_update, 1, sd.sweepOrder().c_str(), -1, SQLITE_TRANSIENT);
+			sqlite3_bind_text(stmt_update, 2, fileTokens[0].c_str(), -1, SQLITE_TRANSIENT);
+			sqlite3_bind_int(stmt_update, 3, atoi(fileTokens[1].c_str()));
+			sqlite3_bind_int(stmt_update, 4, atoi(fileTokens[2].c_str()));
+			sqlite3_step(stmt_update);
+			sqlite3_finalize(stmt_update);
+
 		} else {
 			std::cerr << "WARNING: Ignoring file " << filename << "/" << d_name << " due to improper filename format." << std::endl;
 		}

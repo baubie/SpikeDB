@@ -275,7 +275,7 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 
 	bp::dict file;
 	sqlite3_stmt *stmt = 0;
-	const char query[] = "SELECT header, spikes FROM files WHERE animalID=? AND cellID=? AND fileID=?";
+	const char query[] = "SELECT header, spikes, sweeporder FROM files WHERE animalID=? AND cellID=? AND fileID=?";
 	sqlite3_prepare_v2(*db, query, strlen(query), &stmt, NULL);
 
 	int r;
@@ -300,7 +300,15 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 		file["CellID"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_cellID);
 		file["FileID"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_filenum);
 		file["datetime"] = sd.iso8601(sd.m_head.cDateTime).c_str();
-		file["Location"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_location).c_str();
+		file["location"] = row.get_value(mp_FileDetailsTree->m_Columns.m_col_location).c_str();
+		std::string strSweepOrder = ((char*)sqlite3_column_text(stmt,2) == NULL) ? "" : (char*)sqlite3_column_text(stmt, 2);
+		bp::list SweepOrder;
+		std::vector<std::string> sweeps;
+		boost::split(sweeps, strSweepOrder, boost::is_any_of(","));
+		for (std::vector<std::string>::iterator it = sweeps.begin(); it != sweeps.end(); it++) {
+			SweepOrder.append(atof((*it).c_str()));
+		}
+		file["sweeporder"] = SweepOrder;
 
 		// Get the tags
 		bp::list tags;
@@ -404,16 +412,6 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 		file["begin"] = begin;
 
 		file["xvar"] = sd.xVariable();
-
-		// Added June 13, 2012
-		// Create an array of x-vars that signify the order stimuli were presented
-		bp::list presentations;
-		for (unsigned int i = 0; i < sd.m_sweepOrder.size(); ++i)
-		{
-			//presentations.append(sd.xvalue(i));
-			presentations.append(sd.xvalue(sd.m_sweepOrder.at(i)));
-		}
-		file["presentations"] = presentations;
 
 		bp::list trials;
 		for (int i = 0; i < sd.m_head.nSweeps; ++i) {

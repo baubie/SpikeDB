@@ -35,6 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <boost/python.hpp>
 #include <boost/python/stl_iterator.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <gtkmm.h>
 #include <sqlite3.h>

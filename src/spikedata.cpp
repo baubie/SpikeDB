@@ -629,3 +629,13 @@ void SpikeData::printfile()
     std::cout << "stimFirstCh2.nType: " << m_head.stimFirstCh2.nType << std::endl;
     std::cout << "stimFirstCh2.fBegin: " << m_head.stimFirstCh2.fBegin << std::endl;
 }
+std::string SpikeData::sweepOrder() 
+{
+	std::stringstream ss;
+	for (std::vector<int>::iterator i = this->m_sweepOrder.begin(); i != this->m_sweepOrder.end(); i++) {
+		ss << *i << ",";
+	}
+	// Remove the last comma
+	std::string strList = ss.str().substr(0, ss.str().length()-1);
+	return strList;
+}

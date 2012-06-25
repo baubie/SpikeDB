@@ -39,6 +39,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string.h>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 // Porting from windows!
 #define DWORD uint32_t
@@ -336,6 +337,7 @@ class SpikeData
 		std::string iso8601(const char* s);
         int headerversion(void *header);
 		std::vector<int> m_sweepOrder;
+		std::string sweepOrder();
 
     private:
         std::vector<DWORD> m_dwDataArray;
