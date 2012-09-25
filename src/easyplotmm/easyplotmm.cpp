@@ -378,7 +378,12 @@ void EasyPlotmm::axes(double xmin, double xmax, double ymin, double ymax)
 
 void EasyPlotmm::clear()
 {
-	m_x.clear();
+
+    for (unsigned int i=0; i < m_x.size(); ++i) {
+        m_x.at(i).clear();
+    }
+    m_x.clear();
+
 	m_y.clear();
 	m_names.clear();
 	m_data.clear();
