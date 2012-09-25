@@ -1388,7 +1388,6 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 			if (sd.xVariable() != "Ch 1 Atten" && sd.xVariable() != "Ch 2 Atten") filtered = false;
 		}
 
-		int r2;
 		sqlite3_stmt *stmt2 = 0;
 		if (mp_uiFilterFrame->tag() != "")
 		{
@@ -1396,7 +1395,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 			sqlite3_prepare_v2(db, query_animal_tag, -1, &stmt2, 0);
 			sqlite3_bind_text(stmt2, 1, mp_uiFilterFrame->tag().c_str(), -1, SQLITE_TRANSIENT);
 			sqlite3_bind_text(stmt2, 2, (char*)sqlite3_column_text(stmt, 0), -1, SQLITE_TRANSIENT);
-			r2 = sqlite3_step(stmt2);
+			sqlite3_step(stmt2);
 			bool allow_animal = sqlite3_column_int(stmt2,0) > 0;
 			sqlite3_finalize(stmt2);
 
@@ -1405,7 +1404,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 			sqlite3_bind_text(stmt2, 1, mp_uiFilterFrame->tag().c_str(), -1, SQLITE_TRANSIENT);
 			sqlite3_bind_text(stmt2, 2, (char*)sqlite3_column_text(stmt, 0), -1, SQLITE_TRANSIENT);
 			sqlite3_bind_int(stmt2, 3, sqlite3_column_int(stmt, 1));
-			r2 = sqlite3_step(stmt2);
+			sqlite3_step(stmt2);
 			bool allow_cell = sqlite3_column_int(stmt2,0) > 0;
 			sqlite3_finalize(stmt2);
 
@@ -1415,7 +1414,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 			sqlite3_bind_text(stmt2, 2, (char*)sqlite3_column_text(stmt, 0), -1, SQLITE_TRANSIENT);
 			sqlite3_bind_int(stmt2, 3, sqlite3_column_int(stmt, 1));
 			sqlite3_bind_int(stmt2, 4, sqlite3_column_int(stmt, 2));
-			r2 = sqlite3_step(stmt2);
+			sqlite3_step(stmt2);
 			bool allow_file = sqlite3_column_int(stmt2,0) > 0;
 			sqlite3_finalize(stmt2);
 
@@ -1429,7 +1428,7 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 		sqlite3_bind_text(stmt2, 2, (char*)sqlite3_column_text(stmt, 0), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_int(stmt2, 3, sqlite3_column_int(stmt, 1));
 		sqlite3_bind_int(stmt2, 4, sqlite3_column_int(stmt, 2));
-		r2 = sqlite3_step(stmt2);
+		sqlite3_step(stmt2);
 		bool hidden_file = (sqlite3_column_int(stmt2,0) > 0);
 		sqlite3_finalize(stmt2);
 

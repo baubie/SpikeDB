@@ -160,8 +160,6 @@ class EasyPlotmm : public Gtk::DrawingArea
 		Glib::ustring lastdir;
 
         // Store plots
-        std::vector< std::vector<double> > m_x_hist;
-        std::vector< std::vector<double> > m_y_hist;
         std::vector< std::vector<double> > m_x;
         std::vector< std::vector<double> > m_y;
         std::vector< std::vector<double> > m_err;

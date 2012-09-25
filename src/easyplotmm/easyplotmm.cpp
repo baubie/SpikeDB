@@ -384,10 +384,26 @@ void EasyPlotmm::clear()
     }
     m_x.clear();
 
+    for (unsigned int i=0; i < m_y.size(); ++i) {
+        m_y.at(i).clear();
+    }
 	m_y.clear();
-	m_names.clear();
-	m_data.clear();
+
+    for (unsigned int i=0; i < m_err.size(); ++i) {
+        m_err.at(i).clear();
+    }
 	m_err.clear();
+
+    for (unsigned int i=0; i < m_names.size(); ++i) {
+        m_names.at(i).clear();
+    }
+	m_names.clear();
+
+    for (unsigned int i=0; i < m_data.size(); ++i) {
+        m_data.at(i).clear();
+    }
+	m_data.clear();
+
 	m_pens.clear();
 	m_xname = "";
 	m_yname = "";
