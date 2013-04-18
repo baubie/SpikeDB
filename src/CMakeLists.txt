@@ -30,7 +30,7 @@ ADD_CUSTOM_COMMAND(TARGET spikedb POST_BUILD
 	COMMAND cp -r ${CMAKE_SOURCE_DIR}/SpikeDB.app.template ${BUNDLE_LOCATION}
 	COMMAND cp -r ${CMAKE_SOURCE_DIR}/src/plugins ${BUNDLE_LOCATION}/Contents/Resources/
 	COMMAND cp ${CMAKE_SOURCE_DIR}/src/spikedb ${BUNDLE_LOCATION}/Contents/Resources/bin/spikedb-bin
-	COMMAND python ${CMAKE_SOURCE_DIR}/library_magic.py ${BUNDLE_LOCATION}/Contents/Resources/bin/spikedb-bin
+	COMMAND python2.7 ${CMAKE_SOURCE_DIR}/library_magic.py ${BUNDLE_LOCATION}/Contents/Resources/bin/spikedb-bin
 	COMMAND rm -rf ${CMAKE_SOURCE_DIR}/build/SpikeDB.app
 	COMMAND mv ${BUNDLE_LOCATION} ${CMAKE_SOURCE_DIR}/build/
 	COMMAND ${CMAKE_SOURCE_DIR}/update_app_version ${SPIKEDBVERSION} "${CMAKE_SOURCE_DIR}"

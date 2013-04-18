@@ -14,14 +14,16 @@ ELSE(APPLE)
 	SET(COREFOUNDATION_LIBRARY "")
 ENDIF(APPLE)
 
-SET(PythonLibs_FIND_VERSION 2)
+SET(PythonLibs_FIND_VERSION 2.7)
 
 FIND_PACKAGE(PkgConfig)
-FIND_PACKAGE(PythonLibs)
+FIND_PACKAGE(PythonLibs REQUIRED)
 FIND_PACKAGE(Boost COMPONENTS python REQUIRED)
 pkg_check_modules(GTKMM gtkmm-2.4)
 pkg_check_modules(CAIRO cairo)
 pkg_check_modules(SQLITE3 sqlite3)
+
+SET(PYTHON_INCLUDE_PATH /opt/local/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7/)
 
 ADD_SUBDIRECTORY(src)
 

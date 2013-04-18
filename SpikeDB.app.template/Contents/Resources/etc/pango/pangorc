@@ -5,4 +5,4 @@
 #
 
 [Pango]
-ModuleFiles = ${HOME}/.spikedb-etc/pango.modules
+ModuleFiles = /opt/local/etc/pango/pango.modules
