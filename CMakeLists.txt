@@ -23,7 +23,9 @@ pkg_check_modules(GTKMM gtkmm-2.4)
 pkg_check_modules(CAIRO cairo)
 pkg_check_modules(SQLITE3 sqlite3)
 
-SET(PYTHON_INCLUDE_PATH /opt/local/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7/)
+IF(APPLE)
+	SET(PYTHON_INCLUDE_PATH /opt/local/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7/)
+ENDIF(APPLE)
 
 ADD_SUBDIRECTORY(src)
 
