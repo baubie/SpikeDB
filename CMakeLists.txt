@@ -16,9 +16,11 @@ ENDIF(APPLE)
 
 SET(PythonLibs_FIND_VERSION 2.7)
 
+
 FIND_PACKAGE(PkgConfig)
 FIND_PACKAGE(PythonLibs REQUIRED)
-FIND_PACKAGE(Boost COMPONENTS python REQUIRED)
+#FIND_PACKAGE(Boost 1.54.0 COMPONENTS python REQUIRED)
+FIND_PACKAGE(Boost 1.50.0 COMPONENTS python REQUIRED)
 pkg_check_modules(GTKMM gtkmm-2.4)
 pkg_check_modules(CAIRO cairo)
 pkg_check_modules(SQLITE3 sqlite3)

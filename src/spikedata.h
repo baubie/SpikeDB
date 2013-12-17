@@ -329,6 +329,7 @@ class SpikeData
         double duration(int channel, int sweep);
         double attenuation(int channel, int sweep);
         double frequency(int channel, int sweep);
+        double freqdev(int channel, int sweep);
         bool setHeader(void *header);
 
         HEADER m_head;

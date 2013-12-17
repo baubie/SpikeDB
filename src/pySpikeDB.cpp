@@ -392,6 +392,28 @@ bp::object pySpikeDB::getFile(const Gtk::TreeModel::iterator& iter)
 		}
 		file["frequency"] = freq;
 
+
+        /* NEW IN 1.9 */
+		bp::dict freqdev;
+		if (sd.m_head.nOnCh1 == 0) { freqdev[1] = "";} 
+		else { 
+			if (sd.freqdev(1, 0) == sd.freqdev(1, 1)) {
+				freqdev[1] = sd.freqdev(1,0);
+			} else {
+				freqdev[1] = VARYING_STIMULUS;
+			}
+		}
+		if (sd.m_head.nOnCh2 == 0) { freqdev[2] = "";} 
+		else { 
+			if (sd.freqdev(2, 0) == sd.freqdev(2, 1)) {
+				freqdev[2] = sd.freqdev(2,0);
+			} else {
+				freqdev[2] = VARYING_STIMULUS;
+			}
+		}
+		file["freqdev"] = freqdev;
+
+
 		bp::dict begin;
 		if (sd.m_head.nOnCh1 == 0) { begin[1] = "";} 
 		else { 

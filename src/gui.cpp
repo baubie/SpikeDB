@@ -1582,6 +1582,31 @@ void GUI::populateDetailsList(const Glib::ustring animalID, const int cellID)
 			bufferCh1[0] = '\0';
 			bufferCh2[0] = '\0';
 			buffer[0] = '\0';
+
+
+            /* NEW IN VERSION 1.9 */
+            /* SHOWS FREQ DEV IN DETAILS VIEW */
+			if (sd.m_head.nOnCh1 == 0) {
+					strcpy(bufferCh1, "-");
+			} else{
+					if (sd.freqdev(1, 0) == sd.freqdev(1, 1)) {
+							sprintf(bufferCh1, "%d", (int)sd.freqdev(1, 0));
+					} else{                              strcpy(bufferCh1, "Var"); }
+			}
+			if (sd.m_head.nOnCh2 == 0) {
+					strcpy(bufferCh2, "-");
+			} else{
+					if (sd.freqdev(2, 0) == sd.freqdev(2, 1)) {
+							sprintf(bufferCh2, "%d", (int)sd.freqdev(2, 0));
+					} else{                              strcpy(bufferCh2, "Var"); }
+			}
+			sprintf(buffer, "%s/%s", bufferCh1, bufferCh2);
+			row[mp_FileDetailsTree->m_Columns.m_col_freqdev] = buffer;
+			bufferCh1[0] = '\0';
+			bufferCh2[0] = '\0';
+			buffer[0] = '\0';
+
+                
 		}
 	}
 	p_pbStatus->set_text("Populating Table");
@@ -1727,7 +1752,7 @@ void GUI::on_menuAbout_activate()
 	dialog.set_transient_for(*this);
 	dialog.set_title("About SpikeDB");
 	dialog.set_program_name("SpikeDB");
-	dialog.set_version("1.8");
+	dialog.set_version("1.9");
 	dialog.set_copyright(copyright);
 	std::vector<Glib::ustring> authors;
 	authors.push_back("Programming: Brandon Aubie");
